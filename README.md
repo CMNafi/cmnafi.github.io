@@ -1,2 +1,4 @@
+# H1 Hello World, Welcome to my personal blog 
 
-Personal area 51 stuffs
+## H2 Technology used:
+# H3 - HTML5, CSS3, JS
