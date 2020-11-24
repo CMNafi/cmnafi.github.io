@@ -1,4 +1,6 @@
-# H1 Hello World, Welcome to my personal blog 
+# Hello World, Welcome to my personal blog 
 
-## H2 Technology used:
-# H3 - HTML5, CSS3, JS
+##  Technology used: HTML5, CSS3, JS
+
+### Thank you for visiting!
+
