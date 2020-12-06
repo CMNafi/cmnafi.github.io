@@ -1,6 +1,5 @@
-# Hello World, Welcome to my personal blog 
+# Hello World, Welcome to my personal blog
 
-##  Technology used: HTML5, CSS3, JS, Bootstrap
+## Technology used: HTML5, CSS3, JS, Bootstrap
 
-### Thank you for visiting!
-
+### Thank you for visiting
