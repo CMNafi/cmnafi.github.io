@@ -1,74 +1,312 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cmnafi.space</title>
-
-    <!-- Bootstrap-- css and js> -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>C M Nafi Portfolio</title>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
 </head>
 
 <body>
-   
-
-
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">cmnafi.space</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" >Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="blog/blog.html">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="learning/learning.html">Learning</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="gaming/gaming.html">Gaming</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="programs/programs.html">Programs</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="about/about.html">About</a>
-              </li>
-              <!-- <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-              </li>
-            </ul> -->
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
+    <div id="mobile-menu-open" class="shadow-large">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </div>
+    <!-- End #mobile-menu-toggle -->
+    <header>
+        <div id="mobile-menu-close">
+            <span>Close</span> <i class="fa fa-times" aria-hidden="true"></i>
         </div>
-      </nav>
+        <ul id="menu" class="shadow">
+            <li>
+                <a href="#about">About</a>
+            </li>
+            <li>
+                <a href="#experience">Experience</a>
+            </li>
+            <li>
+                <a href="#education">Education</a>
+            </li>
+            <li>
+                <a href="#projects">Projects</a>
+            </li>
+            <li>
+                <a href="#skills">Skills</a>
+            </li>
+            <li>
+                <a href="#contact">Contact</a>
+            </li>
+        </ul>
+    </header>
+    <!-- End header -->
 
-      <p>
-        This website is currently under development
-      </p>
+    <div id="lead">
+        <div id="lead-content">
+            <h1>C M Nafi</h1>
+            <h2>Data Scientist</h2>
+            <a href="doc/resume.pdf" class="btn-rounded-white">Download Resume</a>
+        </div>
+        <!-- End #lead-content -->
 
+        <div id="lead-overlay"></div>
+
+        <div id="lead-down">
+            <span>
+                <i class="fa fa-chevron-down" aria-hidden="true"></i>
+            </span>
+        </div>
+        <!-- End #lead-down -->
+    </div>
+    <!-- End #lead -->
+
+    <div id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h2 class="heading">About Me</h2>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                       I am a Data Scientist looking for an internship or full-time position.  <br>
+ 
+                        My story began in Bangladesh, the son of a lawyer and a teacher. I attended military school in Bangladesh for several years and discovered that it was not for me.<br>
+                        I set off for Changshu, China to continue my education at an International Baccalaureate high school before making my way to northeast Iowa and Luther College. <br>
+                        The world is, indeed, global. Along the way, I forged new friendships, came to better understand different countries, cultures, and contexts, and am living through a life-defining global health pandemic.<br>
+
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End #about -->
+
+    <div id="experience" class="background-alt">
+        <h2 class="heading">Experience</h2>
+        <div id="experience-timeline">
+            <div data-date="February 2021 – Present">
+                <h3>Mayo-Clinic</h3>
+                <h4>AI Intern</h4>
+                <p>
+                   Focused on Deep-Learning and Neural Networks. <br> 
+            
+                   Tools used: Tensorflow, Keras, Pandas, Numpy, Scikit-Learn, Matplotlib <br> 
+                
+                </p>
+            </div>
+
+            <div data-date="January 2020 – February 2021">
+                <h3>Luther College</h3>
+                <h4>Assistant to the Executive Director of Admissions and Global Learning</h4>
+                <p>
+                   Focused on Data-Analysis and Visualization. <br>
+                   Language : Python, R. <br>
+                   Python Library used:Pandas, Numpy, Matplotlib
+                   Other Tools: Tableau, Microsoft Excel.   
+                </p>
+            </div>
+
+            <div data-date="September 2020 – December 2020">
+                <h3>Luther College Institutional Research and Assessments </h3>
+                <h4>Student Data Analyst</h4>
+                <p>
+                    Focused on Data-Management, Analysis, Visualization and presentation <br>
+                    Other Tools: Microsoft Power BI, Microsoft Access, Tableau, Microsoft Excel. 
+                </p>
+            </div>
+
+            <div data-date="May 2019 - August 2019">
+                <h3>The Getup Decorah</h3>
+                <h4>Website Developer and Social Media Intern</h4>
+                <p>
+                Focused on: Retailed website pricing and Social Media
+                Tools Used:Python, Excel. 
+                Social Media Tools: Adobe Illustrator, Adobe Indesign, Hootsuite, Facebook Marketing.  
+                </p>
+            </div>
+        </div>
+    </div>
+
+            <!-- <div data-date="September 2015 – September 2016">
+                <h3>Employer Name</h3>
+                <h4>Job Title</h4>
+                <p>
+                     Data Exploration using Pandas and Tableau and Visualization using Tableau and Scikit-Learn for international Admission Strategic Report 2020-2024
+                </p>
+            </div>
+
+            <div data-date="September 2015 – September 2016">
+                <h3>Employer Name</h3>
+                <h4>Job Title</h4>
+                <p>
+                     Data Exploration using Pandas and Tableau and Visualization using Tableau and Scikit-Learn for international Admission Strategic Report 2020-2024
+                </p>
+            </div>
+        </div>
+    </div> -->
+    <!-- End #experience -->
+
+    <div id="education">
+        <h2 class="heading">Education</h2>
+        <div class="education-block">
+            <h3>Luther College</h3>
+            <span class="education-date">August 2018 - Expected December 2021</span>
+            <h4>Major: Data Science<br> Minor: Computer Science</h4>
+            <p>
+            <b>Computer Science Courses</b>: Fundamentals of Web-Programming, Data Modeling and Querying, Introduction to Computer-Science, Data Structure and Algorithm, Object-Oriented Programming with Java, Full Stack Development</p>
+            <p><b>Data Science Courses</b>: Introduction to Data-Science, Advanced Statistics, Applied Statistics, Data-Analysis and Visualization, Data Analysis and Business Decision Making.</p>
+            <p> <b>Other Fun Courses</b> : Creativity and Innovation, Entrepreneurship, Money-Credit and Banking, Environmental Economics,Graphics Design.
+            </p>
+        </div>
+        <!-- End .education-block -->
+
+        <div class="education-block">
+            <h3>UWC Changshu, China</h3>
+            <span class="education-date">August 2016 - May 2018</span>
+            <h4>International Baccalaureate</h4>
+            <ul>
+                <li>
+                    Higher Level: Physics, Economics, English
+                </li>
+                <li>
+                   Standard Level: Math, Environmental Science, Bangla 
+                </li>
+                <li>
+                 Research Paper: The effect of Rampal Coal Power Plant on Royal Bengal Tiger at Sundarbans. 
+                </li>
+            </ul>
+        </div>
+        <!-- End .education-block -->
+    </div>
+    <!-- End #education -->
+
+    <div id="projects" class="background-alt">
+        <h2 class="heading">Projects</h2>
+        <div class="container">
+            <div class="row">
+                <div class="project shadow-large">
+                    <div class="project-image">
+                        <img src="images/project.jpg" />
+                    </div>
+                    <!-- End .project-image -->
+                    <div class="project-info">
+                        <h3>Norsebooks.com</h3>
+                        <p>
+                            The NorseBooks project seeks to provide Luther College students a place to buy and sell textbooks to each other.
+                        </p>
+                        <a href="https://github.com/WKHAllen/NorseBooks">View Project</a>
+                    </div>
+                    <!-- End .project-info -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+                <!-- End .project --> 
+
+                <!-- <div class="project shadow-large">
+                    <div class="project-image">
+                        <img src="images/project.jpg" />
+                    </div>
+                    <!-- End .project-image -->
+                    <!-- <div class="project-info">
+                        <h3>Inspirational Quotes Diary</h3>
+                        <p>
+                            Simple JavaScript Application 
+                        </p>
+                        <a href="https://inspiration330.herokuapp.com/myQuotes">View Project</a> -->
+                    
+                    <!-- End .project-info -->
+            
+                <!-- End .project
+            </div>
+        </div>
+    </div>
+    <!-- End #projects -->
+
+    <div id="skills">
+        <h2 class="heading">Skills</h2>
+        <ul>
+            <li>JavaScript</li>
+            <li>Python</li>
+            <li>R</li>
+            <li>SQL</li>
+            <li>java</li>
+            <li>Flask</li>
+            <li>Bootstrap</li>
+            <li>Bash</li>
+            <li>Pandas</li>
+            <li>Numpy</li>
+            <li>Scipy</li>
+            <li>Scikit-Learn</li>
+            <li>Matplotlib</li>
+            <li>Tensorflow</li>
+            <li>Pytorch</li>
+            <li>Tableau</li>
+            <li>Microsoft Access</li>
+            <li>Microsoft Power BI</li>
+    </div>
+    <!-- End #skills -->
+
+    <div id="contact">
+        <h2>Get in Touch</h2>
+        <div id="contact-form">
+            <form method="POST" action="https://naficm01@gmail.com">
+                <input type="hidden" name="_subject" value="Contact request from personal website" />
+                <input type="email" name="_replyto" placeholder="Your email" required>
+                <textarea name="message" placeholder="Your message" required></textarea>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        <!-- End #contact-form -->
+    </div>
+    <!-- End #contact -->
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-5 copyright">
+                    <p>
+                        Copyright &copy; 2021 C M Nafi
+                    </p>
+                </div>
+                <div class="col-sm-2 top">
+                    <span id="to-top">
+                        <i class="fa fa-chevron-up" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="col-sm-5 social">
+                    <ul>
+                        <li>
+                            <a href="https://github.com/CMNafi" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
+                        </li>
+                        <li>
+                            <a href="https://stackoverflow.com/users/10948169/c-m-nafi" target="_blank"><i class="fa fa-stack-overflow" aria-hidden="true"></i></a>
+                        </li>
+                        <li>
+                            <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                        </li>
+                        <li>
+                            <a href="https://www.facebook.com/cm.nafi.7" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        </li>
+                        <li>
+                            <a href="https://twitter.com/" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End footer -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/scripts.min.js"></script>
 </body>
 
 </html>
