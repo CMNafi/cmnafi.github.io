@@ -31,13 +31,13 @@ export const strategyMapChapters: StrategyMapChapter[] = [
     id: 'dinajpur',
     step: '01',
     place: 'Dinajpur, Bangladesh',
-    theme: 'Foundation Strategy',
-    label: 'Origin',
-    title: 'Small beginnings established the first principles.',
+    theme: 'Global Foundations',
+    label: 'Origins · Bangladesh',
+    title: 'The first world laid the foundation for everything that followed.',
     narrative:
-      'Dinajpur is the earliest operating environment: close to home, close to routine, and close to the first habits of observation. It is the chapter that created root depth before the route ever widened.',
-    capability: 'First principles, groundedness, starting conditions',
-    signal: 'Smallest footprint, deepest root.',
+      'Dinajpur is where the story begins: the first bearings, the first routines, and the earliest sense of rootedness. Before the route widened across institutions and continents, it started here.',
+    capability: 'First principles, groundedness, early formation',
+    signal: 'A rooted beginning before the route widened.',
     atlasLabel: '25.63 N / 88.64 E',
     mapX: '17%',
     mapY: '68%',
@@ -47,13 +47,13 @@ export const strategyMapChapters: StrategyMapChapter[] = [
     id: 'rangpur',
     step: '02',
     place: 'Rangpur, Bangladesh',
-    theme: 'Discipline Layer',
-    label: 'Formation',
-    title: 'Structure became part of the operating system.',
+    theme: 'Discipline & Independence',
+    label: 'Age 12 · Bangladesh',
+    title: 'Discipline & Independence',
     narrative:
-      'Rangpur brought military school, routine, distance from home, and a sharper internal standard. Discipline stopped being external pressure and turned into durable self-command.',
+      "My story is defined by a series of bold, independent transitions. It began at age 12, when I left home for military school in Bangladesh — a disciplined start that forged the self-reliance I've carried ever since.",
     capability: 'Rigor, resilience, internal sharpness',
-    signal: 'Formation through rules, repetition, and endurance.',
+    signal: 'A disciplined start that forged self-reliance.',
     atlasLabel: '25.75 N / 89.25 E',
     mapX: '22%',
     mapY: '62%',
@@ -63,13 +63,13 @@ export const strategyMapChapters: StrategyMapChapter[] = [
     id: 'changshu',
     step: '03',
     place: 'Changshu, China',
-    theme: 'Global Expansion',
-    label: 'Expansion Node',
-    title: 'A wider map changed the frame of thought.',
+    theme: 'Global Interconnectedness',
+    label: 'Age 16 · Changshu, China',
+    title: 'Global Interconnectedness',
     narrative:
-      'Changshu marked the international jump: new institutions, new peers, new contexts, and a daily practice of adaptation. Exposure turned movement into worldview and made global context feel lived rather than abstract.',
+      'That foundation allowed me to leap into a global life at 16, moving to Changshu, China, to attend United World College. Immersed in an International Baccalaureate program alongside students from 100+ nations, I learned to navigate complex global perspectives and saw firsthand how interconnected our world truly is.',
     capability: 'Adaptation, exposure, widened worldview',
-    signal: 'The route opens beyond one country.',
+    signal: 'A global life shaped by 100+ perspectives.',
     atlasLabel: '31.65 N / 120.75 E',
     mapX: '56%',
     mapY: '34%',
@@ -79,13 +79,13 @@ export const strategyMapChapters: StrategyMapChapter[] = [
     id: 'decorah',
     step: '04',
     place: 'Decorah, Iowa, USA',
-    theme: 'Intellectual Compounding',
-    label: 'Compounding Stage',
-    title: 'Ideas started compounding into method and systems.',
+    theme: 'Data Science & CS Logic',
+    label: 'Iowa, USA',
+    title: 'Data Science & CS Logic',
     narrative:
-      'Decorah is where academic life sharpened reflection into a more repeatable method. Study, writing, data, and systems thinking started reinforcing one another instead of living in separate lanes.',
+      'This curiosity brought me to the United States and Luther College, where I fully leaned into the intersection of logic and creativity. I graduated with a major in Data Science and a minor in Computer Science, focusing my senior research on the power of high-density data to solve real-world problems.',
     capability: 'Frameworks, synthesis, systems thinking',
-    signal: 'Reflection becomes method.',
+    signal: 'Logic and creativity moved into the same frame.',
     atlasLabel: '43.30 N / 91.79 W',
     mapX: '77%',
     mapY: '27%',
@@ -95,13 +95,13 @@ export const strategyMapChapters: StrategyMapChapter[] = [
     id: 'tampa',
     step: '05',
     place: 'Tampa, Florida',
-    theme: 'Current Deployment',
-    label: 'Active Deployment',
-    title: 'The present phase is public, practical, and still in motion.',
+    theme: 'From Research to Financial Intelligence',
+    label: 'Current',
+    title: 'From Research to Financial Intelligence',
     narrative:
-      'Tampa is the active deployment: fintech systems, product thinking, writing, experimentation, and public work. The earlier chapters no longer sit behind the present; they now operate together inside it.',
+      'I believe that data is only as valuable as the narrative it helps uncover. The current chapter brings together research, strategy, institutional finance, and product work into a clearer public-facing direction.',
     capability: 'Fintech, product systems, writing, public identity',
-    signal: 'Building, writing, shipping, connecting.',
+    signal: 'Bridging complex data and actionable intelligence.',
     atlasLabel: '27.95 N / 82.46 W',
     mapX: '84%',
     mapY: '56%',
@@ -111,20 +111,20 @@ export const strategyMapChapters: StrategyMapChapter[] = [
 
 export const strategyMapSignals: StrategyMapSignal[] = [
   {
-    title: 'Fintech systems',
-    description: 'Operational products shaped by regulatory, data, and workflow complexity.'
+    title: 'Exploring Stories',
+    description: 'An avid reader of biographies, fascinated by the lives that have shaped our history.'
   },
   {
-    title: 'Product and AI',
-    description: 'Practical interfaces for research, diligence, and intelligent automation.'
+    title: 'On the Field & Track',
+    description: 'Cricket, FC Barcelona, and Formula 1 remain the clearest reset outside of work.'
   },
   {
-    title: 'Writing in public',
-    description: 'Essays, reflections, and narratives that clarify the work behind the work.'
+    title: "In the Driver's Seat",
+    description: 'A deep fascination with finance markets and cutting-edge technology continues to shape what I pay attention to.'
   },
   {
-    title: 'Global context',
-    description: 'A worldview built across institutions, countries, and different systems of thought.'
+    title: 'Work in Public',
+    description: 'Writing, products, and public-facing tools now sit in the same frame as the work itself.'
   }
 ];
 
