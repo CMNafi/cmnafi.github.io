@@ -11,13 +11,13 @@ const { project } = Astro.props;
     <span>{project.data.category}</span>
     <span>Updated {formatDate(project.data.updatedAt ?? project.data.startedAt)}</span>
   </div>
-  <h3><a href={`/projects/${project.data.slug}`}>{project.data.title}</a></h3>
+  <h3><a href={`/projects/${project.slug}`}>{project.data.title}</a></h3>
   <p>{project.data.summary}</p>
   <div class="tag-row">
     {project.data.stack.slice(0, 4).map((item: string) => <span class="tag-chip">{item}</span>)}
   </div>
   <div class="project-actions">
-    <a href={`/projects/${project.data.slug}`}>View details</a>
+    <a href={`/projects/${project.slug}`}>View details</a>
     {project.data.liveUrl && <a href={project.data.liveUrl} target="_blank" rel="noreferrer">Live demo</a>}
     {project.data.repoUrl && <a href={project.data.repoUrl} target="_blank" rel="noreferrer">GitHub repo</a>}
   </div>
