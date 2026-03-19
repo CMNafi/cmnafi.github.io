@@ -27,44 +27,88 @@ const directoryItems = directories
 ---
 
 <BaseLayout>
-  <section class="page-section">
-    <Hero hero={homepageConfig.hero} />
+  <section class="page-section page-section-hero">
+    <Hero hero={homepageConfig.hero} processChapters={homepageConfig.processChapters} />
   </section>
 
   <section class="page-section">
     <SectionHeading
-      eyebrow="Directory"
-      title="A calm index for work in motion"
-      description="Everything on the site is organized as a living directory, so adding new sections later doesn’t require rebuilding the system."
+      eyebrow="From raw to refined"
+      title="A brewing story for how the work becomes public"
+      description="The homepage moves like a ritual: collect, grind, brew, pour, and serve. Each stage maps to how ideas are gathered, refined, built, published, and carried forward."
+    />
+    <div class="process-grid">
+      {homepageConfig.processChapters.map((chapter) => (
+        <article class="process-card panel">
+          <span class="process-phase">{chapter.phase}</span>
+          <h3>{chapter.title}</h3>
+          <p class="process-subtitle">{chapter.subtitle}</p>
+          <p>{chapter.description}</p>
+          <small>{chapter.cue}</small>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section page-section-directory">
+    <SectionHeading
+      eyebrow="Poured into public form"
+      title="A directory designed like a studio service tray"
+      description="The useful parts stay obvious: blog entries, projects, essays, apps, and future notes all live in a system that can keep expanding without losing the atmosphere."
     />
     <DirectoryTabs tabs={[...homepageConfig.directoryTabs]} items={directoryItems} />
   </section>
 
-  <section class="page-section two-up">
-    {homepageConfig.featuredBands.latestWriting && latestPost && (
-      <div>
-        <SectionHeading eyebrow="Latest writing" title={latestPost.data.title} description={latestPost.data.excerpt} />
-        <FeaturedPostCard post={latestPost} />
+  <section class="page-section two-up home-focus-grid">
+    <div>
+      <SectionHeading
+        eyebrow="Currently brewing"
+        title="What is under warm pressure right now"
+        description="These are the themes, products, and curiosities currently moving through the grinder."
+      />
+      <div class="panel current-brewing">
+        <ul>
+          {homepageConfig.currentBrewing.map((item) => <li>{item}</li>)}
+        </ul>
       </div>
-    )}
-    {homepageConfig.featuredBands.featuredProject && featuredProject && (
-      <div>
-        <SectionHeading eyebrow="Featured project" title={featuredProject.data.title} description={featuredProject.data.summary} />
-        <ProjectCard project={featuredProject} />
+    </div>
+
+    <div>
+      <SectionHeading
+        eyebrow="Studio canisters"
+        title="Clear containers for the next wave"
+        description="A few durable categories make the site easy to maintain while giving future sections room to arrive naturally."
+      />
+      <div class="canister-grid">
+        {homepageConfig.focusCanisters.map((item) => (
+          <article class="canister panel">
+            <span>{item.label}</span>
+            <p>{item.value}</p>
+          </article>
+        ))}
       </div>
-    )}
+    </div>
   </section>
 
   <section class="page-section">
     <SectionHeading
-      eyebrow="Currently brewing"
-      title="Themes shaping the next wave"
-      description="A snapshot of the ideas, experiments, and curiosities guiding the work right now."
+      eyebrow="Selected entries"
+      title="Already served"
+      description={homepageConfig.selectedEntryIntro}
     />
-    <div class="panel current-brewing">
-      <ul>
-        {homepageConfig.currentBrewing.map((item) => <li>{item}</li>)}
-      </ul>
+    <div class="two-up selected-grid">
+      {homepageConfig.featuredBands.latestWriting && latestPost && (
+        <div>
+          <SectionHeading eyebrow="Latest writing" title={latestPost.data.title} description={latestPost.data.excerpt} />
+          <FeaturedPostCard post={latestPost} />
+        </div>
+      )}
+      {homepageConfig.featuredBands.featuredProject && featuredProject && (
+        <div>
+          <SectionHeading eyebrow="Featured project" title={featuredProject.data.title} description={featuredProject.data.summary} />
+          <ProjectCard project={featuredProject} />
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>

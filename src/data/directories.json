@@ -54,9 +54,9 @@
     "slug": "/adventures",
     "description": "Travel, moments on the move, and stories worth keeping.",
     "category": "Writing",
-    "status": "coming soon",
+    "status": "brewing",
     "icon": "↗",
-    "visibility": false,
+    "visibility": true,
     "order": 6
   },
   {
