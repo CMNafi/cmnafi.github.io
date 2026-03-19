@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
 import { ManagerSearchDashboard } from "@/components/manager-search/manager-search-dashboard";
 import { Badge } from "@/components/ui/badge";

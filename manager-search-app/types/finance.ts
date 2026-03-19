@@ -1,4 +1,4 @@
-﻿export type AdviserType = "Registered Investment Adviser" | "Exempt Reporting Adviser" | "Not Disclosed";
+export type AdviserType = "Registered Investment Adviser" | "Exempt Reporting Adviser" | "Not Disclosed";
 
 export interface Entity {
   id: string;

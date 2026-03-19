@@ -1,4 +1,4 @@
-﻿import type { ADVData, Entity, Holding, SummaryOptions } from "@/types/finance";
+import type { ADVData, Entity, Holding, SummaryOptions } from "@/types/finance";
 import OpenAI from "openai";
 
 import { toDisclosure } from "@/lib/format";
