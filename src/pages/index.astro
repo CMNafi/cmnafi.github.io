@@ -16,25 +16,7 @@ const blogPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 const projects = (await getCollection('projects')).sort((a, b) => b.data.priority - a.data.priority);
 const latestPost = blogPosts[0];
 const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
-const codexProjects = projects.filter((project) => {
-  const searchText = [
-    project.data.title,
-    project.data.summary,
-    project.data.description,
-    project.data.category,
-    ...project.data.stack
-  ]
-    .join(' ')
-    .toLowerCase();
-
-  const stackMatches = project.data.stack.some((item) => {
-    const value = item.toLowerCase();
-    return value.includes('ai') || value.includes('codex') || value.includes('agent') || value.includes('llm');
-  });
-
-  return project.data.category === 'automation' || stackMatches || searchText.includes('codex');
-});
-const codexProjectItems = (codexProjects.length ? codexProjects : projects).slice(0, 3);
+const homepageProject = projects.find((project) => project.slug === 'homepage') ?? featuredProject;
 
 const directoryItems = directories
   .filter((item) => item.visibility)
@@ -162,12 +144,12 @@ const stageChapters = homepageConfig.processChapters.slice(0, 4);
 
     <section class="page-section page-section-codex-projects">
       <SectionHeading
-        eyebrow="Codex projects"
-        title="AI-assisted builds from this studio"
-        description="Projects with automation and AI workflow DNA, surfaced in one place."
+        eyebrow="Codex project"
+        title="Homepage"
+        description="The live front door for cmnafi.com, kept aligned with the latest coffeehouse design system."
       />
       <div class="project-grid">
-        {codexProjectItems.map((project) => <ProjectCard project={project} />)}
+        <ProjectCard project={homepageProject} />
       </div>
     </section>
   </div>
