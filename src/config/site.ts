@@ -1,6 +1,6 @@
 export const siteConfig = {
   title: 'C M Nafi',
-  description: 'A personal website tracing a global journey into fintech through writing, projects, and public work.',
+  description: 'A personal website tracing a global journey into fintech, now shaped by work as a Solutions Specialist at Dasseti.',
   author: 'C M Nafi',
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',

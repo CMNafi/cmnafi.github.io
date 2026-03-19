@@ -1,8 +1,40 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { strategyMapChapters } from '@/data/strategy-map';
 
 const routeRegions = ['Bangladesh', 'China', 'USA'];
+const primaryRole = 'Solutions Specialist at Dasseti';
+const journeyHighlights = [
+  {
+    step: '01',
+    place: 'Dinajpur, Bangladesh',
+    theme: 'Foundations',
+    signal: 'A small city in the north where the restlessness started and the route first took shape.'
+  },
+  {
+    step: '02',
+    place: 'Rangpur, Bangladesh',
+    theme: 'Discipline & Independence',
+    signal: 'Military school taught structure, self-reliance, and the discipline that still sits underneath the work.'
+  },
+  {
+    step: '03',
+    place: 'Changshu, China',
+    theme: 'Global Interconnectedness',
+    signal: 'UWC widened the frame through classmates from 100+ countries and a much larger sense of the world.'
+  },
+  {
+    step: '04',
+    place: 'Decorah, Iowa',
+    theme: 'Data Science & Logic',
+    signal: 'Luther College gave data science and computer science a permanent seat in how I think about systems.'
+  },
+  {
+    step: '05',
+    place: 'Tampa, Florida',
+    theme: 'Financial Intelligence',
+    signal: 'Now at Dasseti, working as a Solutions Specialist across due diligence, reporting, and investor workflows.'
+  }
+];
 const secondaryPaths = [
   {
     title: 'Writing',
@@ -27,14 +59,16 @@ const secondaryPaths = [
     <section class="page-section home-hero">
       <div class="home-hero__copy">
         <p class="eyebrow">C M Nafi</p>
-        <h1>A global journey into fintech.</h1>
+        <p class="home-hero__role">{primaryRole}</p>
+        <h1>At sixteen, I left military school for a city in China I'd never seen.</h1>
         <p class="home-hero__body">
-          From Bangladesh to Tampa, building a life across movement, systems, and financial intelligence.
+          From Bangladesh to China to the United States, I now help institutional investors turn complex diligence and
+          reporting workflows into clearer systems.
         </p>
 
         <div class="home-hero__actions">
           <a class="button button-primary" href="/story">Start the journey</a>
-          <a class="home-hero__subtle-link" href="/projects">View projects</a>
+          <a class="home-hero__subtle-link" href="/projects">See the work</a>
         </div>
       </div>
 
@@ -70,12 +104,13 @@ const secondaryPaths = [
         <p class="eyebrow">Journey</p>
         <h2>The journey comes first.</h2>
         <p>
-          Everything else on the site extends from it: writing, projects, and public work.
+          Everything else on this site extends from it - the writing, the projects, and the work. Five places shaped how
+          I think.
         </p>
       </div>
 
       <div class="journey-teaser__grid">
-        {strategyMapChapters.map((chapter) => (
+        {journeyHighlights.map((chapter) => (
           <article class="journey-stop">
             <span class="journey-stop__step">{chapter.step}</span>
             <div>
@@ -94,7 +129,7 @@ const secondaryPaths = [
       <div class="home-secondary__header">
         <p class="eyebrow">Elsewhere</p>
         <p class="home-secondary__copy">
-          Writing, projects, and public contact remain available, but they stay secondary to the journey.
+          The hook lives in the journey. Writing, projects, and public contact build on what that route made possible.
         </p>
       </div>
 
@@ -145,8 +180,8 @@ const secondaryPaths = [
 
   .home-hero__copy {
     display: grid;
-    gap: 1.4rem;
-    max-width: 38rem;
+    gap: 1.1rem;
+    max-width: 42rem;
   }
 
   .home-hero h1,
@@ -159,9 +194,9 @@ const secondaryPaths = [
   }
 
   .home-hero h1 {
-    font-size: clamp(3.5rem, 7vw, 6.2rem);
-    line-height: 0.94;
-    max-width: 9ch;
+    font-size: clamp(3.1rem, 6.8vw, 5.4rem);
+    line-height: 0.97;
+    max-width: 11ch;
   }
 
   .home-hero__body,
@@ -176,8 +211,17 @@ const secondaryPaths = [
   }
 
   .home-hero__body {
-    max-width: 32rem;
+    max-width: 34rem;
     font-size: 1.05rem;
+  }
+
+  .home-hero__role {
+    margin: 0;
+    color: rgba(211, 154, 89, 0.92);
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-family: 'Manrope', sans-serif;
   }
 
   .home-hero__actions {
@@ -374,6 +418,7 @@ const secondaryPaths = [
 
   .journey-stop__signal {
     font-size: 0.95rem;
+    line-height: 1.7;
   }
 
   .journey-teaser__cta {
@@ -477,7 +522,7 @@ const secondaryPaths = [
     }
 
     .home-hero h1 {
-      font-size: clamp(2.9rem, 13vw, 4.1rem);
+      font-size: clamp(2.7rem, 12vw, 3.8rem);
     }
 
     .home-hero__body {
