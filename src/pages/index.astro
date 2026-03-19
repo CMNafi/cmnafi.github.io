@@ -1,13 +1,791 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Hero from '@/components/Hero.astro';
-import { homepageConfig } from '@/config/homepage';
 ---
 
-<BaseLayout>
-  <div class="home-story simple-home">
-    <section class="page-section page-section-hero">
-      <Hero hero={homepageConfig.hero} />
+<BaseLayout description="From global foundations to financial intelligence — the personal site of C M Nafi.">
+  <div class="story-wrapper">
+
+    <!-- ═══════════════ HERO INTRO WITH AVATAR ═══════════════ -->
+    <section class="story-hero">
+      <a class="hero-avatar" href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noopener noreferrer" aria-label="C M Nafi on LinkedIn">
+        <img src="/profile.jpg" alt="C M Nafi" />
+      </a>
+      <p class="eyebrow">The Journey</p>
+      <h1 class="story-hero__title">From Global Foundations<br/>to Financial Intelligence</h1>
+      <p class="story-hero__sub">A story defined by bold, independent transitions — across continents, disciplines, and institutions.</p>
+      <div class="hero-scroll-hint" aria-hidden="true">
+        <span class="scroll-line"></span>
+        <span class="scroll-label">Scroll to explore</span>
+      </div>
     </section>
+
+    <!-- ═══════════════ STICKY STAGE ═══════════════ -->
+    <div class="story-stage" aria-hidden="true">
+      <svg class="stage-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="glow-warm" cx="50%" cy="50%" r="45%">
+            <stop offset="0%" stop-color="rgba(211,154,89,0.25)" />
+            <stop offset="100%" stop-color="transparent" />
+          </radialGradient>
+          <radialGradient id="glow-cool" cx="50%" cy="50%" r="45%">
+            <stop offset="0%" stop-color="rgba(126,134,157,0.2)" />
+            <stop offset="100%" stop-color="transparent" />
+          </radialGradient>
+          <linearGradient id="path-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="var(--accent)" />
+            <stop offset="100%" stop-color="var(--cool)" />
+          </linearGradient>
+        </defs>
+
+        <rect class="stage-bg" width="800" height="500" fill="url(#glow-warm)" opacity="0.4" />
+
+        <!-- Phase 1: Military — geometric discipline shapes -->
+        <g class="phase-visual phase-1-visual" opacity="0">
+          <rect x="340" y="160" width="120" height="120" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.6">
+            <animateTransform attributeName="transform" type="rotate" from="0 400 220" to="360 400 220" dur="40s" repeatCount="indefinite" />
+          </rect>
+          <rect x="355" y="175" width="90" height="90" rx="2" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.4">
+            <animateTransform attributeName="transform" type="rotate" from="360 400 220" to="0 400 220" dur="30s" repeatCount="indefinite" />
+          </rect>
+          <rect x="370" y="190" width="60" height="60" fill="none" stroke="var(--accent)" stroke-width="0.8" opacity="0.3">
+            <animateTransform attributeName="transform" type="rotate" from="0 400 220" to="360 400 220" dur="20s" repeatCount="indefinite" />
+          </rect>
+          <line x1="200" y1="340" x2="600" y2="340" stroke="var(--accent)" stroke-width="0.5" opacity="0.2" />
+          <line x1="200" y1="360" x2="600" y2="360" stroke="var(--accent)" stroke-width="0.5" opacity="0.15" />
+          <line x1="200" y1="380" x2="600" y2="380" stroke="var(--accent)" stroke-width="0.5" opacity="0.1" />
+          <polygon points="400,100 408,130 440,130 414,148 424,178 400,160 376,178 386,148 360,130 392,130" fill="var(--accent)" opacity="0.15" />
+        </g>
+
+        <!-- Phase 2: Globe — world interconnectedness -->
+        <g class="phase-visual phase-2-visual" opacity="0">
+          <circle cx="400" cy="220" r="110" fill="none" stroke="var(--cool)" stroke-width="0.8" opacity="0.4">
+            <animateTransform attributeName="transform" type="rotate" from="0 400 220" to="360 400 220" dur="60s" repeatCount="indefinite" />
+          </circle>
+          <ellipse cx="400" cy="220" rx="110" ry="40" fill="none" stroke="var(--cool)" stroke-width="0.6" opacity="0.3" />
+          <ellipse cx="400" cy="220" rx="40" ry="110" fill="none" stroke="var(--cool)" stroke-width="0.6" opacity="0.3">
+            <animateTransform attributeName="transform" type="rotate" from="0 400 220" to="360 400 220" dur="45s" repeatCount="indefinite" />
+          </ellipse>
+          <ellipse cx="400" cy="220" rx="80" ry="110" fill="none" stroke="var(--cool)" stroke-width="0.4" opacity="0.2">
+            <animateTransform attributeName="transform" type="rotate" from="30 400 220" to="390 400 220" dur="55s" repeatCount="indefinite" />
+          </ellipse>
+          <circle cx="460" cy="195" r="4" fill="var(--accent)" opacity="0.9">
+            <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite" />
+          </circle>
+          <text x="470" y="190" fill="var(--accent)" font-size="9" opacity="0.7" font-family="Manrope">Dhaka</text>
+          <circle cx="490" cy="210" r="4" fill="var(--cool)" opacity="0.9">
+            <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite" begin="1s" />
+          </circle>
+          <text x="500" y="205" fill="var(--cool)" font-size="9" opacity="0.7" font-family="Manrope">Changshu</text>
+          <path d="M460,195 Q480,175 490,210" fill="none" stroke="url(#path-grad)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.7">
+            <animate attributeName="stroke-dashoffset" values="0;-28" dur="3s" repeatCount="indefinite" />
+          </path>
+          <circle cx="310" cy="190" r="3" fill="#f3ede1" opacity="0.6">
+            <animate attributeName="r" values="2;4;2" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+          </circle>
+          <text x="280" y="185" fill="#f3ede1" font-size="9" opacity="0.5" font-family="Manrope">Iowa</text>
+          <path d="M490,210 Q400,160 310,190" fill="none" stroke="rgba(243,237,225,0.3)" stroke-width="1" stroke-dasharray="3 4" opacity="0.5">
+            <animate attributeName="stroke-dashoffset" values="0;-28" dur="4s" repeatCount="indefinite" />
+          </path>
+        </g>
+
+        <!-- Phase 3: Terminal — CS & Data Science -->
+        <g class="phase-visual phase-3-visual" opacity="0">
+          <rect x="240" y="120" width="320" height="220" rx="12" fill="rgba(18,15,13,0.85)" stroke="var(--cool)" stroke-width="1" />
+          <rect x="240" y="120" width="320" height="28" rx="12" fill="rgba(126,134,157,0.15)" />
+          <circle cx="260" cy="134" r="5" fill="#ff5f57" opacity="0.7" />
+          <circle cx="276" cy="134" r="5" fill="#febc2e" opacity="0.7" />
+          <circle cx="292" cy="134" r="5" fill="#28c840" opacity="0.7" />
+          <text x="260" y="170" fill="var(--cool)" font-size="11" font-family="monospace" opacity="0.6">$ python model_train.py</text>
+          <text x="260" y="190" fill="var(--accent)" font-size="11" font-family="monospace" opacity="0.5">&rarr; Loading dataset... 42,891 rows</text>
+          <text x="260" y="210" fill="var(--cool)" font-size="11" font-family="monospace" opacity="0.4">&rarr; Feature extraction: complete</text>
+          <text x="260" y="230" fill="#28c840" font-size="11" font-family="monospace" opacity="0.5">&rarr; Accuracy: 94.7%  &#10003;</text>
+          <text x="260" y="260" fill="var(--muted)" font-size="11" font-family="monospace" opacity="0.3">&rarr; Generating report...</text>
+          <rect x="260" y="275" width="80" height="3" rx="1" fill="var(--accent)" opacity="0.5">
+            <animate attributeName="width" values="0;260" dur="3s" repeatCount="indefinite" />
+          </rect>
+          <rect x="260" y="300" width="8" height="14" fill="var(--cool)" opacity="0.6">
+            <animate attributeName="opacity" values="0.6;0;0.6" dur="1s" repeatCount="indefinite" />
+          </rect>
+        </g>
+
+        <!-- Phase 4: Network graph — institutional finance -->
+        <g class="phase-visual phase-4-visual" opacity="0">
+          <line x1="400" y1="200" x2="300" y2="140" stroke="var(--accent)" stroke-width="0.6" opacity="0.3" />
+          <line x1="400" y1="200" x2="500" y2="150" stroke="var(--accent)" stroke-width="0.6" opacity="0.3" />
+          <line x1="400" y1="200" x2="340" y2="300" stroke="var(--cool)" stroke-width="0.6" opacity="0.3" />
+          <line x1="400" y1="200" x2="480" y2="290" stroke="var(--cool)" stroke-width="0.6" opacity="0.3" />
+          <line x1="300" y1="140" x2="230" y2="190" stroke="var(--accent)" stroke-width="0.4" opacity="0.2" />
+          <line x1="500" y1="150" x2="570" y2="200" stroke="var(--accent)" stroke-width="0.4" opacity="0.2" />
+          <line x1="340" y1="300" x2="280" y2="350" stroke="var(--cool)" stroke-width="0.4" opacity="0.2" />
+          <line x1="480" y1="290" x2="550" y2="330" stroke="var(--cool)" stroke-width="0.4" opacity="0.2" />
+          <line x1="300" y1="140" x2="500" y2="150" stroke="rgba(243,237,225,0.1)" stroke-width="0.4" />
+          <line x1="340" y1="300" x2="480" y2="290" stroke="rgba(243,237,225,0.1)" stroke-width="0.4" />
+          <circle cx="400" cy="200" r="18" fill="var(--accent)" opacity="0.2" stroke="var(--accent)" stroke-width="1">
+            <animate attributeName="r" values="16;20;16" dur="4s" repeatCount="indefinite" />
+          </circle>
+          <text x="400" y="204" text-anchor="middle" fill="var(--accent)" font-size="8" font-family="Manrope" font-weight="700">CORE</text>
+          <circle cx="300" cy="140" r="12" fill="rgba(126,134,157,0.15)" stroke="var(--cool)" stroke-width="0.8" />
+          <text x="300" y="144" text-anchor="middle" fill="var(--cool)" font-size="7" font-family="Manrope">MAYO</text>
+          <circle cx="500" cy="150" r="12" fill="rgba(126,134,157,0.15)" stroke="var(--cool)" stroke-width="0.8" />
+          <text x="500" y="154" text-anchor="middle" fill="var(--cool)" font-size="6" font-family="Manrope">SKYBR</text>
+          <circle cx="340" cy="300" r="14" fill="rgba(211,154,89,0.15)" stroke="var(--accent)" stroke-width="0.8" />
+          <text x="340" y="304" text-anchor="middle" fill="var(--accent)" font-size="6" font-family="Manrope">BLKRK</text>
+          <circle cx="480" cy="290" r="14" fill="rgba(211,154,89,0.2)" stroke="var(--accent)" stroke-width="1">
+            <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" />
+          </circle>
+          <text x="480" y="294" text-anchor="middle" fill="var(--accent)" font-size="7" font-family="Manrope" font-weight="600">DSSTI</text>
+          <circle cx="230" cy="190" r="6" fill="rgba(126,134,157,0.1)" stroke="var(--cool)" stroke-width="0.5" />
+          <text x="230" y="210" text-anchor="middle" fill="var(--muted)" font-size="7" opacity="0.5">AI</text>
+          <circle cx="570" cy="200" r="6" fill="rgba(126,134,157,0.1)" stroke="var(--cool)" stroke-width="0.5" />
+          <text x="570" y="220" text-anchor="middle" fill="var(--muted)" font-size="7" opacity="0.5">Data</text>
+          <circle cx="280" cy="350" r="6" fill="rgba(211,154,89,0.1)" stroke="var(--accent)" stroke-width="0.5" />
+          <text x="280" y="370" text-anchor="middle" fill="var(--muted)" font-size="7" opacity="0.5">Aladdin</text>
+          <circle cx="550" cy="330" r="6" fill="rgba(211,154,89,0.1)" stroke="var(--accent)" stroke-width="0.5" />
+          <text x="550" y="350" text-anchor="middle" fill="var(--muted)" font-size="7" opacity="0.5">RFP</text>
+          <circle cx="400" cy="200" r="30" fill="none" stroke="var(--accent)" stroke-width="0.5" opacity="0">
+            <animate attributeName="r" values="20;60" dur="3s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.4;0" dur="3s" repeatCount="indefinite" />
+          </circle>
+        </g>
+
+        <!-- Phase 5: F1 telemetry + interests -->
+        <g class="phase-visual phase-5-visual" opacity="0">
+          <polyline points="120,280 180,260 220,290 260,200 300,220 340,180 380,240 420,160 460,210 500,170 540,190 580,150 620,180 680,140" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.5" stroke-linejoin="round">
+            <animate attributeName="stroke-dashoffset" values="800;0" dur="4s" fill="freeze" />
+          </polyline>
+          <polyline points="120,300 180,310 220,280 260,320 300,290 340,270 380,300 420,250 460,280 500,260 540,240 580,270 620,230 680,250" fill="none" stroke="var(--cool)" stroke-width="1" opacity="0.3" stroke-linejoin="round" />
+          <text x="620" y="130" fill="var(--accent)" font-size="28" font-family="Manrope" font-weight="800" opacity="0.3">318</text>
+          <text x="665" y="130" fill="var(--muted)" font-size="10" font-family="Manrope" opacity="0.3">km/h</text>
+          <line x1="120" y1="160" x2="680" y2="160" stroke="rgba(243,237,225,0.05)" stroke-width="0.5" />
+          <line x1="120" y1="200" x2="680" y2="200" stroke="rgba(243,237,225,0.05)" stroke-width="0.5" />
+          <line x1="120" y1="240" x2="680" y2="240" stroke="rgba(243,237,225,0.05)" stroke-width="0.5" />
+          <line x1="120" y1="280" x2="680" y2="280" stroke="rgba(243,237,225,0.05)" stroke-width="0.5" />
+          <line x1="120" y1="320" x2="680" y2="320" stroke="rgba(243,237,225,0.05)" stroke-width="0.5" />
+          <g transform="translate(160, 350)">
+            <rect x="0" y="0" width="30" height="40" rx="2" fill="none" stroke="var(--cool)" stroke-width="0.8" opacity="0.4" />
+            <line x1="15" y1="4" x2="15" y2="36" stroke="var(--cool)" stroke-width="0.5" opacity="0.3" />
+            <line x1="4" y1="12" x2="12" y2="12" stroke="var(--muted)" stroke-width="0.5" opacity="0.3" />
+            <line x1="4" y1="18" x2="12" y2="18" stroke="var(--muted)" stroke-width="0.5" opacity="0.3" />
+            <line x1="18" y1="12" x2="26" y2="12" stroke="var(--muted)" stroke-width="0.5" opacity="0.3" />
+            <line x1="18" y1="18" x2="26" y2="18" stroke="var(--muted)" stroke-width="0.5" opacity="0.3" />
+          </g>
+          <text x="175" y="410" text-anchor="middle" fill="var(--muted)" font-size="8" opacity="0.4" font-family="Manrope">Biographies</text>
+          <g transform="translate(390, 360)">
+            <circle cx="15" cy="15" r="14" fill="none" stroke="var(--accent)" stroke-width="0.8" opacity="0.4" />
+            <path d="M8,4 Q15,15 8,26" fill="none" stroke="var(--accent)" stroke-width="0.5" opacity="0.3" />
+            <path d="M22,4 Q15,15 22,26" fill="none" stroke="var(--accent)" stroke-width="0.5" opacity="0.3" />
+          </g>
+          <text x="405" y="410" text-anchor="middle" fill="var(--muted)" font-size="8" opacity="0.4" font-family="Manrope">Cricket</text>
+          <g transform="translate(560, 355)">
+            <rect x="0" y="0" width="24" height="24" rx="4" fill="none" stroke="var(--cool)" stroke-width="0.8" opacity="0.4" />
+            <text x="12" y="18" text-anchor="middle" fill="var(--cool)" font-size="10" font-weight="700" opacity="0.4">FCB</text>
+          </g>
+          <text x="572" y="400" text-anchor="middle" fill="var(--muted)" font-size="8" opacity="0.4" font-family="Manrope">Barça</text>
+        </g>
+
+        <!-- Phase indicators -->
+        <g class="stage-indicators">
+          <circle class="indicator" data-phase="1" cx="360" cy="470" r="4" fill="var(--muted)" opacity="0.3" />
+          <circle class="indicator" data-phase="2" cx="380" cy="470" r="4" fill="var(--muted)" opacity="0.3" />
+          <circle class="indicator" data-phase="3" cx="400" cy="470" r="4" fill="var(--muted)" opacity="0.3" />
+          <circle class="indicator" data-phase="4" cx="420" cy="470" r="4" fill="var(--muted)" opacity="0.3" />
+          <circle class="indicator" data-phase="5" cx="440" cy="470" r="4" fill="var(--muted)" opacity="0.3" />
+        </g>
+      </svg>
+
+      <div class="stage-label">
+        <span class="stage-label__phase">01</span>
+        <span class="stage-label__title">Foundation</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════ SCROLLING NARRATIVE ═══════════════ -->
+    <div class="story-scroll">
+
+      <!-- Phase 1: Military School -->
+      <section class="story-chapter" data-phase="1">
+        <div class="chapter-marker">
+          <span class="chapter-number">01</span>
+          <span class="chapter-line"></span>
+        </div>
+        <div class="chapter-content">
+          <p class="chapter-eyebrow">Age 12 · Bangladesh</p>
+          <h2 class="chapter-title">Discipline & Independence</h2>
+          <p class="chapter-body">
+            My story is defined by a series of bold, independent transitions. It began at age 12, when I left home for military school in Bangladesh — a disciplined start that forged the self-reliance I've carried ever since.
+          </p>
+        </div>
+      </section>
+
+      <!-- Phase 2: UWC -->
+      <section class="story-chapter" data-phase="2">
+        <div class="chapter-marker">
+          <span class="chapter-number">02</span>
+          <span class="chapter-line"></span>
+        </div>
+        <div class="chapter-content">
+          <p class="chapter-eyebrow">Age 16 · Changshu, China</p>
+          <h2 class="chapter-title">Global Interconnectedness</h2>
+          <p class="chapter-body">
+            That foundation allowed me to leap into a global life at 16, moving to Changshu, China, to attend
+            <a class="ghost-link" href="https://www.uwc.org/" target="_blank" rel="noopener noreferrer">United World College (UWC)</a>.
+            Immersed in an International Baccalaureate program alongside students from 100+ nations, I learned to navigate complex global perspectives and saw firsthand how interconnected our world truly is.
+          </p>
+        </div>
+      </section>
+
+      <!-- Phase 3: Luther College -->
+      <section class="story-chapter" data-phase="3">
+        <div class="chapter-marker">
+          <span class="chapter-number">03</span>
+          <span class="chapter-line"></span>
+        </div>
+        <div class="chapter-content">
+          <p class="chapter-eyebrow">Iowa, USA</p>
+          <h2 class="chapter-title">Data Science & CS Logic</h2>
+          <p class="chapter-body">
+            This curiosity brought me to the United States and
+            <a class="ghost-link" href="https://www.luther.edu/" target="_blank" rel="noopener noreferrer">Luther College</a>,
+            where I fully leaned into the intersection of logic and creativity. I graduated with a major in Data Science and a minor in Computer Science, focusing my senior research on the power of high-density data to solve real-world problems.
+          </p>
+        </div>
+      </section>
+
+      <!-- Phase 4: Professional Evolution -->
+      <section class="story-chapter story-chapter--wide" data-phase="4">
+        <div class="chapter-marker">
+          <span class="chapter-number">04</span>
+          <span class="chapter-line"></span>
+        </div>
+        <div class="chapter-content">
+          <p class="chapter-eyebrow">Professional Evolution</p>
+          <h2 class="chapter-title">From Research to Financial Intelligence</h2>
+          <p class="chapter-body">
+            I believe that data is only as valuable as the narrative it helps uncover. My career has been dedicated to this principle across elite institutions:
+          </p>
+
+          <div class="career-grid">
+            <div class="career-node">
+              <span class="career-node__tag">Research</span>
+              <h3><a class="ghost-link" href="https://www.mayoclinic.org/" target="_blank" rel="noopener noreferrer">Mayo Clinic</a></h3>
+              <p>Delved into AI research, exploring how machine intelligence can solve complex, medical-scale problems.</p>
+            </div>
+            <div class="career-node">
+              <span class="career-node__tag">Strategy</span>
+              <h3><a class="ghost-link" href="https://www.skybridgecapital.com/" target="_blank" rel="noopener noreferrer">Skybridge Associates</a></h3>
+              <p>Worked at the intersection of data and executive strategy, focusing on data-driven intelligence and process building to inform global leaders in finance.</p>
+            </div>
+            <div class="career-node">
+              <span class="career-node__tag">Institutional</span>
+              <h3><a class="ghost-link" href="https://www.blackrock.com/" target="_blank" rel="noopener noreferrer">BlackRock</a></h3>
+              <p>Contributed to the Data and AI team for Aladdin, their industry-leading risk management platform.</p>
+            </div>
+            <div class="career-node career-node--active">
+              <span class="career-node__tag career-node__tag--now">Current</span>
+              <h3><a class="ghost-link" href="https://www.dasseti.com/" target="_blank" rel="noopener noreferrer">Dasseti</a></h3>
+              <p>Bridging the gap between complex regulatory data and actionable intelligence. Building
+                <a class="ghost-link" href="/brewing">Due Diligence and RFP automation</a> platforms that empower private equity firms, hedge funds, and investment advisors.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Phase 5: Beyond the Data -->
+      <section class="story-chapter" data-phase="5">
+        <div class="chapter-marker">
+          <span class="chapter-number">05</span>
+          <span class="chapter-line"></span>
+        </div>
+        <div class="chapter-content">
+          <p class="chapter-eyebrow">Beyond the Data</p>
+          <h2 class="chapter-title">Interests & Identity</h2>
+
+          <div class="interest-cards">
+            <div class="interest-card">
+              <span class="interest-icon">&#x1F4D6;</span>
+              <h3>Exploring Stories</h3>
+              <p>An avid reader of biographies, fascinated by the lives that have shaped our history.</p>
+            </div>
+            <div class="interest-card">
+              <span class="interest-icon">&#x1F3CF;</span>
+              <h3>On the Field & Track</h3>
+              <p>Whether it's playing in
+                <a class="ghost-link" href="/adventures/cricket">local cricket leagues</a>,
+                cheering for FC Barcelona, or following the high-speed strategy of Formula 1 — sports are the ultimate reset.</p>
+            </div>
+            <div class="interest-card">
+              <span class="interest-icon">&#x26A1;</span>
+              <h3>In the Driver's Seat</h3>
+              <p>A deep fascination with finance markets and cutting-edge technology, from the Tesla ecosystem to the rapid evolution of AI and digital assets.</p>
+            </div>
+          </div>
+
+          <div class="story-closing panel">
+            <p>I believe our stories define us. Whether we're discussing the future of Agentic AI or trading F1 race highlights, I'm always excited to connect and see how we can make an impact together.</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="/brewing">See what's brewing</a>
+              <a class="button button-ghost" href="/connect">Let's connect</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
   </div>
 </BaseLayout>
+
+<style>
+  /* ═══════════ STORY HERO ═══════════ */
+  .story-hero {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    position: relative;
+    z-index: 3;
+  }
+
+  .story-hero .hero-avatar {
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2.5px solid rgba(211, 154, 89, 0.5);
+    box-shadow: 0 0 30px rgba(211, 154, 89, 0.15);
+    margin-bottom: 1.5rem;
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+
+  .story-hero .hero-avatar:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 40px rgba(211, 154, 89, 0.3);
+  }
+
+  .story-hero .hero-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .story-hero__title {
+    font-family: "Fraunces", "Times New Roman", serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin: 0.5rem 0 1rem;
+  }
+
+  .story-hero__sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 50ch;
+    margin: 0 auto;
+  }
+
+  .hero-scroll-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2.5rem;
+    opacity: 0.4;
+    animation: pulse-hint 2.5s ease-in-out infinite;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 32px;
+    background: linear-gradient(180deg, transparent, var(--accent));
+  }
+
+  .scroll-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+  }
+
+  @keyframes pulse-hint {
+    0%, 100% { opacity: 0.3; transform: translateY(0); }
+    50% { opacity: 0.6; transform: translateY(4px); }
+  }
+
+  /* ═══════════ STORY LAYOUT ═══════════ */
+  .story-wrapper {
+    position: relative;
+    width: min(calc(100% - 2rem), var(--max-width));
+    margin-inline: auto;
+    min-height: 100vh;
+  }
+
+  .story-stage {
+    position: sticky;
+    top: 5rem;
+    height: 50vh;
+    max-height: 420px;
+    margin-bottom: -12vh;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+
+  .stage-svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.85;
+    transition: opacity 400ms ease;
+  }
+
+  .phase-visual {
+    transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .stage-label {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0.5;
+    transition: opacity 400ms ease;
+  }
+
+  .stage-label__phase {
+    font-family: "Manrope", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    background: rgba(211, 154, 89, 0.1);
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(211, 154, 89, 0.2);
+  }
+
+  .stage-label__title {
+    font-family: "Manrope", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .indicator { transition: all 500ms ease; }
+  .indicator.is-active { fill: var(--accent); opacity: 1; r: 6; }
+
+  /* ═══════════ SCROLLING CHAPTERS ═══════════ */
+  .story-scroll {
+    position: relative;
+    z-index: 2;
+    padding-top: 8vh;
+    padding-bottom: 6rem;
+  }
+
+  .story-chapter {
+    display: flex;
+    gap: 2rem;
+    max-width: 65ch;
+    margin: 0 auto 8vh;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(180deg, rgba(18, 15, 13, 0.92), rgba(18, 15, 13, 0.75));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(30px);
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .story-chapter--wide { max-width: 78ch; }
+  .story-chapter.is-visible { opacity: 1; transform: translateY(0); }
+
+  .chapter-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .chapter-number {
+    font-family: "Manrope", sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    width: 2.2rem;
+    height: 2.2rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1.5px solid rgba(211, 154, 89, 0.3);
+    background: rgba(211, 154, 89, 0.06);
+    flex-shrink: 0;
+  }
+
+  .chapter-line {
+    width: 1.5px;
+    flex: 1;
+    min-height: 2rem;
+    background: linear-gradient(180deg, rgba(211, 154, 89, 0.3), transparent);
+  }
+
+  .chapter-content { flex: 1; min-width: 0; }
+
+  .chapter-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin: 0 0 0.6rem;
+    opacity: 0.8;
+  }
+
+  .chapter-title {
+    font-family: "Fraunces", "Times New Roman", serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    margin: 0 0 1rem;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  .chapter-body {
+    color: var(--muted);
+    line-height: 1.8;
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  /* ═══════════ GHOST LINKS ═══════════ */
+  .ghost-link {
+    color: var(--text);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid rgba(211, 154, 89, 0.25);
+    background: rgba(211, 154, 89, 0.06);
+    transition: all 250ms ease;
+    white-space: nowrap;
+  }
+
+  .ghost-link:hover {
+    background: rgba(211, 154, 89, 0.15);
+    border-color: rgba(211, 154, 89, 0.5);
+    color: var(--accent);
+  }
+
+  /* ═══════════ CAREER GRID ═══════════ */
+  .career-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .career-node {
+    padding: 1.2rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+    transition: border-color 300ms ease, background 300ms ease;
+  }
+
+  .career-node:hover {
+    border-color: rgba(211, 154, 89, 0.3);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .career-node--active {
+    border-color: rgba(211, 154, 89, 0.35);
+    background: rgba(211, 154, 89, 0.04);
+  }
+
+  .career-node__tag {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--cool);
+    background: rgba(126, 134, 157, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 0.6rem;
+  }
+
+  .career-node__tag--now { color: var(--accent); background: rgba(211, 154, 89, 0.15); }
+
+  .career-node h3 {
+    font-family: "Fraunces", serif;
+    font-size: 1.05rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .career-node p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ═══════════ INTEREST CARDS ═══════════ */
+  .interest-cards { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 1.5rem 0; }
+
+  .interest-card {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.2rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+    transition: border-color 300ms ease;
+  }
+
+  .interest-card:hover { border-color: rgba(126, 134, 157, 0.3); }
+
+  .interest-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+  }
+
+  .interest-card h3 { font-family: "Fraunces", serif; font-size: 1rem; margin: 0 0 0.3rem; }
+  .interest-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.65; margin: 0; }
+
+  /* ═══════════ CLOSING ═══════════ */
+  .story-closing {
+    margin-top: 2.5rem;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .story-closing p {
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 50ch;
+    margin: 0 auto 1.5rem;
+  }
+
+  .story-closing .hero-actions { justify-content: center; }
+
+  /* ═══════════ RESPONSIVE ═══════════ */
+  @media (max-width: 768px) {
+    .story-stage { height: 35vh; max-height: 280px; margin-bottom: -6vh; }
+
+    .story-chapter {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.5rem 1.2rem;
+      margin-bottom: 4vh;
+    }
+
+    .chapter-marker { flex-direction: row; }
+
+    .chapter-line {
+      width: auto;
+      height: 1.5px;
+      min-height: unset;
+      min-width: 2rem;
+      background: linear-gradient(90deg, rgba(211, 154, 89, 0.3), transparent);
+    }
+
+    .career-grid { grid-template-columns: 1fr; }
+    .stage-label { display: none; }
+    .story-hero__title { font-size: clamp(1.6rem, 6vw, 2.6rem); }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const chapters = document.querySelectorAll('.story-chapter');
+    const phaseVisuals = document.querySelectorAll('.phase-visual');
+    const indicators = document.querySelectorAll('.indicator');
+    const labelPhase = document.querySelector('.stage-label__phase');
+    const labelTitle = document.querySelector('.stage-label__title');
+
+    const phaseNames = {
+      '1': 'Foundation',
+      '2': 'Global',
+      '3': 'Academic',
+      '4': 'Professional',
+      '5': 'Identity'
+    };
+
+    let activePhase = '0';
+
+    function setPhase(phase) {
+      if (phase === activePhase) return;
+      activePhase = phase;
+
+      phaseVisuals.forEach((v) => v.setAttribute('opacity', '0'));
+      const target = document.querySelector(`.phase-${phase}-visual`);
+      if (target) target.setAttribute('opacity', '1');
+
+      indicators.forEach((ind) => {
+        ind.classList.toggle('is-active', ind.dataset.phase === phase);
+      });
+
+      if (labelPhase && labelTitle) {
+        labelPhase.textContent = phase.padStart(2, '0');
+        labelTitle.textContent = phaseNames[phase] || '';
+      }
+    }
+
+    const visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    const phaseObserver = new IntersectionObserver(
+      (entries) => {
+        let best = null;
+        let bestRatio = 0;
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > bestRatio) {
+            best = entry.target;
+            bestRatio = entry.intersectionRatio;
+          }
+        });
+        if (best) setPhase(best.dataset.phase);
+      },
+      { threshold: [0, 0.25, 0.5, 0.75, 1], rootMargin: '-20% 0px -30% 0px' }
+    );
+
+    chapters.forEach((ch) => {
+      visibilityObserver.observe(ch);
+      phaseObserver.observe(ch);
+    });
+
+    // Fade out scroll hint on first scroll
+    const hint = document.querySelector('.hero-scroll-hint');
+    if (hint) {
+      let hidden = false;
+      window.addEventListener('scroll', () => {
+        if (!hidden && window.scrollY > 120) {
+          hint.style.opacity = '0';
+          hint.style.transition = 'opacity 600ms ease';
+          hidden = true;
+        }
+      }, { passive: true });
+    }
+
+    setTimeout(() => setPhase('1'), 600);
+  });
+</script>
