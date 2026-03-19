@@ -1,0 +1,43 @@
+---
+import type { StrategyMapChapter } from '@/data/strategy-map';
+
+interface Props {
+  chapter: StrategyMapChapter;
+}
+
+const { chapter } = Astro.props;
+---
+
+<article
+  class="strategy-chapter panel"
+  data-strategy-chapter
+  data-chapter-id={chapter.id}
+  data-step={chapter.step}
+  data-place={chapter.place}
+  data-theme={chapter.theme}
+  data-label={chapter.label}
+  data-signal={chapter.signal}
+  data-capability={chapter.capability}
+  data-atlas={chapter.atlasLabel}
+  data-scale={String(chapter.portraitScale)}
+>
+  <div class="strategy-chapter__header">
+    <div class="strategy-chapter__heading">
+      <span class="strategy-chapter__step">{chapter.step}</span>
+      <div>
+        <p class="eyebrow">{chapter.label}</p>
+        <p class="strategy-chapter__place">{chapter.place}</p>
+      </div>
+    </div>
+    <span class="strategy-chapter__theme">{chapter.theme}</span>
+  </div>
+
+  <h2>{chapter.title}</h2>
+  <p class="strategy-chapter__narrative">{chapter.narrative}</p>
+
+  <div class="strategy-chapter__meta">
+    <span>{chapter.capability}</span>
+    <span>{chapter.signal}</span>
+    <span>{chapter.atlasLabel}</span>
+  </div>
+</article>
