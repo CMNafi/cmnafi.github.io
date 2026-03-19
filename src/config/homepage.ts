@@ -1,50 +1,19 @@
 export const homepageConfig = {
   hero: {
-    eyebrow: 'Personal website',
-    title: 'C M Nafi',
-    descriptor: 'A personal home for writing, products, adventures, and work in progress.',
+    eyebrow: 'C M Nafi',
+    title: 'Brewing',
+    descriptor: 'Writing, projects, adventures, and work in progress.',
     intro:
-      'I write, build tools, keep field notes, and use this site as a public place for the ideas, experiments, and stories worth following.',
-    support:
-      'You will find essays, research products, cricket records, future travel logs, and current work that is still taking shape.',
-    presenceLabel: 'Public presence',
+      'A very clean front door. The fuller snapshot of what I am building, exploring, and publishing lives on the brewing in progress page.',
     ctas: [
-      { label: 'Read the blog', href: '/blog', variant: 'primary' },
-      { label: 'Browse projects', href: '/projects', variant: 'secondary' },
-      { label: 'Explore adventures', href: '/adventures', variant: 'ghost' }
-    ],
-    stats: [
-      { label: 'Writing', value: 'Essays, reviews, and notes' },
-      { label: 'Projects', value: 'Data, AI, and research tools' },
-      { label: 'Adventures', value: 'Cricket, travel, and field notes' }
-    ],
-    sceneCards: [
-      {
-        eyebrow: 'Writing',
-        title: 'Thoughts in public',
-        note: 'Essays, reviews, and notes that can deepen over time.'
-      },
-      {
-        eyebrow: 'Projects',
-        title: 'Tools in motion',
-        note: 'Research products, data utilities, and public experiments.'
-      },
-      {
-        eyebrow: 'Adventures',
-        title: 'Field archives',
-        note: 'Cricket records, travel logs, and story-driven notes.'
-      },
-      {
-        eyebrow: 'Now',
-        title: 'Current focus',
-        note: 'A quick snapshot of what I am building, exploring, and reading.'
-      }
-    ],
-    statusCard: {
-      eyebrow: 'Currently brewing',
-      title: 'Research tools, writing, and adventure archives',
-      note: 'Brewing stays as a light metaphor for work in progress, not the identity of the site.'
-    }
+      { label: 'Brewing in progress', href: '/now', variant: 'primary' },
+      { label: 'Blog', href: '/blog', variant: 'ghost' }
+    ]
+  },
+  brewingPage: {
+    title: 'Brewing in progress',
+    description:
+      'A fuller snapshot of current work, selected signals, and the parts of the site that are still evolving.'
   },
   processChapters: [
     {

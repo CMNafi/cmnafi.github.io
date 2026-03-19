@@ -7,68 +7,30 @@ type HeroConfig = typeof homepageConfig.hero;
 const { hero } = Astro.props as {
   hero: HeroConfig;
 };
+
+const quickLinks = siteConfig.nav.filter((item) => item.href !== '/' && item.href !== '/connect').slice(0, 4);
 ---
 
-<section class="hero personal-hero panel">
-  <div class="personal-hero__copy">
-    <p class="eyebrow">{hero.eyebrow}</p>
-    <h1>{hero.title}</h1>
-    <p class="personal-hero__descriptor">{hero.descriptor}</p>
-    <p class="hero-description">{hero.intro}</p>
-    <p class="hero-manifesto">{hero.support}</p>
+<section class="hero landing-hero panel">
+  <p class="eyebrow">{hero.eyebrow}</p>
+  <h1>{hero.title}</h1>
+  <p class="landing-hero__descriptor">{hero.descriptor}</p>
+  <p class="hero-description">{hero.intro}</p>
 
-    <div class="hero-actions">
-      {hero.ctas.map((cta) => (
-        <a class={`button button-${cta.variant}`} href={cta.href}>{cta.label}</a>
-      ))}
-    </div>
-
-    <div class="personal-hero__presence">
-      <span>{hero.presenceLabel}</span>
-      <div class="personal-hero__presence-links">
-        {siteConfig.socialLinks.map((link) => (
-          <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
-            {link.label}
-          </a>
-        ))}
-      </div>
-    </div>
-
-    <div class="hero-stats personal-hero__stats">
-      {hero.stats.map((stat) => (
-        <article class="hero-stat panel">
-          <span>{stat.label}</span>
-          <strong>{stat.value}</strong>
-        </article>
-      ))}
-    </div>
+  <div class="hero-actions">
+    {hero.ctas.map((cta) => (
+      <a class={`button button-${cta.variant}`} href={cta.href}>{cta.label}</a>
+    ))}
   </div>
 
-  <div class="personal-hero__visual" aria-hidden="true">
-    <div class="personal-scene">
-      <div class="personal-scene__wash"></div>
-      <div class="personal-scene__grid"></div>
-      <div class="personal-scene__ring personal-scene__ring-a"></div>
-      <div class="personal-scene__ring personal-scene__ring-b"></div>
-      <div class="personal-scene__beam"></div>
+  <div class="landing-hero__links">
+    {quickLinks.map((item) => (
+      <a href={item.href}>{item.label}</a>
+    ))}
+  </div>
 
-      {hero.sceneCards.map((card, index) => (
-        <article class={`scene-note scene-note-${index + 1}`}>
-          <span>{card.eyebrow}</span>
-          <strong>{card.title}</strong>
-          <p>{card.note}</p>
-        </article>
-      ))}
-
-      <article class="personal-status-card panel">
-        <span>{hero.statusCard.eyebrow}</span>
-        <strong>{hero.statusCard.title}</strong>
-        <p>{hero.statusCard.note}</p>
-        <div class="personal-status-card__steam">
-          <i></i>
-          <i></i>
-        </div>
-      </article>
-    </div>
+  <div class="landing-hero__steam" aria-hidden="true">
+    <span></span>
+    <span></span>
   </div>
 </section>

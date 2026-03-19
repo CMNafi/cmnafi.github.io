@@ -1,26 +1,170 @@
 ---
-import { getEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
+import DirectoryTabs from '@/components/DirectoryTabs.astro';
+import FeaturedPostCard from '@/components/FeaturedPostCard.astro';
 import NowPanel from '@/components/NowPanel.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import StatusBadge from '@/components/StatusBadge.astro';
+import { homepageConfig } from '@/config/homepage';
+import directories from '@/data/directories.json';
 import { formatDate } from '@/utils/format';
 
 const current = await getEntry('now', 'current');
 if (!current) throw new Error('Missing now/current entry');
+
+const blogPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+const projects = (await getCollection('projects')).sort((a, b) => b.data.priority - a.data.priority);
+
+const latestPost = blogPosts[0];
+const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
+
+const destinationMeta = {
+  Blog: `${blogPosts.length} posts`,
+  Projects: `${projects.length} tracked builds`,
+  Adventures: 'Cricket archive live',
+  Now: `Updated ${formatDate(current.data.updatedAt)}`
+} as const;
+
+const featuredDestinations = homepageConfig.featuredDestinations.map((item) => ({
+  ...item,
+  meta: destinationMeta[item.title as keyof typeof destinationMeta]
+}));
+
+const directoryItems = directories
+  .filter((item) => item.visibility)
+  .sort((a, b) => a.order - b.order)
+  .map((item) => ({
+    ...item,
+    count:
+      item.title === 'Blog' ? blogPosts.length : item.title === 'Projects' ? projects.length : undefined
+  }));
 ---
 
-<BaseLayout title="Now" description="A manually updated snapshot of what C M Nafi is building, reading, and exploring right now.">
-  <section class="page-section">
-    <SectionHeading
-      eyebrow={`Updated ${formatDate(current.data.updatedAt)}`}
-      title="Now"
-      description="The clearest public snapshot of current priorities, active curiosity, and the kinds of conversations that feel timely right now."
-    />
-    <div class="now-grid">
-      <NowPanel title="What I'm building" items={current.data.building} />
-      <NowPanel title="What I'm reading" items={current.data.reading} />
-      <NowPanel title="What I'm exploring" items={current.data.exploring} />
-      <NowPanel title="Who I want to meet around" items={current.data.meeting} />
-    </div>
-  </section>
+<BaseLayout title="Brewing in progress" description={homepageConfig.brewingPage.description}>
+  <div class="home-story home-v2 personal-home brewing-page">
+    <section class="page-section page-section-hero">
+      <SectionHeading
+        eyebrow={`Updated ${formatDate(current.data.updatedAt)}`}
+        title={homepageConfig.brewingPage.title}
+        description={homepageConfig.brewingPage.description}
+      />
+      <div class="home-brewing-grid">
+        <article class="panel home-brewing-card">
+          <div class="home-brewing-card__steam" aria-hidden="true">
+            <span></span>
+            <span></span>
+          </div>
+          <SectionHeading
+            eyebrow="Currently brewing"
+            title="Active work, active archives, active questions"
+            description={homepageConfig.currentBrewingIntro}
+          />
+          <ul>
+            {homepageConfig.currentBrewing.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+
+        <div class="home-now-grid">
+          <NowPanel title="Building" items={current.data.building} />
+          <NowPanel title="Exploring" items={current.data.exploring} />
+          <NowPanel title="Reading" items={current.data.reading} />
+          <NowPanel title="Meeting around" items={current.data.meeting} />
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section page-section-positioning">
+      <SectionHeading
+        eyebrow={homepageConfig.positioning.eyebrow}
+        title={homepageConfig.positioning.title}
+        description={homepageConfig.positioning.description}
+      />
+      <div class="home-positioning-grid">
+        {homepageConfig.positioning.cards.map((card) => (
+          <article class="panel home-positioning-card">
+            <span>{card.title}</span>
+            <p>{card.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="page-section page-section-destinations">
+      <SectionHeading
+        eyebrow="Start here"
+        title="Everything else lives here."
+        description="The richer overview of writing, tools, adventures, and current direction sits on this page instead of crowding the homepage."
+      />
+      <div class="home-destination-grid">
+        {featuredDestinations.map((item) => (
+          <a class="panel home-destination-card" href={item.href}>
+            <div class="home-destination-card__top">
+              <span>{item.eyebrow}</span>
+              <small>{item.meta}</small>
+            </div>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="page-section page-section-selected">
+      <SectionHeading
+        eyebrow="Selected work"
+        title="Signals from writing, products, and the field"
+        description={homepageConfig.selectedEntryIntro}
+      />
+      <div class="home-selected-grid">
+        {homepageConfig.featuredBands.latestWriting && latestPost && (
+          <div class="home-selected-column">
+            <p class="eyebrow">Latest writing</p>
+            <FeaturedPostCard post={latestPost} />
+          </div>
+        )}
+
+        {homepageConfig.featuredBands.featuredProject && featuredProject && (
+          <div class="home-selected-column">
+            <p class="eyebrow">Featured project</p>
+            <ProjectCard project={featuredProject} />
+          </div>
+        )}
+
+        <div class="home-selected-column">
+          <p class="eyebrow">{homepageConfig.featuredAdventure.eyebrow}</p>
+          <article class="featured-card panel home-adventure-card">
+            <div class="featured-card__meta">
+              <StatusBadge status="Adventure" />
+              <span>{homepageConfig.featuredAdventure.meta}</span>
+              <span>Central to the site</span>
+            </div>
+            <h3><a href={homepageConfig.featuredAdventure.href}>{homepageConfig.featuredAdventure.title}</a></h3>
+            <p>{homepageConfig.featuredAdventure.description}</p>
+            <div class="tag-row">
+              {homepageConfig.featuredAdventure.tags.map((tag) => <span class="tag-chip">{tag}</span>)}
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section page-section-directory">
+      <div class="home-directory-header">
+        <SectionHeading
+          eyebrow={homepageConfig.archive.eyebrow}
+          title={homepageConfig.archive.title}
+          description={homepageConfig.archive.description}
+        />
+        <article class="panel home-directory-note">
+          <span>{homepageConfig.archive.noteTitle}</span>
+          <p>{homepageConfig.archive.noteCopy}</p>
+        </article>
+      </div>
+      <DirectoryTabs tabs={[...homepageConfig.directoryTabs]} items={directoryItems} />
+    </section>
+  </div>
 </BaseLayout>
