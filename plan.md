@@ -1,108 +1,79 @@
-# Homepage Improvement Plan: Clickable Links & Cleaner Design
+# Plan: Simplify the Homepage
 
-## Overview
-Make every meaningful element on the homepage a clickable link where applicable, and tighten the visual design for a sharper, more polished feel. This is an incremental improvement — no new pages, no structural rewrites.
-
----
-
-## Phase 1: Make Everything Clickable
-
-### 1.1 Hero Section — Signal Card & Preview Cards
-**File:** `src/pages/index.astro`
-
-- **Signal card** (bottom of hero visual: "The journey / From global foundations...") — Wrap in `<a href="#deployment-map">` so clicking it scrolls to the journey section.
-- **Preview cards** in the hover dock — Each already has a `label`/`id` that maps to a nav section. Wrap each `strategy-hero__preview-card` in an `<a>` linking to the corresponding page (`/brewing`, `/blog`, `/projects`, `/adventures`, `/connect`, `/` for home).
-- **Preview stack items** (mobile view) — Same treatment: wrap each in `<a>` linking to its page.
-
-**Data change:** Add `href` field to `StrategyNavPreview` interface and data in `src/data/strategy-map.ts`.
-
-### 1.2 Hero Section — "C M Nafi" Eyebrow
-**File:** `src/pages/index.astro`
-
-- The `<p class="eyebrow">C M Nafi</p>` at line 38 — wrap in `<a href="/about">` (or `/story`) to link to the about/story page.
-
-### 1.3 Deployment Map Chapters
-**File:** `src/components/StrategyMapChapter.astro`
-
-- Each chapter card is currently a static `<article>`. The chapter titles and place names are not clickable. Add a subtle "Read more" or anchor link so clicking a chapter title smooth-scrolls or links to the `/story` page (or an anchor within it) for that life stage.
-- Alternatively, since these are informational, make the **place name** a clickable element that copies the coordinates or links to a map. Simpler approach: add a small arrow/link icon next to each chapter that links to `/story#[chapter-id]` or `/walking-through-life`.
-
-### 1.4 "Beyond the Data" Signal Items
-**File:** `src/pages/index.astro` (lines 224-231)
-
-- The signal items ("Exploring Stories", "On the Field & Track", "In the Driver's Seat", "Work in Public") are static. Add `href` to `StrategyMapSignal` and link them:
-  - "Exploring Stories" → `/blog` (books/essays)
-  - "On the Field & Track" → `/adventures`
-  - "In the Driver's Seat" → `/projects`
-  - "Work in Public" → `/brewing`
-
-**Data change:** Add `href` field to `StrategyMapSignal` interface in `src/data/strategy-map.ts`.
-
-### 1.5 Footer Enhancements
-**File:** `src/components/Footer.astro`
-
-- "C M Nafi" footer title — wrap in `<a href="/">`.
-- Add the `footerLinks` from `siteConfig` (About, Brewing, Connect, RSS) which are defined but not currently rendered in the footer.
+## Goal
+Strip the homepage to a single-viewport landing: name, tagline, nav, one CTA. Move all rich content to dedicated pages.
 
 ---
 
-## Phase 2: Visual Cleanup — Cleaner & Sharper
+## Step 1 — Gut the homepage (`src/pages/index.astro`)
 
-### 2.1 Tighten Hero Typography & Spacing
-**File:** `src/pages/index.astro` `<style>` block
+**Keep only:**
+- The `<BaseLayout>` wrapper (which includes nav bar)
+- A minimal hero section:
+  - Eyebrow: "C M Nafi" → links to `/about`
+  - Tagline: *"Global foundations. Financial intelligence. Work in motion."*
+  - One subtle CTA: "See what I'm building" → `/brewing`
+  - Optional secondary: "Let's connect" → `/connect`
 
-- Reduce `gap` in `.strategy-hero__copy` from `1.35rem` to `1.1rem` for tighter vertical rhythm.
-- Slightly increase the body text opacity from `0.74` to `0.78` for better readability.
-- Make the "SCROLL TO EXPLORE" cue slightly more visible (bump opacity from `0.62` to `0.68`).
+**Delete entirely:**
+- Hero visual panel (map, preview dock, SVG, glow, grid — lines 56–118)
+- Hero body text paragraphs and scroll cue (lines 41–53)
+- Deployment Map section (`#deployment-map`, lines 121–201)
+- Current Deployment / "Beyond the Data" section (`.strategy-now`, lines 203–236)
+- Destinations / site section cards (`.strategy-destinations`, lines 238–255)
+- All `<script>` code (lines 258–414)
+- All scoped `<style>` rules for removed sections (~1000 lines)
 
-### 2.2 Sharpen Panel Borders & Cards
-**File:** `src/pages/index.astro` `<style>` + `src/styles/global.css`
-
-- Increase border opacity on `.panel` from `0.12` to `0.14` for crisper card edges.
-- Add a subtle `1px` top highlight (`inset 0 1px 0 rgba(255,255,255,0.05)`) to chapter cards for more definition.
-- Tighten chapter card padding from `1.45rem` to `1.3rem` for a more compact feel.
-
-### 2.3 Destination Cards Polish
-**File:** `src/pages/index.astro` `<style>` block
-
-- Add a subtle accent-colored left border on hover for destination cards to give directional emphasis.
-- Make the "Go deeper ->" arrow animate (translate-x on hover) for a more interactive feel.
-
-### 2.4 Improve Section Heading Hierarchy
-**File:** `src/components/SectionHeading.astro`
-
-- Add bottom margin/padding so sections breathe more consistently.
-- Ensure the `.section-description` has enough contrast (check opacity).
-
-### 2.5 Button Refinements
-**File:** `src/styles/global.css`
-
-- Ensure primary buttons have a consistent hover state (slight scale + brightness shift).
-- Secondary/ghost buttons should have a visible border on hover.
-
-### 2.6 Footer Cleanup
-**File:** `src/components/Footer.astro` + `src/styles/global.css`
-
-- Add the site navigation links (from `footerLinks` config) in a clean row.
-- Slightly increase footer padding for breathing room.
+**New CSS:** Minimal — hero centered in viewport, large type, breathing room. ~50 lines max.
 
 ---
 
-## Files to Modify (Summary)
+## Step 2 — Verify content already lives on dedicated pages (no migration needed)
 
-| File | Changes |
-|------|---------|
-| `src/data/strategy-map.ts` | Add `href` to `StrategyNavPreview` and `StrategyMapSignal` |
-| `src/pages/index.astro` | Wrap elements in links, CSS tweaks |
-| `src/components/StrategyMapChapter.astro` | Add clickable link to story page |
-| `src/components/SectionHeading.astro` | Minor spacing adjustment |
-| `src/components/Footer.astro` | Add nav links, wrap title in link |
-| `src/styles/global.css` | Button hover states, panel border tweaks |
+| Content removed from homepage | Already exists at |
+|------|--------|
+| Waypoint timeline (Dinajpur → Tampa) | `/story` — Phase 1–4 chapters with sticky SVG visualization |
+| "From Research to Financial Intelligence" | `/story` — Phase 4 career grid (Mayo, Skybridge, BlackRock, Dasseti) |
+| "Beyond the Data" interests | `/story` — Phase 5 interest cards |
+| "Let's connect" CTA | `/connect` — full contact page |
+| Site section cards (Blog, Projects, etc.) | Nav bar already links to all of these |
+
+**No content migration needed.** Everything is already on its proper page.
 
 ---
 
-## Out of Scope (for now)
-- No new pages created
-- No changes to blog/projects/adventures/brewing pages
-- No content rewrites
-- No responsive layout overhaul (only minor mobile touch-ups if needed)
+## Step 3 — Add "Story" to footer links (`src/config/site.ts`)
+
+Make the journey discoverable since it's no longer on the homepage:
+
+```ts
+footerLinks: [
+  { label: 'Story', href: '/story' },
+  { label: 'About', href: '/about' },
+  { label: 'Brewing', href: '/brewing' },
+  { label: 'Connect', href: '/connect' },
+]
+```
+
+---
+
+## Step 4 — Clean up unused imports
+
+Remove from index.astro:
+- `StrategyMapChapter` component import
+- `SectionHeading` component import
+- All data imports (`strategyMapChapters`, `strategyMapSignals`, `strategyMapDestinations`, `strategyNavPreviews`)
+- All SVG/route constants
+
+Keep `src/data/strategy-map.ts` and `src/components/StrategyMapChapter.astro` in the codebase — other pages may use them.
+
+---
+
+## Files changed
+
+| File | Action |
+|------|--------|
+| `src/pages/index.astro` | Rewrite to minimal hero — delete ~1400 lines, replace with ~80 lines |
+| `src/config/site.ts` | Add "Story" to footer links |
+
+**That's it.** Two files. The homepage goes from ~1440 lines to ~80.
