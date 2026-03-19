@@ -2,26 +2,27 @@
 import CareerStatCard from './CareerStatCard.astro';
 import SourceBadge from './SourceBadge.astro';
 import VerifiedBadge from './VerifiedBadge.astro';
-import type { PlayerProfile } from '@/types/cricket';
+import type { PlayerProfile, SourceStatus } from '@/types/cricket';
 
 interface Props {
   player: PlayerProfile;
   stats: { label: string; value: string; detail: string }[];
   statusLabel?: string;
+  sourceStatus?: SourceStatus;
 }
 
-const { player, stats, statusLabel = 'Public record seeded' } = Astro.props;
+const { player, stats, statusLabel = 'Selective archive refresh', sourceStatus = 'manually added' } = Astro.props;
 ---
 
 <section class="cricket-hero panel">
   <div class="cricket-hero__copy">
-    <p class="eyebrow">Adventures → Cricket</p>
+    <p class="eyebrow">Adventures / Cricket</p>
     <div class="cricket-hero__heading-row">
       <div>
         <h1>{player.name}</h1>
-        <p class="cricket-hero__subtitle">{player.role} · {player.battingStyle} · {player.bowlingStyle}</p>
+        <p class="cricket-hero__subtitle">{player.role} / {player.battingStyle} / {player.bowlingStyle}</p>
       </div>
-      <SourceBadge status="verified" />
+      <SourceBadge status={sourceStatus} />
     </div>
     <p class="cricket-hero__intro">{player.intro}</p>
 
@@ -42,11 +43,11 @@ const { player, stats, statusLabel = 'Public record seeded' } = Astro.props;
 
     <div class="hero-actions">
       <a class="button button-primary" href="/adventures/cricket/matches">Browse matches</a>
-      <a class="button button-secondary" href="/adventures/cricket/highlights">Read highlights</a>
+      <a class="button button-secondary" href="/adventures/cricket/highlights">Read standout matches</a>
       <a class="button button-ghost" href={player.profileUrl} target="_blank" rel="noreferrer">Open public profile</a>
     </div>
 
-    <VerifiedBadge label="Version 1 grounded in public CricClubs/TCL data" />
+    <VerifiedBadge label="Headline totals refreshed for player ID 4593171" />
   </div>
 
   <div class="cricket-hero__stats">

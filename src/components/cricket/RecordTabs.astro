@@ -10,23 +10,28 @@ interface Props {
 
 const { summary, seasons } = Astro.props;
 
+const formatValue = (value: number | null, digits = 0, fallback = 'Not yet imported') => {
+  if (value === null) return fallback;
+  return digits > 0 ? value.toFixed(digits) : value.toString();
+};
+
 const battingRows = [
-  ['Matches', summary.matches],
-  ['Runs', summary.runs],
-  ['Balls', summary.balls],
-  ['Average', summary.battingAverage.toFixed(2)],
-  ['Strike rate', summary.strikeRate.toFixed(2)],
-  ['50s', summary.fifties],
-  ['100s', summary.hundreds],
-  ['4s', summary.fours],
-  ['6s', summary.sixes]
+  ['Matches', formatValue(summary.matches)],
+  ['Runs', formatValue(summary.runs)],
+  ['Balls', formatValue(summary.balls)],
+  ['Average', formatValue(summary.battingAverage, 2)],
+  ['Strike rate', formatValue(summary.strikeRate, 2)],
+  ['50s', formatValue(summary.fifties)],
+  ['100s', formatValue(summary.hundreds)],
+  ['4s', formatValue(summary.fours)],
+  ['6s', formatValue(summary.sixes)]
 ];
 
 const bowlingRows = [
-  ['Overs', summary.overs],
-  ['Runs conceded', summary.runsConceded],
-  ['Wickets', summary.wickets],
-  ['Economy', summary.economy.toFixed(2)]
+  ['Overs', formatValue(summary.overs)],
+  ['Runs conceded', formatValue(summary.runsConceded)],
+  ['Wickets', formatValue(summary.wickets)],
+  ['Economy', formatValue(summary.economy, 2)]
 ];
 ---
 
@@ -42,7 +47,7 @@ const bowlingRows = [
     <div class="record-panel__header">
       <div>
         <h3>Batting summary</h3>
-        <p>Clean headline numbers first, with richer innings-by-innings detail ready for later imports.</p>
+        <p>Confirmed headline numbers first, with richer innings-by-innings detail continuing to arrive through future imports.</p>
       </div>
       <SourceBadge status={summary.sourceStatus} />
     </div>
@@ -60,7 +65,7 @@ const bowlingRows = [
     <div class="record-panel__header">
       <div>
         <h3>Bowling summary</h3>
-        <p>Enough structure for economy, wickets, and best spell storytelling now — full spell logs later.</p>
+        <p>Bowling totals are preserved here even while the deeper spell-by-spell record is still being expanded.</p>
       </div>
       <SourceBadge status={summary.sourceStatus} />
     </div>
@@ -78,15 +83,14 @@ const bowlingRows = [
     <div class="record-panel__header">
       <div>
         <h3>Fielding summary</h3>
-        <p>Fielding is intentionally included early so catches, run-outs, and memory-heavy moments never feel secondary.</p>
+        <p>Fielding remains part of the archive, but the deeper catching and run-out record still needs more scorecard imports.</p>
       </div>
     </div>
     {summary.catches !== null ? (
       <div class="record-grid-table">
         <div><span>Catches</span><strong>{summary.catches}</strong></div>
-        <div><span>Run outs</span><strong>{summary.runOuts ?? '—'}</strong></div>
-        <div><span>Stumpings</span><strong>{summary.stumpings ?? '—'}</strong></div>
-        <div><span>Recent fielding marker</span><strong>Allies match · 2 catches</strong></div>
+        <div><span>Run outs</span><strong>{summary.runOuts ?? '-'}</strong></div>
+        <div><span>Stumpings</span><strong>{summary.stumpings ?? '-'}</strong></div>
       </div>
     ) : (
       <EmptyStateCard title="Fielding archive is still opening" description="The schema is ready for catches, run outs, and direct-hit memories once more scorecards are imported." />
@@ -112,8 +116,8 @@ const bowlingRows = [
         <div class="season-breakdown-table__row">
           <strong>{season.seasonLabel}</strong>
           <span>{season.team}</span>
-          <span>{season.runs ?? '—'}</span>
-          <span>{season.wickets ?? '—'}</span>
+          <span>{season.runs ?? '-'}</span>
+          <span>{season.wickets ?? '-'}</span>
           <SourceBadge status={season.sourceStatus} />
         </div>
       ))}

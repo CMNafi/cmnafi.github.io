@@ -19,19 +19,19 @@ export interface PlayerProfile {
 }
 
 export interface CareerSummary {
-  matches: number;
+  matches: number | null;
   runs: number;
-  balls: number;
-  battingAverage: number;
-  strikeRate: number;
-  fifties: number;
-  hundreds: number;
-  fours: number;
-  sixes: number;
-  overs: number;
+  balls: number | null;
+  battingAverage: number | null;
+  strikeRate: number | null;
+  fifties: number | null;
+  hundreds: number | null;
+  fours: number | null;
+  sixes: number | null;
+  overs: number | null;
   wickets: number;
-  runsConceded: number;
-  economy: number;
+  runsConceded: number | null;
+  economy: number | null;
   catches: number | null;
   runOuts: number | null;
   stumpings: number | null;

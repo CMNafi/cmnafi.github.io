@@ -2,36 +2,36 @@
   {
     "id": "milestone-career-runs",
     "label": "Career runs",
-    "value": "380",
-    "detail": "Published TCL total runs in the current version-one archive.",
-    "sourceStatus": "verified"
+    "value": "1772",
+    "detail": "Confirmed headline total for player ID 4593171 on this personal archive.",
+    "sourceStatus": "manually added"
   },
   {
     "id": "milestone-career-wickets",
     "label": "Career wickets",
-    "value": "5",
-    "detail": "Published TCL wickets so far, with room for bowling history to expand through imports.",
-    "sourceStatus": "verified"
+    "value": "63",
+    "detail": "Confirmed headline bowling total, with match-by-match detail still being expanded.",
+    "sourceStatus": "manually added"
   },
   {
     "id": "milestone-best-known-score",
-    "label": "Best known score",
+    "label": "Best imported score",
     "value": "63",
-    "detail": "Current top seeded innings from the TB Bengal Tigers public snapshot.",
-    "sourceStatus": "verified"
+    "detail": "Current standout innings preserved in the imported match archive.",
+    "sourceStatus": "imported"
   },
   {
     "id": "milestone-best-known-spell",
-    "label": "Best known spell",
+    "label": "Best imported spell",
     "value": "4/30",
-    "detail": "Best bowling currently present in the public dataset.",
-    "sourceStatus": "verified"
+    "detail": "Sharpest bowling spell currently preserved in the archive.",
+    "sourceStatus": "imported"
   },
   {
     "id": "milestone-active-teams",
     "label": "Teams preserved",
     "value": "5",
-    "detail": "Current archive includes TB Bengal Tigers, Bengal Tigers, Bengals, SWAT, and St Pete Shields.",
+    "detail": "TB Bengal Tigers, Bengal Tigers, Bengals, SWAT, and St Pete Shields remain visible as separate chapters.",
     "sourceStatus": "manually added"
   }
 ]

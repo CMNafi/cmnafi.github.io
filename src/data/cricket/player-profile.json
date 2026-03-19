@@ -1,8 +1,14 @@
 {
   "playerId": "4593171",
-  "name": "Nafi C M",
+  "name": "C M Nafi",
   "currentTeam": "TB Bengal Tigers",
-  "teams": ["TB Bengal Tigers", "Bengal Tigers", "Bengals", "SWAT", "St Pete Shields"],
+  "teams": [
+    "TB Bengal Tigers",
+    "Bengal Tigers",
+    "Bengals",
+    "SWAT",
+    "St Pete Shields"
+  ],
   "role": "All Rounder",
   "battingStyle": "Right Hand Batsman",
   "bowlingStyle": "Right Hand Fast",
@@ -13,5 +19,5 @@
       "url": "https://cricclubs.com/TCL/viewPlayer.do?playerId=4593171&clubId=1091"
     }
   ],
-  "intro": "Cricket has been competition, community, routine, chaos, team-building, and memory. This archive keeps the numbers close to the stories."
+  "intro": "Cricket lives under Adventures because it has never been just a scoreboard. It has been competition, travel, team chapters, standout days, and memories worth keeping in one place."
 }

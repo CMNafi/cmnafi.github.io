@@ -3,92 +3,180 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import CricketHero from '@/components/cricket/CricketHero.astro';
 import MilestoneStrip from '@/components/cricket/MilestoneStrip.astro';
-import SeasonCard from '@/components/cricket/SeasonCard.astro';
-import TeamCard from '@/components/cricket/TeamCard.astro';
-import HighlightCard from '@/components/cricket/HighlightCard.astro';
-import { careerSnapshotCards, cricketHighlights, cricketMilestones, cricketPlayerProfile, cricketTeams, matchesByDate, seasonsByYear } from '@/data/cricket';
+import SourceBadge from '@/components/cricket/SourceBadge.astro';
+import { careerSnapshotCards, cricketCareerSummary, cricketMilestones, cricketPlayerProfile, matchesByDate } from '@/data/cricket';
 
-const currentTeams = cricketTeams.filter((team) => team.current);
-const pastTeams = cricketTeams.filter((team) => !team.current);
-const featuredHighlights = cricketHighlights.slice(0, 3);
-const recentMatch = matchesByDate[0];
+const standoutInnings = matchesByDate.filter((match) => (match.battingRuns ?? 0) >= 50);
+const standoutSpells = matchesByDate.filter((match) => (match.wickets ?? 0) >= 4);
+const teamList = cricketPlayerProfile.teams.join(', ');
+
 const linkBlocks = [
-  { href: '/adventures/cricket/records', title: 'Records', copy: 'Deep batting, bowling, fielding, team, and season structure.' },
-  { href: '/adventures/cricket/matches', title: 'Matches', copy: 'Searchable archive with filters, expandable rows, and note fields.' },
-  { href: '/adventures/cricket/teams', title: 'Teams', copy: 'Current and past teams, season labels, and competition history.' },
-  { href: '/adventures/cricket/highlights', title: 'Highlights', copy: 'Best innings, spells, catches, and story-first reflections.' },
-  { href: '/adventures/cricket/timeline', title: 'Timeline', copy: 'Chronological sports biography with transitions and milestones.' }
+  { href: '/adventures/cricket/records', title: 'Records', copy: 'Headline totals, partial season snapshots, and the deeper batting and bowling ledger.' },
+  { href: '/adventures/cricket/matches', title: 'Matches', copy: 'Search the match archive and expand rows for notes, source status, and stat detail.' },
+  { href: '/adventures/cricket/highlights', title: 'Highlights', copy: 'A tighter page for standout innings, wicket spells, and editorial cricket notes.' },
+  { href: '/adventures/cricket/teams', title: 'Teams', copy: 'Follow the team chapters behind the runs, wickets, and season changes.' },
+  { href: '/adventures/cricket/timeline', title: 'Timeline', copy: 'Trace the longer cricket story across formats, years, and transitions.' }
 ];
 ---
 
 <BaseLayout
-  title="Cricket Archive"
-  description="A premium personal cricket archive for Nafi C M — blending player profile, career stats, match history, highlights, and story-driven timeline."
+  title="Cricket Adventure"
+  description="A personal cricket home for C M Nafi, centered on headline totals, standout innings, standout spells, and the archive behind them."
 >
   <section class="page-section page-section-hero">
-    <CricketHero player={cricketPlayerProfile} stats={careerSnapshotCards} />
+    <CricketHero
+      player={cricketPlayerProfile}
+      stats={careerSnapshotCards}
+      statusLabel="Headline totals refreshed"
+      sourceStatus={cricketCareerSummary.sourceStatus}
+    />
   </section>
 
   <section class="page-section">
     <SectionHeading
-      eyebrow="Personal note"
-      title="Cricket has been competition, community, routine, chaos, team-building, and memory."
-      description="That is why this archive lives under Adventures: the numbers matter, but they only become meaningful once they sit beside people, seasons, roles, and lived moments."
+      eyebrow="Why This Page Exists"
+      title="Cricket belongs under Adventures because it has shaped how I compete, travel, and remember time."
+      description="The page is deliberately simple: lead with the headline record, keep only the standout batting and bowling days near the top, and let the deeper archive sit one click away."
+    />
+    <div class="two-up cricket-story-grid">
+      <article class="panel cricket-note-card">
+        <p class="eyebrow">Personal note</p>
+        <h3>A cricket page should read like a life chapter, not just a score dump.</h3>
+        <p>
+          Cricket has been routine, pressure, team-building, travel, and memory. The reason it sits inside Adventures is
+          simple: the sport has always carried more than numbers for me.
+        </p>
+        <p>
+          I want this page to hold the days that clearly changed a game or stayed with me after the season moved on. That
+          is why the front page now keeps only the big run days and the big wicket days in view.
+        </p>
+      </article>
+
+      <article class="panel cricket-note-card">
+        <p class="eyebrow">Player snapshot</p>
+        <h3>The quick read for anyone opening this page for the first time.</h3>
+        <ul class="cricket-identity-list">
+          <li>
+            <span>Headline record</span>
+            <strong>1772 runs and 63 wickets</strong>
+          </li>
+          <li>
+            <span>Current chapter</span>
+            <strong>{cricketPlayerProfile.currentTeam}</strong>
+          </li>
+          <li>
+            <span>Teams carried into the archive</span>
+            <strong>{teamList}</strong>
+          </li>
+          <li>
+            <span>Public reference</span>
+            <strong>Player ID {cricketPlayerProfile.playerId}</strong>
+          </li>
+        </ul>
+        <a class="button button-secondary" href={cricketPlayerProfile.profileUrl} target="_blank" rel="noreferrer">Open CricClubs profile</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Career markers"
+      title="The important numbers stay visible even while the full scorecard archive keeps growing."
+      description="Totals are refreshed, the standout match entries are preserved, and the deeper breakdown pages remain ready for more imports later."
     />
     <MilestoneStrip milestones={cricketMilestones} />
   </section>
 
-  <section class="page-section two-up">
-    <div>
-      <SectionHeading eyebrow="Current team" title="The present chapter is active and expanding" description="The archive starts from the current badge and leaves clean space for richer future imports." />
-      <div class="narrow-stack">
-        {currentTeams.map((team) => <TeamCard team={team} />)}
-      </div>
-    </div>
-    <div>
-      <SectionHeading eyebrow="Past teams" title="Older team chapters remain visible" description="Naming variations and shorter snapshots are intentionally preserved so the story does not get simplified away." />
-      <div class="narrow-stack compact-stack">
-        {pastTeams.map((team) => <TeamCard team={team} />)}
-      </div>
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Big run days"
+      title="The innings worth keeping near the top of the page."
+      description="Not every score belongs on the front page. These are the batting days that most clearly deserve to stay in view."
+    />
+    <div class="two-up-grid">
+      {standoutInnings.map((match) => (
+        <article class="panel cricket-performance-card">
+          <div class="cricket-performance-card__top">
+            <div>
+              <p class="eyebrow">Batting highlight</p>
+              <h3>{match.battingRuns} runs</h3>
+              <p>{match.team} / {match.seasonLabel}</p>
+            </div>
+            <SourceBadge status={match.dataStatus} />
+          </div>
+          <p class="cricket-performance-card__summary">
+            {match.competition}{match.opponent !== 'TBD from import' ? ` vs ${match.opponent}` : ''}
+          </p>
+          <div class="highlight-card__statline">
+            {match.battingRuns} runs
+            {match.balls !== null ? ` off ${match.balls}` : ''}
+            {match.strikeRate !== null ? ` / SR ${match.strikeRate}` : ''}
+          </div>
+          <p>{match.personalNote}</p>
+        </article>
+      ))}
     </div>
   </section>
 
   <section class="page-section two-up">
     <div>
-      <SectionHeading eyebrow="Season ledger" title="Snapshots that already carry narrative weight" description="Version one begins with a mix of verified totals, imported snapshots, and provisional placeholders." />
-      <div class="narrow-stack compact-stack">
-        {seasonsByYear.map((season) => <SeasonCard season={season} />)}
+      <SectionHeading
+        eyebrow="Big wicket days"
+        title="The spells that made the all-round story obvious."
+        description="These are the bowling performances that most clearly changed the mood of a game and deserve to stay close to the headline record."
+      />
+      <div class="panel-stack">
+        {standoutSpells.map((match) => (
+          <article class="panel cricket-performance-card">
+            <div class="cricket-performance-card__top">
+              <div>
+                <p class="eyebrow">Bowling highlight</p>
+                <h3>{match.wickets}/{match.runsConceded ?? '-'}</h3>
+                <p>{match.team} / {match.seasonLabel}</p>
+              </div>
+              <SourceBadge status={match.dataStatus} />
+            </div>
+            <p class="cricket-performance-card__summary">
+              {match.competition}{match.opponent !== 'TBD from import' ? ` vs ${match.opponent}` : ''}
+            </p>
+            <div class="highlight-card__statline">
+              {match.wickets} wickets
+              {match.runsConceded !== null ? ` for ${match.runsConceded}` : ''}
+              {match.economy !== null ? ` / Economy ${match.economy}` : ''}
+            </div>
+            <p>{match.personalNote}</p>
+          </article>
+        ))}
       </div>
     </div>
-    <article class="panel recent-match-card">
-      <p class="eyebrow">Recent match preview</p>
-      <h2>{recentMatch.team} vs {recentMatch.opponent}</h2>
-      <p>{recentMatch.date} · {recentMatch.competition}</p>
-      <div class="recent-match-card__stats">
-        <div><span>Batting</span><strong>{recentMatch.battingRuns} off {recentMatch.balls}</strong></div>
-        <div><span>Fielding</span><strong>{recentMatch.catches} catches</strong></div>
-        <div><span>Archive note</span><strong>{recentMatch.dataStatus}</strong></div>
-      </div>
-      <p>{recentMatch.personalNote}</p>
-      <a class="button button-secondary" href="/adventures/cricket/matches">Open full match log</a>
+
+    <article class="panel records-note-card cricket-focus-card">
+      <p class="eyebrow">Archive method</p>
+      <h3>Front page first, full record next.</h3>
+      <p>
+        The goal here is clarity. A first-time visitor should understand quickly that cricket is a serious part of my
+        story, without getting buried under every partial import and every unfinished scorecard.
+      </p>
+      <p>
+        The deeper pages still hold season cards, team chapters, and expandable match rows. This landing page now stays
+        focused on the matches where the runs were big or the wickets mattered most.
+      </p>
+      <a class="button button-secondary" href="/adventures/cricket/records">Open full record view</a>
     </article>
   </section>
 
   <section class="page-section">
-    <SectionHeading eyebrow="Featured milestones" title="Selected moments from the archive" description="Highlights are designed to feel editorial and collectible, not like default sports cards." />
-    <div class="three-up-grid">
-      {featuredHighlights.map((highlight) => <HighlightCard highlight={highlight} />)}
-    </div>
-  </section>
-
-  <section class="page-section">
-    <SectionHeading eyebrow="Archive map" title="Five clear doors keep the section easy to browse" description="Everything here is powered by reusable local data so the site can expand without becoming hard to maintain." />
+    <SectionHeading
+      eyebrow="Archive map"
+      title="Five clear doors keep the cricket section easy to browse."
+      description="The front page is now selective on purpose. Everything else lives in a deeper page that can keep expanding without crowding the story."
+    />
     <div class="five-link-grid">
       {linkBlocks.map((block) => (
         <a class="panel archive-link-card" href={block.href}>
           <h3>{block.title}</h3>
           <p>{block.copy}</p>
-          <span>Open ↗</span>
+          <span>Open -&gt;</span>
         </a>
       ))}
     </div>

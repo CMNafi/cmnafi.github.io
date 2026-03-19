@@ -29,7 +29,7 @@
   {
     "id": "2026-season-high-63",
     "date": "2026-01-25",
-    "competition": "Team stats snapshot",
+    "competition": "TB Bengal Tigers chapter",
     "format": "Leather ball",
     "seasonLabel": "2026",
     "team": "TB Bengal Tigers",
@@ -49,9 +49,9 @@
     "runOuts": null,
     "motm": false,
     "scorecardUrl": null,
-    "source": "Seeded from TB Bengal Tigers snapshot",
-    "dataStatus": "provisional",
-    "personalNote": "This entry marks the current known high score with enough space to attach the full innings story when the scorecard is imported."
+    "source": "Imported from the current TB Bengal Tigers public snapshot",
+    "dataStatus": "imported",
+    "personalNote": "The current headline innings in the archive. It is the kind of knock that deserves front-page space even before the full scorecard detail is attached."
   },
   {
     "id": "2025-swat-54",
@@ -76,9 +76,9 @@
     "runOuts": null,
     "motm": false,
     "scorecardUrl": null,
-    "source": "Seeded from SWAT season snapshot",
+    "source": "Imported from the SWAT Titan Cup XI season snapshot",
     "dataStatus": "imported",
-    "personalNote": "A placeholder for the best-known innings in the SWAT Titan Cup XI batting chapter."
+    "personalNote": "A reminder that some seasons are defined by the innings that arrive under pressure and hold the campaign together."
   },
   {
     "id": "2024-swat-4-30",
@@ -103,9 +103,9 @@
     "runOuts": null,
     "motm": false,
     "scorecardUrl": null,
-    "source": "Seeded from SWAT bowling snapshot",
-    "dataStatus": "provisional",
-    "personalNote": "The clearest bowling burst in the public record so far — a future anchor point for a longer match report."
+    "source": "Imported from the SWAT TPL Fall bowling snapshot",
+    "dataStatus": "imported",
+    "personalNote": "The clearest bowling burst in the current archive and the best example of the all-round story being real, not just a label."
   },
   {
     "id": "2024-st-pete-shields-33",

@@ -29,13 +29,30 @@ export const cricketTimeline = timeline as TimelineItem[];
 export const cricketMilestones = milestones as Milestone[];
 export const cricketSources = sources as SourceRegistryItem[];
 
+const formatMetric = (value: number | null, digits = 0, fallback = 'Open') => {
+  if (value === null) return fallback;
+  return digits > 0 ? value.toFixed(digits) : value.toString();
+};
+
+const bestKnownScore = cricketMatches.reduce((best, match) => Math.max(best, match.battingRuns ?? 0), 0);
+const bestKnownSpellMatch = [...cricketMatches]
+  .filter((match) => match.wickets !== null)
+  .sort((a, b) => {
+    const wicketDelta = (b.wickets ?? 0) - (a.wickets ?? 0);
+    if (wicketDelta !== 0) return wicketDelta;
+    return (a.runsConceded ?? Number.MAX_SAFE_INTEGER) - (b.runsConceded ?? Number.MAX_SAFE_INTEGER);
+  })[0];
+const bestKnownSpell = bestKnownSpellMatch?.wickets !== undefined && bestKnownSpellMatch?.wickets !== null
+  ? `${bestKnownSpellMatch.wickets}/${bestKnownSpellMatch.runsConceded ?? '-'}`
+  : 'Open';
+
 export const careerSnapshotCards = [
-  { label: 'Matches', value: cricketCareerSummary.matches.toString(), detail: 'TCL record' },
-  { label: 'Runs', value: cricketCareerSummary.runs.toString(), detail: 'Across current public archive' },
-  { label: 'Wickets', value: cricketCareerSummary.wickets.toString(), detail: 'Bowling record to date' },
-  { label: 'Strike rate', value: cricketCareerSummary.strikeRate.toFixed(2), detail: 'Career batting tempo' },
-  { label: 'Batting average', value: cricketCareerSummary.battingAverage.toFixed(2), detail: 'Current TCL average' },
-  { label: 'Economy', value: cricketCareerSummary.economy.toFixed(2), detail: 'Current TCL bowling economy' }
+  { label: 'Career runs', value: formatMetric(cricketCareerSummary.runs), detail: 'Confirmed headline batting total' },
+  { label: 'Career wickets', value: formatMetric(cricketCareerSummary.wickets), detail: 'Confirmed headline bowling total' },
+  { label: 'Best score', value: formatMetric(bestKnownScore), detail: 'Top innings in the imported archive' },
+  { label: 'Best spell', value: bestKnownSpell, detail: 'Best bowling figure currently preserved' },
+  { label: 'Teams', value: cricketPlayerProfile.teams.length.toString(), detail: 'Distinct team chapters kept on the page' },
+  { label: 'Player ID', value: cricketPlayerProfile.playerId, detail: 'CricClubs reference' }
 ];
 
 export const seasonsByYear = [...cricketSeasons].sort((a, b) => b.year - a.year);
