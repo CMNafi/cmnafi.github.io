@@ -1660,3 +1660,627 @@ main { padding-bottom: 4rem; }
 
   .timeline-item__rail { display: none; }
 }
+
+/* Home v2: coffeehouse redesign */
+.home-v2 {
+  --coffee-bg: #110c09;
+  --coffee-surface: rgba(26, 20, 16, 0.84);
+  --coffee-surface-strong: rgba(34, 27, 22, 0.94);
+  --coffee-border: rgba(228, 201, 165, 0.18);
+  --coffee-text-soft: rgba(243, 237, 225, 0.78);
+  --coffee-warm: #d7a060;
+  --coffee-roast: #7c4f2f;
+  --coffee-cool: #869ac1;
+  --coffee-shadow: 0 26px 64px rgba(0, 0, 0, 0.34);
+  --brew-cycle: 16s;
+  --brew-ease: cubic-bezier(0.33, 0.02, 0.12, 1);
+}
+
+.home-v2 .panel {
+  border-color: var(--coffee-border);
+  box-shadow: var(--coffee-shadow);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.home-v2 .section-heading h2 {
+  max-width: 18ch;
+  font-size: clamp(2.2rem, 4.8vw, 3.7rem);
+  letter-spacing: -0.03em;
+}
+
+.coffee-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+  gap: clamp(1.4rem, 2.8vw, 2.4rem);
+  padding: clamp(1.5rem, 3vw, 3rem);
+  overflow: hidden;
+  min-height: 50rem;
+}
+
+.coffee-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 10% 12%, rgba(215, 160, 96, 0.18), transparent 26%),
+    radial-gradient(circle at 86% 10%, rgba(134, 154, 193, 0.15), transparent 24%),
+    linear-gradient(180deg, rgba(10, 8, 7, 0.2), transparent 38%);
+  pointer-events: none;
+}
+
+.coffee-hero__copy,
+.coffee-hero__scene,
+.coffee-hero__rail {
+  position: relative;
+  z-index: 1;
+}
+
+.coffee-hero__copy {
+  display: grid;
+  align-content: center;
+}
+
+.coffee-hero h1 {
+  margin: 0;
+  max-width: 8.6ch;
+  display: grid;
+  gap: 0.85rem;
+  font-size: clamp(3.5rem, 9vw, 7.4rem);
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+}
+
+.coffee-hero h1 span {
+  max-width: 18ch;
+  color: var(--coffee-text-soft);
+  font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+.home-v2 .hero-description,
+.home-v2 .hero-manifesto {
+  margin-top: 1rem;
+  max-width: 44rem;
+  color: var(--coffee-text-soft);
+}
+
+.coffee-hero__stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 1.4rem;
+}
+
+.coffee-hero__phase-list {
+  margin-top: 1.3rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.coffee-phase-card {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+}
+
+.coffee-phase-card span {
+  font-size: 0.73rem;
+  letter-spacing: 0.14em;
+  color: rgba(243, 237, 225, 0.6);
+}
+
+.coffee-phase-card strong {
+  font-size: 0.96rem;
+}
+
+.coffee-phase-card small {
+  color: rgba(243, 237, 225, 0.68);
+}
+
+.coffee-hero__scene {
+  min-height: 38rem;
+  display: grid;
+  place-items: center;
+}
+
+.brew-apparatus {
+  position: relative;
+  width: min(100%, 38rem);
+  aspect-ratio: 1 / 1.06;
+  border-radius: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(11, 8, 7, 0.42));
+  overflow: hidden;
+}
+
+.brew-apparatus__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(215, 160, 96, 0.15), transparent 28%),
+    radial-gradient(circle at 62% 78%, rgba(124, 79, 47, 0.34), transparent 34%),
+    radial-gradient(circle at 82% 24%, rgba(134, 154, 193, 0.15), transparent 26%);
+}
+
+.brew-orbit {
+  position: absolute;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+}
+
+.brew-orbit--outer {
+  inset: 9%;
+  animation: brewOrbitSpin 28s linear infinite;
+}
+
+.brew-orbit--inner {
+  inset: 24%;
+  border-color: rgba(134, 154, 193, 0.28);
+  animation: brewOrbitSpinReverse 20s linear infinite;
+}
+
+.brew-stage {
+  position: absolute;
+}
+
+.brew-stage__label {
+  position: absolute;
+  top: -1.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: rgba(243, 237, 225, 0.65);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.brew-stage--intake {
+  left: 11%;
+  top: 15%;
+  width: 30%;
+  height: 27%;
+}
+
+.bean-cluster {
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(28, 22, 18, 0.46));
+}
+
+.bean {
+  position: absolute;
+  width: 0.94rem;
+  height: 1.24rem;
+  border-radius: 62% 62% 55% 55%;
+  background: radial-gradient(circle at 30% 30%, rgba(135, 89, 61, 0.95), rgba(39, 24, 18, 0.95));
+  box-shadow: 0 0 18px rgba(213, 151, 86, 0.16);
+  animation: brewBeanPulse var(--brew-cycle) var(--brew-ease) infinite;
+}
+
+.bean-1 { left: 18%; top: 18%; }
+.bean-2 { left: 46%; top: 24%; animation-delay: -2s; }
+.bean-3 { right: 18%; top: 38%; animation-delay: -4s; }
+.bean-4 { left: 28%; bottom: 16%; animation-delay: -1.2s; }
+
+.stage-glow {
+  position: absolute;
+  inset: -8%;
+  border-radius: 34px;
+  background: radial-gradient(circle at 50% 50%, rgba(215, 160, 96, 0.28), transparent 70%);
+  filter: blur(14px);
+  animation: brewIntakeGlow var(--brew-cycle) var(--brew-ease) infinite;
+}
+
+.brew-stage--grind {
+  right: 12%;
+  top: 11%;
+  width: 30%;
+  height: 31%;
+}
+
+.grinder-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.grinder-ring--outer {
+  background: radial-gradient(circle, rgba(215, 160, 96, 0.12), transparent 62%);
+  animation: brewGrindSpin var(--brew-cycle) linear infinite;
+}
+
+.grinder-ring--inner {
+  inset: 18%;
+  border-color: rgba(134, 154, 193, 0.28);
+  animation: brewGrindSpinReverse var(--brew-cycle) linear infinite;
+}
+
+.grind-dust {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(10px);
+  background: radial-gradient(circle, rgba(215, 160, 96, 0.34), transparent 72%);
+  animation: brewGrindDust var(--brew-cycle) var(--brew-ease) infinite;
+}
+
+.grind-dust--a { inset: 22%; }
+.grind-dust--b {
+  inset: 36%;
+  animation-delay: -1.6s;
+}
+
+.brew-stage--extract {
+  left: 34%;
+  top: 29%;
+  width: 24%;
+  height: 40%;
+}
+
+.brew-column {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px 999px 28px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: linear-gradient(180deg, rgba(111, 129, 164, 0.14), rgba(168, 102, 49, 0.24), rgba(30, 18, 13, 0.62));
+  overflow: hidden;
+}
+
+.brew-liquid {
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  bottom: 0;
+  border-radius: 999px 999px 18px 18px;
+  background: linear-gradient(180deg, rgba(236, 198, 150, 0.08), rgba(171, 99, 46, 0.38), rgba(62, 33, 23, 0.58));
+}
+
+.brew-liquid--main {
+  height: 72%;
+  animation: brewExtractRise var(--brew-cycle) var(--brew-ease) infinite;
+}
+
+.brew-liquid--alt {
+  left: 28%;
+  right: 28%;
+  height: 62%;
+  opacity: 0.58;
+  animation: brewExtractRise var(--brew-cycle) var(--brew-ease) infinite;
+  animation-delay: -1.8s;
+}
+
+.pour-stream {
+  position: absolute;
+  top: -8%;
+  left: 50%;
+  width: 2px;
+  height: 120%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(245, 214, 171, 0), rgba(245, 214, 171, 0.78), rgba(215, 160, 96, 0));
+  box-shadow: 0 0 14px rgba(215, 160, 96, 0.32);
+  animation: brewPourSweep var(--brew-cycle) var(--brew-ease) infinite;
+}
+
+.brew-stage--serve {
+  right: 16%;
+  bottom: 14%;
+  width: 24%;
+  height: 23%;
+}
+
+.cup-saucer,
+.cup-body,
+.cup-handle,
+.cup-glow,
+.steam {
+  position: absolute;
+}
+
+.cup-saucer {
+  inset: auto 8% 0;
+  height: 18px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(215, 160, 96, 0.38), rgba(215, 160, 96, 0.06) 62%, transparent 76%);
+}
+
+.cup-body {
+  inset: 14% 20% 10% 20%;
+  border-radius: 0 0 24px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(80, 48, 34, 0.84));
+}
+
+.cup-handle {
+  width: 25%;
+  height: 42%;
+  right: 6%;
+  top: 29%;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-left-color: transparent;
+}
+
+.cup-glow {
+  inset: -8% 8% 8%;
+  background: radial-gradient(circle at 50% 85%, rgba(215, 160, 96, 0.32), transparent 62%);
+  filter: blur(16px);
+  animation: brewServeGlow var(--brew-cycle) var(--brew-ease) infinite;
+}
+
+.steam {
+  width: 34%;
+  height: 35%;
+  top: -12%;
+  border-radius: 999px;
+  border-top: 1px solid rgba(243, 237, 225, 0.18);
+  opacity: 0;
+  animation: brewSteamFade var(--brew-cycle) var(--brew-ease) infinite;
+}
+
+.steam-a { left: 12%; }
+.steam-b {
+  left: 38%;
+  animation-delay: -1.2s;
+}
+.steam-c {
+  left: 56%;
+  animation-delay: -2.1s;
+}
+
+.brew-route {
+  position: absolute;
+  top: 52%;
+  left: 39%;
+  width: 24%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(215, 160, 96, 0), rgba(215, 160, 96, 0.82), rgba(134, 154, 193, 0));
+  box-shadow: 0 0 12px rgba(134, 154, 193, 0.2);
+  animation: brewRouteSweep var(--brew-cycle) var(--brew-ease) infinite;
+}
+
+.coffee-hero__destinations {
+  position: absolute;
+  inset: auto 8% 8% 8%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.home-v2 .hero-destination {
+  display: grid;
+  gap: 0.24rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.85rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+}
+
+.home-v2 .hero-destination:hover {
+  transform: translateY(-2px);
+  border-color: rgba(215, 160, 96, 0.46);
+}
+
+.coffee-hero__rail {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.home-v2 .hero-rail-card {
+  border-radius: 18px;
+  padding: 0.9rem 1rem;
+}
+
+.home-v2-doors__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.home-v2-door {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.25rem;
+  border-radius: 22px;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.home-v2-door:hover {
+  transform: translateY(-3px);
+  border-color: rgba(215, 160, 96, 0.44);
+}
+
+.home-v2-door__top,
+.home-v2-door__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.home-v2-door__top small,
+.home-v2-door__meta span {
+  color: rgba(243, 237, 225, 0.66);
+}
+
+.home-v2-door h3 {
+  margin: 0;
+}
+
+.home-v2-door p {
+  margin: 0;
+  color: var(--coffee-text-soft);
+}
+
+@keyframes brewOrbitSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes brewOrbitSpinReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes brewBeanPulse {
+  0%, 20% { transform: translateY(0) scale(1); opacity: 1; }
+  30%, 100% { transform: translateY(5px) scale(0.96); opacity: 0.5; }
+}
+
+@keyframes brewIntakeGlow {
+  0%, 20% { opacity: 0.9; }
+  30%, 100% { opacity: 0.2; }
+}
+
+@keyframes brewGrindSpin {
+  0%, 19% { transform: rotate(0deg); opacity: 0.2; }
+  20%, 45% { transform: rotate(360deg); opacity: 0.95; }
+  46%, 100% { transform: rotate(360deg); opacity: 0.24; }
+}
+
+@keyframes brewGrindSpinReverse {
+  0%, 19% { transform: rotate(360deg); opacity: 0.2; }
+  20%, 45% { transform: rotate(0deg); opacity: 0.95; }
+  46%, 100% { transform: rotate(0deg); opacity: 0.24; }
+}
+
+@keyframes brewGrindDust {
+  0%, 19% { opacity: 0; transform: scale(0.9); }
+  20%, 45% { opacity: 0.85; transform: scale(1.05); }
+  46%, 100% { opacity: 0.12; transform: scale(0.96); }
+}
+
+@keyframes brewExtractRise {
+  0%, 44% { transform: translateY(12px); opacity: 0.22; }
+  45%, 75% { transform: translateY(0); opacity: 0.95; }
+  76%, 100% { transform: translateY(6px); opacity: 0.42; }
+}
+
+@keyframes brewPourSweep {
+  0%, 44% { opacity: 0; transform: translateX(-50%) scaleY(0.6); }
+  45%, 75% { opacity: 0.95; transform: translateX(-50%) scaleY(1); }
+  76%, 100% { opacity: 0.2; transform: translateX(-50%) scaleY(0.8); }
+}
+
+@keyframes brewRouteSweep {
+  0%, 44% { opacity: 0; transform: translateX(0); }
+  45%, 75% { opacity: 1; transform: translateX(6px); }
+  76%, 100% { opacity: 0.25; transform: translateX(0); }
+}
+
+@keyframes brewServeGlow {
+  0%, 74% { opacity: 0.14; }
+  75%, 100% { opacity: 1; }
+}
+
+@keyframes brewSteamFade {
+  0%, 74% { opacity: 0; transform: translateY(18px) scaleX(0.95); }
+  75%, 92% { opacity: 0.34; }
+  100% { opacity: 0; transform: translateY(-36px) scaleX(1.05); }
+}
+
+@media (max-width: 1200px) {
+  .coffee-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .coffee-hero__phase-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .coffee-hero__rail,
+  .home-v2-doors__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .brew-stage__label,
+  .brew-orbit--inner,
+  .home-brew-line {
+    display: none;
+  }
+
+  .coffee-hero__stats,
+  .coffee-hero__rail,
+  .home-v2-doors__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .coffee-hero__scene {
+    min-height: 28rem;
+  }
+
+  .brew-apparatus {
+    width: min(100%, 33rem);
+    border-radius: 28px;
+  }
+
+  .brew-stage--intake { left: 7%; width: 36%; }
+  .brew-stage--grind { right: 7%; width: 36%; }
+  .brew-stage--extract { left: 34%; }
+  .brew-stage--serve { right: 12%; }
+
+  .coffee-hero__destinations {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .coffee-hero {
+    padding: 1.15rem;
+  }
+
+  .coffee-hero h1 {
+    font-size: clamp(2.6rem, 16vw, 3.7rem);
+  }
+
+  .coffee-hero__phase-list {
+    grid-template-columns: 1fr;
+  }
+
+  .coffee-hero__scene {
+    min-height: 22rem;
+  }
+
+  .brew-orbit,
+  .brew-route,
+  .stage-glow,
+  .grind-dust,
+  .steam-c {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-v2 .home-brew-line__pulse,
+  .home-v2 .bean,
+  .home-v2 .stage-glow,
+  .home-v2 .grinder-ring,
+  .home-v2 .grind-dust,
+  .home-v2 .brew-liquid,
+  .home-v2 .pour-stream,
+  .home-v2 .brew-route,
+  .home-v2 .cup-glow,
+  .home-v2 .steam,
+  .home-v2 .brew-orbit {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .home-v2 .steam {
+    opacity: 0.16 !important;
+  }
+}
