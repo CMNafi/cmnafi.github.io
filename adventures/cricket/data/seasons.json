@@ -1,0 +1,134 @@
+[
+  {
+    "id": "tb-2026",
+    "seasonName": "TB Bengal Tigers 2026",
+    "team": "TB Bengal Tigers",
+    "teamId": "tb-bengal-tigers",
+    "format": "leather",
+    "year": 2026,
+    "status": "verified",
+    "batting": {
+      "matches": 4,
+      "innings": 4,
+      "notOuts": 0,
+      "runs": 120,
+      "balls": 90,
+      "highScore": 63,
+      "highScoreNotOut": false,
+      "average": 30.00,
+      "strikeRate": 133.33,
+      "fifties": 1,
+      "hundreds": 0,
+      "fours": null,
+      "sixes": null
+    },
+    "bowling": {
+      "overs": 4.2,
+      "maidens": 0,
+      "runsConceded": 86,
+      "wickets": 1,
+      "bestFiguresWickets": 1,
+      "bestFiguresRuns": null,
+      "economy": 19.85
+    }
+  },
+  {
+    "id": "swat-tcl-xi-leather",
+    "seasonName": "SWAT — Titan Cup XI Leather Ball",
+    "team": "SWAT",
+    "teamId": "swat",
+    "format": "leather",
+    "year": 2025,
+    "status": "imported",
+    "batting": {
+      "matches": 9,
+      "innings": 9,
+      "notOuts": 0,
+      "runs": 228,
+      "balls": 198,
+      "highScore": 54,
+      "highScoreNotOut": false,
+      "average": 25.33,
+      "strikeRate": 115.15,
+      "fifties": 1,
+      "hundreds": 0,
+      "fours": null,
+      "sixes": null
+    },
+    "bowling": {
+      "overs": null,
+      "maidens": null,
+      "runsConceded": null,
+      "wickets": null,
+      "bestFiguresWickets": null,
+      "bestFiguresRuns": null,
+      "economy": null
+    }
+  },
+  {
+    "id": "stpete-shields-tcl-x-leather",
+    "seasonName": "St Pete Shields — Titan Cup X Leather Ball",
+    "team": "St Pete Shields",
+    "teamId": "st-pete-shields",
+    "format": "leather",
+    "year": 2024,
+    "status": "imported",
+    "batting": {
+      "matches": 9,
+      "innings": 7,
+      "notOuts": 3,
+      "runs": 83,
+      "balls": 68,
+      "highScore": 33,
+      "highScoreNotOut": false,
+      "average": 20.75,
+      "strikeRate": 122.06,
+      "fifties": 0,
+      "hundreds": 0,
+      "fours": null,
+      "sixes": null
+    },
+    "bowling": {
+      "overs": null,
+      "maidens": null,
+      "runsConceded": null,
+      "wickets": null,
+      "bestFiguresWickets": null,
+      "bestFiguresRuns": null,
+      "economy": null
+    }
+  },
+  {
+    "id": "swat-tpl-tennis-fall-2024",
+    "seasonName": "SWAT — TPL Tennis Ball Fall 2024",
+    "team": "SWAT",
+    "teamId": "swat",
+    "format": "tennis",
+    "year": 2024,
+    "status": "imported",
+    "batting": {
+      "matches": 8,
+      "innings": null,
+      "notOuts": null,
+      "runs": null,
+      "balls": null,
+      "highScore": null,
+      "highScoreNotOut": false,
+      "average": null,
+      "strikeRate": null,
+      "fifties": 0,
+      "hundreds": 0,
+      "fours": null,
+      "sixes": null
+    },
+    "bowling": {
+      "overs": null,
+      "maidens": 0,
+      "runsConceded": null,
+      "wickets": 7,
+      "bestFiguresWickets": 4,
+      "bestFiguresRuns": 30,
+      "economy": 10.13
+    }
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "tb-bengal-tigers",
+    "name": "TB Bengal Tigers",
+    "shortName": "TBBT",
+    "status": "verified",
+    "active": true,
+    "seasons": ["tb-2026"],
+    "notes": "Current team. Tampa Bay-based leather ball side competing in the Tampa Cricket League."
+  },
+  {
+    "id": "bengal-tigers",
+    "name": "Bengal Tigers",
+    "shortName": "BT",
+    "status": "provisional",
+    "active": false,
+    "seasons": [],
+    "notes": "Predecessor or affiliated club to TB Bengal Tigers. Relationship to be confirmed."
+  },
+  {
+    "id": "bengals",
+    "name": "Bengals",
+    "shortName": "BNG",
+    "status": "provisional",
+    "active": false,
+    "seasons": [],
+    "notes": "Short-form reference found in CricClubs records — may be an alias for Bengal Tigers."
+  },
+  {
+    "id": "swat",
+    "name": "SWAT",
+    "shortName": "SWAT",
+    "status": "imported",
+    "active": false,
+    "seasons": ["swat-tcl-xi-leather", "swat-tpl-tennis-fall-2024"],
+    "notes": "Competed in both leather ball (Titan Cup XI) and tennis ball (TPL Fall 2024) formats."
+  },
+  {
+    "id": "st-pete-shields",
+    "name": "St Pete Shields",
+    "shortName": "SPS",
+    "status": "imported",
+    "active": false,
+    "seasons": ["stpete-shields-tcl-x-leather"],
+    "notes": "Titan Cup X leather ball campaign — 9 matches played."
+  }
+]

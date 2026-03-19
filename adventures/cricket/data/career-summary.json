@@ -1,0 +1,36 @@
+{
+  "asOf": "2026-02-19",
+  "scope": "TCL / CricClubs overall — leather and tennis ball combined",
+  "status": "imported",
+  "batting": {
+    "matches": 22,
+    "innings": 20,
+    "notOuts": 3,
+    "runs": 380,
+    "balls": 321,
+    "highScore": 63,
+    "highScoreNotOut": false,
+    "average": 18.10,
+    "strikeRate": 118.38,
+    "hundreds": 0,
+    "fifties": 1,
+    "fours": 26,
+    "sixes": 16
+  },
+  "bowling": {
+    "overs": 18.3,
+    "maidens": 0,
+    "runsConceded": 188,
+    "wickets": 5,
+    "bestFiguresWickets": 4,
+    "bestFiguresRuns": 30,
+    "average": 37.6,
+    "economy": 10.16,
+    "strikeRate": 22.2
+  },
+  "fielding": {
+    "catches": 2,
+    "runOuts": 0,
+    "stumpings": 0
+  }
+}

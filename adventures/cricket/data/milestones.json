@@ -1,0 +1,68 @@
+[
+  {
+    "id": "ms-001",
+    "title": "First Half-Century (Leather)",
+    "value": "54",
+    "date": null,
+    "matchId": null,
+    "team": "SWAT",
+    "competition": "Titan Cup XI Leather Ball",
+    "category": "batting",
+    "status": "imported"
+  },
+  {
+    "id": "ms-002",
+    "title": "Career Best Score",
+    "value": "63",
+    "date": null,
+    "matchId": null,
+    "team": "TB Bengal Tigers",
+    "competition": "Tampa Cricket League",
+    "category": "batting",
+    "status": "provisional"
+  },
+  {
+    "id": "ms-003",
+    "title": "Career Best Bowling",
+    "value": "4/30",
+    "date": null,
+    "matchId": null,
+    "team": "SWAT",
+    "competition": "TPL Tennis Ball Fall 2024",
+    "category": "bowling",
+    "status": "imported"
+  },
+  {
+    "id": "ms-004",
+    "title": "100 Career Runs",
+    "value": "100 runs",
+    "date": null,
+    "matchId": null,
+    "team": "SWAT",
+    "competition": "Titan Cup XI Leather Ball",
+    "category": "batting",
+    "status": "imported"
+  },
+  {
+    "id": "ms-005",
+    "title": "5 Career Wickets",
+    "value": "5 wickets",
+    "date": null,
+    "matchId": null,
+    "team": "SWAT",
+    "competition": "TPL Tennis Ball Fall 2024",
+    "category": "bowling",
+    "status": "imported"
+  },
+  {
+    "id": "ms-006",
+    "title": "20 Career Appearances",
+    "value": "20 matches",
+    "date": null,
+    "matchId": null,
+    "team": "SWAT",
+    "competition": "Titan Cup XI Leather Ball",
+    "category": "appearance",
+    "status": "imported"
+  }
+]

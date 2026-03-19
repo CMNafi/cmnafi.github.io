@@ -1,0 +1,34 @@
+[
+  {
+    "id": "m-001",
+    "date": "2026-02-19",
+    "opponent": "Allies",
+    "venue": null,
+    "team": "TB Bengal Tigers",
+    "teamId": "tb-bengal-tigers",
+    "competition": "Tampa Cricket League",
+    "format": "leather",
+    "result": null,
+    "status": "verified",
+    "batting": {
+      "runs": 2,
+      "balls": 3,
+      "notOut": false,
+      "fours": 0,
+      "sixes": 0,
+      "position": null
+    },
+    "bowling": {
+      "overs": null,
+      "runsConceded": null,
+      "wickets": null,
+      "maidens": null
+    },
+    "fielding": {
+      "catches": 2,
+      "runOuts": 0,
+      "stumpings": 0
+    },
+    "notes": "Two catches in the field. First fully verified match entry in the archive."
+  }
+]

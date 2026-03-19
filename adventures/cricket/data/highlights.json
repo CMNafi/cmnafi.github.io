@@ -1,0 +1,54 @@
+[
+  {
+    "id": "hl-001",
+    "title": "First Half-Century",
+    "category": "batting",
+    "date": null,
+    "matchId": null,
+    "team": "SWAT",
+    "opponent": null,
+    "competition": "Titan Cup XI Leather Ball",
+    "headline": "54 — first leather ball fifty",
+    "body": "A composed innings that confirmed the ability to build and accelerate in the middle order. The half-century came during the SWAT Titan Cup XI leather ball campaign and remains one of the landmark innings of the archive — the first time a fifty was posted in the leather ball format.",
+    "status": "imported"
+  },
+  {
+    "id": "hl-002",
+    "title": "Career Best — 63",
+    "category": "batting",
+    "date": null,
+    "matchId": null,
+    "team": "TB Bengal Tigers",
+    "opponent": null,
+    "competition": "Tampa Cricket League",
+    "headline": "63 — career best score, SR 133+",
+    "body": "The highest score in the personal archive. Played for TB Bengal Tigers in the 2026 Tampa Cricket League season. An aggressive, controlled knock at a strike rate above 130 that drove the team innings and set the tone for a new chapter with a new side.",
+    "status": "provisional"
+  },
+  {
+    "id": "hl-003",
+    "title": "Career Best Bowling — 4/30",
+    "category": "bowling",
+    "date": null,
+    "matchId": null,
+    "team": "SWAT",
+    "opponent": null,
+    "competition": "TPL Tennis Ball Fall 2024",
+    "headline": "4/30 — career best bowling figures",
+    "body": "The best bowling performance in the archive. In the SWAT TPL Tennis Ball Fall 2024 series, four wickets in a single innings at a cost of 30 runs. The haul contributed to a series total of 7 wickets across 8 matches — the most productive bowling campaign on record.",
+    "status": "imported"
+  },
+  {
+    "id": "hl-004",
+    "title": "Two Catches vs Allies",
+    "category": "fielding",
+    "date": "2026-02-19",
+    "matchId": "m-001",
+    "team": "TB Bengal Tigers",
+    "opponent": "Allies",
+    "competition": "Tampa Cricket League",
+    "headline": "2 catches in a single match",
+    "body": "Against the Allies on February 19, 2026, two catches in the field contributed to the TB Bengal Tigers effort. Alert positioning and clean hands — the first verified fielding entry in the archive, and a reminder that the all-round contribution goes beyond bat and ball.",
+    "status": "verified"
+  }
+]

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cricket | C M Nafi</title>
+    <meta name="description" content="Personal cricket archive for Nafi C M — All Rounder, TB Bengal Tigers. Records, matches, highlights, and career timeline.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body data-page="cricket-hub">
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="../../index.html">cmnafi</a>
+            <nav class="topbar-nav" aria-label="Primary navigation">
+                <a href="../../index.html">Home</a>
+                <a href="../../blog/index.html">Blog</a>
+                <a href="../../projects/index.html">Projects</a>
+                <a href="../index.html">Adventures</a>
+                <a href="../../about/about.html">About</a>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Player Hero — JS fills this -->
+            <section id="player-hero" aria-labelledby="player-name"></section>
+
+            <!-- Career Stats -->
+            <section aria-label="Career statistics" style="margin-top: 8px;">
+                <div style="margin-bottom: 20px;">
+                    <p class="eyebrow" style="margin-bottom: 10px;">Batting · Career</p>
+                    <div id="career-batting-stats" class="stat-grid"></div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <p class="eyebrow" style="margin-bottom: 10px;">Bowling · Career</p>
+                    <div id="career-bowling-stats" class="stat-grid"></div>
+                </div>
+                <div>
+                    <p class="eyebrow" style="margin-bottom: 10px;">Fielding · Career</p>
+                    <div id="career-fielding-stats" class="stat-grid"></div>
+                </div>
+            </section>
+
+            <!-- Milestones -->
+            <div id="milestone-strip" class="milestone-strip"></div>
+
+            <!-- Sub-page Navigation -->
+            <section class="directory-section" aria-labelledby="cricket-nav-title">
+                <div class="section-heading">
+                    <p class="eyebrow">Cricket archive</p>
+                    <h2 id="cricket-nav-title">Explore the record</h2>
+                    <p>Each section covers a different dimension of the cricket journey — from raw numbers to the stories behind them.</p>
+                </div>
+                <div class="directory-grid">
+                    <a class="directory-card" href="records.html">
+                        <span class="directory-tab">stats</span>
+                        <h3>Records</h3>
+                        <p>Full batting, bowling, and fielding breakdowns by season, team, and format.</p>
+                        <span class="directory-link">Open records →</span>
+                    </a>
+                    <a class="directory-card" href="matches.html">
+                        <span class="directory-tab">log</span>
+                        <h3>Matches</h3>
+                        <p>Every match entry with filters by year, team, format, and opponent search.</p>
+                        <span class="directory-link">Open match log →</span>
+                    </a>
+                    <a class="directory-card" href="teams.html">
+                        <span class="directory-tab">sides</span>
+                        <h3>Teams</h3>
+                        <p>Team history, season affiliations, and campaign summaries from first game to now.</p>
+                        <span class="directory-link">View teams →</span>
+                    </a>
+                    <a class="directory-card" href="highlights.html">
+                        <span class="directory-tab">moments</span>
+                        <h3>Highlights</h3>
+                        <p>Best innings, spells, and standout performances with narrative context.</p>
+                        <span class="directory-link">See highlights →</span>
+                    </a>
+                    <a class="directory-card" href="timeline.html">
+                        <span class="directory-tab">journey</span>
+                        <h3>Timeline</h3>
+                        <p>Chronological story of the cricket career — teams, seasons, and milestones in order.</p>
+                        <span class="directory-link">View timeline →</span>
+                    </a>
+                    <a class="directory-card" href="../index.html">
+                        <span class="directory-tab">back</span>
+                        <h3>Adventures</h3>
+                        <p>Return to the adventures hub to explore other sections.</p>
+                        <span class="directory-link">← Back to adventures</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p>Personal cricket archive · data confidence varies by entry · last updated from CricClubs Feb 2026</p>
+            <p>© <span id="year"></span> C M Nafi</p>
+        </footer>
+    </div>
+
+    <script src="cricket.js"></script>
+    <script src="../../js/scripts.js"></script>
+</body>
+</html>

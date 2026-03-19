@@ -1,0 +1,74 @@
+[
+  {
+    "id": "tl-001",
+    "year": 2023,
+    "month": null,
+    "label": "2023",
+    "title": "First TCL Season",
+    "body": "Joined the Tampa Cricket League. First organised leather ball cricket in the United States — a new environment, new teammates, and the start of a competitive record.",
+    "type": "debut",
+    "teamId": "bengals",
+    "highlightId": null,
+    "status": "provisional"
+  },
+  {
+    "id": "tl-002",
+    "year": 2024,
+    "month": null,
+    "label": "2024",
+    "title": "St Pete Shields — Titan Cup X",
+    "body": "Represented St Pete Shields in the Titan Cup X leather ball competition. Nine matches, 83 runs, and a high score of 33 — building consistency and experience across a full season.",
+    "type": "season-start",
+    "teamId": "st-pete-shields",
+    "highlightId": null,
+    "status": "imported"
+  },
+  {
+    "id": "tl-003",
+    "year": 2024,
+    "month": 9,
+    "label": "Fall 2024",
+    "title": "SWAT TPL Tennis Ball — 7 Wickets",
+    "body": "Switched format and joined SWAT for the TPL Tennis Ball Fall 2024 series. The move paid off with the best bowling return of the archive: 7 wickets across 8 matches, headlined by a career-best 4/30.",
+    "type": "milestone",
+    "teamId": "swat",
+    "highlightId": "hl-003",
+    "status": "imported"
+  },
+  {
+    "id": "tl-004",
+    "year": 2025,
+    "month": null,
+    "label": "2025",
+    "title": "SWAT Titan Cup XI — First Leather Fifty",
+    "body": "Back to leather ball with SWAT. Nine matches, 228 runs, and a 54 that marked the first half-century in the leather ball format — the most productive batting season of the archive.",
+    "type": "milestone",
+    "teamId": "swat",
+    "highlightId": "hl-001",
+    "status": "imported"
+  },
+  {
+    "id": "tl-005",
+    "year": 2026,
+    "month": 1,
+    "label": "Jan 2026",
+    "title": "TB Bengal Tigers — Career Best 63",
+    "body": "Joined TB Bengal Tigers for the 2026 TCL season. Hit a career-best 63 in the opening phase of the campaign — the highest score of the personal archive, at a strike rate above 130.",
+    "type": "team-change",
+    "teamId": "tb-bengal-tigers",
+    "highlightId": "hl-002",
+    "status": "provisional"
+  },
+  {
+    "id": "tl-006",
+    "year": 2026,
+    "month": 2,
+    "label": "Feb 2026",
+    "title": "Two Catches vs Allies",
+    "body": "February 19, 2026 — Allies vs TB Bengal Tigers. Two catches in the field. The first fully verified match entry in the personal archive.",
+    "type": "milestone",
+    "teamId": "tb-bengal-tigers",
+    "highlightId": "hl-004",
+    "status": "verified"
+  }
+]
