@@ -1,7 +1,6 @@
 export const siteConfig = {
   title: 'C M Nafi',
-  description:
-    'A refined digital home base for writing, projects, experiments, and future-facing tools.',
+  description: 'A personal home for writing, products, adventures, and work in progress.',
   author: 'C M Nafi',
   siteUrl: 'https://cmnafi.com',
   email: 'hello@cmnafi.com',

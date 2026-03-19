@@ -2,21 +2,39 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
-import BrewingJourney from '@/components/BrewingJourney.astro';
 import DirectoryTabs from '@/components/DirectoryTabs.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import FeaturedPostCard from '@/components/FeaturedPostCard.astro';
+import NowPanel from '@/components/NowPanel.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
+import StatusBadge from '@/components/StatusBadge.astro';
 import { homepageConfig } from '@/config/homepage';
 import directories from '@/data/directories.json';
+import { formatDate } from '@/utils/format';
 
 const blogPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
 );
 const projects = (await getCollection('projects')).sort((a, b) => b.data.priority - a.data.priority);
+const nowEntries = (await getCollection('now')).sort(
+  (a, b) => b.data.updatedAt.getTime() - a.data.updatedAt.getTime()
+);
+
 const latestPost = blogPosts[0];
 const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
-const homepageProject = projects.find((project) => project.slug === 'homepage') ?? featuredProject;
+const currentNow = nowEntries[0];
+
+const destinationMeta = {
+  Blog: `${blogPosts.length} posts`,
+  Projects: `${projects.length} tracked builds`,
+  Adventures: 'Cricket archive live',
+  Now: currentNow ? `Updated ${formatDate(currentNow.data.updatedAt)}` : 'Manual updates'
+} as const;
+
+const featuredDestinations = homepageConfig.featuredDestinations.map((item) => ({
+  ...item,
+  meta: destinationMeta[item.title as keyof typeof destinationMeta]
+}));
 
 const directoryItems = directories
   .filter((item) => item.visibility)
@@ -26,131 +44,129 @@ const directoryItems = directories
     count:
       item.title === 'Blog' ? blogPosts.length : item.title === 'Projects' ? projects.length : undefined
   }));
-
-const spotlightItems = directoryItems
-  .filter((item) => ['Blog', 'Projects', 'Adventures'].includes(item.title))
-  .sort((a, b) => ['Blog', 'Projects', 'Adventures'].indexOf(a.title) - ['Blog', 'Projects', 'Adventures'].indexOf(b.title));
-
-const stageChapters = homepageConfig.processChapters.slice(0, 4);
 ---
 
 <BaseLayout>
-  <div class="home-story home-v2">
-    <div class="home-brew-line" aria-hidden="true">
-      <span class="home-brew-line__core"></span>
-      <span class="home-brew-line__pulse home-brew-line__pulse-a"></span>
-      <span class="home-brew-line__pulse home-brew-line__pulse-b"></span>
-      <span class="home-brew-line__pulse home-brew-line__pulse-c"></span>
-    </div>
-
+  <div class="home-story home-v2 personal-home">
     <section class="page-section page-section-hero">
-      <Hero hero={homepageConfig.hero} processChapters={homepageConfig.processChapters} />
+      <Hero hero={homepageConfig.hero} />
     </section>
 
-    <section class="page-section page-section-story">
+    <section class="page-section page-section-positioning">
       <SectionHeading
-        eyebrow="Process chapters"
-        title="Bean intake to finished serve"
-        description="A four-step brewing narrative keeps the homepage readable, intentional, and consistent across sections."
+        eyebrow={homepageConfig.positioning.eyebrow}
+        title={homepageConfig.positioning.title}
+        description={homepageConfig.positioning.description}
       />
-      <BrewingJourney chapters={stageChapters} />
+      <div class="home-positioning-grid">
+        {homepageConfig.positioning.cards.map((card) => (
+          <article class="panel home-positioning-card">
+            <span>{card.title}</span>
+            <p>{card.description}</p>
+          </article>
+        ))}
+      </div>
     </section>
 
-    <section class="page-section home-v2-doors">
+    <section class="page-section page-section-destinations">
       <SectionHeading
-        eyebrow="High-visibility destinations"
-        title="Three clear doors stay in reach"
-        description="Whether you want to read, build, or explore, each path remains obvious in the flow of the page."
+        eyebrow="Start here"
+        title="The site is personal first, then modular."
+        description="Within a few seconds, visitors should understand where to read, what is being built, where the adventures live, and what is active right now."
       />
-      <div class="home-v2-doors__grid">
-        {spotlightItems.map((item) => (
-          <a class="home-v2-door panel" href={item.slug}>
-            <div class="home-v2-door__top">
-              <span>{item.icon}</span>
-              <small>{item.category}</small>
+      <div class="home-destination-grid">
+        {featuredDestinations.map((item) => (
+          <a class="panel home-destination-card" href={item.href}>
+            <div class="home-destination-card__top">
+              <span>{item.eyebrow}</span>
+              <small>{item.meta}</small>
             </div>
             <h3>{item.title}</h3>
             <p>{item.description}</p>
-            <div class="home-v2-door__meta">
-              <span>{item.count ? `${item.count} entries` : 'Open section'}</span>
-              <strong>Enter</strong>
-            </div>
           </a>
         ))}
       </div>
     </section>
 
-    <section class="page-section page-section-directory">
-      <SectionHeading
-        eyebrow="Directory"
-        title="Everything pours into one organized system"
-        description="Tabs keep navigation practical while preserving the same coffeehouse visual language."
-      />
-      <DirectoryTabs tabs={[...homepageConfig.directoryTabs]} items={directoryItems} />
-    </section>
-
-    <section class="page-section two-up home-focus-grid">
-      <div>
-        <SectionHeading
-          eyebrow="Currently brewing"
-          title="Active work on the counter"
-          description="The next wave of writing and products in progress."
-        />
-        <div class="panel current-brewing story-panel">
+    <section class="page-section page-section-brewing">
+      <div class="home-brewing-grid">
+        <article class="panel home-brewing-card">
+          <div class="home-brewing-card__steam" aria-hidden="true">
+            <span></span>
+            <span></span>
+          </div>
+          <SectionHeading
+            eyebrow="Currently brewing"
+            title="Active work, active archives, active questions"
+            description={homepageConfig.currentBrewingIntro}
+          />
           <ul>
             {homepageConfig.currentBrewing.map((item) => <li>{item}</li>)}
           </ul>
-        </div>
-      </div>
+        </article>
 
-      <div>
-        <SectionHeading
-          eyebrow="Studio canisters"
-          title="Reusable containers for what comes next"
-          description="Consistent buckets keep expansion easy as new sections are added."
-        />
-        <div class="canister-grid">
-          {homepageConfig.focusCanisters.map((item) => (
-            <article class="canister panel story-panel">
-              <span>{item.label}</span>
-              <p>{item.value}</p>
-            </article>
-          ))}
-        </div>
+        {currentNow && (
+          <div class="home-now-grid">
+            <NowPanel title="Building" items={currentNow.data.building.slice(0, 3)} />
+            <NowPanel title="Exploring" items={currentNow.data.exploring.slice(0, 3)} />
+            <NowPanel title="Reading" items={currentNow.data.reading.slice(0, 3)} />
+          </div>
+        )}
       </div>
     </section>
 
     <section class="page-section page-section-selected">
       <SectionHeading
-        eyebrow="Already served"
-        title="Selected entries"
+        eyebrow="Selected work"
+        title="Signals from writing, products, and the field"
         description={homepageConfig.selectedEntryIntro}
       />
-      <div class="two-up selected-grid">
+      <div class="home-selected-grid">
         {homepageConfig.featuredBands.latestWriting && latestPost && (
-          <div>
-            <SectionHeading eyebrow="Latest writing" title={latestPost.data.title} description={latestPost.data.excerpt} />
+          <div class="home-selected-column">
+            <p class="eyebrow">Latest writing</p>
             <FeaturedPostCard post={latestPost} />
           </div>
         )}
+
         {homepageConfig.featuredBands.featuredProject && featuredProject && (
-          <div>
-            <SectionHeading eyebrow="Featured project" title={featuredProject.data.title} description={featuredProject.data.summary} />
+          <div class="home-selected-column">
+            <p class="eyebrow">Featured project</p>
             <ProjectCard project={featuredProject} />
           </div>
         )}
+
+        <div class="home-selected-column">
+          <p class="eyebrow">{homepageConfig.featuredAdventure.eyebrow}</p>
+          <article class="featured-card panel home-adventure-card">
+            <div class="featured-card__meta">
+              <StatusBadge status="Adventure" />
+              <span>{homepageConfig.featuredAdventure.meta}</span>
+              <span>Central to the site</span>
+            </div>
+            <h3><a href={homepageConfig.featuredAdventure.href}>{homepageConfig.featuredAdventure.title}</a></h3>
+            <p>{homepageConfig.featuredAdventure.description}</p>
+            <div class="tag-row">
+              {homepageConfig.featuredAdventure.tags.map((tag) => <span class="tag-chip">{tag}</span>)}
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
-    <section class="page-section page-section-codex-projects">
-      <SectionHeading
-        eyebrow="Codex project"
-        title="Homepage"
-        description="The live front door for cmnafi.com, kept aligned with the latest coffeehouse design system."
-      />
-      <div class="project-grid">
-        <ProjectCard project={homepageProject} />
+    <section class="page-section page-section-directory">
+      <div class="home-directory-header">
+        <SectionHeading
+          eyebrow={homepageConfig.archive.eyebrow}
+          title={homepageConfig.archive.title}
+          description={homepageConfig.archive.description}
+        />
+        <article class="panel home-directory-note">
+          <span>{homepageConfig.archive.noteTitle}</span>
+          <p>{homepageConfig.archive.noteCopy}</p>
+        </article>
       </div>
+      <DirectoryTabs tabs={[...homepageConfig.directoryTabs]} items={directoryItems} />
     </section>
   </div>
 </BaseLayout>

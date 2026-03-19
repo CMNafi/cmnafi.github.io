@@ -2290,3 +2290,539 @@ main { padding-bottom: 4rem; }
     opacity: 0.16 !important;
   }
 }
+
+/* Home v3: personal site refresh */
+.personal-home {
+  --home-surface: rgba(24, 20, 18, 0.82);
+  --home-surface-strong: rgba(32, 27, 24, 0.94);
+  --home-border: rgba(233, 218, 196, 0.14);
+  --home-copy: rgba(243, 237, 225, 0.78);
+  --home-muted: rgba(243, 237, 225, 0.58);
+  --home-warm: rgba(215, 160, 96, 0.9);
+  --home-cool: rgba(132, 150, 188, 0.8);
+}
+
+.personal-home .panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+  border-color: var(--home-border);
+}
+
+.personal-home .section-description {
+  max-width: 52rem;
+  color: var(--home-copy);
+}
+
+.personal-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.5rem, 3vw, 3rem);
+  overflow: hidden;
+}
+
+.personal-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(215, 160, 96, 0.14), transparent 24%),
+    radial-gradient(circle at 88% 14%, rgba(132, 150, 188, 0.14), transparent 22%),
+    linear-gradient(180deg, rgba(8, 8, 11, 0.18), transparent 40%);
+  pointer-events: none;
+}
+
+.personal-hero__copy,
+.personal-hero__visual {
+  position: relative;
+  z-index: 1;
+}
+
+.personal-hero__copy {
+  display: grid;
+  align-content: center;
+}
+
+.personal-hero h1 {
+  margin: 0;
+  max-width: 8ch;
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.personal-hero__descriptor {
+  margin: 1rem 0 0;
+  max-width: 28rem;
+  color: rgba(243, 237, 225, 0.94);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  line-height: 1.45;
+}
+
+.personal-home .hero-description,
+.personal-home .hero-manifesto {
+  max-width: 43rem;
+  color: var(--home-copy);
+}
+
+.personal-home .hero-manifesto {
+  color: rgba(243, 237, 225, 0.72);
+}
+
+.personal-hero__presence {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.personal-hero__presence > span,
+.home-positioning-card span,
+.home-directory-note span,
+.scene-note span,
+.personal-status-card span,
+.home-destination-card__top span,
+.home-brewing-card .eyebrow {
+  display: block;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--home-muted);
+}
+
+.personal-hero__presence-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.personal-hero__presence-links a {
+  color: rgba(243, 237, 225, 0.78);
+  border-bottom: 1px solid rgba(243, 237, 225, 0.12);
+  padding-bottom: 0.08rem;
+}
+
+.personal-hero__presence-links a:hover {
+  color: var(--text);
+  border-bottom-color: rgba(215, 160, 96, 0.42);
+}
+
+.personal-hero__stats {
+  margin-top: 1.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.personal-hero__visual {
+  display: grid;
+  place-items: center;
+  min-height: 35rem;
+}
+
+.personal-scene {
+  position: relative;
+  width: min(100%, 39rem);
+  aspect-ratio: 1 / 1.04;
+  border-radius: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 22% 22%, rgba(255, 255, 255, 0.05), transparent 20%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(11, 9, 10, 0.42));
+}
+
+.personal-scene__wash,
+.personal-scene__grid,
+.personal-scene__ring,
+.personal-scene__beam,
+.scene-note,
+.personal-status-card {
+  position: absolute;
+}
+
+.personal-scene__wash {
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 24%, rgba(215, 160, 96, 0.16), transparent 24%),
+    radial-gradient(circle at 78% 18%, rgba(132, 150, 188, 0.16), transparent 24%),
+    radial-gradient(circle at 64% 80%, rgba(215, 160, 96, 0.1), transparent 28%);
+  animation: drift 22s ease-in-out infinite alternate;
+}
+
+.personal-scene__grid {
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 120px 120px;
+  mask-image: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0.8), transparent 80%);
+}
+
+.personal-scene__ring {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.personal-scene__ring-a {
+  inset: 12%;
+  animation: rotateSlow 26s linear infinite;
+}
+
+.personal-scene__ring-b {
+  inset: 28%;
+  border-color: rgba(132, 150, 188, 0.2);
+  animation: rotateSlowReverse 20s linear infinite;
+}
+
+.personal-scene__beam {
+  left: 10%;
+  right: 10%;
+  bottom: 24%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(215, 160, 96, 0), rgba(215, 160, 96, 0.85), rgba(132, 150, 188, 0));
+  box-shadow: 0 0 18px rgba(132, 150, 188, 0.18);
+  animation: homeBeamSweep 8.5s ease-in-out infinite;
+}
+
+.scene-note {
+  width: min(42%, 14rem);
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  backdrop-filter: blur(18px);
+  animation: homeCardFloat 12s ease-in-out infinite;
+}
+
+.scene-note strong,
+.personal-status-card strong {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.scene-note p,
+.personal-status-card p,
+.home-destination-card p,
+.home-positioning-card p,
+.home-directory-note p {
+  margin: 0;
+  color: var(--home-copy);
+  line-height: 1.65;
+}
+
+.scene-note-1 {
+  left: 8%;
+  top: 10%;
+}
+
+.scene-note-2 {
+  right: 8%;
+  top: 17%;
+  animation-delay: -2.2s;
+}
+
+.scene-note-3 {
+  left: 13%;
+  bottom: 13%;
+  animation-delay: -4.4s;
+}
+
+.scene-note-4 {
+  right: 11%;
+  bottom: 31%;
+  animation-delay: -1.1s;
+}
+
+.personal-status-card {
+  left: 32%;
+  top: 34%;
+  width: min(38%, 15rem);
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem 1rem 1.15rem;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(14, 15, 20, 0.86), rgba(14, 15, 20, 0.54));
+}
+
+.personal-status-card__steam {
+  position: absolute;
+  right: 0.8rem;
+  top: 0.6rem;
+  width: 3rem;
+  height: 3rem;
+}
+
+.personal-status-card__steam i,
+.home-brewing-card__steam span {
+  position: absolute;
+  inset: auto auto 0 0;
+  width: 60%;
+  height: 55%;
+  border-top: 1px solid rgba(243, 237, 225, 0.2);
+  border-radius: 999px;
+  animation: homeSteam 6.5s ease-in-out infinite;
+}
+
+.personal-status-card__steam i:last-child,
+.home-brewing-card__steam span:last-child {
+  left: 34%;
+  animation-delay: -2.3s;
+}
+
+.home-positioning-grid,
+.home-destination-grid,
+.home-selected-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.home-positioning-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-positioning-card {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.35rem;
+  border-radius: 24px;
+}
+
+.home-positioning-card span,
+.home-directory-note span {
+  color: rgba(243, 237, 225, 0.7);
+}
+
+.home-destination-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.home-destination-card {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.35rem;
+  border-radius: 24px;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.home-destination-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(215, 160, 96, 0.36);
+  background: linear-gradient(180deg, rgba(215, 160, 96, 0.08), rgba(255, 255, 255, 0.03));
+}
+
+.home-destination-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.home-destination-card__top small {
+  color: var(--home-muted);
+  text-align: right;
+}
+
+.home-destination-card h3,
+.home-directory-note h3 {
+  margin: 0;
+}
+
+.home-brewing-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.home-brewing-card {
+  position: relative;
+  padding: 1.45rem;
+  overflow: hidden;
+}
+
+.home-brewing-card__steam {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 4rem;
+  height: 4rem;
+  pointer-events: none;
+}
+
+.home-brewing-card ul,
+.now-panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.home-brewing-card ul {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.home-brewing-card li,
+.now-panel li {
+  color: var(--home-copy);
+  line-height: 1.7;
+}
+
+.home-now-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.home-now-grid .now-panel {
+  padding: 1.35rem;
+  border-radius: 22px;
+}
+
+.home-now-grid .now-panel h3 {
+  margin: 0 0 0.7rem;
+}
+
+.home-selected-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-selected-column {
+  min-width: 0;
+}
+
+.home-selected-column > .eyebrow {
+  margin-bottom: 0.75rem;
+}
+
+.home-selected-column .featured-card,
+.home-selected-column .project-card,
+.home-adventure-card {
+  height: 100%;
+}
+
+.home-adventure-card {
+  padding: 1.35rem;
+}
+
+.personal-home .status-adventure {
+  background: rgba(132, 150, 188, 0.18);
+}
+
+.home-directory-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1.4rem;
+}
+
+.home-directory-note {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1.2rem;
+  border-radius: 24px;
+}
+
+@keyframes homeCardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes homeBeamSweep {
+  0%, 100% { opacity: 0.35; transform: scaleX(0.92); }
+  50% { opacity: 0.95; transform: scaleX(1); }
+}
+
+@keyframes homeSteam {
+  0% { opacity: 0; transform: translateY(16px) scaleX(0.92); }
+  20% { opacity: 0.28; }
+  100% { opacity: 0; transform: translateY(-18px) scaleX(1.06); }
+}
+
+@media (max-width: 1200px) {
+  .personal-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-destination-grid,
+  .home-selected-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .personal-hero__stats,
+  .home-positioning-grid,
+  .home-destination-grid,
+  .home-selected-grid,
+  .home-brewing-grid,
+  .home-directory-header {
+    grid-template-columns: 1fr;
+  }
+
+  .personal-hero__visual {
+    min-height: 28rem;
+  }
+
+  .personal-scene {
+    width: min(100%, 34rem);
+    border-radius: 28px;
+  }
+
+  .scene-note {
+    width: min(44%, 13rem);
+  }
+
+  .personal-status-card {
+    left: 30%;
+    width: 42%;
+  }
+}
+
+@media (max-width: 640px) {
+  .personal-hero {
+    padding: 1.2rem;
+  }
+
+  .personal-hero h1 {
+    font-size: clamp(2.8rem, 16vw, 4rem);
+  }
+
+  .personal-hero__presence {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .personal-hero__visual {
+    min-height: 23rem;
+  }
+
+  .personal-scene__ring,
+  .scene-note-4 {
+    display: none;
+  }
+
+  .scene-note {
+    width: min(46%, 11.5rem);
+    padding: 0.8rem;
+  }
+
+  .personal-status-card {
+    left: 28%;
+    top: 39%;
+    width: 46%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .personal-scene__wash,
+  .personal-scene__ring,
+  .personal-scene__beam,
+  .scene-note,
+  .personal-status-card__steam i,
+  .home-brewing-card__steam span {
+    animation: none !important;
+    transform: none !important;
+  }
+}

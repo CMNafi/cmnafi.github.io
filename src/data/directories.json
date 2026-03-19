@@ -20,12 +20,12 @@
     "order": 2
   },
   {
-    "title": "Writing",
-    "slug": "/writing",
-    "description": "Longer-form writing, series, and future editorial collections.",
-    "category": "Writing",
-    "status": "coming soon",
-    "icon": "\u270e",
+    "title": "Adventures",
+    "slug": "/adventures",
+    "description": "A premium archive for cricket, travel, and memorable chapters on the move.",
+    "category": "Adventures",
+    "status": "live",
+    "icon": "\u2197",
     "visibility": true,
     "order": 3
   },
@@ -50,13 +50,13 @@
     "order": 5
   },
   {
-    "title": "Adventures",
-    "slug": "/adventures",
-    "description": "A premium archive for cricket, travel, and memorable chapters on the move.",
+    "title": "Writing",
+    "slug": "/writing",
+    "description": "Longer-form writing, series, and future editorial collections.",
     "category": "Writing",
-    "status": "live",
-    "icon": "\u2197",
-    "visibility": true,
+    "status": "coming soon",
+    "icon": "\u270e",
+    "visibility": false,
     "order": 6
   },
   {

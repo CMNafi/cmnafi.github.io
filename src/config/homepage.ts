@@ -1,96 +1,165 @@
 export const homepageConfig = {
   hero: {
-    eyebrow: 'Coffeehouse studio for notes, products, and fieldwork',
-    title: 'Coffeehouse',
-    highlight: 'Ideas brewed carefully, then served in public.',
-    description:
-      'A modern front door where writing, tools, and adventures move through one calm brewing ritual from raw intake to finished pour.',
-    manifesto:
-      'Everything here follows a shared rhythm: collect signal, refine direction, extract value, and serve it where it is easiest to explore.',
+    eyebrow: 'Personal website',
+    title: 'C M Nafi',
+    descriptor: 'A personal home for writing, products, adventures, and work in progress.',
+    intro:
+      'I write, build tools, keep field notes, and use this site as a public place for the ideas, experiments, and stories worth following.',
+    support:
+      'You will find essays, research products, cricket records, future travel logs, and current work that is still taking shape.',
+    presenceLabel: 'Public presence',
     ctas: [
-      { label: 'Read the journal', href: '/blog', variant: 'primary' },
+      { label: 'Read the blog', href: '/blog', variant: 'primary' },
       { label: 'Browse projects', href: '/projects', variant: 'secondary' },
-      { label: 'What is brewing now', href: '/now', variant: 'ghost' }
-    ],
-    animationStages: [
-      { label: 'Bean Intake', cue: '0-20% cycle' },
-      { label: 'Grind', cue: '20-45% cycle' },
-      { label: 'Brew', cue: '45-75% cycle' },
-      { label: 'Serve', cue: '75-100% cycle' }
+      { label: 'Explore adventures', href: '/adventures', variant: 'ghost' }
     ],
     stats: [
-      { label: 'Atmosphere', value: 'Editorial and warm' },
-      { label: 'Output', value: 'Writing, products, adventures' },
-      { label: 'Motion', value: 'Subtle and accessible' }
-    ]
+      { label: 'Writing', value: 'Essays, reviews, and notes' },
+      { label: 'Projects', value: 'Data, AI, and research tools' },
+      { label: 'Adventures', value: 'Cricket, travel, and field notes' }
+    ],
+    sceneCards: [
+      {
+        eyebrow: 'Writing',
+        title: 'Thoughts in public',
+        note: 'Essays, reviews, and notes that can deepen over time.'
+      },
+      {
+        eyebrow: 'Projects',
+        title: 'Tools in motion',
+        note: 'Research products, data utilities, and public experiments.'
+      },
+      {
+        eyebrow: 'Adventures',
+        title: 'Field archives',
+        note: 'Cricket records, travel logs, and story-driven notes.'
+      },
+      {
+        eyebrow: 'Now',
+        title: 'Current focus',
+        note: 'A quick snapshot of what I am building, exploring, and reading.'
+      }
+    ],
+    statusCard: {
+      eyebrow: 'Currently brewing',
+      title: 'Research tools, writing, and adventure archives',
+      note: 'Brewing stays as a light metaphor for work in progress, not the identity of the site.'
+    }
   },
   processChapters: [
     {
-      phase: 'Collect',
-      title: 'Signals gathered from the world outside the cup',
-      subtitle: 'Books, matches, trips, products, and moments worth returning to',
+      phase: 'Observe',
+      title: 'Ideas start with signal',
+      subtitle: 'Books, products, matches, trips, and questions worth following',
       description:
-        'The work begins with fragments that carry unusual weight: a product decision, a quiet quote, a movie image, a cricket session, a travel memory, or a lingering systems question.',
-      cue: 'Intake of the raw signal'
+        'The site begins with curiosity: a note, a line, a sports memory, a product problem, or a moment that keeps returning.',
+      cue: 'Early signal'
     },
     {
-      phase: 'Grind',
-      title: 'Fragments are milled into sharper questions',
-      subtitle: 'Patterns become structure before anything gets published',
+      phase: 'Shape',
+      title: 'Fragments become structure',
+      subtitle: 'Thoughts are refined before they are published',
       description:
-        'Loose observations are compared, compressed, and reframed until they have enough shape to become a useful essay, experiment, product path, or public note.',
-      cue: 'Compression into clarity'
+        'Signals gain form through drafting, testing, comparing, and editing until they are clear enough to share with intent.',
+      cue: 'Structure before release'
     },
     {
-      phase: 'Brew',
-      title: 'Pressure and patience extract the real idea',
-      subtitle: 'Where thought becomes interface, draft, or prototype',
+      phase: 'Publish',
+      title: 'Work enters public form',
+      subtitle: 'Essays, products, and field notes become visible',
       description:
-        'This is the making phase: writing, prototyping, arranging, and testing until the work feels distilled rather than merely decorated.',
-      cue: 'Extraction in motion'
+        'Writing, interfaces, records, and public notes are released in the format that best fits what they are trying to do.',
+      cue: 'Public release'
     },
     {
-      phase: 'Pour',
-      title: 'The work branches into public destinations',
-      subtitle: 'Blog, Projects, and Adventures each receive their own pour',
+      phase: 'Archive',
+      title: 'The site stays ready to expand',
+      subtitle: 'A calm home for current work and future additions',
       description:
-        'Once ready, the stream separates into the right vessel - an article, a product page, or a field note - without losing the atmosphere of the original process.',
-      cue: 'Routing the finished batch'
-    },
-    {
-      phase: 'Serve',
-      title: 'The site becomes the final cup and service tray',
-      subtitle: 'A calm archive for active work and future releases',
-      description:
-        'Everything lands in a coherent publishing system that can keep expanding into notes, apps, library pages, and future experiments while staying warm and readable.',
-      cue: 'Ready for public use'
+        'Everything lands in a system designed to grow into more posts, projects, adventure logs, apps, notes, and living archives.',
+      cue: 'Extensible by design'
     }
   ],
-  directoryTabs: ['All', 'Blog', 'Projects', 'Writing', 'Apps', 'Notes'],
+  positioning: {
+    eyebrow: 'About this site',
+    title: 'A personal website that holds work, curiosity, and lived experience together.',
+    description:
+      'This is not just a portfolio. It is where ideas turn into essays, tools, records, and archives that can keep growing without losing their shape.',
+    cards: [
+      {
+        title: 'Writing',
+        description:
+          'Books, movies, games, product thinking, and essays that deserve more care than a quick timeline post.'
+      },
+      {
+        title: 'Projects',
+        description:
+          'ADV Screener, 13F and data research products, AI-supported workflows, and public experiments built in the open.'
+      },
+      {
+        title: 'Adventures',
+        description:
+          'Cricket records, future travel logs, and field notes that feel central to identity rather than decorative.'
+      }
+    ]
+  },
+  featuredDestinations: [
+    {
+      title: 'Blog',
+      href: '/blog',
+      eyebrow: 'Writing',
+      description: 'Essays, notes, reviews, and product thinking published in public.'
+    },
+    {
+      title: 'Projects',
+      href: '/projects',
+      eyebrow: 'Tools',
+      description: 'Research products, data tools, and practical experiments in motion.'
+    },
+    {
+      title: 'Adventures',
+      href: '/adventures',
+      eyebrow: 'Field notes',
+      description: 'Cricket, travel, and story-led archives built with the same care as the work.'
+    },
+    {
+      title: 'Now',
+      href: '/now',
+      eyebrow: 'Current focus',
+      description: 'A living snapshot of what I am building, reading, exploring, and paying attention to.'
+    }
+  ],
+  directoryTabs: ['All', 'Blog', 'Projects', 'Adventures', 'Apps', 'Notes'],
   featuredBands: {
     latestWriting: true,
     featuredProject: true
   },
+  currentBrewingIntro:
+    'This is the one place where the brewing metaphor still fits: active work, live experiments, and archives that are still taking shape.',
   currentBrewing: [
-    'Designing AI-supported diligence and research tools with a more editorial, premium interface language.',
-    'Writing about books, movies, games, cricket, work, and the product choices that quietly shape modern life.',
-    'Exploring how immersive visuals and restrained motion can make personal publishing feel more cinematic without losing performance.',
-    'Building a reusable homepage system that can expand into future notes, apps, adventures, and themed collections.'
+    'Designing calmer public surfaces for research products like ADV Screener and 13F Data Finder.',
+    'Writing across books, movies, games, work, cricket, and the product choices that shape modern life.',
+    'Expanding Adventures into a stronger home for cricket records, travel logs, and story-driven field notes.',
+    'Keeping the site modular so new apps, notes, and archives can be added without redesigning the whole system.'
   ],
-  focusCanisters: [
-    {
-      label: 'Writing themes',
-      value: 'Culture, craft, systems, and observations that keep earning another read.'
-    },
-    {
-      label: 'Experiments',
-      value: 'Interfaces, AI workflows, and product structures tested in public before they harden.'
-    },
-    {
-      label: 'Future apps',
-      value: 'Utility-first tools shaped with editorial warmth, cinematic restraint, and practical clarity.'
-    }
-  ],
+  featuredAdventure: {
+    eyebrow: 'Featured adventure',
+    title: 'Cricket archive',
+    href: '/adventures/cricket',
+    description:
+      'A living archive for matches, milestones, teams, seasons, and the personal notes that make the record feel human.',
+    meta: 'Records, timeline, highlights',
+    tags: ['cricket', 'archive', 'field notes']
+  },
+  archive: {
+    eyebrow: 'Archive system',
+    title: 'A modular home that can keep expanding.',
+    description:
+      'Blog posts, projects, adventure entries, apps, notes, and now updates all have a clear place in the system.',
+    noteTitle: 'Built to scale',
+    noteCopy:
+      'Adding a new post, project, field note, app, or update should stay low-friction, readable, and easy to maintain.'
+  },
   selectedEntryIntro:
-    'A few pieces already poured into public form - presented inside the same visual story as the rest of the homepage so the transition from browsing to reading feels intentional.'
+    'A few current signals across the site, spanning writing, tools, and field notes.'
 } as const;
