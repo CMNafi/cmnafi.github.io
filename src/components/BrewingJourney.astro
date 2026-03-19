@@ -1,0 +1,27 @@
+---
+import { homepageConfig } from '@/config/homepage';
+
+const { chapters } = Astro.props as {
+  chapters: typeof homepageConfig.processChapters;
+};
+---
+
+<div class="brewing-journey panel">
+  <div class="brewing-journey__beam" aria-hidden="true">
+    <span></span>
+  </div>
+  <div class="brewing-journey__grid">
+    {chapters.map((chapter, index) => (
+      <article class="journey-card">
+        <div class="journey-card__top">
+          <span class="journey-card__index">0{index + 1}</span>
+          <span class="journey-card__phase">{chapter.phase}</span>
+        </div>
+        <h3>{chapter.title}</h3>
+        <p class="journey-card__subtitle">{chapter.subtitle}</p>
+        <p>{chapter.description}</p>
+        <small>{chapter.cue}</small>
+      </article>
+    ))}
+  </div>
+</div>

@@ -2,10 +2,12 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
+import BrewingJourney from '@/components/BrewingJourney.astro';
 import DirectoryTabs from '@/components/DirectoryTabs.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import FeaturedPostCard from '@/components/FeaturedPostCard.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
+import DirectoryCard from '@/components/DirectoryCard.astro';
 import { homepageConfig } from '@/config/homepage';
 import directories from '@/data/directories.json';
 
@@ -24,91 +26,105 @@ const directoryItems = directories
     count:
       item.title === 'Blog' ? blogPosts.length : item.title === 'Projects' ? projects.length : undefined
   }));
+
+const spotlightItems = directoryItems.filter((item) =>
+  ['Blog', 'Projects', 'Adventures'].includes(item.title)
+);
 ---
 
 <BaseLayout>
-  <section class="page-section page-section-hero">
-    <Hero hero={homepageConfig.hero} processChapters={homepageConfig.processChapters} />
-  </section>
-
-  <section class="page-section">
-    <SectionHeading
-      eyebrow="From raw to refined"
-      title="A brewing story for how the work becomes public"
-      description="The homepage moves like a ritual: collect, grind, brew, pour, and serve. Each stage maps to how ideas are gathered, refined, built, published, and carried forward."
-    />
-    <div class="process-grid">
-      {homepageConfig.processChapters.map((chapter) => (
-        <article class="process-card panel">
-          <span class="process-phase">{chapter.phase}</span>
-          <h3>{chapter.title}</h3>
-          <p class="process-subtitle">{chapter.subtitle}</p>
-          <p>{chapter.description}</p>
-          <small>{chapter.cue}</small>
-        </article>
-      ))}
+  <div class="home-story">
+    <div class="home-brew-line" aria-hidden="true">
+      <span class="home-brew-line__core"></span>
+      <span class="home-brew-line__pulse home-brew-line__pulse-a"></span>
+      <span class="home-brew-line__pulse home-brew-line__pulse-b"></span>
+      <span class="home-brew-line__pulse home-brew-line__pulse-c"></span>
     </div>
-  </section>
 
-  <section class="page-section page-section-directory">
-    <SectionHeading
-      eyebrow="Poured into public form"
-      title="A directory designed like a studio service tray"
-      description="The useful parts stay obvious: blog entries, projects, essays, apps, and future notes all live in a system that can keep expanding without losing the atmosphere."
-    />
-    <DirectoryTabs tabs={[...homepageConfig.directoryTabs]} items={directoryItems} />
-  </section>
+    <section class="page-section page-section-hero">
+      <Hero hero={homepageConfig.hero} processChapters={homepageConfig.processChapters} />
+    </section>
 
-  <section class="page-section two-up home-focus-grid">
-    <div>
+    <section class="page-section page-section-story">
       <SectionHeading
-        eyebrow="Currently brewing"
-        title="What is under warm pressure right now"
-        description="These are the themes, products, and curiosities currently moving through the grinder."
+        eyebrow="From raw signal to finished pour"
+        title="The homepage now moves like one cinematic brewing sequence"
+        description="A continuous visual current ties the hero, process, directory, and featured work together so each section feels like the next chapter of the same ritual."
       />
-      <div class="panel current-brewing">
-        <ul>
-          {homepageConfig.currentBrewing.map((item) => <li>{item}</li>)}
-        </ul>
-      </div>
-    </div>
+      <BrewingJourney chapters={homepageConfig.processChapters} />
+    </section>
 
-    <div>
+    <section class="page-section page-section-spotlights">
       <SectionHeading
-        eyebrow="Studio canisters"
-        title="Clear containers for the next wave"
-        description="A few durable categories make the site easy to maintain while giving future sections room to arrive naturally."
+        eyebrow="Immediate destinations"
+        title="Three clear doors stay front-and-center"
+        description="Blog, Projects, and Adventures stay obvious and clickable throughout the experience, even as the atmosphere becomes more immersive."
       />
-      <div class="canister-grid">
-        {homepageConfig.focusCanisters.map((item) => (
-          <article class="canister panel">
-            <span>{item.label}</span>
-            <p>{item.value}</p>
-          </article>
-        ))}
+      <div class="spotlight-grid">
+        {spotlightItems.map((item) => <DirectoryCard item={item} />)}
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="page-section">
-    <SectionHeading
-      eyebrow="Selected entries"
-      title="Already served"
-      description={homepageConfig.selectedEntryIntro}
-    />
-    <div class="two-up selected-grid">
-      {homepageConfig.featuredBands.latestWriting && latestPost && (
-        <div>
-          <SectionHeading eyebrow="Latest writing" title={latestPost.data.title} description={latestPost.data.excerpt} />
-          <FeaturedPostCard post={latestPost} />
+    <section class="page-section page-section-directory">
+      <SectionHeading
+        eyebrow="Poured into public form"
+        title="Section cards now feel like artifacts from the same studio world"
+        description="Shared gradients, edge-lighting, and story accents make the cards feel related while preserving strong clarity and tap targets for navigation."
+      />
+      <DirectoryTabs tabs={[...homepageConfig.directoryTabs]} items={directoryItems} />
+    </section>
+
+    <section class="page-section two-up home-focus-grid">
+      <div>
+        <SectionHeading
+          eyebrow="Currently brewing"
+          title="Warm pressure on the next wave of work"
+          description="What is active right now sits in the same narrative system as the rest of the homepage."
+        />
+        <div class="panel current-brewing story-panel">
+          <ul>
+            {homepageConfig.currentBrewing.map((item) => <li>{item}</li>)}
+          </ul>
         </div>
-      )}
-      {homepageConfig.featuredBands.featuredProject && featuredProject && (
-        <div>
-          <SectionHeading eyebrow="Featured project" title={featuredProject.data.title} description={featuredProject.data.summary} />
-          <ProjectCard project={featuredProject} />
+      </div>
+
+      <div>
+        <SectionHeading
+          eyebrow="Studio canisters"
+          title="Reusable containers for what expands next"
+          description="Durable categories keep the code maintainable while giving future sections a shared visual language."
+        />
+        <div class="canister-grid">
+          {homepageConfig.focusCanisters.map((item) => (
+            <article class="canister panel story-panel">
+              <span>{item.label}</span>
+              <p>{item.value}</p>
+            </article>
+          ))}
         </div>
-      )}
-    </div>
-  </section>
+      </div>
+    </section>
+
+    <section class="page-section page-section-selected">
+      <SectionHeading
+        eyebrow="Selected entries"
+        title="Already served"
+        description={homepageConfig.selectedEntryIntro}
+      />
+      <div class="two-up selected-grid">
+        {homepageConfig.featuredBands.latestWriting && latestPost && (
+          <div>
+            <SectionHeading eyebrow="Latest writing" title={latestPost.data.title} description={latestPost.data.excerpt} />
+            <FeaturedPostCard post={latestPost} />
+          </div>
+        )}
+        {homepageConfig.featuredBands.featuredProject && featuredProject && (
+          <div>
+            <SectionHeading eyebrow="Featured project" title={featuredProject.data.title} description={featuredProject.data.summary} />
+            <ProjectCard project={featuredProject} />
+          </div>
+        )}
+      </div>
+    </section>
+  </div>
 </BaseLayout>
