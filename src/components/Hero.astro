@@ -1,25 +1,101 @@
 ---
 import { homepageConfig } from '@/config/homepage';
-const { hero } = Astro.props as { hero: typeof homepageConfig.hero };
+const { hero, processChapters } = Astro.props as {
+  hero: typeof homepageConfig.hero;
+  processChapters: typeof homepageConfig.processChapters;
+};
 ---
 
-<section class="hero panel">
+<section class="hero hero-shell panel">
+  <div class="hero-atmosphere" aria-hidden="true">
+    <span class="hero-haze hero-haze-amber"></span>
+    <span class="hero-haze hero-haze-blue"></span>
+    <span class="hero-grid"></span>
+  </div>
+
   <div class="hero-copy">
     <p class="eyebrow">{hero.eyebrow}</p>
-    <h1>{hero.title}</h1>
+    <h1>
+      {hero.title}
+      <span>{hero.highlight}</span>
+    </h1>
     <p class="hero-description">{hero.description}</p>
+    <p class="hero-manifesto">{hero.manifesto}</p>
+
     <div class="hero-actions">
       {hero.ctas.map((cta) => (
         <a class={`button button-${cta.variant}`} href={cta.href}>{cta.label}</a>
       ))}
     </div>
+
+    <div class="hero-stats">
+      {hero.stats.map((stat) => (
+        <div class="hero-stat panel">
+          <span>{stat.label}</span>
+          <strong>{stat.value}</strong>
+        </div>
+      ))}
+    </div>
   </div>
+
   <div class="hero-visual" aria-hidden="true">
-    <div class="orb orb-a"></div>
-    <div class="orb orb-b"></div>
-    <div class="orb orb-c"></div>
-    <div class="steam steam-a"></div>
-    <div class="steam steam-b"></div>
-    <div class="steam steam-c"></div>
+    <div class="brew-stage brew-stage-beans">
+      <div class="stage-label">Bean collection</div>
+      <span class="bean bean-1"></span>
+      <span class="bean bean-2"></span>
+      <span class="bean bean-3"></span>
+      <span class="bean bean-4"></span>
+      <span class="bean bean-5"></span>
+      <span class="bean bean-6"></span>
+      <div class="bean-vessel"></div>
+    </div>
+
+    <div class="brew-stage brew-stage-grind">
+      <div class="stage-label">Grinding</div>
+      <div class="grinder-ring grinder-ring-outer"></div>
+      <div class="grinder-ring grinder-ring-inner"></div>
+      <div class="grind-dust grind-dust-a"></div>
+      <div class="grind-dust grind-dust-b"></div>
+    </div>
+
+    <div class="brew-stage brew-stage-brew">
+      <div class="stage-label">Brewing</div>
+      <div class="brew-column">
+        <span class="brew-flow brew-flow-a"></span>
+        <span class="brew-flow brew-flow-b"></span>
+        <span class="steam-line steam-line-a"></span>
+        <span class="steam-line steam-line-b"></span>
+        <span class="steam-line steam-line-c"></span>
+      </div>
+    </div>
+
+    <div class="brew-stage brew-stage-pour">
+      <div class="stage-label">Pour</div>
+      <span class="pour-stream"></span>
+      <div class="pour-card pour-card-a">Blog</div>
+      <div class="pour-card pour-card-b">Projects</div>
+      <div class="pour-card pour-card-c">Adventures</div>
+    </div>
+
+    <div class="brew-stage brew-stage-cup">
+      <div class="stage-label">Final cup</div>
+      <div class="cup-saucer"></div>
+      <div class="cup-body"></div>
+      <div class="cup-handle"></div>
+      <div class="cup-glow"></div>
+    </div>
+  </div>
+
+  <div class="hero-rail">
+    {processChapters.map((chapter, index) => (
+      <article class="hero-rail-card panel">
+        <span class="hero-rail-index">0{index + 1}</span>
+        <div>
+          <p>{chapter.phase}</p>
+          <h2>{chapter.title}</h2>
+          <small>{chapter.cue}</small>
+        </div>
+      </article>
+    ))}
   </div>
 </section>
