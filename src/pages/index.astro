@@ -5,6 +5,7 @@ import { formatDate } from '@/utils/format';
 
 const routeRegions = ['Bangladesh', 'China', 'USA'];
 const primaryRole = 'Solutions Specialist at Dasseti';
+const parseDisplayDate = (value: string) => new Date(`${value}T12:00:00`);
 const journeyHighlights = [
   {
     step: '01',
@@ -157,7 +158,7 @@ const secondaryPaths = [
         {homeInterestTimeline.map((entry) => (
           <a class="interests-entry" href={entry.href}>
             <div class="interests-entry__date">
-              <span>{formatDate(new Date(entry.date))}</span>
+              <span>{formatDate(parseDisplayDate(entry.date))}</span>
             </div>
             <div class="interests-entry__line" aria-hidden="true"></div>
             <article class="panel interests-entry__card">
