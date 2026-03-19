@@ -1,63 +1,63 @@
 export const homepageConfig = {
   hero: {
-    eyebrow: 'A personal studio for ideas under gentle pressure',
+    eyebrow: 'A cinematic home for work gathered slowly and released with intent',
     title: 'Still Brewing',
-    highlight: 'ideas with warmth and weight',
+    highlight: 'ideas into warm, precise public artifacts',
     description:
-      'Projects, essays, notes, experiments, and future apps move through the same ritual here: gather the signal, refine the thought, brew the work, then serve something useful.',
+      'Writing, experiments, product thinking, adventures, and future tools now live inside one immersive visual system — more atmospheric, more editorial, and still easy to navigate.',
     manifesto:
-      'This is a calm motion story for work in progress — a place where books, movies, cricket, product thinking, and quiet software experiments become public over time.',
+      'The homepage is designed like a premium brewing ritual: signals are collected, refined, pressurized, and poured into clear destinations for reading, building, and exploration.',
     ctas: [
       { label: 'Enter the journal', href: '/blog', variant: 'primary' },
       { label: 'Browse projects', href: '/projects', variant: 'secondary' },
       { label: 'See what is brewing now', href: '/now', variant: 'ghost' }
     ],
     stats: [
-      { label: 'Mode', value: 'Slow creative ritual' },
-      { label: 'Output', value: 'Writing, tools, experiments' },
-      { label: 'Signal', value: 'Books, work, games, cricket, life' }
+      { label: 'Atmosphere', value: 'Cinematic, warm, and immersive' },
+      { label: 'Output', value: 'Writing, tools, stories, field notes' },
+      { label: 'System', value: 'Reusable sections with gentle motion' }
     ]
   },
   processChapters: [
     {
       phase: 'Collect',
-      title: 'Bean collection',
-      subtitle: 'Gathering what matters',
+      title: 'Signals gathered from the world outside the cup',
+      subtitle: 'Books, matches, trips, products, and moments worth returning to',
       description:
-        'Ideas begin as fragments: books worth underlining, films that linger, product patterns, travel notes, work lessons, and the odd match that refuses to leave the mind.',
-      cue: 'Collecting signals'
+        'The work begins with fragments that carry unusual weight: a product decision, a quiet quote, a movie image, a cricket session, a travel memory, or a lingering systems question.',
+      cue: 'Intake of the raw signal'
     },
     {
       phase: 'Grind',
-      title: 'Grinding the rough edges',
-      subtitle: 'Turning input into clarity',
+      title: 'Fragments are milled into sharper questions',
+      subtitle: 'Patterns become structure before anything gets published',
       description:
-        'Loose inputs are broken down, compared, and sharpened into stronger questions, cleaner structures, and more useful next steps.',
-      cue: 'Refining the noise'
+        'Loose observations are compared, compressed, and reframed until they have enough shape to become a useful essay, experiment, product path, or public note.',
+      cue: 'Compression into clarity'
     },
     {
       phase: 'Brew',
-      title: 'Deep work in extraction',
-      subtitle: 'Where thinking turns tangible',
+      title: 'Pressure and patience extract the real idea',
+      subtitle: 'Where thought becomes interface, draft, or prototype',
       description:
-        'Writing, prototyping, and synthesis happen here — slowly enough to stay thoughtful, steadily enough to ship.',
-      cue: 'The work is in motion'
+        'This is the making phase: writing, prototyping, arranging, and testing until the work feels distilled rather than merely decorated.',
+      cue: 'Extraction in motion'
     },
     {
       phase: 'Pour',
-      title: 'Poured into public form',
-      subtitle: 'Serving what is ready',
+      title: 'The work branches into public destinations',
+      subtitle: 'Blog, Projects, and Adventures each receive their own pour',
       description:
-        'Posts, projects, and field notes arrive as structured outputs: readable, navigable, and ready to meet the world.',
-      cue: 'Served when ready'
+        'Once ready, the stream separates into the right vessel — an article, a product page, or a field note — without losing the atmosphere of the original process.',
+      cue: 'Routing the finished batch'
     },
     {
       phase: 'Serve',
-      title: 'The final cup',
-      subtitle: 'A place for what is brewing',
+      title: 'The site becomes the final cup and service tray',
+      subtitle: 'A calm archive for active work and future releases',
       description:
-        'The site itself is the vessel: a warm index of finished work, active experiments, and the themes shaping what comes next.',
-      cue: 'Ideas, refined and ready'
+        'Everything lands in a coherent publishing system that can keep expanding into notes, apps, library pages, and future experiments while staying warm and readable.',
+      cue: 'Ready for public use'
     }
   ],
   directoryTabs: ['All', 'Blog', 'Projects', 'Writing', 'Apps', 'Notes'],
@@ -66,25 +66,25 @@ export const homepageConfig = {
     featuredProject: true
   },
   currentBrewing: [
-    'Designing gentle research tools and diligence workflows that feel editorial instead of mechanical.',
-    'Writing about books, movies, games, cricket, and the product decisions that quietly shape modern life.',
-    'Building future-facing apps with a warm interface language: calm, precise, and useful under pressure.',
-    'Creating a personal publishing system that can expand into notes, a library, adventures, and public experiments without losing coherence.'
+    'Designing AI-supported diligence and research tools with a more editorial, premium interface language.',
+    'Writing about books, movies, games, cricket, work, and the product choices that quietly shape modern life.',
+    'Exploring how immersive visuals and restrained motion can make personal publishing feel more cinematic without losing performance.',
+    'Building a reusable homepage system that can expand into future notes, apps, adventures, and themed collections.'
   ],
   focusCanisters: [
     {
       label: 'Writing themes',
-      value: 'Culture, craft, systems, and the observations that survive a second look.'
+      value: 'Culture, craft, systems, and observations that keep earning another read.'
     },
     {
       label: 'Experiments',
-      value: 'Small interfaces, AI workflows, and product ideas being tested in public.'
+      value: 'Interfaces, AI workflows, and product structures tested in public before they harden.'
     },
     {
       label: 'Future apps',
-      value: 'Utility-first tools that feel considered, warm, and materially clear.'
+      value: 'Utility-first tools shaped with editorial warmth, cinematic restraint, and practical clarity.'
     }
   ],
   selectedEntryIntro:
-    'A few things already poured into public form — one recent note, one featured build, and one clear view into the next layer of the studio.'
+    'A few pieces already poured into public form — presented inside the same visual story as the rest of the homepage so the transition from browsing to reading feels intentional.'
 } as const;
