@@ -1,20 +1,34 @@
 ---
 import { homepageConfig } from '@/config/homepage';
+
+type HeroStage = {
+  label: string;
+  cue: string;
+};
+
+type HeroConfig = typeof homepageConfig.hero & {
+  animationStages?: readonly HeroStage[];
+};
+
 const { hero, processChapters } = Astro.props as {
-  hero: typeof homepageConfig.hero;
+  hero: HeroConfig;
   processChapters: typeof homepageConfig.processChapters;
 };
+
+const animationStages =
+  hero.animationStages ??
+  ([
+    { label: 'Bean Intake', cue: '0-20% cycle' },
+    { label: 'Grind', cue: '20-45% cycle' },
+    { label: 'Brew', cue: '45-75% cycle' },
+    { label: 'Serve', cue: '75-100% cycle' }
+  ] as const);
+
+const chapterRail = processChapters.slice(0, 4);
 ---
 
-<section class="hero hero-shell panel">
-  <div class="hero-atmosphere" aria-hidden="true">
-    <span class="hero-haze hero-haze-amber"></span>
-    <span class="hero-haze hero-haze-blue"></span>
-    <span class="hero-grid"></span>
-    <span class="hero-vignette"></span>
-  </div>
-
-  <div class="hero-copy">
+<section class="hero coffee-hero panel">
+  <div class="coffee-hero__copy">
     <p class="eyebrow">{hero.eyebrow}</p>
     <h1>
       {hero.title}
@@ -29,7 +43,7 @@ const { hero, processChapters } = Astro.props as {
       ))}
     </div>
 
-    <div class="hero-stats hero-stats-premium">
+    <div class="hero-stats coffee-hero__stats">
       {hero.stats.map((stat) => (
         <article class="hero-stat panel">
           <span>{stat.label}</span>
@@ -37,78 +51,85 @@ const { hero, processChapters } = Astro.props as {
         </article>
       ))}
     </div>
+
+    <div class="coffee-hero__phase-list">
+      {animationStages.map((stage, index) => (
+        <article class="coffee-phase-card">
+          <span>{`0${index + 1}`}</span>
+          <strong>{stage.label}</strong>
+          <small>{stage.cue}</small>
+        </article>
+      ))}
+    </div>
   </div>
 
-  <div class="hero-visual" aria-hidden="true">
-    <div class="hero-visual-shell">
-      <div class="scene-orbit scene-orbit-outer"></div>
-      <div class="scene-orbit scene-orbit-inner"></div>
-      <div class="scene-ring-glow"></div>
+  <div class="coffee-hero__scene" aria-hidden="true">
+    <div class="brew-apparatus">
+      <div class="brew-apparatus__backdrop"></div>
 
-      <div class="scene-stage scene-stage-intake">
-        <span class="scene-label">Signals arrive</span>
+      <div class="brew-orbit brew-orbit--outer"></div>
+      <div class="brew-orbit brew-orbit--inner"></div>
+
+      <section class="brew-stage brew-stage--intake">
+        <span class="brew-stage__label">Bean intake</span>
         <div class="bean-cluster">
           <span class="bean bean-1"></span>
           <span class="bean bean-2"></span>
           <span class="bean bean-3"></span>
           <span class="bean bean-4"></span>
-          <span class="bean bean-5"></span>
         </div>
-      </div>
+        <span class="stage-glow stage-glow--intake"></span>
+      </section>
 
-      <div class="scene-stage scene-stage-grind">
-        <span class="scene-label">Thoughts refined</span>
-        <div class="grinder-ring grinder-ring-outer"></div>
-        <div class="grinder-ring grinder-ring-inner"></div>
-        <div class="grind-dust grind-dust-a"></div>
-        <div class="grind-dust grind-dust-b"></div>
-      </div>
+      <section class="brew-stage brew-stage--grind">
+        <span class="brew-stage__label">Grind</span>
+        <div class="grinder-ring grinder-ring--outer"></div>
+        <div class="grinder-ring grinder-ring--inner"></div>
+        <span class="grind-dust grind-dust--a"></span>
+        <span class="grind-dust grind-dust--b"></span>
+      </section>
 
-      <div class="scene-stage scene-stage-brew">
-        <span class="scene-label">Work extracting</span>
+      <section class="brew-stage brew-stage--extract">
+        <span class="brew-stage__label">Brew</span>
         <div class="brew-column">
-          <span class="brew-flow brew-flow-a"></span>
-          <span class="brew-flow brew-flow-b"></span>
-          <span class="steam-line steam-line-a"></span>
-          <span class="steam-line steam-line-b"></span>
-          <span class="steam-line steam-line-c"></span>
+          <span class="brew-liquid brew-liquid--main"></span>
+          <span class="brew-liquid brew-liquid--alt"></span>
         </div>
-      </div>
+        <span class="pour-stream"></span>
+      </section>
 
-      <div class="scene-stage scene-stage-serve">
-        <span class="scene-label">Public release</span>
+      <section class="brew-stage brew-stage--serve">
+        <span class="brew-stage__label">Serve</span>
         <div class="cup-saucer"></div>
         <div class="cup-body"></div>
         <div class="cup-handle"></div>
-        <div class="cup-glow"></div>
-      </div>
+        <span class="cup-glow"></span>
+        <span class="steam steam-a"></span>
+        <span class="steam steam-b"></span>
+        <span class="steam steam-c"></span>
+      </section>
 
-      <div class="scene-stream scene-stream-main"></div>
-      <div class="scene-stream scene-stream-accent"></div>
+      <div class="brew-route"></div>
 
-      <div class="hero-destination-links">
-        <a class="hero-destination hero-destination-blog" href="/blog">
+      <div class="coffee-hero__destinations">
+        <a class="hero-destination" href="/blog">
           <span>Journal</span>
           <strong>Blog</strong>
         </a>
-        <a class="hero-destination hero-destination-projects" href="/projects">
+        <a class="hero-destination" href="/projects">
           <span>Build log</span>
           <strong>Projects</strong>
         </a>
-        <a class="hero-destination hero-destination-adventures" href="/adventures">
+        <a class="hero-destination" href="/adventures">
           <span>Field notes</span>
           <strong>Adventures</strong>
         </a>
       </div>
-
-      <div class="hero-scene-caption panel">
-        <p>Every section follows the same ritual: gather, refine, brew, and serve.</p>
-      </div>
     </div>
   </div>
 
-  <div class="hero-rail">
-    {processChapters.map((chapter, index) => (
+  <div class="hero-rail coffee-hero__rail">
+    {chapterRail.map((chapter, index) => (
       <article class="hero-rail-card panel">
         <span class="hero-rail-index">0{index + 1}</span>
         <div>

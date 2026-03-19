@@ -7,7 +7,6 @@ import DirectoryTabs from '@/components/DirectoryTabs.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import FeaturedPostCard from '@/components/FeaturedPostCard.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
-import DirectoryCard from '@/components/DirectoryCard.astro';
 import { homepageConfig } from '@/config/homepage';
 import directories from '@/data/directories.json';
 
@@ -27,13 +26,15 @@ const directoryItems = directories
       item.title === 'Blog' ? blogPosts.length : item.title === 'Projects' ? projects.length : undefined
   }));
 
-const spotlightItems = directoryItems.filter((item) =>
-  ['Blog', 'Projects', 'Adventures'].includes(item.title)
-);
+const spotlightItems = directoryItems
+  .filter((item) => ['Blog', 'Projects', 'Adventures'].includes(item.title))
+  .sort((a, b) => ['Blog', 'Projects', 'Adventures'].indexOf(a.title) - ['Blog', 'Projects', 'Adventures'].indexOf(b.title));
+
+const stageChapters = homepageConfig.processChapters.slice(0, 4);
 ---
 
 <BaseLayout>
-  <div class="home-story">
+  <div class="home-story home-v2">
     <div class="home-brew-line" aria-hidden="true">
       <span class="home-brew-line__core"></span>
       <span class="home-brew-line__pulse home-brew-line__pulse-a"></span>
@@ -47,29 +48,42 @@ const spotlightItems = directoryItems.filter((item) =>
 
     <section class="page-section page-section-story">
       <SectionHeading
-        eyebrow="From raw signal to finished pour"
-        title="The homepage now moves like one cinematic brewing sequence"
-        description="A continuous visual current ties the hero, process, directory, and featured work together so each section feels like the next chapter of the same ritual."
+        eyebrow="Process chapters"
+        title="Bean intake to finished serve"
+        description="A four-step brewing narrative keeps the homepage readable, intentional, and consistent across sections."
       />
-      <BrewingJourney chapters={homepageConfig.processChapters} />
+      <BrewingJourney chapters={stageChapters} />
     </section>
 
-    <section class="page-section page-section-spotlights">
+    <section class="page-section home-v2-doors">
       <SectionHeading
-        eyebrow="Immediate destinations"
-        title="Three clear doors stay front-and-center"
-        description="Blog, Projects, and Adventures stay obvious and clickable throughout the experience, even as the atmosphere becomes more immersive."
+        eyebrow="High-visibility destinations"
+        title="Three clear doors stay in reach"
+        description="Whether you want to read, build, or explore, each path remains obvious in the flow of the page."
       />
-      <div class="spotlight-grid">
-        {spotlightItems.map((item) => <DirectoryCard item={item} />)}
+      <div class="home-v2-doors__grid">
+        {spotlightItems.map((item) => (
+          <a class="home-v2-door panel" href={item.slug}>
+            <div class="home-v2-door__top">
+              <span>{item.icon}</span>
+              <small>{item.category}</small>
+            </div>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+            <div class="home-v2-door__meta">
+              <span>{item.count ? `${item.count} entries` : 'Open section'}</span>
+              <strong>Enter</strong>
+            </div>
+          </a>
+        ))}
       </div>
     </section>
 
     <section class="page-section page-section-directory">
       <SectionHeading
-        eyebrow="Poured into public form"
-        title="Section cards now feel like artifacts from the same studio world"
-        description="Shared gradients, edge-lighting, and story accents make the cards feel related while preserving strong clarity and tap targets for navigation."
+        eyebrow="Directory"
+        title="Everything pours into one organized system"
+        description="Tabs keep navigation practical while preserving the same coffeehouse visual language."
       />
       <DirectoryTabs tabs={[...homepageConfig.directoryTabs]} items={directoryItems} />
     </section>
@@ -78,8 +92,8 @@ const spotlightItems = directoryItems.filter((item) =>
       <div>
         <SectionHeading
           eyebrow="Currently brewing"
-          title="Warm pressure on the next wave of work"
-          description="What is active right now sits in the same narrative system as the rest of the homepage."
+          title="Active work on the counter"
+          description="The next wave of writing and products in progress."
         />
         <div class="panel current-brewing story-panel">
           <ul>
@@ -91,8 +105,8 @@ const spotlightItems = directoryItems.filter((item) =>
       <div>
         <SectionHeading
           eyebrow="Studio canisters"
-          title="Reusable containers for what expands next"
-          description="Durable categories keep the code maintainable while giving future sections a shared visual language."
+          title="Reusable containers for what comes next"
+          description="Consistent buckets keep expansion easy as new sections are added."
         />
         <div class="canister-grid">
           {homepageConfig.focusCanisters.map((item) => (
@@ -107,8 +121,8 @@ const spotlightItems = directoryItems.filter((item) =>
 
     <section class="page-section page-section-selected">
       <SectionHeading
-        eyebrow="Selected entries"
-        title="Already served"
+        eyebrow="Already served"
+        title="Selected entries"
         description={homepageConfig.selectedEntryIntro}
       />
       <div class="two-up selected-grid">

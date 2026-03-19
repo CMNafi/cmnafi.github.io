@@ -1,21 +1,27 @@
 export const homepageConfig = {
   hero: {
-    eyebrow: 'A cinematic home for work gathered slowly and released with intent',
-    title: 'Still Brewing',
-    highlight: 'ideas into warm, precise public artifacts',
+    eyebrow: 'Coffeehouse studio for notes, products, and fieldwork',
+    title: 'Coffeehouse',
+    highlight: 'Ideas brewed carefully, then served in public.',
     description:
-      'Writing, experiments, product thinking, adventures, and future tools now live inside one immersive visual system — more atmospheric, more editorial, and still easy to navigate.',
+      'A modern front door where writing, tools, and adventures move through one calm brewing ritual from raw intake to finished pour.',
     manifesto:
-      'The homepage is designed like a premium brewing ritual: signals are collected, refined, pressurized, and poured into clear destinations for reading, building, and exploration.',
+      'Everything here follows a shared rhythm: collect signal, refine direction, extract value, and serve it where it is easiest to explore.',
     ctas: [
-      { label: 'Enter the journal', href: '/blog', variant: 'primary' },
+      { label: 'Read the journal', href: '/blog', variant: 'primary' },
       { label: 'Browse projects', href: '/projects', variant: 'secondary' },
-      { label: 'See what is brewing now', href: '/now', variant: 'ghost' }
+      { label: 'What is brewing now', href: '/now', variant: 'ghost' }
+    ],
+    animationStages: [
+      { label: 'Bean Intake', cue: '0-20% cycle' },
+      { label: 'Grind', cue: '20-45% cycle' },
+      { label: 'Brew', cue: '45-75% cycle' },
+      { label: 'Serve', cue: '75-100% cycle' }
     ],
     stats: [
-      { label: 'Atmosphere', value: 'Cinematic, warm, and immersive' },
-      { label: 'Output', value: 'Writing, tools, stories, field notes' },
-      { label: 'System', value: 'Reusable sections with gentle motion' }
+      { label: 'Atmosphere', value: 'Editorial and warm' },
+      { label: 'Output', value: 'Writing, products, adventures' },
+      { label: 'Motion', value: 'Subtle and accessible' }
     ]
   },
   processChapters: [
@@ -48,7 +54,7 @@ export const homepageConfig = {
       title: 'The work branches into public destinations',
       subtitle: 'Blog, Projects, and Adventures each receive their own pour',
       description:
-        'Once ready, the stream separates into the right vessel — an article, a product page, or a field note — without losing the atmosphere of the original process.',
+        'Once ready, the stream separates into the right vessel - an article, a product page, or a field note - without losing the atmosphere of the original process.',
       cue: 'Routing the finished batch'
     },
     {
@@ -86,5 +92,5 @@ export const homepageConfig = {
     }
   ],
   selectedEntryIntro:
-    'A few pieces already poured into public form — presented inside the same visual story as the rest of the homepage so the transition from browsing to reading feels intentional.'
+    'A few pieces already poured into public form - presented inside the same visual story as the rest of the homepage so the transition from browsing to reading feels intentional.'
 } as const;
