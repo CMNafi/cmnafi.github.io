@@ -3,7 +3,11 @@
     "allow": [
       "WebFetch(domain:ai.studio)",
       "WebFetch(domain:aistudio.google.com)",
-      "Bash(winget install:*)"
+      "Bash(winget install:*)",
+      "Bash(grep -r href= C:UsersnaficDesktopcmnafi.comcmnafi.github.io.claudeworktreesepic-meninsky --include=*.html)",
+      "Bash(grep -rh href=[''] C:UsersnaficDesktopcmnafi.comcmnafi.github.io.claudeworktreesepic-meninsky --include=*.html)",
+      "Bash(grep -rh href=\"\"[^\"\"]*\"\" C:UsersnaficDesktopcmnafi.comcmnafi.github.io.claudeworktreesepic-meninsky --include=*.html)",
+      "Bash(basedir=\"C:/Users/nafic/Desktop/cmnafi.com/cmnafi.github.io/.claude/worktrees/epic-meninsky\" echo \"Files referenced in about/about.html:\" grep 'href=\"\"\"\"[^\"\"\"\"]*\"\"\"\"' \"C:/Users/nafic/Desktop/cmnafi.com/cmnafi.github.io/.claude/worktrees/epic-meninsky/about/about.html\")"
     ]
   }
 }
