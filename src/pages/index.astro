@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { strategyMapChapters } from '@/data/strategy-map';
 
-const routePlaces = strategyMapChapters.map((chapter) => chapter.place.split(',')[0]);
+const routeRegions = ['Bangladesh', 'China', 'USA'];
 const secondaryPaths = [
   {
     title: 'Writing',
@@ -39,13 +39,16 @@ const secondaryPaths = [
       </div>
 
       <aside class="panel route-preview">
+        <a class="home-hero__portrait" href="/about" aria-label="About C M Nafi">
+          <img src="/profile.jpg" alt="Portrait of C M Nafi" />
+        </a>
         <p class="eyebrow">The route</p>
-        <h2>{routePlaces.join(' -> ')}</h2>
+        <h2>{routeRegions.join(' -> ')}</h2>
 
         <div class="route-preview__visual" aria-hidden="true">
           <div class="route-preview__track">
-            {routePlaces.map((place, index) => (
-              <span class:list={['route-preview__node', index === routePlaces.length - 1 && 'is-current']}>
+            {routeRegions.map((region, index) => (
+              <span class:list={['route-preview__node', index === routeRegions.length - 1 && 'is-current']}>
                 <span class="route-preview__pulse"></span>
               </span>
             ))}
@@ -53,8 +56,8 @@ const secondaryPaths = [
         </div>
 
         <ol class="route-preview__stops">
-          {routePlaces.map((place) => (
-            <li>{place}</li>
+          {routeRegions.map((region) => (
+            <li>{region}</li>
           ))}
         </ol>
 
@@ -198,19 +201,46 @@ const secondaryPaths = [
   }
 
   .route-preview {
+    position: relative;
     display: grid;
     gap: 1rem;
     padding: 1.4rem;
+    padding-top: 4.75rem;
     border-radius: 30px;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
       radial-gradient(circle at top, rgba(211, 154, 89, 0.08), transparent 64%);
   }
 
+  .home-hero__portrait {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(211, 154, 89, 0.35);
+    box-shadow: 0 0 0 6px rgba(211, 154, 89, 0.08);
+    transition: transform 180ms ease, border-color 180ms ease;
+  }
+
+  .home-hero__portrait:hover {
+    transform: translateY(-2px);
+    border-color: rgba(211, 154, 89, 0.5);
+  }
+
+  .home-hero__portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
   .route-preview h2 {
     font-size: clamp(1.8rem, 3vw, 2.6rem);
     line-height: 1.08;
-    max-width: 14ch;
+    max-width: 12ch;
   }
 
   .route-preview__visual {
@@ -220,7 +250,7 @@ const secondaryPaths = [
   .route-preview__track {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: center;
     gap: 0.4rem;
   }
@@ -272,7 +302,7 @@ const secondaryPaths = [
   .route-preview__stops {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.65rem;
     padding: 0;
     font-size: 0.77rem;
@@ -438,10 +468,6 @@ const secondaryPaths = [
     .route-preview {
       max-width: 40rem;
     }
-
-    .route-preview__stops {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
   }
 
   @media (max-width: 720px) {
@@ -465,8 +491,17 @@ const secondaryPaths = [
       border-radius: 22px;
     }
 
+    .route-preview {
+      padding-top: 4.35rem;
+    }
+
+    .home-hero__portrait {
+      width: 3.7rem;
+      height: 3.7rem;
+    }
+
     .route-preview__stops {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr;
       font-size: 0.72rem;
     }
 
@@ -488,7 +523,8 @@ const secondaryPaths = [
     .route-preview__pulse,
     .home-secondary__card,
     .home-hero__subtle-link,
-    .route-preview__link {
+    .route-preview__link,
+    .home-hero__portrait {
       animation: none !important;
       transition: none !important;
     }
