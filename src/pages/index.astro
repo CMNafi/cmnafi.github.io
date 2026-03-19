@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import DirectoryTabs from '@/components/DirectoryTabs.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import FeaturedPostCard from '@/components/FeaturedPostCard.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import { homepageConfig } from '@/config/homepage';
+import directories from '@/data/directories.json';
+
+const blogPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+const projects = (await getCollection('projects')).sort((a, b) => b.data.priority - a.data.priority);
+const latestPost = blogPosts[0];
+const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
+
+const directoryItems = directories
+  .filter((item) => item.visibility)
+  .sort((a, b) => a.order - b.order)
+  .map((item) => ({
+    ...item,
+    count:
+      item.title === 'Blog' ? blogPosts.length : item.title === 'Projects' ? projects.length : undefined
+  }));
+---
+
+<BaseLayout>
+  <section class="page-section">
+    <Hero hero={homepageConfig.hero} />
+  </section>
+
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Directory"
+      title="A calm index for work in motion"
+      description="Everything on the site is organized as a living directory, so adding new sections later doesn’t require rebuilding the system."
+    />
+    <DirectoryTabs tabs={[...homepageConfig.directoryTabs]} items={directoryItems} />
+  </section>
+
+  <section class="page-section two-up">
+    {homepageConfig.featuredBands.latestWriting && latestPost && (
+      <div>
+        <SectionHeading eyebrow="Latest writing" title={latestPost.data.title} description={latestPost.data.excerpt} />
+        <FeaturedPostCard post={latestPost} />
+      </div>
+    )}
+    {homepageConfig.featuredBands.featuredProject && featuredProject && (
+      <div>
+        <SectionHeading eyebrow="Featured project" title={featuredProject.data.title} description={featuredProject.data.summary} />
+        <ProjectCard project={featuredProject} />
+      </div>
+    )}
+  </section>
+
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Currently brewing"
+      title="Themes shaping the next wave"
+      description="A snapshot of the ideas, experiments, and curiosities guiding the work right now."
+    />
+    <div class="panel current-brewing">
+      <ul>
+        {homepageConfig.currentBrewing.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

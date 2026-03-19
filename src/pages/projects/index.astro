@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => b.data.priority - a.data.priority);
+const featuredProjects = projects.filter((project) => project.data.featured);
+const categories = ['All', ...new Set(projects.map((project) => project.data.category))];
+const liveCount = projects.filter((project) => project.data.status === 'live').length;
+---
+
+<BaseLayout title="Projects" description="Data tools, research utilities, and public experiments in motion.">
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Public builds"
+      title="Projects"
+      description="A home for technical projects, future-facing tools, and public experiments designed to become more useful over time."
+    />
+    <div class="stats-row">
+      <div class="panel stat-card"><strong>{projects.length}</strong><span>tracked builds</span></div>
+      <div class="panel stat-card"><strong>{featuredProjects.length}</strong><span>featured</span></div>
+      <div class="panel stat-card"><strong>{liveCount}</strong><span>live today</span></div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <SectionHeading eyebrow="Featured" title="Priority builds" description="The strongest current signals from the product and tooling side of the site." />
+    <div class="project-grid">
+      {featuredProjects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+
+  <section class="page-section panel filter-panel">
+    <div class="filter-row" role="tablist" aria-label="Project category filters">
+      {categories.map((category, index) => (
+        <button class="directory-tab" role="tab" aria-selected={index === 0 ? 'true' : 'false'} data-project-filter={category}>
+          {category}
+        </button>
+      ))}
+    </div>
+    <div class="project-grid" data-project-grid>
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+
+  <script>
+    const initializeProjectFilters = () => {
+      const buttons = Array.from(document.querySelectorAll('[data-project-filter]'));
+      const cards = Array.from(document.querySelectorAll('[data-project-grid] .project-card'));
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const filter = button.getAttribute('data-project-filter');
+          buttons.forEach((candidate) => candidate.setAttribute('aria-selected', String(candidate === button)));
+          cards.forEach((card) => {
+            const category = card.getAttribute('data-category');
+            card.toggleAttribute('hidden', !(filter === 'All' || category === filter));
+          });
+        });
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeProjectFilters, { once: true });
+    } else {
+      initializeProjectFilters();
+    }
+  </script>
+</BaseLayout>

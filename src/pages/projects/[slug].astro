@@ -1,0 +1,102 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import StatusBadge from '@/components/StatusBadge.astro';
+import { formatDate } from '@/utils/format';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.data.slug },
+    props: { project, projects }
+  }));
+}
+
+const { project, projects } = Astro.props;
+const { Content } = await render(project);
+const relatedProjects = projects.filter((candidate) => candidate.id !== project.id).slice(0, 2);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.data.seoTitle ?? project.data.title,
+  description: project.data.seoDescription ?? project.data.description,
+  dateCreated: project.data.startedAt.toISOString(),
+  dateModified: (project.data.updatedAt ?? project.data.startedAt).toISOString()
+};
+---
+
+<BaseLayout title={project.data.title} description={project.data.description}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </Fragment>
+  <section class="page-section article-shell project-shell">
+    <article class="article panel prose">
+      <div class="project-hero-meta">
+        <StatusBadge status={project.data.status} />
+        <span>{project.data.category}</span>
+      </div>
+      <h1>{project.data.title}</h1>
+      <p class="article-subtitle">{project.data.summary}</p>
+      <div class="article-meta">
+        <span>Started {formatDate(project.data.startedAt)}</span>
+        <span>Updated {formatDate(project.data.updatedAt ?? project.data.startedAt)}</span>
+      </div>
+      <div class="tag-row">
+        {project.data.stack.map((item) => <span class="tag-chip">{item}</span>)}
+      </div>
+
+      <div class="callout-grid">
+        <div class="callout panel">
+          <p class="eyebrow">Problem</p>
+          <p>{project.data.problem}</p>
+        </div>
+        <div class="callout panel">
+          <p class="eyebrow">Solution</p>
+          <p>{project.data.solution}</p>
+        </div>
+        <div class="callout panel">
+          <p class="eyebrow">Who it's for</p>
+          <p>{project.data.whoItsFor}</p>
+        </div>
+      </div>
+
+      <Content />
+
+      <section>
+        <h2>Key features</h2>
+        <ul>
+          {project.data.keyFeatures.map((feature) => <li>{feature}</li>)}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Roadmap</h2>
+        <ul>
+          {project.data.roadmap.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+    </article>
+
+    <aside class="article-rail panel">
+      <p class="eyebrow">Project links</p>
+      <div class="stacked-links">
+        {project.data.liveUrl ? <a href={project.data.liveUrl} target="_blank" rel="noreferrer">Visit live app</a> : <span>Live app brewing</span>}
+        {project.data.repoUrl ? <a href={project.data.repoUrl} target="_blank" rel="noreferrer">View repository</a> : <span>Repository private</span>}
+      </div>
+      <p class="eyebrow">Related writing</p>
+      <ul class="related-list">
+        {project.data.relatedPosts.length > 0 ? (
+          project.data.relatedPosts.map((slug) => <li><a href={`/blog/${slug}`}>{slug.replace(/-/g, ' ')}</a></li>)
+        ) : (
+          <li>Related posts will appear as the writing archive grows.</li>
+        )}
+      </ul>
+      <p class="eyebrow">More projects</p>
+      <ul class="related-list">
+        {relatedProjects.map((related) => (
+          <li><a href={`/projects/${related.data.slug}`}>{related.data.title}</a></li>
+        ))}
+      </ul>
+    </aside>
+  </section>
+</BaseLayout>

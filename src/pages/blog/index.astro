@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import FeaturedPostCard from '@/components/FeaturedPostCard.astro';
+import { formatDate } from '@/utils/format';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
+const categories = ['All', ...new Set(posts.map((post) => post.data.category))];
+---
+
+<BaseLayout title="Blog" description="Editorial writing across books, movies, games, cricket, product ideas, and personal essays.">
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Editorial archive"
+      title="Blog"
+      description="Notes that move between culture, products, sports, and the systems we build around them."
+    />
+    {featuredPost && <FeaturedPostCard post={featuredPost} />}
+  </section>
+
+  <section class="page-section panel filter-panel">
+    <div class="filter-row" role="tablist" aria-label="Blog category filters">
+      {categories.map((category, index) => (
+        <button class="directory-tab" role="tab" aria-selected={index === 0 ? 'true' : 'false'} data-blog-filter={category}>
+          {category}
+        </button>
+      ))}
+      <label class="search-input">
+        <span class="sr-only">Search posts</span>
+        <input type="search" placeholder="Search title or tag" data-blog-search />
+      </label>
+      <div class="toggle-group" aria-label="Layout toggle">
+        <button class="directory-tab" type="button" data-layout="grid" aria-pressed="true">Grid</button>
+        <button class="directory-tab" type="button" data-layout="list" aria-pressed="false">List</button>
+      </div>
+    </div>
+
+    <div class="post-grid" data-post-grid>
+      {posts.map((post) => (
+        <article
+          class="post-card panel"
+          data-category={post.data.category}
+          data-search={`${post.data.title} ${post.data.tags.join(' ')}`.toLowerCase()}
+        >
+          <div class="post-card__meta">
+            <span>{post.data.category}</span>
+            <span>{formatDate(post.data.publishedAt)}</span>
+            <span>{post.data.readingTime}</span>
+          </div>
+          <h3><a href={`/blog/${post.data.slug}`}>{post.data.title}</a></h3>
+          <p>{post.data.description}</p>
+          <div class="tag-row">
+            {post.data.tags.map((tag) => <span class="tag-chip">{tag}</span>)}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <script>
+    const initializeBlogFilters = () => {
+      const filterButtons = Array.from(document.querySelectorAll('[data-blog-filter]'));
+      const searchInput = document.querySelector('[data-blog-search]');
+      const cards = Array.from(document.querySelectorAll('.post-card'));
+      const grid = document.querySelector('[data-post-grid]');
+      const layoutButtons = Array.from(document.querySelectorAll('[data-layout]'));
+      let activeFilter = 'All';
+      let searchTerm = '';
+
+      const applyFilters = () => {
+        cards.forEach((card) => {
+          const category = card.getAttribute('data-category');
+          const searchText = card.getAttribute('data-search') || '';
+          const matchesFilter = activeFilter === 'All' || category === activeFilter;
+          const matchesSearch = searchText.includes(searchTerm);
+          card.toggleAttribute('hidden', !(matchesFilter && matchesSearch));
+        });
+      };
+
+      filterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          activeFilter = button.getAttribute('data-blog-filter') || 'All';
+          filterButtons.forEach((candidate) => candidate.setAttribute('aria-selected', String(candidate === button)));
+          applyFilters();
+        });
+      });
+
+      searchInput?.addEventListener('input', (event) => {
+        searchTerm = event.target.value.toLowerCase().trim();
+        applyFilters();
+      });
+
+      layoutButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const layout = button.getAttribute('data-layout');
+          grid?.setAttribute('data-layout', layout || 'grid');
+          layoutButtons.forEach((candidate) => candidate.setAttribute('aria-pressed', String(candidate === button)));
+        });
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeBlogFilters, { once: true });
+    } else {
+      initializeBlogFilters();
+    }
+  </script>
+</BaseLayout>
