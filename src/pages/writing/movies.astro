@@ -1,24 +1,19 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import MovieReviewCard from '@/components/MovieReviewCard.astro';
-import { getLetterboxdFeed } from '@/utils/letterboxd';
+import { siteConfig } from '@/config/site';
 
-const movies = await getLetterboxdFeed();
+const destination = '/interests/movies';
+const canonical = new URL(destination, siteConfig.siteUrl).toString();
 ---
 
-<BaseLayout title="Movies" description="A collection of movies I've watched and reviewed on Letterboxd.">
-    <section class="page-section">
-        <div class="panel prose">
-            <h1 class="text-3xl font-bold">Movie Reviews</h1>
-            <p class="mt-4">
-                A collection of movies I've watched and reviewed on Letterboxd.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-            {movies.map(movie => (
-                <MovieReviewCard {...movie} />
-            ))}
-        </div>
-    </section>
-</BaseLayout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${destination}`} />
+    <link rel="canonical" href={canonical} />
+    <title>Redirecting to Movies</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href={destination}>Movies</a>.</p>
+  </body>
+</html>

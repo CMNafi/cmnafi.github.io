@@ -24,16 +24,20 @@ export interface StrategyMapDestination {
 export interface StrategyMapSignal {
   title: string;
   description: string;
-  href: string;
 }
 
-export interface StrategyNavPreview {
+export interface JourneyStop {
   id: string;
-  label: string;
+  step: string;
+  place: string;
+  region: string;
   title: string;
-  description: string;
-  note: string;
-  href: string;
+  organization: string;
+  summary: string;
+  narrative: string;
+  atlasLabel: string;
+  mapX: string;
+  mapY: string;
 }
 
 export const strategyMapChapters: StrategyMapChapter[] = [
@@ -42,7 +46,7 @@ export const strategyMapChapters: StrategyMapChapter[] = [
     step: '01',
     place: 'Dinajpur, Bangladesh',
     theme: 'Global Foundations',
-    label: 'Origins · Bangladesh',
+    label: 'Origins | Bangladesh',
     title: 'The first world laid the foundation for everything that followed.',
     narrative:
       'Dinajpur is where the story begins: the first bearings, the first routines, and the earliest sense of rootedness. Before the route widened across institutions and continents, it started here.',
@@ -58,10 +62,10 @@ export const strategyMapChapters: StrategyMapChapter[] = [
     step: '02',
     place: 'Rangpur, Bangladesh',
     theme: 'Discipline & Independence',
-    label: 'Age 12 · Bangladesh',
+    label: 'Age 12 | Bangladesh',
     title: 'Discipline & Independence',
     narrative:
-      "My story is defined by a series of bold, independent transitions. It began at age 12, when I left home for military school in Bangladesh — a disciplined start that forged the self-reliance I've carried ever since.",
+      "My story is defined by a series of bold, independent transitions. It began at age 12, when I left home for military school in Bangladesh - a disciplined start that forged the self-reliance I've carried ever since.",
     capability: 'Rigor, resilience, internal sharpness',
     signal: 'A disciplined start that forged self-reliance.',
     atlasLabel: '25.75 N / 89.25 E',
@@ -74,7 +78,7 @@ export const strategyMapChapters: StrategyMapChapter[] = [
     step: '03',
     place: 'Changshu, China',
     theme: 'Global Interconnectedness',
-    label: 'Age 16 · Changshu, China',
+    label: 'Age 16 | Changshu, China',
     title: 'Global Interconnectedness',
     narrative:
       'That foundation allowed me to leap into a global life at 16, moving to Changshu, China, to attend United World College. Immersed in an International Baccalaureate program alongside students from 100+ nations, I learned to navigate complex global perspectives and saw firsthand how interconnected our world truly is.',
@@ -122,80 +126,19 @@ export const strategyMapChapters: StrategyMapChapter[] = [
 export const strategyMapSignals: StrategyMapSignal[] = [
   {
     title: 'Exploring Stories',
-    description: 'An avid reader of biographies, fascinated by the lives that have shaped our history.',
-    href: '/blog'
+    description: 'An avid reader of biographies, fascinated by the lives that have shaped our history.'
   },
   {
     title: 'On the Field & Track',
-    description: 'Cricket, FC Barcelona, and Formula 1 remain the clearest reset outside of work.',
-    href: '/adventures'
+    description: 'Cricket, FC Barcelona, and Formula 1 remain the clearest reset outside of work.'
   },
   {
     title: "In the Driver's Seat",
-    description: 'A deep fascination with finance markets and cutting-edge technology continues to shape what I pay attention to.',
-    href: '/projects'
+    description: 'A deep fascination with finance markets and cutting-edge technology continues to shape what I pay attention to.'
   },
   {
     title: 'Work in Public',
-    description: 'Writing, products, and public-facing tools now sit in the same frame as the work itself.',
-    href: '/brewing'
-  }
-];
-
-export const strategyNavPreviews: StrategyNavPreview[] = [
-  {
-    id: 'home',
-    label: 'Home',
-    title: 'Global foundations, financial intelligence, work in motion.',
-    description:
-      'A living strategy map tracing the route from Bangladesh to Tampa and the capabilities formed along the way.',
-    note: 'Identity, movement, and the current thesis behind the site.',
-    href: '/'
-  },
-  {
-    id: 'brewing',
-    label: 'Brewing',
-    title: 'Ideas still in motion.',
-    description:
-      'Experiments, prompts, systems, and rough edges being refined before they become finished work.',
-    note: 'Early-stage thinking, active notes, and what is currently taking shape.',
-    href: '/brewing'
-  },
-  {
-    id: 'blog',
-    label: 'Blog',
-    title: 'Books, films, music, essays, and reflections.',
-    description:
-      'Writing that turns reading, watching, listening, and lived experience into a clearer point of view.',
-    note: 'Finished pieces, quieter reflections, and the longer-form archive.',
-    href: '/blog'
-  },
-  {
-    id: 'projects',
-    label: 'Projects',
-    title: 'Tools, apps, builds, and financial data products.',
-    description:
-      'Public experiments and working systems shaped around due diligence, research workflows, and usable intelligence.',
-    note: 'Products, automations, and data-heavy builds meant for real operators.',
-    href: '/projects'
-  },
-  {
-    id: 'adventures',
-    label: 'Adventures',
-    title: 'Travel, cricket, field notes, records, and journeys.',
-    description:
-      'The story-driven archive beyond work, where movement, sport, and place leave a different kind of record.',
-    note: 'Trips, match memories, field notes, and the personal ledger outside the desk.',
-    href: '/adventures'
-  },
-  {
-    id: 'connect',
-    label: 'Connect',
-    title: 'Conversations, collaboration, and public presence.',
-    description:
-      'The outward-facing layer of the site, from direct contact to the places where work and ideas stay in touch with people.',
-    note: 'Email, social presence, and ways to reach out for thoughtful collaboration.',
-    href: '/connect'
+    description: 'Writing, products, and public-facing tools now sit in the same frame as the work itself.'
   }
 ];
 
@@ -229,5 +172,134 @@ export const strategyMapDestinations: StrategyMapDestination[] = [
     href: '/connect',
     mode: 'Network',
     description: 'Conversations, collaboration, and the outward-facing layer of the site.'
+  }
+];
+
+export const journeyStops: JourneyStop[] = [
+  {
+    id: 'dinajpur',
+    step: '01',
+    place: 'Dinajpur, Bangladesh',
+    region: 'Bangladesh',
+    title: 'Origins and first bearings',
+    organization: 'Foundation',
+    summary: 'The story opens with roots, first principles, and the earliest sense of direction.',
+    narrative:
+      'Dinajpur is the beginning: the smallest frame, the deepest root, and the first sense of how place shapes discipline, memory, and ambition.',
+    atlasLabel: '25.63 N / 88.64 E',
+    mapX: '68%',
+    mapY: '58%'
+  },
+  {
+    id: 'rangpur',
+    step: '02',
+    place: 'Rangpur, Bangladesh',
+    region: 'Bangladesh',
+    title: 'Discipline and independence',
+    organization: 'Military School',
+    summary: 'Leaving home early created the discipline layer that still runs underneath everything else.',
+    narrative:
+      'Rangpur introduced structure, routine, and the habit of carrying responsibility independently. It was the first real test of range and resilience.',
+    atlasLabel: '25.75 N / 89.25 E',
+    mapX: '70%',
+    mapY: '55%'
+  },
+  {
+    id: 'changshu',
+    step: '03',
+    place: 'Changshu, China',
+    region: 'China',
+    title: 'A wider map appears',
+    organization: 'United World College',
+    summary: 'The route opens outward into a more global frame, with perspective shaped by many countries at once.',
+    narrative:
+      'Changshu widened the map. Studying in an international environment made adaptation, context switching, and global awareness part of the operating system.',
+    atlasLabel: '31.65 N / 120.75 E',
+    mapX: '80%',
+    mapY: '46%'
+  },
+  {
+    id: 'decorah',
+    step: '04',
+    place: 'Decorah, Iowa, USA',
+    region: 'USA',
+    title: 'Systems and intellectual compounding',
+    organization: 'Luther College',
+    summary: 'Study turned curiosity into method, pulling data science and computer science into the same frame.',
+    narrative:
+      'Decorah is where ideas began to compound into clearer systems thinking. It sharpened the bridge between logic, creativity, and real-world problem solving.',
+    atlasLabel: '43.30 N / 91.79 W',
+    mapX: '30%',
+    mapY: '35%'
+  },
+  {
+    id: 'rochester',
+    step: '05',
+    place: 'Rochester, Minnesota',
+    region: 'USA',
+    title: 'Research at institutional scale',
+    organization: 'Mayo Clinic',
+    summary: 'Medical-scale research work expanded the sense of what intelligent systems can do in practice.',
+    narrative:
+      'At Mayo Clinic, research moved from theory into high-stakes environments. It was an early proof that large datasets and careful modeling can carry real consequence.',
+    atlasLabel: '44.01 N / 92.48 W',
+    mapX: '29%',
+    mapY: '31%'
+  },
+  {
+    id: 'boston',
+    step: '06',
+    place: 'Boston, Massachusetts',
+    region: 'USA',
+    title: 'Strategy in motion',
+    organization: 'SkyBridge Associates',
+    summary: 'The work shifted closer to executive strategy, process design, and financial decision support.',
+    narrative:
+      'Boston brought a sharper view of how data, process, and narrative support decision-makers. Strategy work became more operational and more externally facing.',
+    atlasLabel: '42.36 N / 71.06 W',
+    mapX: '39%',
+    mapY: '33%'
+  },
+  {
+    id: 'wilmington',
+    step: '07',
+    place: 'Wilmington, Delaware',
+    region: 'USA',
+    title: 'Institutional finance systems',
+    organization: 'BlackRock',
+    summary: 'Financial infrastructure, data, and AI moved into the center of the story.',
+    narrative:
+      'Wilmington deepened the connection to institutional finance and product systems, with work closer to platform-scale data, intelligence, and operating rigor.',
+    atlasLabel: '39.74 N / 75.55 W',
+    mapX: '41%',
+    mapY: '38%'
+  },
+  {
+    id: 'nyc',
+    step: '08',
+    place: 'New York City, New York',
+    region: 'USA',
+    title: 'Product and market context',
+    organization: 'Dasseti',
+    summary: 'The route narrows into fintech products, regulatory intelligence, and work that serves real clients directly.',
+    narrative:
+      'New York sharpened the public-facing edge of the work. Product thinking, investor workflows, and financial intelligence started aligning more clearly into one direction.',
+    atlasLabel: '40.71 N / 74.00 W',
+    mapX: '42%',
+    mapY: '37%'
+  },
+  {
+    id: 'tampa',
+    step: '09',
+    place: 'Tampa, Florida',
+    region: 'USA',
+    title: 'Current base',
+    organization: 'Home',
+    summary: 'Today the route resolves into fintech, writing, public work, and a more integrated operating system.',
+    narrative:
+      'Tampa is the present-day base: the place where research, finance, product systems, and writing now move together with more clarity and intention.',
+    atlasLabel: '27.95 N / 82.46 W',
+    mapX: '36%',
+    mapY: '54%'
   }
 ];

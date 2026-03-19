@@ -1,13 +1,19 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import { siteConfig } from '@/config/site';
+
+const destination = '/interests/writing';
+const canonical = new URL(destination, siteConfig.siteUrl).toString();
 ---
 
-<BaseLayout title="Writing" description="Long-form writing is still brewing.">
-  <section class="page-section narrow-stack">
-    <div class="panel prose">
-      <p class="eyebrow">Coming soon</p>
-      <h1>Writing</h1>
-      <p>This section is reserved for longer-form essays, series, and future editorial collections.</p>
-    </div>
-  </section>
-</BaseLayout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${destination}`} />
+    <link rel="canonical" href={canonical} />
+    <title>Redirecting to Writing & Ideas</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href={destination}>Writing &amp; Ideas</a>.</p>
+  </body>
+</html>

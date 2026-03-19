@@ -1,0 +1,379 @@
+---
+import { getCollection } from 'astro:content';
+import InterestWorldNav from '@/components/InterestWorldNav.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatDate } from '@/utils/format';
+
+const cricketPosts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Cricket')).sort(
+  (a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime()
+);
+
+const mappedPosts = cricketPosts.map((post, index) => {
+  const angle = cricketPosts.length === 1 ? -90 : 210 - (index * 240) / (cricketPosts.length - 1);
+  const radians = (angle * Math.PI) / 180;
+  const left = 50 + Math.cos(radians) * 29;
+  const top = 50 + Math.sin(radians) * 22;
+
+  return {
+    post,
+    left,
+    top
+  };
+});
+---
+
+<BaseLayout
+  title="Cricket"
+  description="A cricket world built like a ground from above, with match stories sitting on the inner circle."
+>
+  <div class="cricket-world">
+    <section class="page-section cricket-world__hero">
+      <div class="cricket-world__copy">
+        <p class="eyebrow">Cricket world</p>
+        <h1>The ground becomes the archive.</h1>
+        <p>
+          This section treats cricket as a place, not just a list. Match stories sit around the inner circle, and the
+          full archive stays one click deeper when you want the records, timelines, and score detail.
+        </p>
+        <div class="cricket-world__actions">
+          <a class="button button-secondary" href="/adventures/cricket">Open full cricket archive</a>
+          <a class="button button-ghost" href="/blog">Open full timeline</a>
+        </div>
+      </div>
+
+      <div class="cricket-world__nav-wrap">
+        <InterestWorldNav current="cricket" />
+      </div>
+    </section>
+
+    <section class="page-section panel cricket-world__stage">
+      <div class="cricket-world__stage-copy">
+        <p class="eyebrow">Field view</p>
+        <h2>Posts are placed along the 30-yard circle.</h2>
+        <p>
+          Hover any dot for a quick preview. Click into the story when you want the full match, the pressure, and the
+          memory around it.
+        </p>
+      </div>
+
+      <div class="cricket-ground">
+        <div class="cricket-ground__oval"></div>
+        <div class="cricket-ground__inner-circle"></div>
+        <div class="cricket-ground__pitch">
+          <span class="cricket-ground__crease cricket-ground__crease--top"></span>
+          <span class="cricket-ground__crease cricket-ground__crease--bottom"></span>
+          <span class="cricket-ground__stumps cricket-ground__stumps--top"></span>
+          <span class="cricket-ground__stumps cricket-ground__stumps--bottom"></span>
+        </div>
+
+        {mappedPosts.map(({ post, left, top }) => (
+          <a
+            class="cricket-ground__node"
+            href={`/blog/${post.slug}`}
+            style={`left:${left}%; top:${top}%;`}
+          >
+            <span class="cricket-ground__dot"></span>
+            <span class="cricket-ground__tooltip">
+              <strong>{post.data.title}</strong>
+              <small>{formatDate(post.data.publishedAt)}</small>
+              <span>{post.data.description}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="page-section cricket-world__ledger">
+      <div class="cricket-world__ledger-grid">
+        {cricketPosts
+          .slice()
+          .reverse()
+          .map((post) => (
+            <a class="panel cricket-world__ledger-card" href={`/blog/${post.slug}`}>
+              <p>{formatDate(post.data.publishedAt)}</p>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+            </a>
+          ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .cricket-world {
+    position: relative;
+    padding-bottom: 4rem;
+  }
+
+  .cricket-world::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 16% 14%, rgba(156, 187, 118, 0.14), transparent 24%),
+      radial-gradient(circle at 82% 18%, rgba(222, 194, 122, 0.08), transparent 20%),
+      linear-gradient(180deg, rgba(8, 20, 10, 0.96), rgba(16, 34, 18, 0.98));
+  }
+
+  .cricket-world > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cricket-world__hero {
+    display: grid;
+    gap: 1rem;
+    padding-top: clamp(2rem, 6vw, 4rem);
+  }
+
+  .cricket-world__copy {
+    max-width: 42rem;
+  }
+
+  .cricket-world__copy h1,
+  .cricket-world__stage h2,
+  .cricket-world__ledger-card h3 {
+    margin: 0;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    letter-spacing: -0.05em;
+  }
+
+  .cricket-world__copy h1 {
+    font-size: clamp(3rem, 6vw, 4.8rem);
+    line-height: 0.95;
+    margin-bottom: 0.7rem;
+  }
+
+  .cricket-world__copy p,
+  .cricket-world__stage p,
+  .cricket-world__ledger-card p {
+    margin: 0;
+    color: rgba(237, 244, 216, 0.78);
+    line-height: 1.78;
+  }
+
+  .cricket-world__actions,
+  .cricket-world__nav-wrap {
+    margin-top: 1rem;
+  }
+
+  .cricket-world__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .cricket-world__stage {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.2rem, 3vw, 1.7rem);
+    background:
+      linear-gradient(180deg, rgba(34, 67, 34, 0.9), rgba(16, 34, 18, 0.96)),
+      radial-gradient(circle at top, rgba(216, 191, 122, 0.08), transparent 62%);
+    border-color: rgba(182, 215, 143, 0.22);
+  }
+
+  .cricket-world__stage h2 {
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    line-height: 1.02;
+    margin-bottom: 0.6rem;
+  }
+
+  .cricket-ground {
+    position: relative;
+    width: 100%;
+    min-height: 32rem;
+    border-radius: 42px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(182, 215, 143, 0.06), transparent 54%),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.02) 0,
+        rgba(255, 255, 255, 0.02) 3%,
+        transparent 3%,
+        transparent 7%
+      ),
+      linear-gradient(180deg, rgba(47, 91, 44, 0.95), rgba(28, 54, 27, 0.98));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+
+  .cricket-ground__oval,
+  .cricket-ground__inner-circle,
+  .cricket-ground__pitch {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .cricket-ground__oval {
+    width: 84%;
+    height: 86%;
+    border-radius: 50%;
+    border: 2px solid rgba(237, 244, 216, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  .cricket-ground__inner-circle {
+    width: 58%;
+    height: 60%;
+    border-radius: 50%;
+    border: 1px solid rgba(237, 244, 216, 0.2);
+  }
+
+  .cricket-ground__pitch {
+    width: 12%;
+    height: 66%;
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(168, 127, 72, 0.94), rgba(111, 73, 38, 0.98));
+    box-shadow: inset 0 0 0 1px rgba(245, 222, 181, 0.12);
+  }
+
+  .cricket-ground__crease,
+  .cricket-ground__stumps {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .cricket-ground__crease {
+    width: 190%;
+    height: 2px;
+    background: rgba(237, 244, 216, 0.38);
+  }
+
+  .cricket-ground__crease--top { top: 10%; }
+  .cricket-ground__crease--bottom { bottom: 10%; }
+
+  .cricket-ground__stumps {
+    width: 1.25rem;
+    height: 1rem;
+    background:
+      linear-gradient(90deg, rgba(237, 244, 216, 0.7) 0 18%, transparent 18% 40%, rgba(237, 244, 216, 0.7) 40% 58%, transparent 58% 80%, rgba(237, 244, 216, 0.7) 80% 100%);
+  }
+
+  .cricket-ground__stumps--top { top: 4.5%; }
+  .cricket-ground__stumps--bottom { bottom: 4.5%; }
+
+  .cricket-ground__node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .cricket-ground__dot {
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    background: #d8bf7a;
+    box-shadow: 0 0 0 0 rgba(216, 191, 122, 0.18);
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  }
+
+  .cricket-ground__tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 0.85rem);
+    transform: translateX(-50%) translateY(0.3rem);
+    width: min(16rem, 62vw);
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.8rem 0.9rem;
+    border-radius: 16px;
+    background: rgba(11, 16, 11, 0.96);
+    border: 1px solid rgba(216, 191, 122, 0.2);
+    color: #edf4d8;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  }
+
+  .cricket-ground__tooltip strong,
+  .cricket-world__ledger-card h3 {
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-size: 1.08rem;
+  }
+
+  .cricket-ground__tooltip small {
+    color: rgba(237, 244, 216, 0.66);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.68rem;
+  }
+
+  .cricket-ground__tooltip span {
+    color: rgba(237, 244, 216, 0.78);
+    line-height: 1.6;
+    font-size: 0.92rem;
+  }
+
+  .cricket-ground__node:hover .cricket-ground__dot,
+  .cricket-ground__node:focus-visible .cricket-ground__dot {
+    transform: scale(1.22);
+    box-shadow: 0 0 0 12px rgba(216, 191, 122, 0.16);
+    background: #f4ddb2;
+  }
+
+  .cricket-ground__node:hover .cricket-ground__tooltip,
+  .cricket-ground__node:focus-visible .cricket-ground__tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .cricket-world__ledger {
+    margin-top: 1.25rem;
+  }
+
+  .cricket-world__ledger-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.9rem;
+  }
+
+  .cricket-world__ledger-card {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1rem;
+    border-radius: 22px;
+    border-color: rgba(182, 215, 143, 0.16);
+    background: linear-gradient(180deg, rgba(22, 43, 21, 0.92), rgba(12, 22, 11, 0.95));
+    transition: transform 180ms ease, border-color 180ms ease;
+  }
+
+  .cricket-world__ledger-card:hover,
+  .cricket-world__ledger-card:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(216, 191, 122, 0.24);
+    outline: none;
+  }
+
+  .cricket-world__ledger-card > p:first-child {
+    color: rgba(216, 191, 122, 0.86);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 720px) {
+    .cricket-ground {
+      min-height: 24rem;
+      border-radius: 28px;
+    }
+
+    .cricket-ground__tooltip {
+      width: min(13rem, 70vw);
+    }
+
+    .cricket-world__actions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

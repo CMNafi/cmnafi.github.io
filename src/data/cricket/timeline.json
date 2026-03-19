@@ -26,6 +26,19 @@
     "relatedStats": ["83 runs", "Avg 20.75", "SR 122.06"]
   },
   {
+    "id": "timeline-swat-final-over-defense",
+    "date": "2024-10-01",
+    "seasonLabel": "2024",
+    "title": "Seven to defend becomes a SWAT match memory",
+    "type": "match",
+    "summary": "29 off 24 with the bat, then a final over that began to wobble and still ended in a 3-run win.",
+    "body": "Royal Phoenix needed 7 from the last over and got close enough to make the whole ground hold its breath. The over included wides that shifted the pressure fast, but the reset came in time: Amit Saha fell to a top edge, the final ball was a dot, and the win stayed with SWAT. This is exactly the kind of match that belongs in the archive because the nerve matters as much as the numbers.",
+    "relatedTeam": "SWAT",
+    "relatedMatch": "2024-10-01-swat-vs-royal-phoenix",
+    "relatedHighlight": "highlight-swat-final-over-defense",
+    "relatedStats": ["29 off 24", "Defended 7 in the final over", "SWAT won by 3 runs"]
+  },
+  {
     "id": "timeline-swat-bowling-spike",
     "date": "2024-11-02",
     "seasonLabel": "2024",

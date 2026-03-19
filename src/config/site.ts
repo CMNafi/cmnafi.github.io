@@ -1,15 +1,13 @@
 export const siteConfig = {
   title: 'C M Nafi',
-  description: 'From global foundations to financial intelligence — writing, products, adventures, and work in progress.',
+  description: 'A personal website organized as four interest worlds, a running timeline, and the work that connects them.',
   author: 'C M Nafi',
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',
   nav: [
-    { id: 'home', label: 'Home', href: '/' },
-    { id: 'brewing', label: 'Brewing', href: '/brewing' },
-    { id: 'blog', label: 'Blog', href: '/blog' },
+    { id: 'journey', label: 'Journey', href: '/story' },
+    { id: 'timeline', label: 'Timeline', href: '/blog' },
     { id: 'projects', label: 'Projects', href: '/projects' },
-    { id: 'adventures', label: 'Adventures', href: '/adventures' },
     { id: 'connect', label: 'Connect', href: '/connect' }
   ],
   socialLinks: [
@@ -21,6 +19,7 @@ export const siteConfig = {
     { label: 'Story', href: '/story' },
     { label: 'About', href: '/about' },
     { label: 'Brewing', href: '/brewing' },
+    { label: 'Interests', href: '/interests' },
     { label: 'Connect', href: '/connect' }
   ]
 } as const;

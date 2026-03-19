@@ -1,0 +1,193 @@
+---
+import InterestTimelineSection from '@/components/InterestTimelineSection.astro';
+
+interface TimelinePost {
+  slug: string;
+  data: {
+    title: string;
+    description: string;
+    publishedAt: Date;
+    category: string;
+    readingTime: string;
+    tags: string[];
+  };
+}
+
+interface InterestGroup {
+  id: string;
+  title: string;
+  description: string;
+  posts: TimelinePost[];
+}
+
+interface Props {
+  groups: InterestGroup[];
+}
+
+const { groups } = Astro.props;
+---
+
+<div class="interests-page">
+  <section class="page-section interests-page__hero">
+    <div class="interests-page__intro">
+      <p class="eyebrow">Interests</p>
+      <h1>A timeline for the things I keep coming back to.</h1>
+      <p>
+        Cricket, books, movies, and writing now live in one place. Each lane keeps its own timeline so the archive can grow
+        in a way that still feels readable.
+      </p>
+    </div>
+
+    <div class="panel interests-page__index">
+      <div>
+        <p class="eyebrow">Quick access</p>
+        <h2>Every lane stays one click away.</h2>
+      </div>
+
+      <div class="interests-page__chips">
+        {groups.map((group) => (
+          <a href={`#${group.id}`}>
+            <strong>{group.title}</strong>
+            <span>{group.posts.length} {group.posts.length === 1 ? 'entry' : 'entries'}</span>
+          </a>
+        ))}
+        <a href="/blog">
+          <strong>Full blog archive</strong>
+          <span>Search and filter every post</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section panel interests-page__overview">
+    <p class="eyebrow">How to read it</p>
+    <h2>The archive is organized by interest, then by time.</h2>
+    <p>
+      Each section below is chronological, so the cricket entries move from May to June, and the rest of the site can grow
+      the same way as new posts are added.
+    </p>
+  </section>
+
+  <div class="interests-page__sections">
+    {groups.map((group) => (
+      <InterestTimelineSection
+        id={group.id}
+        title={group.title}
+        description={group.description}
+        posts={group.posts}
+      />
+    ))}
+  </div>
+</div>
+
+<style>
+  .interests-page {
+    display: grid;
+    gap: 1.5rem;
+    padding-bottom: 4rem;
+  }
+
+  .interests-page__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
+    gap: clamp(1.25rem, 4vw, 3rem);
+    align-items: start;
+    padding-top: clamp(2rem, 6vw, 4rem);
+  }
+
+  .interests-page__intro {
+    max-width: 42rem;
+  }
+
+  .interests-page__intro h1,
+  .interests-page__index h2,
+  .interests-page__overview h2 {
+    margin: 0;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    letter-spacing: -0.05em;
+  }
+
+  .interests-page__intro h1 {
+    font-size: clamp(3rem, 6vw, 4.9rem);
+    line-height: 0.96;
+    max-width: 11ch;
+    margin-bottom: 0.85rem;
+  }
+
+  .interests-page__intro p,
+  .interests-page__overview p,
+  .interests-page__index span {
+    margin: 0;
+    color: rgba(243, 237, 225, 0.72);
+    line-height: 1.8;
+  }
+
+  .interests-page__index,
+  .interests-page__overview {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.25rem, 3vw, 1.7rem);
+    border-radius: 28px;
+  }
+
+  .interests-page__index h2,
+  .interests-page__overview h2 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    line-height: 1.08;
+  }
+
+  .interests-page__chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.9rem;
+  }
+
+  .interests-page__chips a {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.95rem 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(243, 237, 225, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .interests-page__chips a:hover,
+  .interests-page__chips a:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(211, 154, 89, 0.22);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)),
+      radial-gradient(circle at top left, rgba(211, 154, 89, 0.06), transparent 68%);
+    outline: none;
+  }
+
+  .interests-page__chips strong {
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-size: 1.15rem;
+    color: rgba(243, 237, 225, 0.94);
+  }
+
+  .interests-page__sections {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  @media (max-width: 920px) {
+    .interests-page__hero {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .interests-page__intro h1 {
+      font-size: clamp(2.5rem, 11vw, 3.6rem);
+    }
+
+    .interests-page__index,
+    .interests-page__overview {
+      padding: 1rem;
+      border-radius: 22px;
+    }
+  }
+</style>
