@@ -24,6 +24,7 @@ export interface StrategyMapDestination {
 export interface StrategyMapSignal {
   title: string;
   description: string;
+  href: string;
 }
 
 export interface StrategyNavPreview {
@@ -32,6 +33,7 @@ export interface StrategyNavPreview {
   title: string;
   description: string;
   note: string;
+  href: string;
 }
 
 export const strategyMapChapters: StrategyMapChapter[] = [
@@ -120,19 +122,23 @@ export const strategyMapChapters: StrategyMapChapter[] = [
 export const strategyMapSignals: StrategyMapSignal[] = [
   {
     title: 'Exploring Stories',
-    description: 'An avid reader of biographies, fascinated by the lives that have shaped our history.'
+    description: 'An avid reader of biographies, fascinated by the lives that have shaped our history.',
+    href: '/blog'
   },
   {
     title: 'On the Field & Track',
-    description: 'Cricket, FC Barcelona, and Formula 1 remain the clearest reset outside of work.'
+    description: 'Cricket, FC Barcelona, and Formula 1 remain the clearest reset outside of work.',
+    href: '/adventures'
   },
   {
     title: "In the Driver's Seat",
-    description: 'A deep fascination with finance markets and cutting-edge technology continues to shape what I pay attention to.'
+    description: 'A deep fascination with finance markets and cutting-edge technology continues to shape what I pay attention to.',
+    href: '/projects'
   },
   {
     title: 'Work in Public',
-    description: 'Writing, products, and public-facing tools now sit in the same frame as the work itself.'
+    description: 'Writing, products, and public-facing tools now sit in the same frame as the work itself.',
+    href: '/brewing'
   }
 ];
 
@@ -143,7 +149,8 @@ export const strategyNavPreviews: StrategyNavPreview[] = [
     title: 'Global foundations, financial intelligence, work in motion.',
     description:
       'A living strategy map tracing the route from Bangladesh to Tampa and the capabilities formed along the way.',
-    note: 'Identity, movement, and the current thesis behind the site.'
+    note: 'Identity, movement, and the current thesis behind the site.',
+    href: '/'
   },
   {
     id: 'brewing',
@@ -151,7 +158,8 @@ export const strategyNavPreviews: StrategyNavPreview[] = [
     title: 'Ideas still in motion.',
     description:
       'Experiments, prompts, systems, and rough edges being refined before they become finished work.',
-    note: 'Early-stage thinking, active notes, and what is currently taking shape.'
+    note: 'Early-stage thinking, active notes, and what is currently taking shape.',
+    href: '/brewing'
   },
   {
     id: 'blog',
@@ -159,7 +167,8 @@ export const strategyNavPreviews: StrategyNavPreview[] = [
     title: 'Books, films, music, essays, and reflections.',
     description:
       'Writing that turns reading, watching, listening, and lived experience into a clearer point of view.',
-    note: 'Finished pieces, quieter reflections, and the longer-form archive.'
+    note: 'Finished pieces, quieter reflections, and the longer-form archive.',
+    href: '/blog'
   },
   {
     id: 'projects',
@@ -167,7 +176,8 @@ export const strategyNavPreviews: StrategyNavPreview[] = [
     title: 'Tools, apps, builds, and financial data products.',
     description:
       'Public experiments and working systems shaped around due diligence, research workflows, and usable intelligence.',
-    note: 'Products, automations, and data-heavy builds meant for real operators.'
+    note: 'Products, automations, and data-heavy builds meant for real operators.',
+    href: '/projects'
   },
   {
     id: 'adventures',
@@ -175,7 +185,8 @@ export const strategyNavPreviews: StrategyNavPreview[] = [
     title: 'Travel, cricket, field notes, records, and journeys.',
     description:
       'The story-driven archive beyond work, where movement, sport, and place leave a different kind of record.',
-    note: 'Trips, match memories, field notes, and the personal ledger outside the desk.'
+    note: 'Trips, match memories, field notes, and the personal ledger outside the desk.',
+    href: '/adventures'
   },
   {
     id: 'connect',
@@ -183,7 +194,8 @@ export const strategyNavPreviews: StrategyNavPreview[] = [
     title: 'Conversations, collaboration, and public presence.',
     description:
       'The outward-facing layer of the site, from direct contact to the places where work and ideas stay in touch with people.',
-    note: 'Email, social presence, and ways to reach out for thoughtful collaboration.'
+    note: 'Email, social presence, and ways to reach out for thoughtful collaboration.',
+    href: '/connect'
   }
 ];
 
