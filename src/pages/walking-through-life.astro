@@ -1,164 +1,116 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import LifeJourneyChapter from '@/components/LifeJourneyChapter.astro';
-import { lifeJourneyChapters, lifeJourneyDestinations } from '@/data/life-journey';
-
-const initialChapter = lifeJourneyChapters[0];
+import { journeySegments, lifeJourneyDestinations } from '@/data/life-journey';
 ---
 
 <BaseLayout
-  title="Walking Through My Life"
-  description="An alternative homepage for C M Nafi: a cinematic biographical journey through Dinajpur, Rangpur, Changshu, Decorah, and Tampa."
+  title="My Journey"
+  description="The path from Dinajpur to Tampa — education, work, and everything in between. A segmented timeline of the places, institutions, and roles that shaped C M Nafi."
 >
-  <div class="life-walk-page" data-life-walk data-active-chapter={initialChapter.id}>
-    <section class="page-section page-section-hero life-walk-hero">
-      <div class="life-walk-hero__copy">
-        <p class="eyebrow">Alternative Homepage / Biography In Motion</p>
-        <h1>Walking Through the Worlds That Built Me</h1>
-        <p class="life-walk-hero__lead">
-          From Dinajpur to Tampa, this is a personal path shaped across countries, institutions, disciplines, and years.
-          The page is meant to feel less like a landing screen and more like a guided walk through a life still in motion.
-        </p>
-
-        <div class="life-walk-hero__meta">
-          <span>C M Nafi</span>
-          <span>Writing, products, adventures, and work in progress</span>
-        </div>
-
-        <div class="hero-actions">
-          <a class="button button-primary" href="#life-journey">Begin the walk</a>
-          <a class="button button-secondary" href="/brewing">Open Brewing</a>
-        </div>
-
-        <div class="life-walk-scroll">
-          <span class="life-walk-scroll__line"></span>
-          <span class="life-walk-scroll__label">Scroll to walk the path</span>
-        </div>
-      </div>
-
-      <div class="life-walk-hero__visual" aria-hidden="true">
-        <div class="life-walk-hero__portrait-shell">
-          <div class="life-walk-hero__route">
-            {lifeJourneyChapters.map((chapter) => (
-              <span class={`life-walk-hero__route-node life-walk-hero__route-node--${chapter.id}`}></span>
-            ))}
-          </div>
-          <div class="life-walk-hero__portrait-card">
-            <img src="/profile.jpg" alt="" />
-            <div class="life-walk-hero__portrait-copy">
-              <strong>From Dinajpur to Tampa</strong>
-              <small>A path through place, discipline, and becoming.</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="life-journey" class="page-section life-atlas-section">
-      <div class="panel life-atlas-bar">
-        <div class="life-atlas-bar__status">
-          <p class="eyebrow">Current waypoint</p>
-          <div>
-            <strong data-status-place>{initialChapter.location}, {initialChapter.region}</strong>
-            <p data-status-theme>{initialChapter.note}</p>
-          </div>
-          <span data-status-step>{initialChapter.step}</span>
-        </div>
-
-        <div class="life-atlas-bar__map">
-          <svg viewBox="0 0 1000 240" class="life-atlas-bar__svg" aria-hidden="true">
-            <path class="life-atlas-bar__arc life-atlas-bar__arc--1" data-map-arc d="M140 154 C170 136 200 134 224 142" />
-            <path class="life-atlas-bar__arc life-atlas-bar__arc--2" data-map-arc d="M224 142 C330 122 444 78 550 96" />
-            <path class="life-atlas-bar__arc life-atlas-bar__arc--3" data-map-arc d="M550 96 C648 92 708 88 730 82" />
-            <path class="life-atlas-bar__arc life-atlas-bar__arc--4" data-map-arc d="M730 82 C790 112 840 146 820 164" />
-            <path class="life-atlas-bar__ghost" d="M90 182 C190 124 356 42 550 96 C690 132 784 48 910 174" />
-          </svg>
-
-          {lifeJourneyChapters.map((chapter) => (
-            <button
-              type="button"
-              class={`life-atlas-bar__node life-atlas-bar__node--${chapter.id}`}
-              data-map-node
-              data-map-target={chapter.id}
-              style={`left:${chapter.mapX}; top:${chapter.mapY};`}
-              aria-label={`Jump to ${chapter.location}, ${chapter.region}`}
-            >
-              <span class="life-atlas-bar__dot"></span>
-              <span class="life-atlas-bar__label">{chapter.location}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="page-section life-walk-journey">
-      <div class="life-walk-journey__intro">
-        <SectionHeading
-          eyebrow="Journey Path"
-          title="Five locations, five shifts in scale, one continuing life path."
-          description="The walk now runs horizontally across the page: one line of waypoints overhead, one active destination at a time, and a cleaner text-led chapter sequence underneath."
-        />
-      </div>
-
-      <div class="life-walk-journey__chapters">
-        {lifeJourneyChapters.map((chapter, index) => (
-          <LifeJourneyChapter chapter={chapter} index={index} isLast={index === lifeJourneyChapters.length - 1} />
+  <div class="journey-page">
+    <!-- Hero -->
+    <section class="page-section journey-hero">
+      <p class="eyebrow">Journey / Timeline</p>
+      <h1>The path so far</h1>
+      <p class="journey-hero__lead">
+        From Bangladesh to Tampa — through military school, a global education, and into the world of data, finance, and public work.
+        Each chapter clickable, each milestone a turning point.
+      </p>
+      <div class="journey-hero__nav">
+        {journeySegments.map((segment) => (
+          <a class="journey-hero__nav-chip" href={`#${segment.id}`}>
+            <span class={`journey-hero__nav-icon journey-hero__nav-icon--${segment.icon}`} aria-hidden="true"></span>
+            {segment.label}
+            <span class="journey-hero__nav-count">{segment.items.length}</span>
+          </a>
         ))}
       </div>
     </section>
 
-    <section class="page-section life-present-section">
+    <!-- Timeline segments -->
+    {journeySegments.map((segment, segIdx) => (
+      <section id={segment.id} class="page-section journey-segment">
+        <div class="journey-segment__header">
+          <span class={`journey-segment__icon journey-segment__icon--${segment.icon}`} aria-hidden="true"></span>
+          <h2 class="journey-segment__title">{segment.label}</h2>
+          <span class="journey-segment__count">{segment.items.length} milestones</span>
+        </div>
+
+        <div class="journey-timeline">
+          <div class="journey-timeline__line" aria-hidden="true"></div>
+
+          {segment.items.map((item, idx) => {
+            const isClickable = !!item.href;
+            const Tag = isClickable ? 'a' : 'div';
+            return (
+              <Tag
+                class={`journey-card panel ${isClickable ? 'journey-card--link' : ''}`}
+                {...(isClickable ? { href: item.href } : {})}
+                {...(isClickable && item.href?.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                style={`--card-delay: ${idx * 0.08}s`}
+                data-journey-card
+              >
+                <div class="journey-card__dot" aria-hidden="true">
+                  <span class="journey-card__dot-ring"></span>
+                  <span class="journey-card__dot-core"></span>
+                </div>
+
+                <div class="journey-card__period">{item.period}</div>
+
+                <div class="journey-card__body">
+                  <div class="journey-card__heading">
+                    <h3>{item.title}</h3>
+                    {isClickable && (
+                      <span class="journey-card__arrow" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </span>
+                    )}
+                  </div>
+                  <p class="journey-card__subtitle">{item.subtitle}</p>
+                  <p class="journey-card__location">{item.location}</p>
+                  <p class="journey-card__description">{item.description}</p>
+
+                  <div class="journey-card__highlights">
+                    {item.highlights.map((h) => (
+                      <span class="journey-card__highlight">{h}</span>
+                    ))}
+                  </div>
+
+                  {item.tags && (
+                    <div class="journey-card__tags">
+                      {item.tags.map((tag) => (
+                        <span class="journey-card__tag">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </Tag>
+            );
+          })}
+        </div>
+      </section>
+    ))}
+
+    <!-- Destinations -->
+    <section class="page-section journey-destinations">
       <SectionHeading
-        eyebrow="Present Identity"
-        title="The walk reaches Tampa, but it still points forward."
-        description="The present chapter is where writing, products, adventures, and public work start to sit in the same frame. It feels less like an ending than a clearer way of moving."
+        eyebrow="Continue"
+        title="Where the journey leads next"
+        description="The walk opens into the rest of the site — each destination carries a different part of the same person."
       />
-
-      <div class="two-up life-present-grid">
-        <article class="panel life-present-card">
-          <p class="eyebrow">Now</p>
-          <h3>Building in public with a calmer, more confident sense of direction.</h3>
-          <p>
-            Tampa is the current base: a place for products, research, writing, and a more outward-facing body of work.
-            The earlier chapters remain visible, but the present voice is sharper and easier to recognize.
-          </p>
-          <div class="life-present-points">
-            <span>Writing and reflection</span>
-            <span>Financial and data-driven products</span>
-            <span>Cricket, travel, and memory</span>
-            <span>Relationships and public presence</span>
-          </div>
-        </article>
-
-        <article class="panel life-present-card">
-          <p class="eyebrow">Handoff</p>
-          <h3>Once the walk is complete, the rest of the site should feel like a natural continuation.</h3>
-          <p>
-            Brewing holds what is still forming. Blog carries the finished writing. Projects shows what has been built.
-            Adventures keeps the human archive. Connect opens the door outward.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="/projects">View Projects</a>
-            <a class="button button-secondary" href="/adventures">Open Adventures</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="page-section life-destinations-section">
-      <SectionHeading
-        eyebrow="Destinations"
-        title="The walk opens into the rest of the website."
-        description="Each destination carries a different part of the same person, so the transition out of the biography still feels coherent."
-      />
-
-      <div class="life-destination-grid">
-        {lifeJourneyDestinations.map((destination) => (
-          <a class="panel life-destination-card" href={destination.href}>
-            <h3>{destination.title}</h3>
-            <p>{destination.description}</p>
-            <span>Open -></span>
+      <div class="journey-destination-grid">
+        {lifeJourneyDestinations.map((dest) => (
+          <a class="panel journey-destination-card" href={dest.href}>
+            <h3>{dest.title}</h3>
+            <p>{dest.description}</p>
+            <span class="journey-destination-card__arrow">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
           </a>
         ))}
       </div>
@@ -166,67 +118,20 @@ const initialChapter = lifeJourneyChapters[0];
   </div>
 
   <script>
-    const root = document.querySelector('[data-life-walk]');
-    if (root) {
-      const chapters = Array.from(root.querySelectorAll('[data-journey-chapter]'));
-      const mapNodes = Array.from(root.querySelectorAll('[data-map-node]'));
-      const mapArcs = Array.from(root.querySelectorAll('[data-map-arc]'));
-      const statusPlace = root.querySelector('[data-status-place]');
-      const statusTheme = root.querySelector('[data-status-theme]');
-      const statusStep = root.querySelector('[data-status-step]');
-
-      const setActive = (index) => {
-        const chapter = chapters[index];
-        if (!chapter) return;
-
-        root.dataset.activeChapter = chapter.dataset.chapterId ?? '';
-        root.style.setProperty('--journey-scale', chapter.dataset.scale ?? '1');
-        root.style.setProperty('--journey-progress', String(index / Math.max(chapters.length - 1, 1)));
-
-        if (statusPlace) statusPlace.textContent = chapter.dataset.place ?? '';
-        if (statusTheme) statusTheme.textContent = chapter.dataset.theme ? `${chapter.dataset.theme} / ${chapter.dataset.era}` : '';
-        if (statusStep) statusStep.textContent = chapter.dataset.step ?? '';
-
-        chapters.forEach((item, itemIndex) => {
-          item.classList.toggle('is-active', itemIndex === index);
-          item.classList.toggle('is-complete', itemIndex < index);
-        });
-
-        mapNodes.forEach((node, nodeIndex) => {
-          node.classList.toggle('is-active', nodeIndex === index);
-          node.classList.toggle('is-complete', nodeIndex < index);
-        });
-
-        mapArcs.forEach((arc, arcIndex) => {
-          arc.classList.toggle('is-active', arcIndex < index);
-        });
-      };
-
+    const cards = document.querySelectorAll('[data-journey-card]');
+    if (cards.length) {
       const observer = new IntersectionObserver(
         (entries) => {
-          const visible = entries
-            .filter((entry) => entry.isIntersecting)
-            .sort((a, b) => b.intersectionRatio - a.intersectionRatio || a.boundingClientRect.top - b.boundingClientRect.top)[0];
-
-          if (!visible) return;
-          setActive(chapters.indexOf(visible.target));
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
         },
-        {
-          threshold: [0.3, 0.55, 0.75],
-          rootMargin: '-18% 0px -32% 0px'
-        }
+        { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
       );
-
-      chapters.forEach((chapter) => observer.observe(chapter));
-      setActive(0);
-
-      mapNodes.forEach((node) => {
-        node.addEventListener('click', () => {
-          const target = node.getAttribute('data-map-target');
-          const chapter = root.querySelector(`[data-chapter-id=\"${target}\"]`);
-          chapter?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-      });
+      cards.forEach((card) => observer.observe(card));
     }
   </script>
 </BaseLayout>

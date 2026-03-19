@@ -1,3 +1,122 @@
+export interface TimelineItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  location: string;
+  period: string;
+  description: string;
+  highlights: string[];
+  href?: string;
+  tags?: string[];
+}
+
+export interface TimelineSegment {
+  id: string;
+  label: string;
+  icon: string;
+  items: TimelineItem[];
+}
+
+export const journeySegments: TimelineSegment[] = [
+  {
+    id: 'education',
+    label: 'Education',
+    icon: 'graduation',
+    items: [
+      {
+        id: 'dinajpur',
+        title: 'Early Foundation',
+        subtitle: 'Where memory begins',
+        location: 'Dinajpur, Bangladesh',
+        period: 'Childhood',
+        description:
+          'Dinajpur is where the story begins: family, routine, and the quiet scale of a first world. It gave everything after it a baseline of rootedness.',
+        highlights: ['First bearings', 'Family roots', 'Early formation'],
+        tags: ['Origins', 'Foundation']
+      },
+      {
+        id: 'rangpur',
+        title: 'Rangpur Cadet College',
+        subtitle: 'Military school — discipline and independence',
+        location: 'Rangpur, Bangladesh',
+        period: 'Age 12',
+        description:
+          "Left home at age 12 for military school — a disciplined start that forged the self-reliance carried ever since. Distance from home, repetition, discipline, and self-command shaped a harder but more independent character.",
+        highlights: ['Self-reliance', 'Discipline', 'Leadership training'],
+        tags: ['Military', 'Discipline']
+      },
+      {
+        id: 'changshu',
+        title: 'United World College',
+        subtitle: 'International Baccalaureate programme',
+        location: 'Changshu, China',
+        period: 'Age 16',
+        description:
+          'Moved to China to attend UWC, immersed in an IB programme alongside students from 100+ nations. Learned to navigate complex global perspectives and saw firsthand how interconnected the world truly is.',
+        highlights: ['100+ nationalities', 'IB Diploma', 'Global perspective'],
+        href: 'https://www.uwcchina.org/',
+        tags: ['International', 'IB']
+      },
+      {
+        id: 'decorah',
+        title: 'Luther College',
+        subtitle: 'Data Science major, Computer Science minor',
+        location: 'Decorah, Iowa, USA',
+        period: 'College years',
+        description:
+          'Fully leaned into the intersection of logic and creativity. Graduated with a major in Data Science and a minor in Computer Science, focusing senior research on the power of high-density data to solve real-world problems.',
+        highlights: ['Data Science', 'Computer Science', 'Senior research'],
+        href: 'https://www.luther.edu/',
+        tags: ['Data Science', 'CS', 'Research']
+      }
+    ]
+  },
+  {
+    id: 'work',
+    label: 'Work',
+    icon: 'briefcase',
+    items: [
+      {
+        id: 'research',
+        title: 'Research & Data Products',
+        subtitle: 'Building tools from data',
+        location: 'Remote & On-site',
+        period: 'Post-college',
+        description:
+          'Channeled academic training into real-world research workflows — building tools, automations, and data products that bridge the gap between raw information and actionable intelligence.',
+        highlights: ['Data pipelines', 'Automation', 'Research tooling'],
+        href: '/projects',
+        tags: ['Research', 'Data']
+      },
+      {
+        id: 'fintech',
+        title: 'Financial Intelligence',
+        subtitle: 'Institutional finance and strategy',
+        location: 'Tampa, Florida',
+        period: 'Present',
+        description:
+          'The current chapter brings together research, strategy, institutional finance, and product work into a clearer public-facing direction. Data is only as valuable as the narrative it helps uncover.',
+        highlights: ['Fintech', 'Strategy', 'Product systems'],
+        href: '/brewing',
+        tags: ['Finance', 'Product']
+      },
+      {
+        id: 'public-work',
+        title: 'Writing & Public Work',
+        subtitle: 'Building in public',
+        location: 'Tampa, Florida',
+        period: 'Ongoing',
+        description:
+          'Writing, products, adventures, and public-facing tools now sit in the same frame as the work itself. Building with a calmer, more confident sense of direction.',
+        highlights: ['Blog & essays', 'Open-source tools', 'Public presence'],
+        href: '/blog',
+        tags: ['Writing', 'Open Source']
+      }
+    ]
+  }
+];
+
+// Keep legacy exports for backwards compatibility if needed elsewhere
 export interface LifeJourneyChapter {
   id: string;
   step: string;
@@ -19,89 +138,6 @@ export interface LifeJourneyDestination {
   href: string;
   description: string;
 }
-
-export const lifeJourneyChapters: LifeJourneyChapter[] = [
-  {
-    id: 'dinajpur',
-    step: '01',
-    era: 'Early childhood',
-    location: 'Dinajpur',
-    region: 'Bangladesh',
-    theme: 'Foundation',
-    title: 'The first world was close, local, and formative.',
-    narrative:
-      'Dinajpur is where memory begins: family, routine, and the quiet scale of a first world. It is the chapter that gave everything after it a baseline of rootedness.',
-    atlasLabel: '25.63 N / 88.64 E',
-    note: 'Origins, intimacy, first bearings.',
-    scale: 0.78,
-    mapX: '13%',
-    mapY: '64%'
-  },
-  {
-    id: 'rangpur',
-    step: '02',
-    era: 'Adolescence',
-    location: 'Rangpur',
-    region: 'Bangladesh',
-    theme: 'Discipline',
-    title: 'Structure arrived early and changed the rhythm of growth.',
-    narrative:
-      'Rangpur carries the military-school chapter: distance from home, repetition, discipline, and self-command. It was a harder shape, but it built the independence that later moves would demand.',
-    atlasLabel: '25.74 N / 89.25 E',
-    note: 'Formation, order, endurance.',
-    scale: 0.88,
-    mapX: '18%',
-    mapY: '60%'
-  },
-  {
-    id: 'changshu',
-    step: '03',
-    era: 'Age 16 and outward',
-    location: 'Changshu',
-    region: 'China',
-    theme: 'Expansion',
-    title: 'The horizon widened into a global education.',
-    narrative:
-      'Changshu was the international turn: a life among students from across the world, where borders became more real and more porous at the same time. Curiosity stopped being abstract and became daily practice.',
-    atlasLabel: '31.65 N / 120.75 E',
-    note: 'Exposure, widening, movement outward.',
-    scale: 1,
-    mapX: '55%',
-    mapY: '40%'
-  },
-  {
-    id: 'decorah',
-    step: '04',
-    era: 'College years',
-    location: 'Decorah',
-    region: 'Iowa',
-    theme: 'Study',
-    title: 'Reflection and rigor found a home in the American Midwest.',
-    narrative:
-      'Decorah is where study became a sharper instrument: data, systems, writing, and the patience to think with structure. It added intellectual depth to a life already shaped by movement.',
-    atlasLabel: '43.30 N / 91.79 W',
-    note: 'Institution, reflection, sharpening.',
-    scale: 1.12,
-    mapX: '73%',
-    mapY: '34%'
-  },
-  {
-    id: 'tampa',
-    step: '05',
-    era: 'Present day',
-    location: 'Tampa',
-    region: 'Florida',
-    theme: 'Building',
-    title: 'The present chapter is public, practical, and still in motion.',
-    narrative:
-      'Tampa is where the earlier worlds start to converge into a clearer identity: writing, products, adventures, and work that faces outward. It feels less like arrival than a confident continuation.',
-    atlasLabel: '27.95 N / 82.46 W',
-    note: 'Now, creating, connecting.',
-    scale: 1.24,
-    mapX: '82%',
-    mapY: '58%'
-  }
-];
 
 export const lifeJourneyDestinations: LifeJourneyDestination[] = [
   {
