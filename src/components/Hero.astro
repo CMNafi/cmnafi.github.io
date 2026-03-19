@@ -1,0 +1,25 @@
+---
+import { homepageConfig } from '@/config/homepage';
+const { hero } = Astro.props as { hero: typeof homepageConfig.hero };
+---
+
+<section class="hero panel">
+  <div class="hero-copy">
+    <p class="eyebrow">{hero.eyebrow}</p>
+    <h1>{hero.title}</h1>
+    <p class="hero-description">{hero.description}</p>
+    <div class="hero-actions">
+      {hero.ctas.map((cta) => (
+        <a class={`button button-${cta.variant}`} href={cta.href}>{cta.label}</a>
+      ))}
+    </div>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+    <div class="steam steam-a"></div>
+    <div class="steam steam-b"></div>
+    <div class="steam steam-c"></div>
+  </div>
+</section>

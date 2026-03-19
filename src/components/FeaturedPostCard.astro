@@ -1,0 +1,19 @@
+---
+import { formatDate } from '@/utils/format';
+import StatusBadge from './StatusBadge.astro';
+
+const { post } = Astro.props;
+---
+
+<article class="featured-card panel">
+  <div class="featured-card__meta">
+    <StatusBadge status={post.data.category} />
+    <span>{formatDate(post.data.publishedAt)}</span>
+    <span>{post.data.readingTime}</span>
+  </div>
+  <h3><a href={`/blog/${post.data.slug}`}>{post.data.title}</a></h3>
+  <p>{post.data.description}</p>
+  <div class="tag-row">
+    {post.data.tags.slice(0, 3).map((tag: string) => <span class="tag-chip">{tag}</span>)}
+  </div>
+</article>

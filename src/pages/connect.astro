@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+---
+
+<BaseLayout title="Connect" description="Public professional context, working interests, and the kinds of intros worth making.">
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Professional layer"
+      title="Connect"
+      description="A public-facing view of the themes, people, and collaborations that feel especially aligned right now."
+    />
+    <div class="now-grid">
+      <section class="panel now-panel">
+        <h3>Current interests</h3>
+        <ul>
+          <li>Fintech workflows that deserve better interfaces.</li>
+          <li>Research and diligence systems with less friction and more clarity.</li>
+          <li>AI tools that amplify judgment instead of replacing it.</li>
+        </ul>
+      </section>
+      <section class="panel now-panel">
+        <h3>Open to talk about</h3>
+        <ul>
+          <li>Product strategy for data-heavy tools.</li>
+          <li>Builder workflows, automation, and thoughtful prototyping.</li>
+          <li>Writing systems for public work and personal knowledge.</li>
+        </ul>
+      </section>
+      <section class="panel now-panel">
+        <h3>Working on</h3>
+        <ul>
+          <li>ADV Screener and 13F Data Finder as modular product surfaces.</li>
+          <li>A writing practice that connects culture, sport, and product ideas.</li>
+          <li>A calm public system for sharing what is taking shape.</li>
+        </ul>
+      </section>
+      <section class="panel now-panel">
+        <h3>Good fit intros</h3>
+        <ul>
+          <li>Builders shaping research, diligence, or finance infrastructure.</li>
+          <li>People exploring practical AI for analysts and operators.</li>
+          <li>Writers and curious generalists with strong taste.</li>
+        </ul>
+      </section>
+    </div>
+    <section class="panel contact-panel">
+      <h3>Contact</h3>
+      <p>If any of this overlaps with what you’re building or thinking about, say hello.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="mailto:hello@cmnafi.com">Email hello@cmnafi.com</a>
+        <a class="button button-secondary" href="https://github.com/cmnafi" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="button button-ghost" href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+    </section>
+  </section>
+</BaseLayout>

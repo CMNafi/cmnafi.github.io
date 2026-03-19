@@ -1,0 +1,26 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import NowPanel from '@/components/NowPanel.astro';
+import { formatDate } from '@/utils/format';
+
+const current = await getEntry('now', 'current');
+if (!current) throw new Error('Missing now/current entry');
+---
+
+<BaseLayout title="Now" description="A manually updated snapshot of what C M Nafi is building, reading, and exploring right now.">
+  <section class="page-section">
+    <SectionHeading
+      eyebrow={`Updated ${formatDate(current.data.updatedAt)}`}
+      title="Now"
+      description="The clearest public snapshot of current priorities, active curiosity, and the kinds of conversations that feel timely right now."
+    />
+    <div class="now-grid">
+      <NowPanel title="What I'm building" items={current.data.building} />
+      <NowPanel title="What I'm reading" items={current.data.reading} />
+      <NowPanel title="What I'm exploring" items={current.data.exploring} />
+      <NowPanel title="Who I want to meet around" items={current.data.meeting} />
+    </div>
+  </section>
+</BaseLayout>

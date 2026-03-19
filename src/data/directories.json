@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Blog",
+    "slug": "/blog",
+    "description": "Essays, notes, reviews, match reflections, and product thinking.",
+    "category": "Blog",
+    "status": "live",
+    "icon": "✦",
+    "visibility": true,
+    "order": 1
+  },
+  {
+    "title": "Projects",
+    "slug": "/projects",
+    "description": "Data tools, experiments, and public builds that are taking shape.",
+    "category": "Projects",
+    "status": "live",
+    "icon": "◌",
+    "visibility": true,
+    "order": 2
+  },
+  {
+    "title": "Writing",
+    "slug": "/writing",
+    "description": "Longer-form writing, series, and future editorial collections.",
+    "category": "Writing",
+    "status": "coming soon",
+    "icon": "✎",
+    "visibility": true,
+    "order": 3
+  },
+  {
+    "title": "Apps",
+    "slug": "/apps",
+    "description": "Productized tools and focused interfaces for real workflows.",
+    "category": "Apps",
+    "status": "brewing",
+    "icon": "⌘",
+    "visibility": true,
+    "order": 4
+  },
+  {
+    "title": "Notes",
+    "slug": "/notes",
+    "description": "Short-form observations, half-formed ideas, and quick references.",
+    "category": "Notes",
+    "status": "coming soon",
+    "icon": "⋯",
+    "visibility": true,
+    "order": 5
+  },
+  {
+    "title": "Adventures",
+    "slug": "/adventures",
+    "description": "Travel, moments on the move, and stories worth keeping.",
+    "category": "Writing",
+    "status": "coming soon",
+    "icon": "↗",
+    "visibility": false,
+    "order": 6
+  },
+  {
+    "title": "Library",
+    "slug": "/library",
+    "description": "Books, articles, matches, and media worth revisiting.",
+    "category": "Notes",
+    "status": "brewing",
+    "icon": "☰",
+    "visibility": false,
+    "order": 7
+  }
+]
