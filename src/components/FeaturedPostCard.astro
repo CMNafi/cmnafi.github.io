@@ -11,7 +11,7 @@ const { post } = Astro.props;
     <span>{formatDate(post.data.publishedAt)}</span>
     <span>{post.data.readingTime}</span>
   </div>
-  <h3><a href={`/blog/${post.data.slug}`}>{post.data.title}</a></h3>
+  <h3><a href={`/blog/${post.slug}`}>{post.data.title}</a></h3>
   <p>{post.data.description}</p>
   <div class="tag-row">
     {post.data.tags.slice(0, 3).map((tag: string) => <span class="tag-chip">{tag}</span>)}
