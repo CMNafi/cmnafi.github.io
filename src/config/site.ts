@@ -6,7 +6,7 @@ export const siteConfig = {
   email: 'nafi@cmnafi.com',
   nav: [
     { id: 'journey', label: 'Journey', href: '/story' },
-    { id: 'writing', label: 'Writing', href: '/writing' },
+    { id: 'interests', label: 'Interests', href: '/interests' },
     { id: 'projects', label: 'Projects', href: '/projects' },
     { id: 'connect', label: 'Connect', href: '/connect' }
   ],
@@ -17,7 +17,7 @@ export const siteConfig = {
   ],
   footerLinks: [
     { label: 'About', href: '/about' },
-    { label: 'Brewing', href: '/brewing' },
+    { label: 'Interests', href: '/interests' },
     { label: 'Connect', href: '/connect' },
     { label: 'RSS', href: '/blog' }
   ]

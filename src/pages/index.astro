@@ -40,9 +40,9 @@ const journeyHighlights = [
 ];
 const secondaryPaths = [
   {
-    title: 'Blog',
-    href: '/blog',
-    description: 'Match stories, essays, and the growing archive behind the public work.'
+    title: 'Interests',
+    href: '/interests',
+    description: 'A timeline view of cricket, books, movies, writing, and the growing archive behind them.'
   },
   {
     title: 'Projects',
@@ -107,7 +107,7 @@ const secondaryPaths = [
         <p class="eyebrow">Journey</p>
         <h2>The journey comes first.</h2>
         <p>
-          Everything else on this site extends from it - the writing, the projects, and the work. Five places shaped how
+          Everything else on this site extends from it - the interests, the projects, and the work. Five places shaped how
           I think.
         </p>
       </div>
@@ -133,8 +133,8 @@ const secondaryPaths = [
         <p class="eyebrow">Interests</p>
         <h2>Beyond the route, a growing timeline.</h2>
         <p>
-          This is where cricket, books, movies, and writing start to build a public record. It is set up to grow entry by
-          entry over time.
+          Cricket, books, movies, writing, and the broader archive now live in one place. Each lane is easy to reach, and
+          each one is built to grow entry by entry over time.
         </p>
       </div>
 
@@ -175,7 +175,7 @@ const secondaryPaths = [
       <div class="home-secondary__header">
         <p class="eyebrow">Explore further</p>
         <p class="home-secondary__copy">
-          The journey sets the context. The blog, projects, and direct contact are where the rest of the site opens up.
+          The journey sets the context. Interests, projects, and direct contact are where the rest of the site opens up.
         </p>
       </div>
 
@@ -505,7 +505,7 @@ const secondaryPaths = [
 
   .interests-section__lanes {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 0.9rem;
   }
 

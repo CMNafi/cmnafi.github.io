@@ -1,3 +1,5 @@
+import { interestSections } from '@/data/interests';
+
 export interface HomeInterestLane {
   title: string;
   description: string;
@@ -13,22 +15,15 @@ export interface HomeInterestTimelineEntry {
 }
 
 export const homeInterestLanes: HomeInterestLane[] = [
+  ...interestSections.map((section) => ({
+    title: section.title,
+    description: section.description,
+    href: `/interests#${section.id}`
+  })),
   {
-    title: 'On the cricket field',
-    description: 'Match stories, scorelines, and the days that stay vivid long after the result.'
-  },
-  {
-    title: 'Books',
-    description: 'Biographies, ideas, and the kinds of books that keep changing shape over time.'
-  },
-  {
-    title: 'Movies',
-    description: 'Scenes, atmosphere, and the films that stay with me after the credits.'
-  },
-  {
-    title: 'Writing',
-    description: 'Notes, reflections, and longer pieces once they are ready to leave the notebook.',
-    href: '/writing'
+    title: 'Blog archive',
+    description: 'Every post in one searchable place, with filters for category and tags.',
+    href: '/blog'
   }
 ];
 
