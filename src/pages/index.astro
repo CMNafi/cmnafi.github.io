@@ -417,6 +417,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     width: min(calc(100% - 2rem), var(--max-width));
     margin-inline: auto;
     min-height: 100vh;
+    overflow-x: clip;
   }
 
   .story-stage {
@@ -683,7 +684,34 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
   /* ═══════════ RESPONSIVE ═══════════ */
   @media (max-width: 768px) {
-    .story-stage { height: 35vh; max-height: 280px; margin-bottom: -6vh; }
+    .story-hero {
+      padding: 2.25rem 1rem 1.5rem;
+    }
+
+    .story-hero .hero-avatar {
+      width: 72px;
+      height: 72px;
+      margin-bottom: 1rem;
+    }
+
+    .story-hero__title { font-size: clamp(1.6rem, 6vw, 2.6rem); }
+
+    .story-hero__sub {
+      font-size: 0.96rem;
+      line-height: 1.65;
+    }
+
+    .hero-scroll-hint {
+      margin-top: 1.5rem;
+    }
+
+    .story-stage {
+      display: none;
+    }
+
+    .story-scroll {
+      padding-top: 0;
+    }
 
     .story-chapter {
       flex-direction: column;
@@ -704,7 +732,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
     .career-grid { grid-template-columns: 1fr; }
     .stage-label { display: none; }
-    .story-hero__title { font-size: clamp(1.6rem, 6vw, 2.6rem); }
   }
 </style>
 

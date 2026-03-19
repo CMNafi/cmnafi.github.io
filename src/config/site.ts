@@ -3,7 +3,7 @@ export const siteConfig = {
   description: 'From global foundations to financial intelligence — writing, products, adventures, and work in progress.',
   author: 'C M Nafi',
   siteUrl: 'https://cmnafi.com',
-  email: 'hello@cmnafi.com',
+  email: 'nafi@cmnafi.com',
   nav: [
     { label: 'Home', href: '/' },
     { label: 'Brewing', href: '/brewing' },
@@ -15,7 +15,7 @@ export const siteConfig = {
   socialLinks: [
     { label: 'GitHub', href: 'https://github.com/cmnafi' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/cm-nafi/' },
-    { label: 'Email', href: 'mailto:hello@cmnafi.com' }
+    { label: 'Email', href: 'mailto:nafi@cmnafi.com' }
   ],
   footerLinks: [
     { label: 'About', href: '/about' },
