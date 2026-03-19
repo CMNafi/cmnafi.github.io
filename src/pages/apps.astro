@@ -1,13 +1,62 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+
+const appCards = [
+  {
+    eyebrow: 'Flagship app',
+    title: 'Manager Search',
+    href: '/apps/manager-search',
+    status: 'Building now',
+    description:
+      'Resolve institutional managers by CRD and CIK, pull Form ADV and 13F data, and turn it into a clean research narrative.'
+  },
+  {
+    eyebrow: 'Live tool',
+    title: 'Form ADV Search',
+    href: 'https://aistudio.google.com/apps/22413b76-84f4-492f-9424-602e8a68d040',
+    status: 'Live',
+    description:
+      'A fast regulatory search surface for navigating investment adviser filings without wading through the default workflow.',
+    external: true
+  },
+  {
+    eyebrow: 'Research system',
+    title: '13F Data Finder',
+    href: '/projects/13f-data-finder',
+    status: 'Brewing',
+    description:
+      'A calmer entry point into holdings research, manager behavior, and repeatable diligence questions.'
+  }
+] as const;
 ---
 
-<BaseLayout title="Apps" description="Public product surfaces and separate app modules are still brewing.">
-  <section class="page-section narrow-stack">
-    <div class="panel prose">
-      <p class="eyebrow">Brewing</p>
-      <h1>Apps</h1>
-      <p>Future app modules like ADV Screener and 13F Data Finder will eventually branch out from here.</p>
+<BaseLayout title="Apps" description="Focused product surfaces for research, filings, and public experiments.">
+  <section class="page-section apps-overview">
+    <div class="panel apps-intro">
+      <SectionHeading
+        eyebrow="Apps"
+        title="Focused tools for research-heavy workflows."
+        description="This is where productized workflows branch out from the main site. Each app is meant to be practical, legible, and built for repeat use."
+      />
+    </div>
+
+    <div class="apps-grid">
+      {appCards.map((app) => (
+        <a
+          class="panel app-card"
+          href={app.href}
+          target={app.external ? '_blank' : undefined}
+          rel={app.external ? 'noreferrer' : undefined}
+        >
+          <div class="app-card__meta">
+            <span>{app.eyebrow}</span>
+            <small>{app.status}</small>
+          </div>
+          <h2>{app.title}</h2>
+          <p>{app.description}</p>
+        </a>
+      ))}
     </div>
   </section>
 </BaseLayout>

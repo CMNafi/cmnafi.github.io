@@ -1,0 +1,56 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+
+const capabilities = [
+  'Resolve firms through SEC CIK and FINRA CRD identifiers.',
+  'Pull the latest Form ADV operating profile and most recent 13F cover page data.',
+  'Collapse raw holdings into a ranked top-positions view instead of sending unfiltered JSON to an LLM.',
+  'Generate a concise narrative summary for diligence, research, and manager triage.'
+];
+
+const workflow = [
+  'Search for a manager name or identifier.',
+  'Confirm the matched entity and open the SEC / IAPD links.',
+  'Review the top holdings, operational profile, and filing status.',
+  'Read an AI-generated narrative built only from pruned and labeled inputs.'
+];
+---
+
+<BaseLayout
+  title="Manager Search"
+  description="A manager intelligence dashboard for resolving institutional advisers, reading Form ADV data, and summarizing 13F holdings."
+>
+  <section class="page-section app-detail">
+    <div class="panel app-detail__hero">
+      <SectionHeading
+        eyebrow="Manager intelligence"
+        title="Manager Search"
+        description="A dedicated dashboard for institutional manager resolution, public filing analysis, and AI-assisted narrative summaries."
+      />
+      <p class="app-detail__lead">
+        This app is designed for public-market research workflows that start with a name and need to end with a cleaner picture of the manager, the filings, and the portfolio.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="/apps">Back to apps</a>
+        <a class="button button-ghost" href="/projects">Browse projects</a>
+      </div>
+    </div>
+
+    <div class="app-detail__grid">
+      <article class="panel app-detail__card">
+        <p class="eyebrow">Core capabilities</p>
+        <ul>
+          {capabilities.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+
+      <article class="panel app-detail__card">
+        <p class="eyebrow">Workflow</p>
+        <ol>
+          {workflow.map((item) => <li>{item}</li>)}
+        </ol>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

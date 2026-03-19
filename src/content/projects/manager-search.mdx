@@ -1,0 +1,41 @@
+---
+title: Manager Search
+summary: A manager intelligence dashboard that ties together entity resolution, Form ADV data, 13F holdings, and narrative summaries.
+description: Manager Search is a focused research application for resolving institutional investment managers through CRD and CIK identifiers, reading Form ADV operating data, summarizing 13F holdings, and turning public filings into a cleaner diligence surface.
+status: brewing
+category: web app
+stack:
+  - Next.js
+  - TypeScript
+  - SEC API
+  - OpenAI
+  - Form ADV
+  - Form 13F
+repoUrl: https://github.com/cmnafi/cmnafi.github.io
+liveUrl: https://cmnafi.com/apps/manager-search
+featured: true
+priority: 95
+startedAt: 2026-03-19
+updatedAt: 2026-03-19
+problem: Public filings contain the right answers, but the path from manager name to a usable diligence snapshot is still too fragmented and manual.
+solution: Build one dashboard that resolves entities, gathers key regulatory and holdings data, prunes the raw inputs responsibly, and produces a readable summary for faster research.
+whoItsFor: Investors, allocators, analysts, and diligence teams who need a faster path from name lookup to a trustworthy manager snapshot.
+keyFeatures:
+  - Debounced entity search with CRD and CIK resolution.
+  - Deep links to SEC EDGAR and IAPD profiles.
+  - Top-holdings rollup from 13F data with deterministic value calculations.
+  - LLM summary generation using only pruned and labeled inputs.
+roadmap:
+  - Add comparison mode for multiple managers.
+  - Surface filing change detection between quarters.
+  - Expand into a broader manager research platform.
+seoTitle: Manager Search
+seoDescription: A manager intelligence dashboard for Form ADV, 13F holdings, and AI-assisted diligence summaries.
+relatedPosts: []
+---
+
+Manager Search is a product direction that sits directly between public regulatory data and a real research workflow.
+
+## Why it matters
+
+The work is less about making filings look pretty and more about making them usable. A name should resolve into a manager profile quickly, the key identifiers should be obvious, and the holdings view should support the next decision instead of creating more cleanup work.
