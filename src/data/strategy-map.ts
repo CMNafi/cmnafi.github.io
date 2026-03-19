@@ -26,6 +26,14 @@ export interface StrategyMapSignal {
   description: string;
 }
 
+export interface StrategyNavPreview {
+  id: string;
+  label: string;
+  title: string;
+  description: string;
+  note: string;
+}
+
 export const strategyMapChapters: StrategyMapChapter[] = [
   {
     id: 'dinajpur',
@@ -125,6 +133,57 @@ export const strategyMapSignals: StrategyMapSignal[] = [
   {
     title: 'Work in Public',
     description: 'Writing, products, and public-facing tools now sit in the same frame as the work itself.'
+  }
+];
+
+export const strategyNavPreviews: StrategyNavPreview[] = [
+  {
+    id: 'home',
+    label: 'Home',
+    title: 'Global foundations, financial intelligence, work in motion.',
+    description:
+      'A living strategy map tracing the route from Bangladesh to Tampa and the capabilities formed along the way.',
+    note: 'Identity, movement, and the current thesis behind the site.'
+  },
+  {
+    id: 'brewing',
+    label: 'Brewing',
+    title: 'Ideas still in motion.',
+    description:
+      'Experiments, prompts, systems, and rough edges being refined before they become finished work.',
+    note: 'Early-stage thinking, active notes, and what is currently taking shape.'
+  },
+  {
+    id: 'blog',
+    label: 'Blog',
+    title: 'Books, films, music, essays, and reflections.',
+    description:
+      'Writing that turns reading, watching, listening, and lived experience into a clearer point of view.',
+    note: 'Finished pieces, quieter reflections, and the longer-form archive.'
+  },
+  {
+    id: 'projects',
+    label: 'Projects',
+    title: 'Tools, apps, builds, and financial data products.',
+    description:
+      'Public experiments and working systems shaped around due diligence, research workflows, and usable intelligence.',
+    note: 'Products, automations, and data-heavy builds meant for real operators.'
+  },
+  {
+    id: 'adventures',
+    label: 'Adventures',
+    title: 'Travel, cricket, field notes, records, and journeys.',
+    description:
+      'The story-driven archive beyond work, where movement, sport, and place leave a different kind of record.',
+    note: 'Trips, match memories, field notes, and the personal ledger outside the desk.'
+  },
+  {
+    id: 'connect',
+    label: 'Connect',
+    title: 'Conversations, collaboration, and public presence.',
+    description:
+      'The outward-facing layer of the site, from direct contact to the places where work and ideas stay in touch with people.',
+    note: 'Email, social presence, and ways to reach out for thoughtful collaboration.'
   }
 ];
 

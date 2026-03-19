@@ -68,7 +68,13 @@ const currentPath = Astro.url.pathname;
 
               return (
                 <li>
-                  <a href={item.href} aria-current={isCurrent ? 'page' : undefined}>{item.label}</a>
+                  <a
+                    href={item.href}
+                    data-nav-item={item.id}
+                    aria-current={isCurrent ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </a>
                 </li>
               );
             })}

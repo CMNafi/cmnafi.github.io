@@ -5,12 +5,12 @@ export const siteConfig = {
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',
   nav: [
-    { label: 'Home', href: '/' },
-    { label: 'Brewing', href: '/brewing' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Projects', href: '/projects' },
-    { label: 'Adventures', href: '/adventures' },
-    { label: 'Connect', href: '/connect' }
+    { id: 'home', label: 'Home', href: '/' },
+    { id: 'brewing', label: 'Brewing', href: '/brewing' },
+    { id: 'blog', label: 'Blog', href: '/blog' },
+    { id: 'projects', label: 'Projects', href: '/projects' },
+    { id: 'adventures', label: 'Adventures', href: '/adventures' },
+    { id: 'connect', label: 'Connect', href: '/connect' }
   ],
   socialLinks: [
     { label: 'GitHub', href: 'https://github.com/cmnafi' },

@@ -131,18 +131,45 @@ main,
 }
 
 .nav-list a {
+  position: relative;
+  overflow: hidden;
   color: var(--muted);
   padding: 0.6rem 0.9rem;
   border-radius: 999px;
   border: 1px solid transparent;
-  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.nav-list a::after {
+  content: "";
+  position: absolute;
+  left: 0.95rem;
+  right: 0.95rem;
+  bottom: 0.42rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(243, 237, 225, 0.4), var(--accent), transparent);
+  opacity: 0;
+  transform: scaleX(0.76);
+  transform-origin: center;
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
 .nav-list a[aria-current='page'],
-.nav-list a:hover {
+.nav-list a:hover,
+.nav-list a:focus-visible,
+.nav-list a.is-preview-active {
   color: var(--text);
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255,255,255,0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 30px rgba(0, 0, 0, 0.16);
+}
+
+.nav-list a:hover::after,
+.nav-list a:focus-visible::after,
+.nav-list a[aria-current='page']::after,
+.nav-list a.is-preview-active::after {
+  opacity: 0.92;
+  transform: scaleX(1);
 }
 
 main { padding-bottom: 4rem; }

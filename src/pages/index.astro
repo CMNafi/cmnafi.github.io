@@ -5,10 +5,12 @@ import StrategyMapChapter from '@/components/StrategyMapChapter.astro';
 import {
   strategyMapChapters,
   strategyMapDestinations,
-  strategyMapSignals
+  strategyMapSignals,
+  strategyNavPreviews
 } from '@/data/strategy-map';
 
 const firstChapter = strategyMapChapters[0];
+const defaultNavPreview = strategyNavPreviews[0];
 const routeSegments = [
   'M153 367 C165 355 182 340 198 335',
   'M198 335 C280 300 390 215 504 184',
@@ -28,6 +30,7 @@ const contourPaths = [
     class="strategy-map-page"
     data-strategy-map
     data-active-chapter={firstChapter.id}
+    data-active-preview={defaultNavPreview.id}
     style={`--portrait-scale:${firstChapter.portraitScale}; --deployment-progress:0;`}
   >
     <section class="page-section page-section-hero strategy-hero">
@@ -50,12 +53,38 @@ const contourPaths = [
         </div>
       </div>
 
-      <div class="strategy-hero__visual panel" aria-hidden="true">
-        <div class="strategy-hero__visual-glow strategy-hero__visual-glow--warm"></div>
-        <div class="strategy-hero__visual-glow strategy-hero__visual-glow--cool"></div>
-        <div class="strategy-hero__grid"></div>
+      <div class="strategy-hero__visual panel" data-nav-preview-zone>
+        <div class="strategy-hero__visual-glow strategy-hero__visual-glow--warm" aria-hidden="true"></div>
+        <div class="strategy-hero__visual-glow strategy-hero__visual-glow--cool" aria-hidden="true"></div>
+        <div class="strategy-hero__grid" aria-hidden="true"></div>
 
-        <svg class="strategy-hero__map" viewBox="0 0 900 540" preserveAspectRatio="xMidYMid meet">
+        <div class="strategy-hero__preview-dock" aria-live="polite" data-nav-preview-dock>
+          {strategyNavPreviews.map((preview, index) => (
+            <article
+              class:list={['strategy-hero__preview-card', index === 0 && 'is-active']}
+              data-nav-preview-panel
+              data-preview-id={preview.id}
+              aria-hidden={index === 0 ? 'false' : 'true'}
+            >
+              <span class="strategy-hero__preview-kicker">{preview.label}</span>
+              <h2>{preview.title}</h2>
+              <p>{preview.description}</p>
+              <small>{preview.note}</small>
+            </article>
+          ))}
+        </div>
+
+        <div class="strategy-hero__preview-stack" aria-label="Site sections preview">
+          {strategyNavPreviews.map((preview) => (
+            <article class="strategy-hero__preview-stack-item">
+              <span>{preview.label}</span>
+              <strong>{preview.title}</strong>
+              <p>{preview.description}</p>
+            </article>
+          ))}
+        </div>
+
+        <svg class="strategy-hero__map" viewBox="0 0 900 540" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
           <g class="strategy-hero__continents">
             {contourPaths.map((path) => (
               <path d={path}></path>
@@ -68,14 +97,18 @@ const contourPaths = [
         </svg>
 
         {strategyMapChapters.map((chapter) => (
-          <span class={`strategy-hero__node strategy-hero__node--${chapter.id}`} style={`left:${chapter.mapX}; top:${chapter.mapY};`}>
+          <span
+            class={`strategy-hero__node strategy-hero__node--${chapter.id}`}
+            style={`left:${chapter.mapX}; top:${chapter.mapY};`}
+            aria-hidden="true"
+          >
             <span></span>
           </span>
         ))}
 
-        <div class="strategy-hero__label strategy-hero__label--coverage">Coverage</div>
-        <div class="strategy-hero__label strategy-hero__label--signal">Signal strengthening</div>
-        <div class="strategy-hero__label strategy-hero__label--deployment">Current deployment</div>
+        <div class="strategy-hero__label strategy-hero__label--coverage" aria-hidden="true">Coverage</div>
+        <div class="strategy-hero__label strategy-hero__label--signal" aria-hidden="true">Signal strengthening</div>
+        <div class="strategy-hero__label strategy-hero__label--deployment" aria-hidden="true">Current deployment</div>
 
         <div class="strategy-hero__signal-card">
           <span>The journey</span>
@@ -227,6 +260,10 @@ const contourPaths = [
       const chapters = Array.from(root.querySelectorAll('[data-strategy-chapter]'));
       const mapNodes = Array.from(root.querySelectorAll('[data-map-node]'));
       const routeSegments = Array.from(root.querySelectorAll('[data-route-segment]'));
+      const previewZone = root.querySelector('[data-nav-preview-zone]');
+      const previewPanels = Array.from(root.querySelectorAll('[data-nav-preview-panel]'));
+      const navItems = Array.from(document.querySelectorAll('.site-header [data-nav-item]'));
+      const navList = document.querySelector('.site-header .nav-list');
       const activePlace = root.querySelector('[data-active-place]');
       const activeSignal = root.querySelector('[data-active-signal]');
       const activeStep = root.querySelector('[data-active-step]');
@@ -234,6 +271,9 @@ const contourPaths = [
       const activeTheme = root.querySelector('[data-active-theme]');
       const activeCapability = root.querySelector('[data-active-capability]');
       const activeAtlas = root.querySelector('[data-active-atlas]');
+      const defaultPreviewId = root.dataset.activePreview ?? 'home';
+      const defaultPreviewLink = navItems.find((item) => item.getAttribute('data-nav-item') === defaultPreviewId) ?? navItems[0];
+      let previewResetTimer = 0;
 
       const setActive = (index) => {
         const chapter = chapters[index];
@@ -266,6 +306,53 @@ const contourPaths = [
         });
       };
 
+      const positionPreview = (item) => {
+        if (!previewZone || !item) return;
+
+        const zoneRect = previewZone.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+        const gutter = Math.min(176, Math.max(zoneRect.width * 0.28, 96));
+        const minimum = gutter;
+        const maximum = Math.max(zoneRect.width - gutter, minimum);
+        const center = itemRect.left + itemRect.width / 2 - zoneRect.left;
+        const clamped = Math.min(Math.max(center, minimum), maximum);
+
+        previewZone.style.setProperty('--nav-preview-left', `${clamped}px`);
+      };
+
+      const setPreview = (id, item) => {
+        const activeId = id || defaultPreviewId;
+
+        root.dataset.activePreview = activeId;
+
+        previewPanels.forEach((panel) => {
+          const isActive = panel.getAttribute('data-preview-id') === activeId;
+          panel.classList.toggle('is-active', isActive);
+          panel.setAttribute('aria-hidden', String(!isActive));
+        });
+
+        navItems.forEach((link) => {
+          const isActive = link.getAttribute('data-nav-item') === activeId;
+          link.classList.toggle('is-preview-active', isActive);
+        });
+
+        positionPreview(item ?? defaultPreviewLink);
+      };
+
+      const clearPreviewReset = () => {
+        if (previewResetTimer) {
+          window.clearTimeout(previewResetTimer);
+          previewResetTimer = 0;
+        }
+      };
+
+      const schedulePreviewReset = () => {
+        clearPreviewReset();
+        previewResetTimer = window.setTimeout(() => {
+          setPreview(defaultPreviewId, defaultPreviewLink);
+        }, 140);
+      };
+
       const observer = new IntersectionObserver(
         (entries) => {
           const visible = entries
@@ -283,6 +370,7 @@ const contourPaths = [
 
       chapters.forEach((chapter) => observer.observe(chapter));
       setActive(0);
+      setPreview(defaultPreviewId, defaultPreviewLink);
 
       mapNodes.forEach((node) => {
         node.addEventListener('click', () => {
@@ -290,6 +378,35 @@ const contourPaths = [
           const chapter = root.querySelector(`[data-chapter-id="${target}"]`);
           chapter?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
+      });
+
+      navItems.forEach((item) => {
+        const previewId = item.getAttribute('data-nav-item');
+        if (!previewPanels.some((panel) => panel.getAttribute('data-preview-id') === previewId)) return;
+
+        item.addEventListener('pointerenter', () => {
+          clearPreviewReset();
+          setPreview(previewId, item);
+        });
+
+        item.addEventListener('focus', () => {
+          clearPreviewReset();
+          setPreview(previewId, item);
+        });
+      });
+
+      navList?.addEventListener('pointerleave', schedulePreviewReset);
+      navList?.addEventListener('focusout', () => {
+        window.requestAnimationFrame(() => {
+          if (navList.contains(document.activeElement)) return;
+          setPreview(defaultPreviewId, defaultPreviewLink);
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        const activeItem =
+          navItems.find((item) => item.classList.contains('is-preview-active')) ?? defaultPreviewLink;
+        positionPreview(activeItem);
       });
     }
   </script>
@@ -412,6 +529,7 @@ const contourPaths = [
   }
 
   .strategy-hero__visual {
+    --nav-preview-left: 9rem;
     position: relative;
     min-height: 34rem;
     padding: 1.4rem;
@@ -435,10 +553,119 @@ const contourPaths = [
   .strategy-hero__visual-glow,
   .strategy-hero__grid,
   .strategy-hero__map,
+  .strategy-hero__preview-dock,
+  .strategy-hero__preview-stack,
   .strategy-hero__signal-card,
   .strategy-hero__label,
   .strategy-hero__node {
     position: absolute;
+  }
+
+  .strategy-hero__preview-dock {
+    top: 1.2rem;
+    left: 1.2rem;
+    right: 1.2rem;
+    height: 10.4rem;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .strategy-hero__preview-dock::before,
+  .strategy-hero__preview-dock::after {
+    content: "";
+    position: absolute;
+    left: var(--nav-preview-left);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .strategy-hero__preview-dock::before {
+    top: 0;
+    width: 1px;
+    height: 2.7rem;
+    background: linear-gradient(180deg, rgba(243, 237, 225, 0.56), rgba(243, 237, 225, 0));
+    opacity: 0.72;
+  }
+
+  .strategy-hero__preview-dock::after {
+    top: 2.5rem;
+    width: 0.62rem;
+    height: 0.62rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--strategy-accent) 84%, white 16%);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--strategy-accent) 10%, transparent), 0 0 18px color-mix(in srgb, var(--strategy-accent) 26%, transparent);
+  }
+
+  .strategy-hero__preview-card {
+    position: absolute;
+    left: var(--nav-preview-left);
+    top: 2.95rem;
+    width: min(100%, 19rem);
+    display: grid;
+    gap: 0.55rem;
+    padding: 1rem 1rem 0.95rem;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+      linear-gradient(180deg, rgba(13, 15, 20, 0.9), rgba(12, 12, 16, 0.54)),
+      radial-gradient(circle at top, color-mix(in srgb, var(--strategy-accent) 10%, transparent), transparent 72%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 28px 50px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(18px);
+    opacity: 0;
+    transform: translate3d(-50%, 18px, 0) scale(0.985);
+    transition: opacity 260ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .strategy-hero__preview-card.is-active {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+
+  .strategy-hero__preview-kicker,
+  .strategy-hero__preview-stack-item span {
+    color: rgba(243, 237, 225, 0.56);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .strategy-hero__preview-card h2,
+  .strategy-hero__preview-stack-item strong {
+    margin: 0;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-size: 1.18rem;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: rgba(243, 237, 225, 0.94);
+    text-wrap: balance;
+  }
+
+  .strategy-hero__preview-card p,
+  .strategy-hero__preview-card small,
+  .strategy-hero__preview-stack-item p {
+    margin: 0;
+    color: rgba(243, 237, 225, 0.72);
+    line-height: 1.6;
+  }
+
+  .strategy-hero__preview-card small {
+    display: block;
+    color: rgba(243, 237, 225, 0.54);
+    font-size: 0.77rem;
+  }
+
+  .strategy-hero__preview-stack {
+    display: none;
+  }
+
+  .strategy-hero__preview-stack-item {
+    display: grid;
+    gap: 0.42rem;
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(12, 13, 18, 0.76), rgba(12, 13, 18, 0.46));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .strategy-hero__visual-glow {
@@ -541,8 +768,8 @@ const contourPaths = [
     backdrop-filter: blur(16px);
   }
 
-  .strategy-hero__label--coverage { left: 8%; top: 12%; }
-  .strategy-hero__label--signal { right: 12%; top: 14%; }
+  .strategy-hero__label--coverage { left: 8%; top: 34%; }
+  .strategy-hero__label--signal { right: 12%; top: 35%; }
   .strategy-hero__label--deployment { right: 10%; bottom: 18%; }
 
   .strategy-hero__signal-card {
@@ -1016,6 +1243,33 @@ const contourPaths = [
       min-height: auto;
     }
 
+    .strategy-hero__visual {
+      min-height: 37rem;
+    }
+
+    .strategy-hero__preview-dock {
+      display: none;
+    }
+
+    .strategy-hero__preview-stack {
+      inset: 1rem 1rem auto;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      pointer-events: none;
+    }
+
+    .strategy-hero__label {
+      display: none;
+    }
+
+    .strategy-hero__signal-card {
+      left: 1rem;
+      right: 1rem;
+      bottom: 1rem;
+    }
+
     .strategy-control { position: static; }
     .strategy-destination-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
@@ -1023,11 +1277,21 @@ const contourPaths = [
   @media (max-width: 780px) {
     .strategy-hero { gap: 1.25rem; }
     .strategy-hero h1 { font-size: clamp(2.9rem, 12vw, 4.5rem); }
-    .strategy-hero__visual { min-height: 26rem; }
-    .strategy-hero__label { font-size: 0.62rem; letter-spacing: 0.1em; }
-    .strategy-hero__label--coverage { left: 5%; top: 10%; }
-    .strategy-hero__label--signal { right: 6%; top: 10%; }
-    .strategy-hero__label--deployment { right: 6%; bottom: 24%; }
+    .strategy-hero__visual {
+      min-height: 34rem;
+      padding: 1rem;
+    }
+    .strategy-hero__preview-stack {
+      inset: 0.95rem 0.95rem auto;
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+    .strategy-hero__preview-stack-item {
+      padding: 0.88rem 0.9rem;
+    }
+    .strategy-hero__preview-stack-item strong {
+      font-size: 1rem;
+    }
     .strategy-control__surface { min-height: 26rem; }
     .strategy-control__header { grid-template-columns: 1fr; }
     .strategy-control__portrait-shell { width: min(100%, 9.2rem); left: 54%; bottom: 12%; }
