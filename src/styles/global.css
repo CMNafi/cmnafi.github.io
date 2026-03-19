@@ -2953,3 +2953,106 @@ main { padding-bottom: 4rem; }
     animation: none !important;
   }
 }
+
+.apps-overview,
+.app-detail {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.apps-intro,
+.app-detail__hero {
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.apps-grid,
+.app-detail__grid {
+  display: grid;
+  gap: 1.2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.app-card,
+.app-detail__card {
+  display: grid;
+  gap: 0.95rem;
+  padding: 1.3rem;
+  min-height: 100%;
+}
+
+.app-card__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  color: rgba(243, 237, 225, 0.62);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.app-card h2,
+.app-detail__hero h1,
+.app-detail__card h2 {
+  margin: 0;
+}
+
+.app-card p,
+.app-detail__lead,
+.app-detail__card li {
+  color: rgba(243, 237, 225, 0.76);
+}
+
+.app-card:hover {
+  border-color: rgba(215, 160, 96, 0.24);
+  transform: translateY(-2px);
+}
+
+.app-detail__lead {
+  max-width: 48rem;
+  margin: 0;
+}
+
+.app-detail__card ul,
+.app-detail__card ol {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+@media (max-width: 900px) {
+  .apps-grid,
+  .app-detail__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Profile avatar in hero corner ── */
+.hero-avatar {
+  position: absolute;
+  top: clamp(1rem, 3vw, 1.75rem);
+  left: clamp(1rem, 3vw, 1.75rem);
+  z-index: 2;
+  display: block;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(211, 154, 89, 0.45);
+  box-shadow: 0 0 0 4px rgba(211, 154, 89, 0.08);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.hero-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.hero-avatar:hover {
+  border-color: rgba(211, 154, 89, 0.9);
+  box-shadow: 0 0 0 5px rgba(211, 154, 89, 0.18);
+  transform: scale(1.06);
+}

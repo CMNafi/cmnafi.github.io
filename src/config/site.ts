@@ -10,11 +10,12 @@ export const siteConfig = {
     { label: 'Projects', href: '/projects' },
     { label: 'Adventures', href: '/adventures' },
     { label: 'Now', href: '/now' },
+    { label: 'Apps', href: '/apps' },
     { label: 'Connect', href: '/connect' }
   ],
   socialLinks: [
     { label: 'GitHub', href: 'https://github.com/cmnafi' },
-    { label: 'LinkedIn', href: 'https://www.linkedin.com' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/cm-nafi/' },
     { label: 'Email', href: 'mailto:hello@cmnafi.com' }
   ],
   footerLinks: [

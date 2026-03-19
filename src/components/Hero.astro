@@ -8,10 +8,13 @@ const { hero } = Astro.props as {
   hero: HeroConfig;
 };
 
-const quickLinks = siteConfig.nav.filter((item) => item.href !== '/' && item.href !== '/connect').slice(0, 4);
+const quickLinks = siteConfig.nav.filter((item) => item.href !== '/' && item.href !== '/connect');
 ---
 
 <section class="hero landing-hero panel">
+  <a class="hero-avatar" href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noopener noreferrer" aria-label="C M Nafi on LinkedIn">
+    <img src="/profile.jpg" alt="C M Nafi" />
+  </a>
   <p class="eyebrow">{hero.eyebrow}</p>
   <h1>{hero.title}</h1>
   <p class="landing-hero__descriptor">{hero.descriptor}</p>
