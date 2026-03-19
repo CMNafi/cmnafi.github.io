@@ -1,0 +1,31 @@
+---
+import type { TimelineItem } from '@/types/cricket';
+
+interface Props {
+  items: TimelineItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="cricket-timeline">
+  {items.map((item) => (
+    <article class="timeline-item">
+      <div class="timeline-item__rail" aria-hidden="true">
+        <span></span>
+      </div>
+      <div class="panel timeline-item__card">
+        <div class="timeline-item__header">
+          <p class="eyebrow">{item.seasonLabel} · {item.type}</p>
+          <time datetime={item.date}>{item.date}</time>
+        </div>
+        <h3>{item.title}</h3>
+        <p class="timeline-item__summary">{item.summary}</p>
+        <p>{item.body}</p>
+        <div class="tag-row">
+          {item.relatedStats.map((stat) => <span class="tag-chip">{stat}</span>)}
+        </div>
+      </div>
+    </article>
+  ))}
+</div>

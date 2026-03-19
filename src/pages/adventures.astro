@@ -1,26 +1,108 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
+import DirectoryCard from '@/components/DirectoryCard.astro';
+import HighlightCard from '@/components/cricket/HighlightCard.astro';
+import CricketTimeline from '@/components/cricket/CricketTimeline.astro';
+import { cricketHighlights, cricketTimeline } from '@/data/cricket';
+
+const adventureCategories = [
+  {
+    title: 'Cricket',
+    slug: '/adventures/cricket',
+    description: 'A premium personal sports archive: teams, seasons, matches, milestones, and the stories between them.',
+    category: 'Adventures',
+    status: 'live',
+    icon: '🏏'
+  },
+  {
+    title: 'Travel notes',
+    slug: '/adventures',
+    description: 'Future city walks, tournament trips, detours, and field notes gathered away from routine.',
+    category: 'Adventures',
+    status: 'brewing',
+    icon: '✈️'
+  },
+  {
+    title: 'Photo journals',
+    slug: '/adventures',
+    description: 'A later layer for image-led memory keeping, visual essays, and story fragments.',
+    category: 'Adventures',
+    status: 'coming soon',
+    icon: '📷'
+  }
+];
+
+const recentHighlights = cricketHighlights.slice(0, 3);
+const timelinePreview = cricketTimeline.slice(-3).reverse();
 ---
 
 <BaseLayout
   title="Adventures"
-  description="Field notes from time away from the desk: travel, movement, moments on the way, and stories still settling."
+  description="A premium home for lived experience: cricket, future travel notes, and memory-rich archives built to expand over time."
 >
+  <section class="page-section page-section-hero">
+    <div class="panel adventures-landing-hero">
+      <p class="eyebrow">Adventures</p>
+      <h1>Personal archives for the parts of life that keep moving.</h1>
+      <p class="hero-description">
+        Adventures is where lived experience gets treated with the same care as work: matches, tournament seasons, travel, moments of growth, and the stories that only make sense once enough time has passed.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="/adventures/cricket">Enter cricket archive</a>
+        <a class="button button-secondary" href="/adventures/cricket/timeline">Open the timeline</a>
+      </div>
+    </div>
+  </section>
+
   <section class="page-section">
     <SectionHeading
-      eyebrow="Adventures"
-      title="Stories gathered while moving"
-      description="A future home for travel notes, off-routine observations, and the kinds of moments that sharpen the rest of the work."
+      eyebrow="Adventure domains"
+      title="Cricket leads, but the system leaves room for the rest of life"
+      description="This hub is designed to grow into travel, tournaments, life moments, tennis, and photo-led journals without losing the premium editorial feeling of the site."
     />
-
-    <div class="panel current-brewing narrow-stack">
-      <p>
-        This section is still brewing. It will hold reflections from trips, city walks, detours, and the small scenes that end up changing how I think.
-      </p>
-      <p>
-        For now, the best place to follow what is in motion is the <a href="/now">Now page</a>, alongside the <a href="/blog">blog</a> and ongoing <a href="/projects">projects</a>.
-      </p>
+    <div class="spotlight-grid">
+      {adventureCategories.map((item) => <DirectoryCard item={item} />)}
     </div>
+  </section>
+
+  <section class="page-section two-up cricket-spotlight-grid">
+    <article class="panel cricket-spotlight-card">
+      <p class="eyebrow">Flagship archive</p>
+      <h2>Cricket is the first major chapter under Adventures.</h2>
+      <p>
+        Built around teams, matches, season snapshots, and personal notes, the cricket section works as both performance log and sports memory bank. It is data-rich without becoming a cold scoreboard.
+      </p>
+      <div class="tag-row">
+        <span class="tag-chip">player profile</span>
+        <span class="tag-chip">match history</span>
+        <span class="tag-chip">highlights</span>
+        <span class="tag-chip">timeline storytelling</span>
+      </div>
+      <div class="hero-actions">
+        <a class="button button-primary" href="/adventures/cricket/records">View records</a>
+        <a class="button button-ghost" href="/adventures/cricket/highlights">Read stories</a>
+      </div>
+    </article>
+
+    <article class="panel panel-stack">
+      <SectionHeading
+        eyebrow="Recent highlights"
+        title="A quick preview of what the archive keeps visible"
+        description="Each highlight balances a stat line with context, leaving space for photos, notes, and scorecards later."
+      />
+      <div class="narrow-stack">
+        {recentHighlights.map((highlight) => <HighlightCard highlight={highlight} />)}
+      </div>
+    </article>
+  </section>
+
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Timeline preview"
+      title="The shape of the journey matters as much as the totals"
+      description="A small look at the chronological layer that turns isolated snapshots into a sports biography."
+    />
+    <CricketTimeline items={timelinePreview} />
   </section>
 </BaseLayout>

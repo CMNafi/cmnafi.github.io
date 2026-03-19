@@ -1,0 +1,41 @@
+---
+import SourceBadge from './SourceBadge.astro';
+import type { SeasonRecord } from '@/types/cricket';
+
+interface Props {
+  season: SeasonRecord;
+}
+
+const { season } = Astro.props;
+
+const statPairs = [
+  ['Matches', season.matches],
+  ['Runs', season.runs],
+  ['High score', season.highScore],
+  ['Strike rate', season.strikeRate],
+  ['Wickets', season.wickets],
+  ['Economy', season.economy]
+].filter(([, value]) => value !== null);
+---
+
+<article class="panel season-card">
+  <div class="season-card__top">
+    <div>
+      <p class="eyebrow">{season.year} · {season.format}</p>
+      <h3>{season.seasonLabel}</h3>
+      <p>{season.team} · {season.competition}</p>
+    </div>
+    <SourceBadge status={season.sourceStatus} />
+  </div>
+
+  <div class="season-card__stats">
+    {statPairs.map(([label, value]) => (
+      <div>
+        <span>{label}</span>
+        <strong>{value}</strong>
+      </div>
+    ))}
+  </div>
+
+  <p class="season-card__notes">{season.notes}</p>
+</article>

@@ -1,0 +1,34 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  series: { label: string; value: number; meta?: string }[];
+  suffix?: string;
+}
+
+const { title, subtitle, series, suffix = '' } = Astro.props;
+const maxValue = Math.max(...series.map((item) => item.value), 1);
+---
+
+<article class="panel stat-chart">
+  <div class="stat-chart__header">
+    <div>
+      <h3>{title}</h3>
+      {subtitle && <p>{subtitle}</p>}
+    </div>
+  </div>
+  <div class="stat-chart__bars">
+    {series.map((item) => (
+      <div class="stat-chart__row">
+        <div class="stat-chart__label">
+          <strong>{item.label}</strong>
+          {item.meta && <span>{item.meta}</span>}
+        </div>
+        <div class="stat-chart__bar-shell">
+          <span class="stat-chart__bar" style={`width:${(item.value / maxValue) * 100}%`}></span>
+        </div>
+        <span class="stat-chart__value">{item.value}{suffix}</span>
+      </div>
+    ))}
+  </div>
+</article>

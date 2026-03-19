@@ -57,11 +57,15 @@ const currentPath = Astro.url.pathname;
         </a>
         <nav aria-label="Primary navigation">
           <ul class="nav-list">
-            {siteConfig.nav.map((item) => (
-              <li>
-                <a href={item.href} aria-current={currentPath === item.href ? 'page' : undefined}>{item.label}</a>
-              </li>
-            ))}
+            {siteConfig.nav.map((item) => {
+              const isCurrent = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(`${item.href}/`));
+
+              return (
+                <li>
+                  <a href={item.href} aria-current={isCurrent ? 'page' : undefined}>{item.label}</a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </header>

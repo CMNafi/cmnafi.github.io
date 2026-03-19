@@ -1,0 +1,45 @@
+---
+import EmptyStateCard from './EmptyStateCard.astro';
+import type { TeamRecord } from '@/types/cricket';
+
+interface Props {
+  team: TeamRecord;
+}
+
+const { team } = Astro.props;
+const stats = team.aggregateStats;
+---
+
+<article class="panel team-card">
+  <div class="team-card__top">
+    <div class="team-card__badge" aria-hidden="true">🏏</div>
+    <div>
+      <p class="eyebrow">{team.current ? 'Current team' : 'Archive team'}</p>
+      <h3>{team.teamName}</h3>
+      <p>{team.role}</p>
+    </div>
+  </div>
+
+  <p class="team-card__notes">{team.notes}</p>
+
+  <div class="tag-row">
+    {team.seasons.map((season) => <span class="tag-chip">{season}</span>)}
+    {team.competitions.map((competition) => <span class="tag-chip tag-chip--muted">{competition}</span>)}
+  </div>
+
+  {(stats.matches ?? stats.runs ?? stats.wickets) !== null ? (
+    <div class="team-card__stats">
+      {stats.matches !== null && <div><span>Matches</span><strong>{stats.matches}</strong></div>}
+      {stats.runs !== null && <div><span>Runs</span><strong>{stats.runs}</strong></div>}
+      {stats.wickets !== null && <div><span>Wickets</span><strong>{stats.wickets}</strong></div>}
+      {stats.battingAverage !== null && <div><span>Avg</span><strong>{stats.battingAverage}</strong></div>}
+      {stats.strikeRate !== null && <div><span>SR</span><strong>{stats.strikeRate}</strong></div>}
+      {stats.economy !== null && <div><span>Eco</span><strong>{stats.economy}</strong></div>}
+    </div>
+  ) : (
+    <EmptyStateCard
+      title="Waiting for imported totals"
+      description="This team identity is preserved now so future imports can merge older scorecards without losing naming history."
+    />
+  )}
+</article>

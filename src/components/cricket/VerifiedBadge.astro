@@ -1,0 +1,15 @@
+---
+interface Props {
+  verified?: boolean;
+  label?: string;
+}
+
+const { verified = true, label = 'Verified record' } = Astro.props;
+---
+
+{verified && (
+  <span class="verified-badge">
+    <span aria-hidden="true">●</span>
+    {label}
+  </span>
+)}

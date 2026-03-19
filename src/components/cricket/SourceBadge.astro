@@ -1,0 +1,17 @@
+---
+import type { SourceStatus } from '@/types/cricket';
+
+interface Props {
+  status: SourceStatus;
+}
+
+const { status } = Astro.props;
+const labelMap: Record<SourceStatus, string> = {
+  verified: 'Verified',
+  imported: 'Imported',
+  provisional: 'Provisional',
+  'manually added': 'Manual'
+};
+---
+
+<span class={`source-badge source-badge--${status.replace(/\s+/g, '-')}`}>{labelMap[status]}</span>

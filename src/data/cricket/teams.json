@@ -1,0 +1,102 @@
+[
+  {
+    "teamId": "tb-bengal-tigers",
+    "teamName": "TB Bengal Tigers",
+    "seasons": ["2026"],
+    "competitions": ["TCL", "Team stats snapshot"],
+    "current": true,
+    "role": "All-rounder",
+    "notes": "Current badge in the archive: the team tied to the most recent verified match and the strongest currently published batting sample.",
+    "aggregateStats": {
+      "matches": 4,
+      "runs": 120,
+      "wickets": 1,
+      "battingAverage": 30,
+      "strikeRate": 133.33,
+      "economy": 19.85
+    },
+    "logo": null,
+    "links": [
+      {
+        "label": "Recent team context",
+        "url": "https://cricclubs.com/"
+      }
+    ]
+  },
+  {
+    "teamId": "bengal-tigers",
+    "teamName": "Bengal Tigers",
+    "seasons": ["TCL era"],
+    "competitions": ["TCL"],
+    "current": false,
+    "role": "All-rounder",
+    "notes": "A legacy label that appears in public records and likely overlaps with the Bengal Tigers team identity in earlier scorecards.",
+    "aggregateStats": {
+      "matches": null,
+      "runs": null,
+      "wickets": null,
+      "battingAverage": null,
+      "strikeRate": null,
+      "economy": null
+    },
+    "logo": null,
+    "links": []
+  },
+  {
+    "teamId": "bengals",
+    "teamName": "Bengals",
+    "seasons": ["TCL era"],
+    "competitions": ["TCL"],
+    "current": false,
+    "role": "All-rounder",
+    "notes": "Another public naming variation that should remain preserved so future imports can reconcile aliases rather than losing history.",
+    "aggregateStats": {
+      "matches": null,
+      "runs": null,
+      "wickets": null,
+      "battingAverage": null,
+      "strikeRate": null,
+      "economy": null
+    },
+    "logo": null,
+    "links": []
+  },
+  {
+    "teamId": "swat",
+    "teamName": "SWAT",
+    "seasons": ["2025", "2024"],
+    "competitions": ["Titan Cup XI", "TPL 2024 Fall Series"],
+    "current": false,
+    "role": "All-rounder",
+    "notes": "An important growth chapter spanning both batting volume and bowling impact across leather-ball and tennis-ball settings.",
+    "aggregateStats": {
+      "matches": 17,
+      "runs": 228,
+      "wickets": 7,
+      "battingAverage": 25.33,
+      "strikeRate": 115.15,
+      "economy": 10.13
+    },
+    "logo": null,
+    "links": []
+  },
+  {
+    "teamId": "st-pete-shields",
+    "teamName": "St Pete Shields",
+    "seasons": ["2024"],
+    "competitions": ["Titan Cup X"],
+    "current": false,
+    "role": "All-rounder",
+    "notes": "A season of compact contributions, not-outs, and role flexibility — the kind of year that becomes more interesting once full match logs arrive.",
+    "aggregateStats": {
+      "matches": 9,
+      "runs": 83,
+      "wickets": null,
+      "battingAverage": 20.75,
+      "strikeRate": 122.06,
+      "economy": null
+    },
+    "logo": null,
+    "links": []
+  }
+]
