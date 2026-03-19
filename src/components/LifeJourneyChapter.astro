@@ -7,12 +7,11 @@ interface Props {
   isLast?: boolean;
 }
 
-const { chapter, index, isLast = false } = Astro.props;
-const side = index % 2 === 0 ? 'left' : 'right';
+const { chapter } = Astro.props;
 ---
 
 <article
-  class:list={['life-chapter', `life-chapter--${side}`]}
+  class="life-chapter"
   data-journey-chapter
   data-chapter-id={chapter.id}
   data-step={chapter.step}
@@ -20,42 +19,23 @@ const side = index % 2 === 0 ? 'left' : 'right';
   data-theme={chapter.theme}
   data-era={chapter.era}
   data-scale={String(chapter.scale)}
-  style={`--chapter-scale:${chapter.scale};`}
 >
   <div class="life-chapter__content panel">
-    <p class="eyebrow">{chapter.era}</p>
-    <div class="life-chapter__header">
+    <div class="life-chapter__stage">
+      <span class="life-chapter__index">{chapter.step}</span>
       <div>
+        <p class="eyebrow">{chapter.era}</p>
         <p class="life-chapter__location">{chapter.location}, {chapter.region}</p>
-        <h2>{chapter.title}</h2>
       </div>
       <span class="life-chapter__theme">{chapter.theme}</span>
     </div>
+
+    <h2>{chapter.title}</h2>
     <p class="life-chapter__narrative">{chapter.narrative}</p>
+
     <div class="life-chapter__meta">
       <span>{chapter.note}</span>
       <span>{chapter.atlasLabel}</span>
-    </div>
-  </div>
-
-  <div class="life-chapter__trail" aria-hidden="true">
-    <span class="life-chapter__step">{chapter.step}</span>
-    <span class="life-chapter__node"></span>
-    {!isLast && <span class="life-chapter__connector"></span>}
-  </div>
-
-  <div class="life-chapter__visual" aria-hidden="true">
-    <div class="life-chapter__portrait">
-      <div class="life-chapter__portrait-glow"></div>
-      <div class="life-chapter__portrait-rings">
-        <span></span>
-        <span></span>
-      </div>
-      <img src="/profile.jpg" alt="" loading="lazy" />
-      <div class="life-chapter__portrait-label">
-        <strong>{chapter.location}</strong>
-        <small>{chapter.theme}</small>
-      </div>
     </div>
   </div>
 </article>

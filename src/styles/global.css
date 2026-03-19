@@ -3887,3 +3887,109 @@ main { padding-bottom: 4rem; }
     opacity: 0.5;
   }
 }
+
+.life-walk-page .life-atlas-bar__map {
+  min-height: 8.5rem;
+}
+
+.life-walk-page .life-atlas-bar__map::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 50%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(215, 160, 96, 0.32) 42%, rgba(126, 144, 174, 0.24));
+  transform: translateY(-50%);
+}
+
+.life-walk-page .life-atlas-bar__node {
+  gap: 0.55rem;
+}
+
+.life-walk-page .life-walk-journey__chapters {
+  gap: 1.35rem;
+}
+
+.life-walk-page .life-chapter,
+.life-walk-page .life-chapter--right {
+  display: block;
+  min-height: auto;
+}
+
+.life-walk-page .life-chapter__trail,
+.life-walk-page .life-chapter__visual {
+  display: none;
+}
+
+.life-walk-page .life-chapter__content {
+  max-width: 58rem;
+  margin-inline: auto;
+  padding: 1.7rem;
+}
+
+.life-walk-page .life-chapter__content::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  margin-bottom: 1.2rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--life-accent, var(--accent)), rgba(126, 144, 174, 0.24));
+  opacity: 0.7;
+}
+
+.life-walk-page .life-chapter__stage {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.life-walk-page .life-chapter__index {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 0.84rem;
+  letter-spacing: 0.18em;
+  color: rgba(243, 237, 225, 0.88);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+}
+
+.life-walk-page .life-chapter__content .eyebrow {
+  margin-bottom: 0.35rem;
+}
+
+.life-walk-page .life-chapter__location {
+  margin: 0;
+}
+
+.life-walk-page .life-chapter__content h2 {
+  max-width: 16ch;
+}
+
+.life-walk-page .life-chapter.is-active .life-chapter__content {
+  transform: translateX(8px);
+}
+
+.life-walk-page .life-chapter.is-active .life-chapter__index,
+.life-walk-page .life-chapter.is-complete .life-chapter__index {
+  background: rgba(215, 160, 96, 0.14);
+  border-color: rgba(215, 160, 96, 0.3);
+  box-shadow: 0 0 0 8px rgba(215, 160, 96, 0.05);
+}
+
+@media (max-width: 780px) {
+  .life-walk-page .life-chapter__stage {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .life-walk-page .life-chapter__content {
+    padding: 1.35rem;
+  }
+}
