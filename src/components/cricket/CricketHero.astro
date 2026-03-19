@@ -1,0 +1,55 @@
+---
+import CareerStatCard from './CareerStatCard.astro';
+import SourceBadge from './SourceBadge.astro';
+import VerifiedBadge from './VerifiedBadge.astro';
+import type { PlayerProfile } from '@/types/cricket';
+
+interface Props {
+  player: PlayerProfile;
+  stats: { label: string; value: string; detail: string }[];
+  statusLabel?: string;
+}
+
+const { player, stats, statusLabel = 'Public record seeded' } = Astro.props;
+---
+
+<section class="cricket-hero panel">
+  <div class="cricket-hero__copy">
+    <p class="eyebrow">Adventures → Cricket</p>
+    <div class="cricket-hero__heading-row">
+      <div>
+        <h1>{player.name}</h1>
+        <p class="cricket-hero__subtitle">{player.role} · {player.battingStyle} · {player.bowlingStyle}</p>
+      </div>
+      <SourceBadge status="verified" />
+    </div>
+    <p class="cricket-hero__intro">{player.intro}</p>
+
+    <div class="cricket-hero__meta">
+      <article class="panel cricket-meta-card">
+        <span>Current team</span>
+        <strong>{player.currentTeam}</strong>
+      </article>
+      <article class="panel cricket-meta-card">
+        <span>Player ID</span>
+        <strong>{player.playerId}</strong>
+      </article>
+      <article class="panel cricket-meta-card">
+        <span>Archive mode</span>
+        <strong>{statusLabel}</strong>
+      </article>
+    </div>
+
+    <div class="hero-actions">
+      <a class="button button-primary" href="/adventures/cricket/matches">Browse matches</a>
+      <a class="button button-secondary" href="/adventures/cricket/highlights">Read highlights</a>
+      <a class="button button-ghost" href={player.profileUrl} target="_blank" rel="noreferrer">Open public profile</a>
+    </div>
+
+    <VerifiedBadge label="Version 1 grounded in public CricClubs/TCL data" />
+  </div>
+
+  <div class="cricket-hero__stats">
+    {stats.map((stat) => <CareerStatCard {...stat} />)}
+  </div>
+</section>

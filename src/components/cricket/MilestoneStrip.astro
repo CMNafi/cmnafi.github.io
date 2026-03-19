@@ -1,0 +1,23 @@
+---
+import SourceBadge from './SourceBadge.astro';
+import type { Milestone } from '@/types/cricket';
+
+interface Props {
+  milestones: Milestone[];
+}
+
+const { milestones } = Astro.props;
+---
+
+<div class="milestone-strip">
+  {milestones.map((milestone) => (
+    <article class="panel milestone-card">
+      <div class="milestone-card__top">
+        <p>{milestone.label}</p>
+        <SourceBadge status={milestone.sourceStatus} />
+      </div>
+      <strong>{milestone.value}</strong>
+      <span>{milestone.detail}</span>
+    </article>
+  ))}
+</div>

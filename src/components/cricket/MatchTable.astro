@@ -1,0 +1,101 @@
+---
+import SourceBadge from './SourceBadge.astro';
+import type { MatchRecord } from '@/types/cricket';
+
+interface Props {
+  matches: MatchRecord[];
+}
+
+const { matches } = Astro.props;
+---
+
+<div class="match-table panel" data-match-table>
+  <div class="match-table__header">
+    <h3>Match archive</h3>
+    <p>Expandable rows keep stats accessible without flattening the memory layer into a sterile spreadsheet.</p>
+  </div>
+
+  <div class="match-table__head">
+    <button type="button" data-sort="date">Date</button>
+    <button type="button" data-sort="opponent">Opponent</button>
+    <button type="button" data-sort="battingRuns">Runs</button>
+    <button type="button" data-sort="wickets">Wkts</button>
+    <span>Status</span>
+  </div>
+
+  <div class="match-table__body">
+    {matches.map((match) => (
+      <details
+        class="match-row"
+        data-match-row
+        data-date={match.date}
+        data-year={match.date.slice(0, 4)}
+        data-team={match.team}
+        data-competition={match.competition}
+        data-format={match.format}
+        data-opponent={match.opponent.toLowerCase()}
+        data-batting-runs={match.battingRuns ?? -1}
+        data-wickets={match.wickets ?? -1}
+      >
+        <summary>
+          <span>{match.date}</span>
+          <strong>{match.opponent}</strong>
+          <span>{match.battingRuns ?? '—'}</span>
+          <span>{match.wickets ?? '—'}</span>
+          <SourceBadge status={match.dataStatus} />
+        </summary>
+
+        <div class="match-row__detail">
+          <div class="match-row__meta-grid">
+            <div><span>Competition</span><strong>{match.competition}</strong></div>
+            <div><span>Format</span><strong>{match.format}</strong></div>
+            <div><span>Team</span><strong>{match.team}</strong></div>
+            <div><span>Venue</span><strong>{match.venue}</strong></div>
+            <div><span>Result</span><strong>{match.result}</strong></div>
+            <div><span>Scorecard</span>{match.scorecardUrl ? <a href={match.scorecardUrl}>Open ↗</a> : <strong>Slot ready</strong>}</div>
+          </div>
+
+          <div class="match-row__stat-grid">
+            <div><span>Batting</span><strong>{match.battingRuns ?? '—'}{match.balls !== null ? ` off ${match.balls}` : ''}</strong></div>
+            <div><span>Boundaries</span><strong>{match.fours ?? '—'} fours · {match.sixes ?? '—'} sixes</strong></div>
+            <div><span>Strike rate</span><strong>{match.strikeRate ?? '—'}</strong></div>
+            <div><span>Bowling</span><strong>{match.bowlingOvers ?? '—'} overs · {match.wickets ?? '—'} wickets</strong></div>
+            <div><span>Economy</span><strong>{match.economy ?? '—'}</strong></div>
+            <div><span>Fielding</span><strong>{match.catches ?? 0} catches · {match.runOuts ?? 0} run outs</strong></div>
+            <div><span>Player of the match</span><strong>{match.motm ? 'Yes' : 'No'}</strong></div>
+            <div><span>Source</span><strong>{match.source}</strong></div>
+          </div>
+
+          <p class="match-row__note">{match.personalNote}</p>
+        </div>
+      </details>
+    ))}
+  </div>
+</div>
+
+<script>
+  const sortValue = (row, key) => {
+    if (key === 'date') return row.dataset.date ?? '';
+    if (key === 'opponent') return row.dataset.opponent ?? '';
+    return Number(row.dataset[key === 'battingRuns' ? 'battingRuns' : 'wickets'] ?? -1);
+  };
+
+  document.querySelectorAll('[data-match-table]').forEach((table) => {
+    const body = table.querySelector('.match-table__body');
+    const rows = () => Array.from(body?.querySelectorAll('[data-match-row]') ?? []);
+
+    table.querySelectorAll('[data-sort]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const key = button.getAttribute('data-sort') ?? 'date';
+        const sorted = rows().sort((a, b) => {
+          const av = sortValue(a, key);
+          const bv = sortValue(b, key);
+          if (key === 'date') return String(bv).localeCompare(String(av));
+          if (typeof av === 'number' && typeof bv === 'number') return bv - av;
+          return String(av).localeCompare(String(bv));
+        });
+        sorted.forEach((row) => body?.appendChild(row));
+      });
+    });
+  });
+</script>

@@ -1,0 +1,39 @@
+---
+import SourceBadge from './SourceBadge.astro';
+import type { Highlight } from '@/types/cricket';
+
+interface Props {
+  highlight: Highlight;
+}
+
+const { highlight } = Astro.props;
+---
+
+<article class="panel highlight-card">
+  <div class="highlight-card__top">
+    <div>
+      <p class="eyebrow">{highlight.category}</p>
+      <h3>{highlight.title}</h3>
+      <p>{highlight.team} · {highlight.date}</p>
+    </div>
+    <SourceBadge status={highlight.sourceStatus} />
+  </div>
+
+  <p class="highlight-card__summary">{highlight.summary}</p>
+  <p>{highlight.description}</p>
+
+  <div class="highlight-card__statline">{highlight.statLine}</div>
+
+  <div class="tag-row">
+    {highlight.tags.map((tag) => <span class="tag-chip">{tag}</span>)}
+  </div>
+
+  <div class="highlight-card__footer">
+    <span>{highlight.media[0]?.label}</span>
+    {highlight.scorecardUrl ? (
+      <a href={highlight.scorecardUrl} target="_blank" rel="noreferrer">Scorecard ↗</a>
+    ) : (
+      <span class="muted-link">Scorecard slot ready</span>
+    )}
+  </div>
+</article>

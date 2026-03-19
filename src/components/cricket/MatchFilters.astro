@@ -1,0 +1,54 @@
+---
+interface Option {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  years: Option[];
+  teams: Option[];
+  competitions: Option[];
+  formats: Option[];
+}
+
+const { years, teams, competitions, formats } = Astro.props;
+---
+
+<div class="panel match-filters" data-match-filters>
+  <div class="search-input">
+    <label>
+      <span>Search opponent</span>
+      <input type="search" placeholder="Type an opponent name" data-filter-search />
+    </label>
+  </div>
+
+  <div class="match-filters__grid">
+    <label>
+      <span>Year</span>
+      <select data-filter-year>
+        {years.map((option) => <option value={option.value}>{option.label}</option>)}
+      </select>
+    </label>
+
+    <label>
+      <span>Team</span>
+      <select data-filter-team>
+        {teams.map((option) => <option value={option.value}>{option.label}</option>)}
+      </select>
+    </label>
+
+    <label>
+      <span>Competition</span>
+      <select data-filter-competition>
+        {competitions.map((option) => <option value={option.value}>{option.label}</option>)}
+      </select>
+    </label>
+
+    <label>
+      <span>Format</span>
+      <select data-filter-format>
+        {formats.map((option) => <option value={option.value}>{option.label}</option>)}
+      </select>
+    </label>
+  </div>
+</div>

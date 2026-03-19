@@ -1,0 +1,93 @@
+[
+  {
+    "id": "timeline-bengals-roots",
+    "date": "2023-12-01",
+    "seasonLabel": "Pre-archive",
+    "title": "Early Bengal identities enter the record",
+    "type": "team",
+    "summary": "Public records show Bengal Tigers and Bengals as part of the naming trail that should be preserved instead of flattened.",
+    "body": "This part of the timeline acts like a memory anchor. Even before full scorecards are imported, preserving alias teams matters because community cricket histories often live across naming shifts, roster changes, and partial archives.",
+    "relatedTeam": "Bengals",
+    "relatedMatch": "manual-memory-placeholder",
+    "relatedHighlight": null,
+    "relatedStats": ["Alias tracking enabled for future imports"]
+  },
+  {
+    "id": "timeline-st-pete-shields-2024",
+    "date": "2024-06-22",
+    "seasonLabel": "2024",
+    "title": "St Pete Shields adds a composed leather-ball chapter",
+    "type": "season",
+    "summary": "7 innings, 3 not outs, and a strike rate above 122 suggest flexible batting responsibility.",
+    "body": "This is a quieter season on the surface, but it has the texture of a useful role player year: staying unbeaten, keeping tempo high, and contributing across a smaller set of innings.",
+    "relatedTeam": "St Pete Shields",
+    "relatedMatch": "2024-st-pete-shields-33",
+    "relatedHighlight": null,
+    "relatedStats": ["83 runs", "Avg 20.75", "SR 122.06"]
+  },
+  {
+    "id": "timeline-swat-bowling-spike",
+    "date": "2024-11-02",
+    "seasonLabel": "2024",
+    "title": "SWAT bowling spike arrives in the fall series",
+    "type": "milestone",
+    "summary": "7 wickets in 8 matches, including a 4/30, adds a clear bowling chapter to the archive.",
+    "body": "The all-rounder label becomes more believable when the timeline shows impact in different formats. The fall series gives the archive exactly that: a compact stretch where bowling takes center stage.",
+    "relatedTeam": "SWAT",
+    "relatedMatch": "2024-swat-4-30",
+    "relatedHighlight": "highlight-swat-7-wickets",
+    "relatedStats": ["7 wickets", "Best 4/30", "Economy 10.13"]
+  },
+  {
+    "id": "timeline-swat-batting-volume",
+    "date": "2025-09-01",
+    "seasonLabel": "2025",
+    "title": "SWAT season turns into a batting-volume chapter",
+    "type": "season",
+    "summary": "228 runs across Titan Cup XI makes SWAT one of the defining phases in the archive.",
+    "body": "A season total often tells a better story than a single score. Here, the archive shows repeated contribution over nine matches and a 54 that can later be expanded into its own scorecard-linked memory.",
+    "relatedTeam": "SWAT",
+    "relatedMatch": "2025-swat-54",
+    "relatedHighlight": "highlight-swat-228",
+    "relatedStats": ["228 runs", "HS 54", "Avg 25.33"]
+  },
+  {
+    "id": "timeline-tb-bengal-tigers-current",
+    "date": "2026-01-25",
+    "seasonLabel": "2026",
+    "title": "TB Bengal Tigers becomes the current badge",
+    "type": "team",
+    "summary": "The most recent team chapter arrives with the best-known score in the current public dataset: 63.",
+    "body": "This is where the archive feels most live. The current team is tied to strong recent batting numbers, a clearly named role, and room for richer match-by-match importing from here forward.",
+    "relatedTeam": "TB Bengal Tigers",
+    "relatedMatch": "2026-season-high-63",
+    "relatedHighlight": "highlight-63-tb-bengal-tigers",
+    "relatedStats": ["120 runs in 4 matches", "High score 63", "SR 133.33"]
+  },
+  {
+    "id": "timeline-allies-fielding-memory",
+    "date": "2026-02-19",
+    "seasonLabel": "2026",
+    "title": "Allies match becomes a fielding memory",
+    "type": "match",
+    "summary": "Not every meaningful entry is a fifty or a four-for. Two catches can still hold the day together.",
+    "body": "The recent Allies match is exactly why the section lives inside Adventures instead of Projects. Cricket is not just outputs — it is memory, alertness, teammates, and the details that stay long after a small score disappears from conversation.",
+    "relatedTeam": "TB Bengal Tigers",
+    "relatedMatch": "2026-02-19-allies-vs-tb-bengal-tigers",
+    "relatedHighlight": "highlight-allies-two-catches",
+    "relatedStats": ["2 off 3", "2 catches"]
+  },
+  {
+    "id": "timeline-archive-launch",
+    "date": "2026-03-19",
+    "seasonLabel": "Version 1",
+    "title": "The personal cricket archive is launched",
+    "type": "personal note",
+    "summary": "Data, memory, and story finally get a durable home under Adventures.",
+    "body": "This site section begins as a curated version-one archive: public stats, seeded milestones, placeholders for future scorecards, and a structure ready for deeper imports. The point is not just completeness — it is making the cricket journey readable, expandable, and personal.",
+    "relatedTeam": null,
+    "relatedMatch": null,
+    "relatedHighlight": "highlight-memory-bank-placeholder",
+    "relatedStats": ["Verified + provisional source states", "Import pipeline scaffolded"]
+  }
+]

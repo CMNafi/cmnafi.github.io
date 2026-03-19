@@ -5,7 +5,7 @@
     "description": "Essays, notes, reviews, match reflections, and product thinking.",
     "category": "Blog",
     "status": "live",
-    "icon": "✦",
+    "icon": "\u2726",
     "visibility": true,
     "order": 1
   },
@@ -15,7 +15,7 @@
     "description": "Data tools, experiments, and public builds that are taking shape.",
     "category": "Projects",
     "status": "live",
-    "icon": "◌",
+    "icon": "\u25cc",
     "visibility": true,
     "order": 2
   },
@@ -25,7 +25,7 @@
     "description": "Longer-form writing, series, and future editorial collections.",
     "category": "Writing",
     "status": "coming soon",
-    "icon": "✎",
+    "icon": "\u270e",
     "visibility": true,
     "order": 3
   },
@@ -35,7 +35,7 @@
     "description": "Productized tools and focused interfaces for real workflows.",
     "category": "Apps",
     "status": "brewing",
-    "icon": "⌘",
+    "icon": "\u2318",
     "visibility": true,
     "order": 4
   },
@@ -45,17 +45,17 @@
     "description": "Short-form observations, half-formed ideas, and quick references.",
     "category": "Notes",
     "status": "coming soon",
-    "icon": "⋯",
+    "icon": "\u22ef",
     "visibility": true,
     "order": 5
   },
   {
     "title": "Adventures",
     "slug": "/adventures",
-    "description": "Travel, moments on the move, and stories worth keeping.",
+    "description": "A premium archive for cricket, travel, and memorable chapters on the move.",
     "category": "Writing",
-    "status": "brewing",
-    "icon": "↗",
+    "status": "live",
+    "icon": "\u2197",
     "visibility": true,
     "order": 6
   },
@@ -65,7 +65,7 @@
     "description": "Books, articles, matches, and media worth revisiting.",
     "category": "Notes",
     "status": "brewing",
-    "icon": "☰",
+    "icon": "\u2630",
     "visibility": false,
     "order": 7
   }

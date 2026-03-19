@@ -1194,3 +1194,469 @@ main { padding-bottom: 4rem; }
     transition-duration: 0.01ms !important;
   }
 }
+
+.adventures-landing-hero,
+.cricket-hero,
+.recent-match-card,
+.cricket-spotlight-card,
+.records-note-card,
+.empty-state-card,
+.archive-link-card,
+.stat-chart,
+.record-tabs,
+.match-table,
+.match-filters,
+.highlight-card,
+.team-card,
+.season-card,
+.milestone-card,
+.timeline-item__card {
+  padding: 1.5rem;
+}
+
+.adventures-landing-hero,
+.cricket-spotlight-card,
+.recent-match-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.adventures-landing-hero::before,
+.cricket-spotlight-card::before,
+.recent-match-card::before,
+.cricket-hero::before,
+.stat-chart::before,
+.match-table::before,
+.record-tabs::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(211, 154, 89, 0.08), transparent 38%, rgba(126, 134, 157, 0.1));
+  pointer-events: none;
+}
+
+.adventures-landing-hero h1,
+.cricket-hero h1 {
+  margin: 0 0 0.8rem;
+  font-size: clamp(3rem, 5vw, 4.9rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.cricket-hero {
+  display: grid;
+  gap: 1.2rem;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+}
+
+.cricket-hero__heading-row,
+.season-card__top,
+.team-card__top,
+.highlight-card__top,
+.record-panel__header,
+.timeline-item__header,
+.milestone-card__top,
+.match-table__header,
+.stat-chart__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cricket-hero__subtitle,
+.cricket-hero__intro,
+.cricket-meta-card span,
+.career-stat-card span,
+.career-stat-card p,
+.season-card p,
+.team-card p,
+.highlight-card p,
+.timeline-item p,
+.match-table p,
+.match-row__note,
+.stat-chart p,
+.record-panel p,
+.empty-state-card p,
+.adventures-landing-hero p,
+.archive-link-card p,
+.records-note-card li,
+.records-note-card p,
+.match-filters span {
+  color: var(--muted);
+}
+
+.cricket-hero__meta,
+.cricket-hero__stats,
+.spotlight-grid,
+.three-up-grid,
+.chart-grid-two-up,
+.five-link-grid,
+.two-up-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.cricket-hero__meta,
+.cricket-hero__stats,
+.chart-grid-two-up {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.three-up-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.two-up-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.five-link-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.compact-stack { gap: 0.85rem; }
+.panel-stack { display: grid; gap: 1rem; }
+
+.cricket-meta-card,
+.career-stat-card,
+.milestone-card,
+.archive-link-card {
+  padding: 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 22px;
+}
+
+.cricket-meta-card strong,
+.career-stat-card strong,
+.milestone-card strong,
+.stat-chart__value,
+.record-grid-table strong,
+.team-card__stats strong,
+.match-row__meta-grid strong,
+.match-row__stat-grid strong,
+.recent-match-card strong {
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.career-stat-card strong,
+.milestone-card strong { font-size: 2.1rem; }
+.career-stat-card p,
+.milestone-card span { margin: 0.45rem 0 0; }
+.cricket-meta-card span,
+.career-stat-card span,
+.record-grid-table span,
+.team-card__stats span,
+.season-card__stats span,
+.match-row__meta-grid span,
+.match-row__stat-grid span,
+.recent-match-card span,
+.stat-chart__label span { font-size: 0.85rem; }
+
+.milestone-strip { display: grid; gap: 1rem; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.milestone-card { display: grid; gap: 0.6rem; }
+
+.source-badge,
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.source-badge { border: 1px solid rgba(255,255,255,0.08); }
+.source-badge--verified { background: rgba(79, 178, 132, 0.16); color: #d9f7e5; }
+.source-badge--imported { background: rgba(126, 134, 157, 0.2); color: #d7dbea; }
+.source-badge--provisional { background: rgba(211, 154, 89, 0.18); color: #f5dcc0; }
+.source-badge--manually-added { background: rgba(170, 128, 224, 0.16); color: #eedfff; }
+.verified-badge { background: rgba(255,255,255,0.05); color: var(--text); width: fit-content; }
+
+.season-card,
+.team-card,
+.highlight-card,
+.empty-state-card,
+.timeline-item__card,
+.records-note-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.season-card__stats,
+.team-card__stats,
+.recent-match-card__stats,
+.record-grid-table,
+.match-row__meta-grid,
+.match-row__stat-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.season-card__stats div,
+.team-card__stats div,
+.recent-match-card__stats div,
+.record-grid-table > div,
+.match-row__meta-grid > div,
+.match-row__stat-grid > div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.team-card__badge {
+  width: 3.25rem;
+  height: 3.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(211, 154, 89, 0.18), rgba(126, 134, 157, 0.16));
+  font-size: 1.5rem;
+}
+
+.tag-chip--muted { opacity: 0.75; }
+.highlight-card__statline {
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(211, 154, 89, 0.14), rgba(255,255,255,0.03));
+  color: var(--text);
+}
+.highlight-card__footer,
+.match-table__head,
+.match-row summary,
+.season-breakdown-table__head,
+.season-breakdown-table__row {
+  display: grid;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.highlight-card__footer {
+  grid-template-columns: 1fr auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.muted-link { color: var(--muted); }
+
+.archive-link-card {
+  min-height: 13rem;
+  display: grid;
+  align-content: space-between;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+.archive-link-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(211, 154, 89, 0.34);
+  background: rgba(255,255,255,0.05);
+}
+.archive-link-card h3 { margin: 0 0 0.5rem; }
+.archive-link-card span { color: var(--accent); }
+
+.record-tabs { position: relative; }
+.record-tabs__nav { margin-bottom: 1rem; }
+.record-tab {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  color: var(--muted);
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+}
+.record-tab.is-active { background: rgba(211, 154, 89, 0.16); color: var(--text); border-color: rgba(211, 154, 89, 0.34); }
+.record-panel { display: none; gap: 1rem; }
+.record-panel.is-active { display: grid; }
+
+.season-breakdown-table { display: grid; gap: 0.75rem; }
+.season-breakdown-table__head,
+.season-breakdown-table__row { grid-template-columns: 1.2fr 1fr 0.6fr 0.6fr auto; }
+.season-breakdown-table__head {
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 0 0.5rem;
+}
+.season-breakdown-table__row {
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.stat-chart { position: relative; overflow: hidden; }
+.stat-chart h3 { margin: 0; }
+.stat-chart__bars { display: grid; gap: 0.9rem; }
+.stat-chart__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr) auto;
+  gap: 0.8rem;
+  align-items: center;
+}
+.stat-chart__label { display: grid; gap: 0.15rem; }
+.stat-chart__bar-shell {
+  position: relative;
+  height: 0.8rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.stat-chart__bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(211, 154, 89, 0.96), rgba(126, 134, 157, 0.92));
+}
+
+.match-filters {
+  display: grid;
+  gap: 1rem;
+}
+.match-filters__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+.match-filters label { display: grid; gap: 0.4rem; }
+.match-filters select,
+.match-filters input {
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 0.85rem 1rem;
+}
+.match-table { position: relative; overflow: hidden; }
+.match-table__head,
+.match-row summary {
+  grid-template-columns: 0.9fr 1.1fr 0.5fr 0.5fr auto;
+}
+.match-table__head {
+  padding: 0 1.1rem 1rem;
+  color: var(--muted);
+}
+.match-table__head button {
+  appearance: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  padding: 0;
+  text-align: left;
+}
+.match-row {
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.match-row summary {
+  list-style: none;
+  padding: 1rem 1.1rem;
+  cursor: pointer;
+}
+.match-row summary::-webkit-details-marker { display: none; }
+.match-row[hidden] { display: none; }
+.match-row__detail {
+  padding: 0 1.1rem 1.1rem;
+  display: grid;
+  gap: 1rem;
+}
+.match-row__note {
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  margin: 0;
+}
+
+.cricket-timeline {
+  display: grid;
+  gap: 1rem;
+}
+.timeline-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 1rem;
+}
+.timeline-item__rail {
+  position: relative;
+}
+.timeline-item__rail::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: -1rem;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(211, 154, 89, 0.7), rgba(255,255,255,0.06));
+}
+.timeline-item__rail span {
+  position: absolute;
+  top: 1.3rem;
+  left: 7px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #fff2da);
+  box-shadow: 0 0 0 6px rgba(211, 154, 89, 0.15);
+}
+.timeline-item__summary { color: var(--text); }
+.timeline-item time { color: var(--muted); }
+
+.cricket-spotlight-grid { align-items: start; }
+.recent-match-card__stats { margin: 1rem 0; }
+.empty-state-card h3,
+.records-note-card h3,
+.stat-chart h3,
+.highlight-card h3,
+.team-card h3,
+.season-card h3,
+.timeline-item h3,
+.match-table h3 {
+  margin: 0;
+}
+.records-note-card ul { margin: 0; padding-left: 1rem; }
+
+@media (max-width: 1100px) {
+  .cricket-hero,
+  .cricket-hero__meta,
+  .cricket-hero__stats,
+  .milestone-strip,
+  .three-up-grid,
+  .five-link-grid,
+  .chart-grid-two-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .match-filters__grid,
+  .season-card__stats,
+  .team-card__stats,
+  .record-grid-table,
+  .recent-match-card__stats,
+  .match-row__meta-grid,
+  .match-row__stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .cricket-hero,
+  .cricket-hero__meta,
+  .cricket-hero__stats,
+  .milestone-strip,
+  .three-up-grid,
+  .five-link-grid,
+  .chart-grid-two-up,
+  .two-up-grid,
+  .match-filters__grid,
+  .season-card__stats,
+  .team-card__stats,
+  .record-grid-table,
+  .recent-match-card__stats,
+  .match-row__meta-grid,
+  .match-row__stat-grid,
+  .season-breakdown-table__head,
+  .season-breakdown-table__row,
+  .match-table__head,
+  .match-row summary,
+  .stat-chart__row {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-item {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-item__rail { display: none; }
+}

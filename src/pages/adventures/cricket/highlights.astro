@@ -1,0 +1,62 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import HighlightCard from '@/components/cricket/HighlightCard.astro';
+import EmptyStateCard from '@/components/cricket/EmptyStateCard.astro';
+import { cricketHighlights } from '@/data/cricket';
+
+const grouped = {
+  innings: cricketHighlights.filter((item) => ['Best innings', 'Tournament story'].includes(item.category)),
+  bowling: cricketHighlights.filter((item) => item.category === 'Best spells'),
+  fielding: cricketHighlights.filter((item) => item.category === 'Fielding moments'),
+  reflections: cricketHighlights.filter((item) => item.category === 'Personal reflections')
+};
+---
+
+<BaseLayout
+  title="Cricket Highlights"
+  description="Story-first cricket highlights for Nafi C M, including best innings, spells, fielding moments, memorable matches, and reflections."
+>
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Highlights"
+      title="Where the archive becomes storytelling"
+      description="This page protects the emotional layer of cricket: memorable innings, sharp spells, fielding moments, tournament texture, and the reflections that never show up in a standard stats table."
+    />
+  </section>
+
+  <section class="page-section">
+    <SectionHeading eyebrow="Best innings" title="Runs with narrative gravity" description="A high score matters more when it gets context, timing, and memory around it." />
+    <div class="two-up-grid">
+      {grouped.innings.map((highlight) => <HighlightCard highlight={highlight} />)}
+    </div>
+  </section>
+
+  <section class="page-section two-up">
+    <div>
+      <SectionHeading eyebrow="Best spells" title="Bowling chapters" description="Spells change the mood of an archive by adding range and tension." />
+      <div class="narrow-stack compact-stack">
+        {grouped.bowling.map((highlight) => <HighlightCard highlight={highlight} />)}
+      </div>
+    </div>
+    <div>
+      <SectionHeading eyebrow="Fielding moments" title="The moments between deliveries" description="Sometimes the match stays with you because of alertness, timing, and clean hands." />
+      <div class="narrow-stack compact-stack">
+        {grouped.fielding.map((highlight) => <HighlightCard highlight={highlight} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section two-up">
+    <div>
+      <SectionHeading eyebrow="Tournament stories" title="Personal reflections and placeholders" description="Editorial space is built in now so future stories do not have to fight the data layer later." />
+      <div class="narrow-stack compact-stack">
+        {grouped.reflections.map((highlight) => <HighlightCard highlight={highlight} />)}
+      </div>
+    </div>
+    <EmptyStateCard
+      title="Gallery and media wall coming later"
+      description="The page already supports media slots, so future uploaded photos, videos, scorecards, and handwritten match notes can be attached without redesigning the archive."
+    />
+  </section>
+</BaseLayout>

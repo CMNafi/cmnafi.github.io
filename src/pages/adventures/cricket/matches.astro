@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import MatchFilters from '@/components/cricket/MatchFilters.astro';
+import MatchTable from '@/components/cricket/MatchTable.astro';
+import { matchesByDate } from '@/data/cricket';
+
+const optionize = (values: string[]) => [{ label: 'All', value: '' }, ...values.map((value) => ({ label: value, value }))];
+const years = optionize([...new Set(matchesByDate.map((match) => match.date.slice(0, 4)))]);
+const teams = optionize([...new Set(matchesByDate.map((match) => match.team))]);
+const competitions = optionize([...new Set(matchesByDate.map((match) => match.competition))]);
+const formats = optionize([...new Set(matchesByDate.map((match) => match.format))]);
+---
+
+<BaseLayout
+  title="Cricket Matches"
+  description="Searchable and filterable personal cricket match archive with expandable stat rows, source status, and personal notes."
+>
+  <section class="page-section">
+    <SectionHeading
+      eyebrow="Match log"
+      title="A searchable archive for scorelines, context, and memory"
+      description="Filter by season, team, competition, format, or opponent. Expand any row to see stat fields, source status, and the personal note layer reserved for story and reflection."
+    />
+    <MatchFilters years={years} teams={teams} competitions={competitions} formats={formats} />
+  </section>
+
+  <section class="page-section">
+    <MatchTable matches={matchesByDate} />
+  </section>
+
+  <script>
+    const filtersRoot = document.querySelector('[data-match-filters]');
+    const rows = Array.from(document.querySelectorAll('[data-match-row]'));
+
+    const applyFilters = () => {
+      const search = String(filtersRoot?.querySelector('[data-filter-search]')?.value ?? '').trim().toLowerCase();
+      const year = String(filtersRoot?.querySelector('[data-filter-year]')?.value ?? '');
+      const team = String(filtersRoot?.querySelector('[data-filter-team]')?.value ?? '');
+      const competition = String(filtersRoot?.querySelector('[data-filter-competition]')?.value ?? '');
+      const format = String(filtersRoot?.querySelector('[data-filter-format]')?.value ?? '');
+
+      rows.forEach((row) => {
+        const visible = (!search || row.dataset.opponent?.includes(search))
+          && (!year || row.dataset.year === year)
+          && (!team || row.dataset.team === team)
+          && (!competition || row.dataset.competition === competition)
+          && (!format || row.dataset.format === format);
+        row.toggleAttribute('hidden', !visible);
+      });
+    };
+
+    filtersRoot?.querySelectorAll('input, select').forEach((input) => input.addEventListener('input', applyFilters));
+  </script>
+</BaseLayout>

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "milestone-career-runs",
+    "label": "Career runs",
+    "value": "380",
+    "detail": "Published TCL total runs in the current version-one archive.",
+    "sourceStatus": "verified"
+  },
+  {
+    "id": "milestone-career-wickets",
+    "label": "Career wickets",
+    "value": "5",
+    "detail": "Published TCL wickets so far, with room for bowling history to expand through imports.",
+    "sourceStatus": "verified"
+  },
+  {
+    "id": "milestone-best-known-score",
+    "label": "Best known score",
+    "value": "63",
+    "detail": "Current top seeded innings from the TB Bengal Tigers public snapshot.",
+    "sourceStatus": "verified"
+  },
+  {
+    "id": "milestone-best-known-spell",
+    "label": "Best known spell",
+    "value": "4/30",
+    "detail": "Best bowling currently present in the public dataset.",
+    "sourceStatus": "verified"
+  },
+  {
+    "id": "milestone-active-teams",
+    "label": "Teams preserved",
+    "value": "5",
+    "detail": "Current archive includes TB Bengal Tigers, Bengal Tigers, Bengals, SWAT, and St Pete Shields.",
+    "sourceStatus": "manually added"
+  }
+]

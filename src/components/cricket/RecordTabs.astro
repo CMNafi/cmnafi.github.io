@@ -1,0 +1,144 @@
+---
+import EmptyStateCard from './EmptyStateCard.astro';
+import SourceBadge from './SourceBadge.astro';
+import type { CareerSummary, SeasonRecord } from '@/types/cricket';
+
+interface Props {
+  summary: CareerSummary;
+  seasons: SeasonRecord[];
+}
+
+const { summary, seasons } = Astro.props;
+
+const battingRows = [
+  ['Matches', summary.matches],
+  ['Runs', summary.runs],
+  ['Balls', summary.balls],
+  ['Average', summary.battingAverage.toFixed(2)],
+  ['Strike rate', summary.strikeRate.toFixed(2)],
+  ['50s', summary.fifties],
+  ['100s', summary.hundreds],
+  ['4s', summary.fours],
+  ['6s', summary.sixes]
+];
+
+const bowlingRows = [
+  ['Overs', summary.overs],
+  ['Runs conceded', summary.runsConceded],
+  ['Wickets', summary.wickets],
+  ['Economy', summary.economy.toFixed(2)]
+];
+---
+
+<div class="record-tabs panel" data-record-tabs>
+  <div class="record-tabs__nav toggle-group" role="tablist" aria-label="Cricket record views">
+    <button type="button" class="record-tab is-active" data-tab-target="batting" role="tab" aria-selected="true">Batting</button>
+    <button type="button" class="record-tab" data-tab-target="bowling" role="tab" aria-selected="false">Bowling</button>
+    <button type="button" class="record-tab" data-tab-target="fielding" role="tab" aria-selected="false">Fielding</button>
+    <button type="button" class="record-tab" data-tab-target="season-breakdown" role="tab" aria-selected="false">Season breakdown</button>
+  </div>
+
+  <section class="record-panel is-active" data-tab-panel="batting">
+    <div class="record-panel__header">
+      <div>
+        <h3>Batting summary</h3>
+        <p>Clean headline numbers first, with richer innings-by-innings detail ready for later imports.</p>
+      </div>
+      <SourceBadge status={summary.sourceStatus} />
+    </div>
+    <div class="record-grid-table">
+      {battingRows.map(([label, value]) => (
+        <div>
+          <span>{label}</span>
+          <strong>{value}</strong>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="record-panel" data-tab-panel="bowling" hidden>
+    <div class="record-panel__header">
+      <div>
+        <h3>Bowling summary</h3>
+        <p>Enough structure for economy, wickets, and best spell storytelling now — full spell logs later.</p>
+      </div>
+      <SourceBadge status={summary.sourceStatus} />
+    </div>
+    <div class="record-grid-table">
+      {bowlingRows.map(([label, value]) => (
+        <div>
+          <span>{label}</span>
+          <strong>{value}</strong>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="record-panel" data-tab-panel="fielding" hidden>
+    <div class="record-panel__header">
+      <div>
+        <h3>Fielding summary</h3>
+        <p>Fielding is intentionally included early so catches, run-outs, and memory-heavy moments never feel secondary.</p>
+      </div>
+    </div>
+    {summary.catches !== null ? (
+      <div class="record-grid-table">
+        <div><span>Catches</span><strong>{summary.catches}</strong></div>
+        <div><span>Run outs</span><strong>{summary.runOuts ?? '—'}</strong></div>
+        <div><span>Stumpings</span><strong>{summary.stumpings ?? '—'}</strong></div>
+        <div><span>Recent fielding marker</span><strong>Allies match · 2 catches</strong></div>
+      </div>
+    ) : (
+      <EmptyStateCard title="Fielding archive is still opening" description="The schema is ready for catches, run outs, and direct-hit memories once more scorecards are imported." />
+    )}
+  </section>
+
+  <section class="record-panel" data-tab-panel="season-breakdown" hidden>
+    <div class="record-panel__header">
+      <div>
+        <h3>Season-by-season record</h3>
+        <p>A compact summary layer that keeps partial snapshots useful without pretending they are fully complete.</p>
+      </div>
+    </div>
+    <div class="season-breakdown-table">
+      <div class="season-breakdown-table__head">
+        <span>Season</span>
+        <span>Team</span>
+        <span>Runs</span>
+        <span>Wickets</span>
+        <span>Status</span>
+      </div>
+      {seasons.map((season) => (
+        <div class="season-breakdown-table__row">
+          <strong>{season.seasonLabel}</strong>
+          <span>{season.team}</span>
+          <span>{season.runs ?? '—'}</span>
+          <span>{season.wickets ?? '—'}</span>
+          <SourceBadge status={season.sourceStatus} />
+        </div>
+      ))}
+    </div>
+  </section>
+</div>
+
+<script>
+  document.querySelectorAll('[data-record-tabs]').forEach((wrapper) => {
+    const buttons = Array.from(wrapper.querySelectorAll('[data-tab-target]'));
+    const panels = Array.from(wrapper.querySelectorAll('[data-tab-panel]'));
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.getAttribute('data-tab-target');
+        buttons.forEach((candidate) => {
+          candidate.classList.toggle('is-active', candidate === button);
+          candidate.setAttribute('aria-selected', String(candidate === button));
+        });
+        panels.forEach((panel) => {
+          const active = panel.getAttribute('data-tab-panel') === target;
+          panel.classList.toggle('is-active', active);
+          panel.toggleAttribute('hidden', !active);
+        });
+      });
+    });
+  });
+</script>
