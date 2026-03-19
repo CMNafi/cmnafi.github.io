@@ -1,0 +1,44 @@
+---
+export interface Props {
+  title: string;
+  year: number;
+  rating: number;
+  review: string;
+  posterUrl: string;
+  link: string;
+  watchedDate: string;
+}
+
+const { title, year, rating, review, posterUrl, link, watchedDate } = Astro.props;
+---
+
+<div class="movie-review-card">
+  <a href={link} target="_blank" rel="noopener noreferrer">
+    <img src={posterUrl} alt={`Poster for ${title}`} />
+    <div class="card-content">
+      <h3>{title} ({year})</h3>
+      <p>Rating: {rating}/5</p>
+      <p>{review}</p>
+      <p><small>Watched on: {watchedDate}</small></p>
+    </div>
+  </a>
+</div>
+
+<style>
+  .movie-review-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    display: flex;
+    max-width: 500px;
+  }
+
+  .movie-review-card img {
+    max-width: 150px;
+  }
+
+  .card-content {
+    padding: 1rem;
+  }
+</style>
