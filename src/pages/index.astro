@@ -355,6 +355,8 @@ const contourPaths = [
         }, 140);
       };
 
+      const chaptersContainer = root.querySelector('.strategy-journey__chapters');
+
       const observer = new IntersectionObserver(
         (entries) => {
           const visible = entries
@@ -365,8 +367,9 @@ const contourPaths = [
           setActive(chapters.indexOf(visible.target));
         },
         {
+          root: chaptersContainer,
           threshold: [0.25, 0.45, 0.7],
-          rootMargin: '-12% 0px -28% 0px'
+          rootMargin: '-10% 0px -10% 0px'
         }
       );
 
@@ -378,7 +381,9 @@ const contourPaths = [
         node.addEventListener('click', () => {
           const target = node.getAttribute('data-map-target');
           const chapter = root.querySelector(`[data-chapter-id="${target}"]`);
-          chapter?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (chapter && chaptersContainer) {
+            chaptersContainer.scrollTo({ top: chapter.offsetTop, behavior: 'smooth' });
+          }
         });
       });
 
@@ -822,16 +827,16 @@ const contourPaths = [
     display: grid;
     grid-template-columns: minmax(320px, 0.94fr) minmax(0, 1.06fr);
     gap: 1.2rem;
-    align-items: start;
+    align-items: stretch;
+    height: min(82vh, 56rem);
   }
 
   .strategy-control {
-    position: sticky;
-    top: 6rem;
     display: grid;
     gap: 1rem;
     padding: 1.2rem;
     overflow: hidden;
+    align-content: start;
   }
 
   .strategy-control__header {
@@ -1058,8 +1063,19 @@ const contourPaths = [
   }
 
   .strategy-journey__chapters {
-    display: grid;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .strategy-journey__chapters::-webkit-scrollbar {
+    display: none;
   }
 
   .strategy-chapter {
@@ -1068,6 +1084,10 @@ const contourPaths = [
     padding: 1.3rem;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
     transition: transform 260ms ease, border-color 260ms ease, background 260ms ease, box-shadow 260ms ease;
+    min-height: 100%;
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    align-content: center;
   }
 
   .strategy-chapter__header,
@@ -1169,7 +1189,6 @@ const contourPaths = [
   }
 
   .strategy-chapter.is-active {
-    transform: translateX(10px);
     border-color: color-mix(in srgb, var(--strategy-accent) 28%, var(--border));
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
@@ -1328,6 +1347,20 @@ const contourPaths = [
     .strategy-journey__grid {
       grid-template-columns: 1fr;
       min-height: auto;
+      height: auto;
+    }
+
+    .strategy-journey__chapters {
+      overflow: visible;
+      scroll-snap-type: none;
+      gap: 1rem;
+    }
+
+    .strategy-chapter {
+      min-height: auto;
+      flex: 0 0 auto;
+      scroll-snap-align: none;
+      align-content: start;
     }
 
     .strategy-hero__visual {
@@ -1389,7 +1422,6 @@ const contourPaths = [
     .strategy-chapter__heading { flex-direction: column; align-items: start; }
     .strategy-chapter h2,
     .strategy-now__card h2 { max-width: none; }
-    .strategy-chapter.is-active { transform: translateX(0); }
     .strategy-now__grid,
     .strategy-destination-grid,
     .two-up { grid-template-columns: 1fr; }
