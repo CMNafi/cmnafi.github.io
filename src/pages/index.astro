@@ -1,1442 +1,496 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
-import StrategyMapChapter from '@/components/StrategyMapChapter.astro';
-import {
-  strategyMapChapters,
-  strategyMapDestinations,
-  strategyMapSignals,
-  strategyNavPreviews
-} from '@/data/strategy-map';
+import { strategyMapChapters } from '@/data/strategy-map';
 
-const firstChapter = strategyMapChapters[0];
-const defaultNavPreview = strategyNavPreviews[0];
-const routeSegments = [
-  'M153 367 C165 355 182 340 198 335',
-  'M198 335 C280 300 390 215 504 184',
-  'M504 184 C564 176 632 160 693 146',
-  'M693 146 C720 165 748 218 756 302'
-];
-const ghostRoute = 'M120 390 C180 320 260 286 330 250 C420 202 496 168 566 166 C654 162 718 166 790 312';
-const contourPaths = [
-  'M102 258 C132 222 182 198 232 208 C274 216 304 246 338 236 C392 218 416 176 470 178 C512 180 540 198 558 222',
-  'M480 232 C534 210 604 212 654 232 C690 248 730 240 764 220 C792 204 826 206 848 228',
-  'M702 272 C728 282 748 302 756 330 C744 348 714 354 690 342 C678 316 684 286 702 272'
+const routePlaces = strategyMapChapters.map((chapter) => chapter.place.split(',')[0]);
+const secondaryPaths = [
+  {
+    title: 'Writing',
+    href: '/writing',
+    description: 'Essays, notes, and reflections with a quieter editorial pace.'
+  },
+  {
+    title: 'Projects',
+    href: '/projects',
+    description: 'Tools, research products, and public builds shaped around financial intelligence.'
+  },
+  {
+    title: 'Connect',
+    href: '/connect',
+    description: 'A direct path for conversation, collaboration, and thoughtful introductions.'
+  }
 ];
 ---
 
-<BaseLayout description="From global foundations to financial intelligence — the personal site of C M Nafi.">
-  <div
-    class="strategy-map-page"
-    data-strategy-map
-    data-active-chapter={firstChapter.id}
-    data-active-preview={defaultNavPreview.id}
-    style={`--portrait-scale:${firstChapter.portraitScale}; --deployment-progress:0;`}
-  >
-    <section class="page-section page-section-hero strategy-hero">
-      <div class="strategy-hero__copy">
-        <a class="eyebrow eyebrow--link" href="/about">C M Nafi</a>
-        <p class="strategy-hero__identity">Global foundations. Financial intelligence. Work in motion.</p>
-        <h1>From Global Foundations to Financial Intelligence</h1>
-        <p class="strategy-hero__body">
-          A story defined by bold, independent transitions — across continents, disciplines, and institutions.
+<BaseLayout description="A global journey into fintech - the personal website of C M Nafi.">
+  <div class="home-cover">
+    <section class="page-section home-hero">
+      <div class="home-hero__copy">
+        <p class="eyebrow">C M Nafi</p>
+        <h1>A global journey into fintech.</h1>
+        <p class="home-hero__body">
+          From Bangladesh to Tampa, building a life across movement, systems, and financial intelligence.
         </p>
 
-        <div class="hero-actions">
-          <a class="button button-primary" href="#deployment-map">Follow the route</a>
-          <a class="button button-secondary" href="/brewing">Open Brewing</a>
-        </div>
-
-        <div class="strategy-hero__cue" aria-hidden="true">
-          <span class="strategy-hero__cue-line"></span>
-          <span>Scroll to explore</span>
+        <div class="home-hero__actions">
+          <a class="button button-primary" href="/story">Start the journey</a>
+          <a class="home-hero__subtle-link" href="/projects">View projects</a>
         </div>
       </div>
 
-      <div class="strategy-hero__visual panel" data-nav-preview-zone>
-        <div class="strategy-hero__visual-glow strategy-hero__visual-glow--warm" aria-hidden="true"></div>
-        <div class="strategy-hero__visual-glow strategy-hero__visual-glow--cool" aria-hidden="true"></div>
-        <div class="strategy-hero__grid" aria-hidden="true"></div>
+      <aside class="panel route-preview">
+        <p class="eyebrow">The route</p>
+        <h2>{routePlaces.join(' -> ')}</h2>
 
-        <div class="strategy-hero__preview-dock" aria-live="polite" data-nav-preview-dock>
-          {strategyNavPreviews.map((preview, index) => (
-            <a
-              class:list={['strategy-hero__preview-card', index === 0 && 'is-active']}
-              data-nav-preview-panel
-              data-preview-id={preview.id}
-              aria-hidden={index === 0 ? 'false' : 'true'}
-              href={preview.href}
-            >
-              <span class="strategy-hero__preview-kicker">{preview.label}</span>
-              <h2>{preview.title}</h2>
-              <p>{preview.description}</p>
-              <small>{preview.note}</small>
-            </a>
-          ))}
-        </div>
-
-        <div class="strategy-hero__preview-stack" aria-label="Site sections preview">
-          {strategyNavPreviews.map((preview) => (
-            <a class="strategy-hero__preview-stack-item" href={preview.href}>
-              <span>{preview.label}</span>
-              <strong>{preview.title}</strong>
-              <p>{preview.description}</p>
-            </a>
-          ))}
-        </div>
-
-        <svg class="strategy-hero__map" viewBox="0 0 900 540" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-          <g class="strategy-hero__continents">
-            {contourPaths.map((path) => (
-              <path d={path}></path>
+        <div class="route-preview__visual" aria-hidden="true">
+          <div class="route-preview__track">
+            {routePlaces.map((place, index) => (
+              <span class:list={['route-preview__node', index === routePlaces.length - 1 && 'is-current']}>
+                <span class="route-preview__pulse"></span>
+              </span>
             ))}
-          </g>
-          <path class="strategy-hero__ghost-route" d={ghostRoute}></path>
-          {routeSegments.map((path, index) => (
-            <path class={`strategy-hero__route strategy-hero__route--${index + 1}`} d={path}></path>
-          ))}
-        </svg>
+          </div>
+        </div>
 
+        <ol class="route-preview__stops">
+          {routePlaces.map((place) => (
+            <li>{place}</li>
+          ))}
+        </ol>
+
+        <a class="route-preview__link" href="/story">Explore full journey &rarr;</a>
+      </aside>
+    </section>
+
+    <section class="page-section panel journey-teaser">
+      <div class="journey-teaser__intro">
+        <p class="eyebrow">Journey</p>
+        <h2>The journey comes first.</h2>
+        <p>
+          Everything else on the site extends from it: writing, projects, and public work.
+        </p>
+      </div>
+
+      <div class="journey-teaser__grid">
         {strategyMapChapters.map((chapter) => (
-          <span
-            class={`strategy-hero__node strategy-hero__node--${chapter.id}`}
-            style={`left:${chapter.mapX}; top:${chapter.mapY};`}
-            aria-hidden="true"
-          >
-            <span></span>
-          </span>
-        ))}
-
-        <div class="strategy-hero__label strategy-hero__label--coverage" aria-hidden="true">Coverage</div>
-        <div class="strategy-hero__label strategy-hero__label--signal" aria-hidden="true">Signal strengthening</div>
-        <div class="strategy-hero__label strategy-hero__label--deployment" aria-hidden="true">Current deployment</div>
-
-        <a class="strategy-hero__signal-card" href="#deployment-map">
-          <span>The journey</span>
-          <strong>From global foundations to financial intelligence.</strong>
-        </a>
-      </div>
-    </section>
-
-    <section id="deployment-map" class="page-section strategy-journey">
-      <SectionHeading
-        eyebrow="Deployment Map"
-        title="A story shaped by bold, independent transitions."
-        description="The route now moves through the places, institutions, and disciplines that shaped the work: one active waypoint at a time, with the present becoming clearer as the story progresses."
-      />
-
-      <div class="strategy-journey__grid">
-        <aside class="strategy-control panel">
-          <div class="strategy-control__header">
+          <article class="journey-stop">
+            <span class="journey-stop__step">{chapter.step}</span>
             <div>
-              <p class="eyebrow">Current waypoint</p>
-              <h2 data-active-place>{firstChapter.place}</h2>
-              <p class="strategy-control__signal" data-active-signal>{firstChapter.signal}</p>
+              <h3>{chapter.place}</h3>
+              <p class="journey-stop__theme">{chapter.theme}</p>
+              <p class="journey-stop__signal">{chapter.signal}</p>
             </div>
-            <span class="strategy-control__step" data-active-step>{firstChapter.step}</span>
-          </div>
-
-          <div class="strategy-control__surface">
-            <div class="strategy-control__surface-grid"></div>
-
-            <svg class="strategy-control__map" viewBox="0 0 900 540" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <g class="strategy-control__continents">
-                {contourPaths.map((path) => (
-                  <path d={path}></path>
-                ))}
-              </g>
-              <path class="strategy-control__ghost-route" d={ghostRoute}></path>
-              {routeSegments.map((path) => (
-                <path class="strategy-control__route-segment" data-route-segment d={path}></path>
-              ))}
-            </svg>
-
-            {strategyMapChapters.map((chapter) => (
-              <button
-                type="button"
-                class="strategy-control__node"
-                data-map-node
-                data-map-target={chapter.id}
-                style={`left:${chapter.mapX}; top:${chapter.mapY};`}
-                aria-label={`Jump to ${chapter.place}`}
-              >
-                <span class="strategy-control__node-dot"></span>
-                <span class="strategy-control__node-label">{chapter.place.split(',')[0]}</span>
-              </button>
-            ))}
-
-            <div class="strategy-control__micro strategy-control__micro--a">Coverage</div>
-            <div class="strategy-control__micro strategy-control__micro--b">Signal strengthening</div>
-            <div class="strategy-control__micro strategy-control__micro--c">Current base</div>
-
-            <div class="strategy-control__portrait-shell">
-              <div class="strategy-control__portrait-glow"></div>
-              <div class="strategy-control__portrait-ring strategy-control__portrait-ring--outer"></div>
-              <div class="strategy-control__portrait-ring strategy-control__portrait-ring--inner"></div>
-              <img src="/profile.jpg" alt="Portrait of C M Nafi" />
-              <div class="strategy-control__portrait-meta">
-                <span data-active-label>{firstChapter.label}</span>
-                <strong data-active-theme>{firstChapter.theme}</strong>
-                <small data-active-capability>{firstChapter.capability}</small>
-                <small class="strategy-control__atlas" data-active-atlas>{firstChapter.atlasLabel}</small>
-              </div>
-            </div>
-          </div>
-
-          <div class="strategy-control__footer" aria-hidden="true">
-            <span>Origin</span>
-            <span>Discipline layer</span>
-            <span>Expansion node</span>
-            <span>Compounding stage</span>
-            <span>Active deployment</span>
-          </div>
-        </aside>
-
-        <div class="strategy-journey__chapters">
-          {strategyMapChapters.map((chapter) => (
-            <StrategyMapChapter chapter={chapter} />
-          ))}
-        </div>
+          </article>
+        ))}
       </div>
+
+      <a class="button button-primary journey-teaser__cta" href="/story">Read the full journey</a>
     </section>
 
-    <section class="page-section strategy-now">
-      <SectionHeading
-        eyebrow="Current Deployment"
-        title="From Research to Financial Intelligence."
-        description="I believe that data is only as valuable as the narrative it helps uncover. The present chapter brings together research, product thinking, writing, and public work into one clearer direction."
-      />
-
-      <div class="two-up strategy-now__grid">
-        <article class="panel strategy-now__card">
-          <p class="eyebrow">Current</p>
-          <h2>Bridging the gap between complex regulatory data and actionable intelligence.</h2>
-          <p>
-            The current work is focused on building due diligence and RFP automation platforms that make complex financial information more usable for real operators, while continuing to write, reflect, and build in public.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="/brewing">See what's brewing</a>
-            <a class="button button-secondary" href="/connect">Let's connect</a>
-          </div>
-        </article>
-
-        <article class="panel strategy-now__card strategy-now__card--signals">
-          <p class="eyebrow">Beyond the Data</p>
-          <div class="strategy-signal-list">
-            {strategyMapSignals.map((signal) => (
-              <a class="strategy-signal-item" href={signal.href}>
-                <h3>{signal.title}</h3>
-                <p>{signal.description}</p>
-                <span class="strategy-signal-item__arrow">&rarr;</span>
-              </a>
-            ))}
-          </div>
-        </article>
+    <section class="page-section home-secondary">
+      <div class="home-secondary__header">
+        <p class="eyebrow">Elsewhere</p>
+        <p class="home-secondary__copy">
+          Writing, projects, and public contact remain available, but they stay secondary to the journey.
+        </p>
       </div>
-    </section>
 
-    <section class="page-section strategy-destinations">
-      <SectionHeading
-        eyebrow="Operating Areas"
-        title="The rest of the site carries the same story into different forms."
-        description="Writing, projects, adventures, work in progress, and outward connection all extend the same path in different directions."
-      />
-
-      <div class="strategy-destination-grid">
-        {strategyMapDestinations.map((destination) => (
-          <a class="panel strategy-destination-card" href={destination.href}>
-            <span class="strategy-destination-card__mode">{destination.mode}</span>
-            <h3>{destination.title}</h3>
-            <p>{destination.description}</p>
-            <span class="strategy-destination-card__arrow">Go deeper -></span>
+      <div class="home-secondary__grid">
+        {secondaryPaths.map((path) => (
+          <a class="panel home-secondary__card" href={path.href}>
+            <span>{path.title}</span>
+            <p>{path.description}</p>
           </a>
         ))}
       </div>
     </section>
   </div>
-
-  <script>
-    const root = document.querySelector('[data-strategy-map]');
-
-    if (root) {
-      const chapters = Array.from(root.querySelectorAll('[data-strategy-chapter]'));
-      const mapNodes = Array.from(root.querySelectorAll('[data-map-node]'));
-      const routeSegments = Array.from(root.querySelectorAll('[data-route-segment]'));
-      const previewZone = root.querySelector('[data-nav-preview-zone]');
-      const previewPanels = Array.from(root.querySelectorAll('[data-nav-preview-panel]'));
-      const navItems = Array.from(document.querySelectorAll('.site-header [data-nav-item]'));
-      const navList = document.querySelector('.site-header .nav-list');
-      const activePlace = root.querySelector('[data-active-place]');
-      const activeSignal = root.querySelector('[data-active-signal]');
-      const activeStep = root.querySelector('[data-active-step]');
-      const activeLabel = root.querySelector('[data-active-label]');
-      const activeTheme = root.querySelector('[data-active-theme]');
-      const activeCapability = root.querySelector('[data-active-capability]');
-      const activeAtlas = root.querySelector('[data-active-atlas]');
-      const defaultPreviewId = root.dataset.activePreview ?? 'home';
-      const defaultPreviewLink = navItems.find((item) => item.getAttribute('data-nav-item') === defaultPreviewId) ?? navItems[0];
-      let previewResetTimer = 0;
-
-      const setActive = (index) => {
-        const chapter = chapters[index];
-        if (!chapter) return;
-
-        root.dataset.activeChapter = chapter.dataset.chapterId ?? '';
-        root.style.setProperty('--portrait-scale', chapter.dataset.scale ?? '1');
-        root.style.setProperty('--deployment-progress', String(index / Math.max(chapters.length - 1, 1)));
-
-        if (activePlace) activePlace.textContent = chapter.dataset.place ?? '';
-        if (activeSignal) activeSignal.textContent = chapter.dataset.signal ?? '';
-        if (activeStep) activeStep.textContent = chapter.dataset.step ?? '';
-        if (activeLabel) activeLabel.textContent = chapter.dataset.label ?? '';
-        if (activeTheme) activeTheme.textContent = chapter.dataset.theme ?? '';
-        if (activeCapability) activeCapability.textContent = chapter.dataset.capability ?? '';
-        if (activeAtlas) activeAtlas.textContent = chapter.dataset.atlas ?? '';
-
-        chapters.forEach((item, itemIndex) => {
-          item.classList.toggle('is-active', itemIndex === index);
-          item.classList.toggle('is-complete', itemIndex < index);
-        });
-
-        mapNodes.forEach((node, nodeIndex) => {
-          node.classList.toggle('is-active', nodeIndex === index);
-          node.classList.toggle('is-complete', nodeIndex < index);
-        });
-
-        routeSegments.forEach((segment, segmentIndex) => {
-          segment.classList.toggle('is-active', segmentIndex < index);
-        });
-      };
-
-      const positionPreview = (item) => {
-        if (!previewZone || !item) return;
-
-        const zoneRect = previewZone.getBoundingClientRect();
-        const itemRect = item.getBoundingClientRect();
-        const gutter = Math.min(176, Math.max(zoneRect.width * 0.28, 96));
-        const minimum = gutter;
-        const maximum = Math.max(zoneRect.width - gutter, minimum);
-        const center = itemRect.left + itemRect.width / 2 - zoneRect.left;
-        const clamped = Math.min(Math.max(center, minimum), maximum);
-
-        previewZone.style.setProperty('--nav-preview-left', `${clamped}px`);
-      };
-
-      const setPreview = (id, item) => {
-        const activeId = id || defaultPreviewId;
-
-        root.dataset.activePreview = activeId;
-
-        previewPanels.forEach((panel) => {
-          const isActive = panel.getAttribute('data-preview-id') === activeId;
-          panel.classList.toggle('is-active', isActive);
-          panel.setAttribute('aria-hidden', String(!isActive));
-        });
-
-        navItems.forEach((link) => {
-          const isActive = link.getAttribute('data-nav-item') === activeId;
-          link.classList.toggle('is-preview-active', isActive);
-        });
-
-        positionPreview(item ?? defaultPreviewLink);
-      };
-
-      const clearPreviewReset = () => {
-        if (previewResetTimer) {
-          window.clearTimeout(previewResetTimer);
-          previewResetTimer = 0;
-        }
-      };
-
-      const schedulePreviewReset = () => {
-        clearPreviewReset();
-        previewResetTimer = window.setTimeout(() => {
-          setPreview(defaultPreviewId, defaultPreviewLink);
-        }, 140);
-      };
-
-      const chaptersContainer = root.querySelector('.strategy-journey__chapters');
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const visible = entries
-            .filter((entry) => entry.isIntersecting)
-            .sort((a, b) => b.intersectionRatio - a.intersectionRatio || a.boundingClientRect.top - b.boundingClientRect.top)[0];
-
-          if (!visible) return;
-          setActive(chapters.indexOf(visible.target));
-        },
-        {
-          root: chaptersContainer,
-          threshold: [0.25, 0.45, 0.7],
-          rootMargin: '-10% 0px -10% 0px'
-        }
-      );
-
-      chapters.forEach((chapter) => observer.observe(chapter));
-      setActive(0);
-      setPreview(defaultPreviewId, defaultPreviewLink);
-
-      mapNodes.forEach((node) => {
-        node.addEventListener('click', () => {
-          const target = node.getAttribute('data-map-target');
-          const chapter = root.querySelector(`[data-chapter-id="${target}"]`);
-          if (chapter && chaptersContainer) {
-            chaptersContainer.scrollTo({ top: chapter.offsetTop, behavior: 'smooth' });
-          }
-        });
-      });
-
-      navItems.forEach((item) => {
-        const previewId = item.getAttribute('data-nav-item');
-        if (!previewPanels.some((panel) => panel.getAttribute('data-preview-id') === previewId)) return;
-
-        item.addEventListener('pointerenter', () => {
-          clearPreviewReset();
-          setPreview(previewId, item);
-        });
-
-        item.addEventListener('focus', () => {
-          clearPreviewReset();
-          setPreview(previewId, item);
-        });
-      });
-
-      navList?.addEventListener('pointerleave', schedulePreviewReset);
-      navList?.addEventListener('focusout', () => {
-        window.requestAnimationFrame(() => {
-          if (navList.contains(document.activeElement)) return;
-          setPreview(defaultPreviewId, defaultPreviewLink);
-        });
-      });
-
-      window.addEventListener('resize', () => {
-        const activeItem =
-          navItems.find((item) => item.classList.contains('is-preview-active')) ?? defaultPreviewLink;
-        positionPreview(activeItem);
-      });
-    }
-  </script>
 </BaseLayout>
 
 <style>
-  .strategy-map-page {
-    --strategy-accent: #d39a59;
-    --strategy-cool: #7e869d;
+  .home-cover {
     position: relative;
     padding-bottom: 4rem;
   }
 
-  .strategy-map-page::before,
-  .strategy-map-page::after {
+  .home-cover::before {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-  }
-
-  .strategy-map-page::before {
     background:
-      radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--strategy-accent) 18%, transparent), transparent 28%),
-      radial-gradient(circle at 82% 16%, color-mix(in srgb, var(--strategy-cool) 18%, transparent), transparent 24%),
-      radial-gradient(circle at 52% 82%, color-mix(in srgb, var(--strategy-accent) 12%, transparent), transparent 30%);
+      radial-gradient(circle at 18% 18%, rgba(211, 154, 89, 0.12), transparent 30%),
+      radial-gradient(circle at 78% 16%, rgba(126, 134, 157, 0.08), transparent 24%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 30%, transparent 70%, rgba(255, 255, 255, 0.012));
   }
 
-  .strategy-map-page::after {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 100% 7rem, 7rem 100%;
-    opacity: 0.22;
-    mask-image: linear-gradient(180deg, transparent, black 12%, black 88%, transparent);
-  }
-
-  .strategy-map-page > * {
+  .home-cover > * {
     position: relative;
     z-index: 1;
   }
 
-  .strategy-map-page[data-active-chapter='dinajpur'] {
-    --strategy-accent: #ca9258;
-    --strategy-cool: #86796e;
-  }
-
-  .strategy-map-page[data-active-chapter='rangpur'] {
-    --strategy-accent: #ce9b63;
-    --strategy-cool: #888599;
-  }
-
-  .strategy-map-page[data-active-chapter='changshu'] {
-    --strategy-accent: #d9aa72;
-    --strategy-cool: #7e97aa;
-  }
-
-  .strategy-map-page[data-active-chapter='decorah'] {
-    --strategy-accent: #dfb584;
-    --strategy-cool: #90a7bb;
-  }
-
-  .strategy-map-page[data-active-chapter='tampa'] {
-    --strategy-accent: #e6be8f;
-    --strategy-cool: #9cb3c7;
-  }
-
-  .strategy-hero {
+  .home-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.96fr);
-    gap: clamp(1.4rem, 4vw, 3rem);
-    min-height: calc(100vh - 7.5rem);
+    grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
     align-items: center;
+    min-height: calc(100vh - 8rem);
+    padding-top: clamp(2rem, 6vw, 5rem);
+    padding-bottom: clamp(2rem, 5vw, 4rem);
   }
 
-  .strategy-hero__copy {
-    display: grid;
-    gap: 1.1rem;
-  }
-
-  .strategy-hero__identity {
-    margin: -0.65rem 0 0;
-    font-size: clamp(1rem, 1.6vw, 1.2rem);
-    line-height: 1.5;
-    color: rgba(243, 237, 225, 0.82);
-  }
-
-  .strategy-hero h1 {
-    margin: 0;
-    max-width: 10ch;
-    font-family: 'Fraunces', 'Times New Roman', serif;
-    font-size: clamp(3.7rem, 7.1vw, 6.9rem);
-    line-height: 0.92;
-    letter-spacing: -0.06em;
-  }
-
-  .strategy-hero__body {
-    max-width: 43rem;
-    margin: 0;
-    color: rgba(243, 237, 225, 0.78);
-    font-size: 1.05rem;
-    line-height: 1.84;
-  }
-
-  .strategy-hero__cue {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.9rem;
-    color: rgba(243, 237, 225, 0.68);
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-
-  .strategy-hero__cue-line {
-    width: 4.2rem;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.16), var(--strategy-accent));
-  }
-
-  .strategy-hero__visual {
-    --nav-preview-left: 9rem;
-    position: relative;
-    min-height: 34rem;
-    padding: 1.4rem;
-    overflow: hidden;
-    isolation: isolate;
-  }
-
-  .strategy-hero__visual::after {
-    content: "";
-    position: absolute;
-    top: 18%;
-    left: -18%;
-    width: 36%;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0));
-    transform: rotate(9deg);
-    opacity: 0.55;
-    animation: strategySweep 9s linear infinite;
-  }
-
-  .strategy-hero__visual-glow,
-  .strategy-hero__grid,
-  .strategy-hero__map,
-  .strategy-hero__preview-dock,
-  .strategy-hero__preview-stack,
-  .strategy-hero__signal-card,
-  .strategy-hero__label,
-  .strategy-hero__node {
-    position: absolute;
-  }
-
-  .strategy-hero__preview-dock {
-    top: 1.2rem;
-    left: 1.2rem;
-    right: 1.2rem;
-    height: 10.4rem;
-    z-index: 3;
-    pointer-events: none;
-  }
-
-  .strategy-hero__preview-dock::before,
-  .strategy-hero__preview-dock::after {
-    content: "";
-    position: absolute;
-    left: var(--nav-preview-left);
-    transform: translateX(-50%);
-    pointer-events: none;
-  }
-
-  .strategy-hero__preview-dock::before {
-    top: 0;
-    width: 1px;
-    height: 2.7rem;
-    background: linear-gradient(180deg, rgba(243, 237, 225, 0.56), rgba(243, 237, 225, 0));
-    opacity: 0.72;
-  }
-
-  .strategy-hero__preview-dock::after {
-    top: 2.5rem;
-    width: 0.62rem;
-    height: 0.62rem;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--strategy-accent) 84%, white 16%);
-    box-shadow: 0 0 0 6px color-mix(in srgb, var(--strategy-accent) 10%, transparent), 0 0 18px color-mix(in srgb, var(--strategy-accent) 26%, transparent);
-  }
-
-  .strategy-hero__preview-card {
-    position: absolute;
-    left: var(--nav-preview-left);
-    top: 2.95rem;
-    width: min(100%, 19rem);
-    display: grid;
-    gap: 0.55rem;
-    padding: 1rem 1rem 0.95rem;
-    border-radius: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background:
-      linear-gradient(180deg, rgba(13, 15, 20, 0.9), rgba(12, 12, 16, 0.54)),
-      radial-gradient(circle at top, color-mix(in srgb, var(--strategy-accent) 10%, transparent), transparent 72%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 28px 50px rgba(0, 0, 0, 0.28);
-    backdrop-filter: blur(18px);
-    opacity: 0;
-    transform: translate3d(-50%, 18px, 0) scale(0.985);
-    transition: opacity 260ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .strategy-hero__preview-card.is-active {
-    opacity: 1;
-    transform: translate3d(-50%, 0, 0) scale(1);
-    pointer-events: auto;
-  }
-
-  .strategy-hero__preview-kicker,
-  .strategy-hero__preview-stack-item span {
-    color: rgba(243, 237, 225, 0.56);
-    font-size: 0.7rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  .strategy-hero__preview-card h2,
-  .strategy-hero__preview-stack-item strong {
-    margin: 0;
-    font-family: 'Fraunces', 'Times New Roman', serif;
-    font-size: 1.18rem;
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    color: rgba(243, 237, 225, 0.94);
-    text-wrap: balance;
-  }
-
-  .strategy-hero__preview-card p,
-  .strategy-hero__preview-card small,
-  .strategy-hero__preview-stack-item p {
-    margin: 0;
-    color: rgba(243, 237, 225, 0.72);
-    line-height: 1.6;
-  }
-
-  .strategy-hero__preview-card small {
-    display: block;
-    color: rgba(243, 237, 225, 0.54);
-    font-size: 0.77rem;
-  }
-
-  .strategy-hero__preview-stack {
-    display: none;
-  }
-
-  .strategy-hero__preview-stack-item {
-    display: grid;
-    gap: 0.42rem;
-    padding: 0.95rem 1rem;
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: linear-gradient(180deg, rgba(12, 13, 18, 0.76), rgba(12, 13, 18, 0.46));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
-
-  .strategy-hero__visual-glow {
-    inset: auto;
-    border-radius: 999px;
-    filter: blur(40px);
-    opacity: 0.55;
-    animation: strategyFloat 15s ease-in-out infinite alternate;
-  }
-
-  .strategy-hero__visual-glow--warm {
-    top: 10%;
-    left: 10%;
-    width: 18rem;
-    height: 18rem;
-    background: radial-gradient(circle, color-mix(in srgb, var(--strategy-accent) 24%, transparent), transparent 70%);
-  }
-
-  .strategy-hero__visual-glow--cool {
-    right: 6%;
-    top: 18%;
-    width: 16rem;
-    height: 16rem;
-    background: radial-gradient(circle, color-mix(in srgb, var(--strategy-cool) 24%, transparent), transparent 70%);
-    animation-duration: 18s;
-  }
-
-  .strategy-hero__grid {
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 100% 4.5rem, 5rem 100%;
-    opacity: 0.24;
-    mask-image: radial-gradient(circle at 54% 42%, black 30%, transparent 88%);
-  }
-
-  .strategy-hero__map {
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .strategy-hero__continents path,
-  .strategy-control__continents path {
-    fill: none;
-    stroke: rgba(255, 255, 255, 0.1);
-    stroke-width: 1.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .strategy-hero__ghost-route,
-  .strategy-control__ghost-route {
-    fill: none;
-    stroke: rgba(255, 255, 255, 0.12);
-    stroke-width: 1.1;
-    stroke-dasharray: 5 7;
-    stroke-linecap: round;
-  }
-
-  .strategy-hero__route {
-    fill: none;
-    stroke: var(--strategy-accent);
-    stroke-width: 1.75;
-    stroke-linecap: round;
-    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--strategy-accent) 28%, transparent));
-    opacity: 0.92;
-  }
-
-  .strategy-hero__node {
-    transform: translate(-50%, -50%);
-  }
-
-  .strategy-hero__node span {
-    display: block;
-    width: 0.82rem;
-    height: 0.82rem;
-    border-radius: 999px;
-    background: rgba(243, 237, 225, 0.26);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--strategy-accent) 18%, transparent);
-    animation: strategyNodePulse 5.5s ease-in-out infinite;
-  }
-
-  .strategy-hero__node--rangpur span { animation-delay: -0.8s; }
-  .strategy-hero__node--changshu span { animation-delay: -1.6s; }
-  .strategy-hero__node--decorah span { animation-delay: -2.4s; }
-  .strategy-hero__node--tampa span { animation-delay: -3.2s; }
-
-  .strategy-hero__label {
-    padding: 0.55rem 0.8rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(9, 10, 14, 0.52);
-    color: rgba(243, 237, 225, 0.68);
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    backdrop-filter: blur(16px);
-  }
-
-  .strategy-hero__label--coverage { left: 8%; top: 34%; }
-  .strategy-hero__label--signal { right: 12%; top: 35%; }
-  .strategy-hero__label--deployment { right: 10%; bottom: 18%; }
-
-  .strategy-hero__signal-card {
-    left: 8%;
-    right: 8%;
-    bottom: 8%;
-    display: grid;
-    gap: 0.55rem;
-    padding: 1rem 1.1rem;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: linear-gradient(180deg, rgba(8, 10, 15, 0.74), rgba(8, 10, 15, 0.38));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  }
-
-  .strategy-hero__signal-card span,
-  .strategy-control__portrait-meta span,
-  .strategy-destination-card__mode {
-    color: rgba(243, 237, 225, 0.56);
-    font-size: 0.72rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  .strategy-hero__signal-card {
-    transition: border-color 180ms ease, transform 180ms ease;
-  }
-
-  .strategy-hero__signal-card:hover {
-    border-color: rgba(255, 255, 255, 0.16);
-    transform: translateY(-2px);
-  }
-
-  .strategy-hero__signal-card strong {
-    font-size: 0.98rem;
-    line-height: 1.7;
-    color: rgba(243, 237, 225, 0.88);
-  }
-
-  .strategy-journey {
+  .home-hero__copy {
     display: grid;
     gap: 1.4rem;
-    margin-top: 2.2rem;
+    max-width: 38rem;
   }
 
-  .strategy-journey__grid {
-    display: grid;
-    grid-template-columns: minmax(320px, 0.94fr) minmax(0, 1.06fr);
-    gap: 1.2rem;
-    align-items: stretch;
-    height: min(82vh, 56rem);
-  }
-
-  .strategy-control {
-    display: grid;
-    gap: 1rem;
-    padding: 1.2rem;
-    overflow: hidden;
-    align-content: start;
-  }
-
-  .strategy-control__header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 1rem;
-    align-items: start;
-  }
-
-  .strategy-control__header h2 {
+  .home-hero h1,
+  .journey-teaser h2,
+  .route-preview h2,
+  .journey-stop h3 {
     margin: 0;
     font-family: 'Fraunces', 'Times New Roman', serif;
-    font-size: clamp(2rem, 3vw, 2.8rem);
-    line-height: 1.02;
     letter-spacing: -0.05em;
   }
 
-  .strategy-control__signal {
-    margin: 0.45rem 0 0;
-    color: rgba(243, 237, 225, 0.66);
-    line-height: 1.7;
+  .home-hero h1 {
+    font-size: clamp(3.5rem, 7vw, 6.2rem);
+    line-height: 0.94;
+    max-width: 9ch;
   }
 
-  .strategy-control__step {
-    font-size: 2.4rem;
-    font-weight: 800;
-    color: var(--strategy-accent);
-    letter-spacing: -0.04em;
+  .home-hero__body,
+  .journey-teaser__intro p,
+  .journey-stop__signal,
+  .home-secondary__copy,
+  .home-secondary__card p,
+  .route-preview__stops {
+    margin: 0;
+    color: rgba(243, 237, 225, 0.72);
+    line-height: 1.8;
   }
 
-  .strategy-control__surface {
-    position: relative;
-    min-height: 36rem;
-    border-radius: 28px;
-    overflow: hidden;
-    background:
-      radial-gradient(circle at 20% 24%, color-mix(in srgb, var(--strategy-accent) 12%, transparent), transparent 26%),
-      radial-gradient(circle at 76% 22%, color-mix(in srgb, var(--strategy-cool) 14%, transparent), transparent 28%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(11, 10, 14, 0.2) 32%, rgba(11, 10, 14, 0.54));
+  .home-hero__body {
+    max-width: 32rem;
+    font-size: 1.05rem;
   }
 
-  .strategy-control__surface-grid,
-  .strategy-control__map,
-  .strategy-control__portrait-shell,
-  .strategy-control__micro,
-  .strategy-control__node {
-    position: absolute;
-  }
-
-  .strategy-control__surface-grid {
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-    background-size: 100% 4rem, 4rem 100%;
-    opacity: 0.4;
-    mask-image: radial-gradient(circle at 50% 46%, black 36%, transparent 92%);
-  }
-
-  .strategy-control__map { inset: 0; width: 100%; height: 100%; }
-
-  .strategy-control__route-segment {
-    fill: none;
-    stroke: var(--strategy-accent);
-    stroke-width: 2.1;
-    stroke-linecap: round;
-    stroke-dasharray: 500;
-    stroke-dashoffset: 500;
-    transition: stroke-dashoffset 420ms cubic-bezier(0.22, 1, 0.36, 1), stroke 260ms ease;
-    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--strategy-accent) 28%, transparent));
-  }
-
-  .strategy-control__route-segment.is-active { stroke-dashoffset: 0; }
-
-  .strategy-control__node {
-    transform: translate(-50%, -50%);
-    display: grid;
-    gap: 0.38rem;
-    justify-items: center;
-    background: transparent;
-    border: 0;
-    padding: 0;
-    color: var(--text);
-    cursor: pointer;
-    transition: transform 180ms ease;
-  }
-
-  .strategy-control__node-dot {
-    width: 0.92rem;
-    height: 0.92rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.16);
-    transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
-  }
-
-  .strategy-control__node-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(243, 237, 225, 0.56);
-    transition: color 220ms ease;
-  }
-
-  .strategy-control__node.is-complete .strategy-control__node-dot,
-  .strategy-control__node.is-active .strategy-control__node-dot {
-    background: var(--strategy-accent);
-    transform: scale(1.06);
-    box-shadow: 0 0 0 8px color-mix(in srgb, var(--strategy-accent) 10%, transparent), 0 0 20px color-mix(in srgb, var(--strategy-accent) 22%, transparent);
-  }
-
-  .strategy-control__node.is-complete .strategy-control__node-label,
-  .strategy-control__node.is-active .strategy-control__node-label,
-  .strategy-control__node:hover .strategy-control__node-label {
-    color: rgba(243, 237, 225, 0.9);
-  }
-
-  .strategy-control__micro {
-    padding: 0.5rem 0.75rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(8, 10, 15, 0.54);
-    color: rgba(243, 237, 225, 0.58);
-    font-size: 0.68rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    backdrop-filter: blur(14px);
-  }
-
-  .strategy-control__micro--a { left: 6%; bottom: 14%; }
-  .strategy-control__micro--b { right: 8%; top: 10%; }
-  .strategy-control__micro--c { right: 12%; bottom: 8%; }
-
-  .strategy-control__portrait-shell {
-    left: 50%;
-    bottom: 10%;
-    width: min(100%, 12.8rem);
-    transform: translateX(-50%) scale(var(--portrait-scale));
-    transform-origin: center bottom;
-    transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .strategy-control__portrait-glow,
-  .strategy-control__portrait-ring {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-
-  .strategy-control__portrait-glow {
-    inset: -16%;
-    background: radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--strategy-accent) 26%, transparent), transparent 68%);
-    filter: blur(20px);
-  }
-
-  .strategy-control__portrait-ring {
-    border-radius: 32px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .strategy-control__portrait-ring--outer {
-    inset: -7%;
-    border-style: dashed;
-    border-color: rgba(255, 255, 255, 0.06);
-  }
-
-  .strategy-control__portrait-ring--inner { inset: 6%; }
-
-  .strategy-control__portrait-shell img {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1.16;
-    object-fit: cover;
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    box-shadow: 0 28px 56px rgba(0, 0, 0, 0.36);
-    z-index: 2;
-  }
-
-  .strategy-control__portrait-meta {
-    position: absolute;
-    left: -2.2rem;
-    right: -2.2rem;
-    bottom: -2.25rem;
-    z-index: 3;
-    display: grid;
-    gap: 0.22rem;
-    padding: 0.95rem 1rem;
-    border-radius: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: linear-gradient(180deg, rgba(10, 11, 15, 0.86), rgba(10, 11, 15, 0.56));
-  }
-
-  .strategy-control__portrait-meta strong { font-size: 0.98rem; }
-
-  .strategy-control__portrait-meta small {
-    color: rgba(243, 237, 225, 0.7);
-    line-height: 1.6;
-  }
-
-  .strategy-control__atlas {
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(243, 237, 225, 0.52);
-  }
-
-  .strategy-control__footer,
-  .strategy-chapter__meta {
+  .home-hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.65rem;
+    gap: 1rem;
+    align-items: center;
   }
 
-  .strategy-control__footer span,
-  .strategy-chapter__meta span {
-    padding: 0.42rem 0.72rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.03);
-    color: rgba(243, 237, 225, 0.62);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
+  .home-hero__subtle-link,
+  .route-preview__link {
+    color: rgba(243, 237, 225, 0.84);
+    font-size: 0.96rem;
+    letter-spacing: 0.02em;
+    transition: color 180ms ease, transform 180ms ease;
   }
 
-  .strategy-journey__chapters {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  .home-hero__subtle-link:hover,
+  .route-preview__link:hover {
+    color: var(--accent);
   }
 
-  .strategy-journey__chapters::-webkit-scrollbar {
-    display: none;
-  }
-
-  .strategy-chapter {
+  .route-preview {
     display: grid;
     gap: 1rem;
-    padding: 1.3rem;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    transition: transform 260ms ease, border-color 260ms ease, background 260ms ease, box-shadow 260ms ease;
-    min-height: 100%;
-    flex: 0 0 100%;
-    scroll-snap-align: start;
-    align-content: center;
+    padding: 1.4rem;
+    border-radius: 30px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top, rgba(211, 154, 89, 0.08), transparent 64%);
   }
 
-  .strategy-chapter__header,
-  .strategy-chapter__heading {
-    display: flex;
-    gap: 1rem;
-    align-items: start;
-    justify-content: space-between;
+  .route-preview h2 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.08;
+    max-width: 14ch;
   }
 
-  .strategy-chapter__heading {
-    justify-content: start;
-    flex: 1;
+  .route-preview__visual {
+    padding: 0.6rem 0 0.2rem;
   }
 
-  .strategy-chapter__step {
-    width: 3rem;
-    height: 3rem;
+  .route-preview__track {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .route-preview__track::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(243, 237, 225, 0.16), rgba(211, 154, 89, 0.82), rgba(243, 237, 225, 0.16));
+    transform: translateY(-50%);
+    opacity: 0.8;
+  }
+
+  .route-preview__node {
+    position: relative;
+    z-index: 1;
+    justify-self: center;
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 999px;
+    border: 1px solid rgba(243, 237, 225, 0.18);
+    background: rgba(243, 237, 225, 0.18);
+    box-shadow: 0 0 0 0 rgba(211, 154, 89, 0.12);
+  }
+
+  .route-preview__node.is-current {
+    background: var(--accent);
+    border-color: rgba(211, 154, 89, 0.56);
+    box-shadow: 0 0 0 10px rgba(211, 154, 89, 0.08);
+  }
+
+  .route-preview__pulse {
+    position: absolute;
+    inset: -0.45rem;
+    border-radius: 999px;
+    border: 1px solid rgba(211, 154, 89, 0.22);
+    opacity: 0;
+    animation: routePulse 8s ease-in-out infinite;
+  }
+
+  .route-preview__node.is-current .route-preview__pulse {
+    animation-duration: 4.8s;
+    opacity: 1;
+  }
+
+  .route-preview__stops {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.65rem;
+    padding: 0;
+    font-size: 0.77rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .route-preview__stops li {
+    color: rgba(243, 237, 225, 0.58);
+  }
+
+  .journey-teaser {
+    display: grid;
+    gap: 1.6rem;
+    padding: clamp(1.5rem, 3vw, 2.2rem);
+    margin-top: 0.5rem;
+  }
+
+  .journey-teaser__intro {
+    max-width: 38rem;
+  }
+
+  .journey-teaser h2 {
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    line-height: 1.02;
+    margin-bottom: 0.75rem;
+  }
+
+  .journey-teaser__grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  .journey-stop {
+    display: grid;
+    gap: 0.8rem;
+    padding: 1rem 0.95rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .journey-stop__step {
+    width: 2.3rem;
+    height: 2.3rem;
     display: grid;
     place-items: center;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.04);
-    color: rgba(243, 237, 225, 0.84);
-    font-size: 0.82rem;
-    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(243, 237, 225, 0.82);
+    font-size: 0.74rem;
     letter-spacing: 0.14em;
-    flex-shrink: 0;
-  }
-
-  .strategy-chapter .eyebrow { margin-bottom: 0.35rem; }
-
-  .strategy-chapter__place {
-    margin: 0;
-    color: var(--strategy-accent);
-    font-size: 0.84rem;
-    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
-  .strategy-chapter__theme {
-    flex-shrink: 0;
-    align-self: start;
-    padding: 0.5rem 0.82rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.04);
-    color: rgba(243, 237, 225, 0.84);
-    font-size: 0.76rem;
-    letter-spacing: 0.1em;
+  .journey-stop h3 {
+    font-size: 1.2rem;
+    line-height: 1.14;
+    margin-bottom: 0.45rem;
+  }
+
+  .journey-stop__theme {
+    margin: 0 0 0.45rem;
+    color: var(--accent);
+    font-size: 0.74rem;
     text-transform: uppercase;
+    letter-spacing: 0.14em;
   }
 
-  .strategy-chapter h2,
-  .strategy-now__card h2,
-  .strategy-signal-item h3,
-  .strategy-destination-card h3 {
-    margin: 0;
-    font-family: 'Fraunces', 'Times New Roman', serif;
-    letter-spacing: -0.04em;
+  .journey-stop__signal {
+    font-size: 0.95rem;
   }
 
-  .strategy-chapter h2 {
-    font-size: clamp(2rem, 2.8vw, 2.8rem);
-    line-height: 1.06;
-    max-width: 14ch;
+  .journey-teaser__cta {
+    justify-self: start;
   }
 
-  .strategy-chapter__narrative,
-  .strategy-now__card p,
-  .strategy-signal-item p,
-  .strategy-destination-card p {
-    margin: 0;
-    color: rgba(243, 237, 225, 0.72);
-    line-height: 1.82;
-  }
-
-  .strategy-chapter__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    color: var(--strategy-accent);
-    font-size: 0.82rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    opacity: 0;
-    transform: translateX(-4px);
-    transition: opacity 220ms ease, transform 220ms ease;
-  }
-
-  .strategy-chapter:hover .strategy-chapter__link,
-  .strategy-chapter.is-active .strategy-chapter__link {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .strategy-chapter__link:hover {
-    text-decoration: underline;
-  }
-
-  .strategy-chapter.is-active {
-    border-color: color-mix(in srgb, var(--strategy-accent) 28%, var(--border));
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
-      linear-gradient(135deg, color-mix(in srgb, var(--strategy-accent) 10%, transparent), transparent 68%);
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.28);
-  }
-
-  .strategy-chapter.is-active .strategy-chapter__step,
-  .strategy-chapter.is-complete .strategy-chapter__step {
-    border-color: color-mix(in srgb, var(--strategy-accent) 34%, rgba(255, 255, 255, 0.08));
-    background: color-mix(in srgb, var(--strategy-accent) 14%, rgba(255, 255, 255, 0.04));
-    box-shadow: 0 0 0 8px color-mix(in srgb, var(--strategy-accent) 6%, transparent);
-  }
-
-  .strategy-now,
-  .strategy-destinations {
-    display: grid;
-    gap: 1.35rem;
-    margin-top: 2.4rem;
-  }
-
-  .strategy-now__grid {
-    align-items: stretch;
-  }
-
-  .strategy-now__card {
+  .home-secondary {
     display: grid;
     gap: 1rem;
-    padding: 1.5rem;
+    margin-top: 1.6rem;
   }
 
-  .strategy-now__card h2 {
-    font-size: clamp(2rem, 3vw, 3.1rem);
-    line-height: 1.02;
-    max-width: 14ch;
+  .home-secondary__header {
+    max-width: 34rem;
   }
 
-  .strategy-signal-list {
+  .home-secondary__grid {
     display: grid;
-    gap: 0.9rem;
-  }
-
-  .strategy-signal-item {
-    padding: 1rem;
-    border-radius: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.03);
-  }
-
-  .strategy-signal-item {
-    transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
-  }
-
-  .strategy-signal-item:hover {
-    border-color: rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.06);
-    transform: translateY(-2px);
-  }
-
-  .strategy-signal-item h3 {
-    font-size: 1.15rem;
-    margin-bottom: 0.35rem;
-  }
-
-  .strategy-signal-item__arrow {
-    display: block;
-    margin-top: 0.4rem;
-    color: var(--strategy-accent);
-    font-size: 0.82rem;
-    letter-spacing: 0.1em;
-    opacity: 0;
-    transform: translateX(-4px);
-    transition: opacity 180ms ease, transform 180ms ease;
-  }
-
-  .strategy-signal-item:hover .strategy-signal-item__arrow {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .strategy-destination-grid {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
   }
 
-  .strategy-destination-card {
-    position: relative;
+  .home-secondary__card {
     display: grid;
-    gap: 0.9rem;
-    min-height: 15rem;
-    align-content: space-between;
-    padding: 1.35rem;
+    gap: 0.7rem;
+    padding: 1.15rem;
+    border-radius: 24px;
     transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
   }
 
-  .strategy-destination-card:hover {
-    transform: translateY(-4px);
-    border-color: color-mix(in srgb, var(--strategy-accent) 30%, var(--border));
+  .home-secondary__card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(211, 154, 89, 0.22);
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-      linear-gradient(135deg, color-mix(in srgb, var(--strategy-accent) 9%, transparent), transparent 72%);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)),
+      radial-gradient(circle at top left, rgba(211, 154, 89, 0.06), transparent 68%);
   }
 
-  .strategy-destination-card h3 { font-size: 1.45rem; }
-
-  .strategy-destination-card__arrow {
-    color: var(--strategy-accent);
-    font-size: 0.82rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    transition: transform 180ms ease;
+  .home-secondary__card span {
+    color: rgba(243, 237, 225, 0.92);
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-size: 1.45rem;
+    letter-spacing: -0.03em;
   }
 
-  .strategy-destination-card:hover .strategy-destination-card__arrow {
-    transform: translateX(4px);
+  :global(.ambient--one),
+  :global(.ambient--two) {
+    opacity: 0.24;
   }
 
-  .strategy-destination-card::before {
-    content: "";
-    position: absolute;
-    top: 12%;
-    left: 0;
-    bottom: 12%;
-    width: 2px;
-    border-radius: 2px;
-    background: var(--strategy-accent);
-    opacity: 0;
-    transform: scaleY(0.4);
-    transition: opacity 180ms ease, transform 180ms ease;
+  :global(.grain) {
+    opacity: 0.035;
   }
 
-  .strategy-destination-card:hover::before {
-    opacity: 1;
-    transform: scaleY(1);
+  :global(.nav-list a[data-nav-item='journey']) {
+    color: var(--text);
+    border-color: rgba(211, 154, 89, 0.18);
+    background: rgba(211, 154, 89, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
-  @keyframes strategyFloat {
-    0% { transform: translate3d(0, 0, 0); }
-    100% { transform: translate3d(0, 12px, 0); }
+  :global(.nav-list a[data-nav-item='journey']::after) {
+    opacity: 0.92;
+    transform: scaleX(1);
   }
 
-  @keyframes strategySweep {
-    0% { transform: translateX(-10%) rotate(9deg); opacity: 0; }
-    18%, 72% { opacity: 0.55; }
-    100% { transform: translateX(180%) rotate(9deg); opacity: 0; }
-  }
+  @keyframes routePulse {
+    0%,
+    100% {
+      transform: scale(0.82);
+      opacity: 0;
+    }
 
-  @keyframes strategyNodePulse {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--strategy-accent) 14%, transparent); }
-    50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--strategy-accent) 4%, transparent); }
+    48% {
+      transform: scale(1.06);
+      opacity: 0.55;
+    }
   }
 
   @media (max-width: 1100px) {
-    .strategy-hero,
-    .strategy-journey__grid {
+    .home-hero,
+    .journey-teaser__grid,
+    .home-secondary__grid {
       grid-template-columns: 1fr;
+    }
+
+    .home-hero {
       min-height: auto;
-      height: auto;
+      padding-top: 2rem;
     }
 
-    .strategy-journey__chapters {
-      overflow: visible;
-      scroll-snap-type: none;
-      gap: 1rem;
+    .route-preview {
+      max-width: 40rem;
     }
 
-    .strategy-chapter {
-      min-height: auto;
-      flex: 0 0 auto;
-      scroll-snap-align: none;
-      align-content: start;
+    .route-preview__stops {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-
-    .strategy-hero__visual {
-      min-height: 37rem;
-    }
-
-    .strategy-hero__preview-dock {
-      display: none;
-    }
-
-    .strategy-hero__preview-stack {
-      inset: 1rem 1rem auto;
-      z-index: 3;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
-    }
-
-    .strategy-hero__label {
-      display: none;
-    }
-
-    .strategy-hero__signal-card {
-      left: 1rem;
-      right: 1rem;
-      bottom: 1rem;
-    }
-
-    .strategy-control { position: static; }
-    .strategy-destination-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
-  @media (max-width: 780px) {
-    .strategy-hero { gap: 1.25rem; }
-    .strategy-hero h1 { font-size: clamp(2.9rem, 12vw, 4.5rem); }
-    .strategy-hero__visual {
-      min-height: 34rem;
-      padding: 1rem;
+  @media (max-width: 720px) {
+    .home-hero {
+      gap: 1.25rem;
+      padding-bottom: 1.4rem;
     }
-    .strategy-hero__preview-stack {
-      inset: 0.95rem 0.95rem auto;
-      grid-template-columns: 1fr;
-      gap: 0.6rem;
+
+    .home-hero h1 {
+      font-size: clamp(2.9rem, 13vw, 4.1rem);
     }
-    .strategy-hero__preview-stack-item {
-      padding: 0.88rem 0.9rem;
-    }
-    .strategy-hero__preview-stack-item strong {
+
+    .home-hero__body {
       font-size: 1rem;
     }
-    .strategy-control__surface { min-height: 26rem; }
-    .strategy-control__header { grid-template-columns: 1fr; }
-    .strategy-control__portrait-shell { width: min(100%, 9.2rem); left: 54%; bottom: 12%; }
-    .strategy-control__portrait-meta { left: -1rem; right: -1rem; bottom: -1.7rem; padding: 0.8rem; }
-    .strategy-control__node-label { font-size: 0.62rem; letter-spacing: 0.08em; }
-    .strategy-control__micro { display: none; }
-    .strategy-chapter { padding: 1.2rem; }
-    .strategy-chapter__header,
-    .strategy-chapter__heading { flex-direction: column; align-items: start; }
-    .strategy-chapter h2,
-    .strategy-now__card h2 { max-width: none; }
-    .strategy-now__grid,
-    .strategy-destination-grid,
-    .two-up { grid-template-columns: 1fr; }
+
+    .route-preview,
+    .journey-teaser,
+    .home-secondary__card {
+      padding: 1rem;
+      border-radius: 22px;
+    }
+
+    .route-preview__stops {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      font-size: 0.72rem;
+    }
+
+    .journey-teaser h2 {
+      font-size: 2rem;
+    }
+
+    .journey-stop {
+      padding-inline: 0;
+    }
+
+    .home-hero__actions {
+      align-items: flex-start;
+      flex-direction: column;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .strategy-map-page,
-    .strategy-map-page *,
-    .strategy-map-page *::before,
-    .strategy-map-page *::after {
+    .route-preview__pulse,
+    .home-secondary__card,
+    .home-hero__subtle-link,
+    .route-preview__link {
       animation: none !important;
       transition: none !important;
-      scroll-behavior: auto !important;
     }
-
-    .strategy-control__route-segment { stroke-dashoffset: 0; }
   }
 </style>
