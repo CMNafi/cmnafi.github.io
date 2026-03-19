@@ -16,11 +16,11 @@ export const siteConfig = {
     { label: 'Email', href: 'mailto:nafi@cmnafi.com' }
   ],
   footerLinks: [
-    { label: 'Journey', href: '/story' },
-    { label: 'Timeline', href: '/blog' },
-    { label: 'Projects', href: '/projects' },
-    { label: 'Connect', href: '/connect' },
-    { label: 'Interests', href: '/interests' }
+    { label: 'Story', href: '/story' },
+    { label: 'About', href: '/about' },
+    { label: 'Brewing', href: '/brewing' },
+    { label: 'Interests', href: '/interests' },
+    { label: 'Connect', href: '/connect' }
   ]
 } as const;
 
