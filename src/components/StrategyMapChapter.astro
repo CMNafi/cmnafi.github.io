@@ -40,4 +40,8 @@ const { chapter } = Astro.props;
     <span>{chapter.signal}</span>
     <span>{chapter.atlasLabel}</span>
   </div>
+
+  <a class="strategy-chapter__link" href={`/story#${chapter.id}`}>
+    Read the full story &rarr;
+  </a>
 </article>
