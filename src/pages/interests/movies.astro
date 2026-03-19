@@ -1,0 +1,163 @@
+---
+import { getCollection } from 'astro:content';
+import InterestWorldNav from '@/components/InterestWorldNav.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatDate } from '@/utils/format';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Movies')).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+---
+
+<BaseLayout title="Movies" description="A cinema-dark page for film notes, ticket-stub entries, and posts built around scenes and atmosphere.">
+  <div class="movies-world">
+    <section class="page-section movies-world__hero">
+      <div class="movies-world__copy">
+        <p class="eyebrow">Movies</p>
+        <h1>Film notes lit like ticket stubs in the dark.</h1>
+        <p>
+          This world leans into the cinema palette: near-black, warm coral, and the feeling that some scenes still carry
+          voltage long after the credits are gone.
+        </p>
+      </div>
+
+      <InterestWorldNav current="movies" />
+    </section>
+
+    <section class="page-section movies-world__tickets">
+      <div class="movies-world__grid">
+        {posts.map((post) => (
+          <a class="panel movies-world__ticket" href={`/blog/${post.slug}`}>
+            <div class="movies-world__ticket-top">
+              <p>{formatDate(post.data.publishedAt)}</p>
+              <span>{post.data.readingTime}</span>
+            </div>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+            <div class="movies-world__ticket-tags">
+              {post.data.tags.map((tag) => <span>{tag}</span>)}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .movies-world {
+    position: relative;
+    padding-bottom: 4rem;
+  }
+
+  .movies-world::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 18% 16%, rgba(255, 140, 105, 0.1), transparent 24%),
+      radial-gradient(circle at 82% 16%, rgba(255, 184, 117, 0.06), transparent 18%),
+      linear-gradient(180deg, rgba(8, 8, 12, 0.99), rgba(14, 8, 10, 0.99));
+  }
+
+  .movies-world > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .movies-world__hero {
+    display: grid;
+    gap: 1rem;
+    padding-top: clamp(2rem, 6vw, 4rem);
+  }
+
+  .movies-world__copy {
+    max-width: 40rem;
+  }
+
+  .movies-world__copy h1,
+  .movies-world__ticket h2 {
+    margin: 0;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    letter-spacing: -0.05em;
+  }
+
+  .movies-world__copy h1 {
+    font-size: clamp(2.9rem, 6vw, 4.6rem);
+    line-height: 0.95;
+    margin-bottom: 0.7rem;
+  }
+
+  .movies-world__copy p,
+  .movies-world__ticket p {
+    margin: 0;
+    color: rgba(247, 231, 221, 0.8);
+    line-height: 1.8;
+  }
+
+  .movies-world__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .movies-world__ticket {
+    position: relative;
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.15rem;
+    border-radius: 26px;
+    border-color: rgba(255, 140, 105, 0.18);
+    background:
+      linear-gradient(180deg, rgba(24, 17, 19, 0.96), rgba(7, 7, 9, 0.98)),
+      radial-gradient(circle at top right, rgba(255, 140, 105, 0.14), transparent 32%);
+    overflow: hidden;
+  }
+
+  .movies-world__ticket::before,
+  .movies-world__ticket::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: rgba(7, 7, 9, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transform: translateY(-50%);
+  }
+
+  .movies-world__ticket::before { left: -0.6rem; }
+  .movies-world__ticket::after { right: -0.6rem; }
+
+  .movies-world__ticket-top,
+  .movies-world__ticket-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .movies-world__ticket-top p,
+  .movies-world__ticket-top span,
+  .movies-world__ticket-tags span {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+    color: rgba(255, 140, 105, 0.84);
+  }
+
+  .movies-world__ticket h2 {
+    font-size: clamp(1.7rem, 3vw, 2.2rem);
+    line-height: 1.04;
+  }
+
+  .movies-world__ticket-tags span {
+    display: inline-flex;
+    padding: 0.32rem 0.58rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 140, 105, 0.18);
+    color: rgba(247, 231, 221, 0.66);
+  }
+</style>

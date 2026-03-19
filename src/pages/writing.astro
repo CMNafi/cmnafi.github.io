@@ -1,19 +1,19 @@
 ---
-import { getCollection } from 'astro:content';
-import InterestsPageContent from '@/components/InterestsPageContent.astro';
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import { interestSections } from '@/data/interests';
+import { siteConfig } from '@/config/site';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime()
-);
-
-const groups = interestSections.map((section) => ({
-  ...section,
-  posts: posts.filter((post) => section.categories.includes(post.data.category))
-}));
+const destination = '/interests/writing';
+const canonical = new URL(destination, siteConfig.siteUrl).toString();
 ---
 
-<BaseLayout title="Interests" description="Cricket, books, movies, writing, and the blog archive arranged as timelines.">
-  <InterestsPageContent groups={groups} />
-</BaseLayout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${destination}`} />
+    <link rel="canonical" href={canonical} />
+    <title>Redirecting to Writing & Ideas</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href={destination}>Writing &amp; Ideas</a>.</p>
+  </body>
+</html>

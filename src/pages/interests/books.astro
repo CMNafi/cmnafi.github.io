@@ -1,0 +1,213 @@
+---
+import { getCollection } from 'astro:content';
+import InterestWorldNav from '@/components/InterestWorldNav.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatDate } from '@/utils/format';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Books')).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+
+const spineWidths = ['2.6rem', '2rem', '3rem', '2.3rem', '1.9rem'];
+const spineColors = ['#6d4324', '#8d5f33', '#a36f3a', '#5c3a21', '#c18647'];
+---
+
+<BaseLayout title="Books" description="A warm reading-room page for books, reading notes, and the posts that sit on the shelf.">
+  <div class="books-world">
+    <section class="page-section books-world__hero">
+      <div class="books-world__copy">
+        <p class="eyebrow">Books</p>
+        <h1>A shelf for the books that stay open in the mind.</h1>
+        <p>
+          This room is quieter by design. Each post sits on the shelf like a spine: compact from a distance, richer once
+          you pull it closer.
+        </p>
+      </div>
+
+      <InterestWorldNav current="books" />
+    </section>
+
+    <section class="page-section panel books-world__shelf-panel">
+      <div class="books-world__shelf-head">
+        <p class="eyebrow">Shelf</p>
+        <h2>Every spine opens into a note.</h2>
+      </div>
+
+      <div class="books-world__shelf">
+        {posts.map((post, index) => (
+          <a
+            class="books-world__spine"
+            href={`/blog/${post.slug}`}
+            style={`--spine-width:${spineWidths[index % spineWidths.length]}; --spine-color:${spineColors[index % spineColors.length]};`}
+          >
+            <span>{post.data.title}</span>
+            <small>{formatDate(post.data.publishedAt)}</small>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="page-section books-world__cards">
+      <div class="books-world__cards-grid">
+        {posts.map((post) => (
+          <a class="panel books-world__card" href={`/blog/${post.slug}`}>
+            <p>{formatDate(post.data.publishedAt)}</p>
+            <h3>{post.data.title}</h3>
+            <p>{post.data.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .books-world {
+    position: relative;
+    padding-bottom: 4rem;
+  }
+
+  .books-world::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 16% 14%, rgba(226, 186, 116, 0.14), transparent 24%),
+      linear-gradient(180deg, rgba(54, 35, 24, 0.96), rgba(19, 13, 10, 0.99));
+  }
+
+  .books-world > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .books-world__hero {
+    display: grid;
+    gap: 1rem;
+    padding-top: clamp(2rem, 6vw, 4rem);
+  }
+
+  .books-world__copy {
+    max-width: 40rem;
+  }
+
+  .books-world__copy h1,
+  .books-world__shelf-head h2,
+  .books-world__card h3 {
+    margin: 0;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    letter-spacing: -0.05em;
+  }
+
+  .books-world__copy h1 {
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    line-height: 0.96;
+    margin-bottom: 0.7rem;
+  }
+
+  .books-world__copy p,
+  .books-world__card p {
+    margin: 0;
+    color: rgba(246, 231, 202, 0.8);
+    line-height: 1.8;
+  }
+
+  .books-world__shelf-panel {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border-color: rgba(226, 186, 116, 0.2);
+    background:
+      linear-gradient(180deg, rgba(74, 45, 24, 0.92), rgba(27, 18, 12, 0.97)),
+      radial-gradient(circle at top, rgba(226, 186, 116, 0.1), transparent 64%);
+  }
+
+  .books-world__shelf-head h2 {
+    font-size: clamp(1.9rem, 4vw, 2.7rem);
+    line-height: 1.03;
+  }
+
+  .books-world__shelf {
+    display: flex;
+    align-items: end;
+    gap: 0.45rem;
+    min-height: 15rem;
+    padding: 1.4rem 1.2rem 0;
+    border-radius: 24px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 30%),
+      linear-gradient(180deg, rgba(48, 28, 17, 0.3), rgba(48, 28, 17, 0.3)) 0 100% / 100% 0.7rem no-repeat;
+    overflow-x: auto;
+  }
+
+  .books-world__spine {
+    width: var(--spine-width);
+    min-width: var(--spine-width);
+    height: 11rem;
+    border-radius: 12px 12px 4px 4px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--spine-color) 82%, white 8%), var(--spine-color));
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    padding: 0.8rem 0.45rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.2);
+    transition: transform 180ms ease, filter 180ms ease;
+  }
+
+  .books-world__spine:hover,
+  .books-world__spine:focus-visible {
+    transform: translateY(-6px);
+    filter: brightness(1.08);
+    outline: none;
+  }
+
+  .books-world__spine span,
+  .books-world__spine small {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .books-world__spine span {
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    color: #f7ebd2;
+    line-height: 1.2;
+  }
+
+  .books-world__spine small {
+    color: rgba(247, 235, 210, 0.66);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .books-world__cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.9rem;
+  }
+
+  .books-world__card {
+    display: grid;
+    gap: 0.55rem;
+    padding: 1rem;
+    border-radius: 22px;
+    border-color: rgba(226, 186, 116, 0.18);
+    background: linear-gradient(180deg, rgba(57, 35, 20, 0.94), rgba(23, 16, 11, 0.97));
+  }
+
+  .books-world__card p:first-child {
+    color: rgba(226, 186, 116, 0.88);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .books-world__shelf {
+      min-height: 12rem;
+      padding-inline: 0.85rem;
+    }
+  }
+</style>

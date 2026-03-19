@@ -1,0 +1,65 @@
+---
+import { interestSections, type InterestWorldId } from '@/data/interests';
+
+interface Props {
+  current?: InterestWorldId | 'timeline';
+}
+
+const { current } = Astro.props;
+---
+
+<nav class="interest-world-nav" aria-label="Interest worlds">
+  {interestSections.map((section) => (
+    <a
+      class:list={['interest-world-nav__link', section.id === current && 'is-active']}
+      href={section.href}
+      style={`--world-accent:${section.palette.accent}; --world-border:${section.palette.border};`}
+      aria-current={section.id === current ? 'page' : undefined}
+    >
+      {section.title}
+    </a>
+  ))}
+  <a
+    class:list={['interest-world-nav__link', 'interest-world-nav__link--timeline', current === 'timeline' && 'is-active']}
+    href="/blog"
+    style="--world-accent:#e2ba74; --world-border:rgba(226, 186, 116, 0.24);"
+    aria-current={current === 'timeline' ? 'page' : undefined}
+  >
+    <span>Timeline</span>
+  </a>
+</nav>
+
+<style>
+  .interest-world-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .interest-world-nav__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 0.95rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(243, 237, 225, 0.72);
+    background: rgba(255, 255, 255, 0.03);
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
+  }
+
+  .interest-world-nav__link:hover,
+  .interest-world-nav__link:focus-visible,
+  .interest-world-nav__link.is-active {
+    color: var(--text);
+    border-color: var(--world-border, rgba(255, 255, 255, 0.14));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+    transform: translateY(-1px);
+    outline: none;
+  }
+
+  .interest-world-nav__link.is-active {
+    color: var(--world-accent, var(--text));
+  }
+ </style>

@@ -1,12 +1,12 @@
 export const siteConfig = {
   title: 'C M Nafi',
-  description: 'A personal website tracing a global journey into fintech, now shaped by work as a Solutions Specialist at Dasseti.',
+  description: 'A personal website organized as four interest worlds, a running timeline, and the work that connects them.',
   author: 'C M Nafi',
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',
   nav: [
     { id: 'journey', label: 'Journey', href: '/story' },
-    { id: 'interests', label: 'Interests', href: '/interests' },
+    { id: 'timeline', label: 'Timeline', href: '/blog' },
     { id: 'projects', label: 'Projects', href: '/projects' },
     { id: 'connect', label: 'Connect', href: '/connect' }
   ],
@@ -16,10 +16,11 @@ export const siteConfig = {
     { label: 'Email', href: 'mailto:nafi@cmnafi.com' }
   ],
   footerLinks: [
-    { label: 'About', href: '/about' },
-    { label: 'Interests', href: '/interests' },
+    { label: 'Journey', href: '/story' },
+    { label: 'Timeline', href: '/blog' },
+    { label: 'Projects', href: '/projects' },
     { label: 'Connect', href: '/connect' },
-    { label: 'RSS', href: '/blog' }
+    { label: 'Interests', href: '/interests' }
   ]
 } as const;
 

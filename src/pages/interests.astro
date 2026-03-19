@@ -1,19 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
-import InterestsPageContent from '@/components/InterestsPageContent.astro';
+import InterestHub from '@/components/InterestHub.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { interestSections } from '@/data/interests';
-
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime()
-);
-
-const groups = interestSections.map((section) => ({
-  ...section,
-  posts: posts.filter((post) => section.categories.includes(post.data.category))
-}));
 ---
 
-<BaseLayout title="Interests" description="Cricket, books, movies, writing, and the blog archive arranged as timelines.">
-  <InterestsPageContent groups={groups} />
+<BaseLayout title="Interests" description="Four interest worlds, each with its own visual language and archive.">
+  <InterestHub />
 </BaseLayout>
