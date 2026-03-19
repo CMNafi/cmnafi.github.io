@@ -40,6 +40,26 @@
     "sourceStatus": "imported"
   },
   {
+    "id": "highlight-swat-final-over-defense",
+    "title": "Seven to defend against Royal Phoenix",
+    "category": "Tournament story",
+    "date": "2024-10-01",
+    "team": "SWAT",
+    "summary": "A pressure match story built around 29 off 24 and a final over that had to be reclaimed in real time.",
+    "description": "Royal Phoenix needed 7 from the final over chasing 96. The over started well, then tilted because of wides, then swung back again when Amit Saha fell to a top edge and the last ball became a dot. It is the kind of win that says more about reset, nerve, and squad belief than any clean scorecard ever could.",
+    "statLine": "29 off 24 · Final-over wicket · SWAT won by 3 runs",
+    "scorecardUrl": null,
+    "media": [
+      {
+        "type": "blog",
+        "label": "Read the full match story",
+        "url": "/blog/seven-to-defend-swat-vs-royal-phoenix"
+      }
+    ],
+    "tags": ["swat", "pressure finish", "match story"],
+    "sourceStatus": "manually added"
+  },
+  {
     "id": "highlight-swat-7-wickets",
     "title": "7 wickets in the fall series",
     "category": "Best spells",
