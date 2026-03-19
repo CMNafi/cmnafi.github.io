@@ -1,0 +1,381 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'journey'>;
+  step: string;
+  Content: any;
+}
+
+const { entry, step, Content } = Astro.props;
+const anchorHref = `/story#${entry.slug}`;
+---
+
+<article
+  id={entry.slug}
+  class:list={['panel', 'journey-chapter', entry.data.featured && 'journey-chapter--featured']}
+  data-journey-stop
+  data-stop-id={entry.slug}
+  data-stop-step={step}
+  data-stop-place={entry.data.place}
+  data-stop-organization={entry.data.organization}
+  data-stop-summary={entry.data.summary}
+  data-stop-map-x={entry.data.mapX}
+  data-stop-map-y={entry.data.mapY}
+  data-stop-period={entry.data.period}
+  data-stop-theme={entry.data.theme}
+  data-stop-atlas={entry.data.atlasLabel}
+  data-stop-featured={String(entry.data.featured)}
+  data-stop-link={anchorHref}
+  tabindex="-1"
+>
+  <div class="journey-chapter__glow" aria-hidden="true"></div>
+  <header class="journey-chapter__header">
+    <div class="journey-chapter__step-wrap">
+      <span class="journey-chapter__step">{step}</span>
+      <span class="journey-chapter__period">{entry.data.period}</span>
+    </div>
+
+    <div class="journey-chapter__intro">
+      <p class="journey-chapter__eyebrow">{entry.data.theme}</p>
+      <div class="journey-chapter__headline">
+        <div>
+          <h2>{entry.data.place}</h2>
+          <p class="journey-chapter__organization">{entry.data.organization}</p>
+        </div>
+        <a class="journey-chapter__anchor" href={anchorHref}>{entry.data.deepLinkLabel}</a>
+      </div>
+      <p class="journey-chapter__summary">{entry.data.summary}</p>
+      <div class="journey-chapter__meta">
+        <span>{entry.data.region}</span>
+        <span>{entry.data.atlasLabel}</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="journey-chapter__layout">
+    <div class="journey-chapter__body prose">
+      <Content />
+    </div>
+
+    <aside class="journey-chapter__aside">
+      {(entry.data.statLabel || entry.data.statValue) && (
+        <div class="journey-chapter__stat">
+          {entry.data.statLabel && <p>{entry.data.statLabel}</p>}
+          {entry.data.statValue && <strong>{entry.data.statValue}</strong>}
+        </div>
+      )}
+
+      {entry.data.pullQuote && (
+        <blockquote class="journey-chapter__quote">
+          <p>{entry.data.pullQuote}</p>
+        </blockquote>
+      )}
+
+      {entry.data.highlights.length > 0 && (
+        <div class="journey-chapter__highlights">
+          <p>Signals</p>
+          <ul>
+            {entry.data.highlights.map((highlight) => <li>{highlight}</li>)}
+          </ul>
+        </div>
+      )}
+    </aside>
+  </div>
+</article>
+
+<style>
+  .journey-chapter {
+    position: relative;
+    display: grid;
+    gap: 1.6rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(40px) scale(0.985);
+    transition:
+      opacity 420ms ease,
+      transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      border-color 220ms ease,
+      box-shadow 220ms ease,
+      background 220ms ease;
+    scroll-margin-top: 10.5rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top right, rgba(211, 154, 89, 0.08), transparent 30%);
+  }
+
+  .journey-chapter.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .journey-chapter.is-active {
+    border-color: rgba(211, 154, 89, 0.28);
+    box-shadow:
+      0 28px 68px rgba(0, 0, 0, 0.28),
+      0 0 0 1px rgba(211, 154, 89, 0.08);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025)),
+      radial-gradient(circle at top right, rgba(211, 154, 89, 0.14), transparent 36%);
+  }
+
+  .journey-chapter--featured {
+    padding: clamp(1.5rem, 3vw, 2.35rem);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.022)),
+      radial-gradient(circle at top right, rgba(211, 154, 89, 0.18), transparent 34%),
+      radial-gradient(circle at bottom left, rgba(126, 134, 157, 0.12), transparent 30%);
+  }
+
+  .journey-chapter__glow {
+    position: absolute;
+    inset: auto auto -4rem -4rem;
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(211, 154, 89, 0.18), transparent 72%);
+    filter: blur(28px);
+    opacity: 0;
+    transition: opacity 260ms ease;
+    pointer-events: none;
+  }
+
+  .journey-chapter.is-active .journey-chapter__glow,
+  .journey-chapter--featured .journey-chapter__glow {
+    opacity: 1;
+  }
+
+  .journey-chapter__header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.1rem;
+    align-items: start;
+  }
+
+  .journey-chapter__step-wrap {
+    display: grid;
+    gap: 0.45rem;
+    align-content: start;
+  }
+
+  .journey-chapter__step,
+  .journey-chapter__period,
+  .journey-chapter__meta span,
+  .journey-chapter__anchor,
+  .journey-chapter__stat p,
+  .journey-chapter__highlights p {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    font-family: 'Manrope', sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+  }
+
+  .journey-chapter__step {
+    justify-content: center;
+    width: 3.1rem;
+    height: 3.1rem;
+    color: var(--accent);
+    background: rgba(211, 154, 89, 0.12);
+    border: 1px solid rgba(211, 154, 89, 0.28);
+    font-weight: 700;
+  }
+
+  .journey-chapter__period,
+  .journey-chapter__meta span,
+  .journey-chapter__anchor,
+  .journey-chapter__stat p,
+  .journey-chapter__highlights p {
+    padding: 0.34rem 0.72rem;
+    color: rgba(243, 237, 225, 0.7);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(243, 237, 225, 0.08);
+  }
+
+  .journey-chapter__intro {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .journey-chapter__eyebrow,
+  .journey-chapter__organization {
+    margin: 0;
+    color: var(--accent);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+
+  .journey-chapter__headline {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: start;
+  }
+
+  .journey-chapter__headline h2 {
+    margin: 0 0 0.35rem;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+  }
+
+  .journey-chapter--featured .journey-chapter__headline h2 {
+    font-size: clamp(2.4rem, 5vw, 3.5rem);
+  }
+
+  .journey-chapter__anchor {
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
+    white-space: nowrap;
+  }
+
+  .journey-chapter__anchor:hover,
+  .journey-chapter__anchor:focus-visible {
+    color: var(--text);
+    border-color: rgba(211, 154, 89, 0.22);
+    background: rgba(211, 154, 89, 0.08);
+    transform: translateY(-1px);
+    outline: none;
+  }
+
+  .journey-chapter__summary {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(243, 237, 225, 0.82);
+    max-width: 55rem;
+  }
+
+  .journey-chapter__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .journey-chapter__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(250px, 0.72fr);
+    gap: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .journey-chapter__body {
+    min-width: 0;
+  }
+
+  .journey-chapter__body :global(p),
+  .journey-chapter__body :global(li) {
+    color: rgba(243, 237, 225, 0.76);
+    line-height: 1.85;
+  }
+
+  .journey-chapter__body :global(p:first-child) {
+    margin-top: 0;
+  }
+
+  .journey-chapter__body :global(h2),
+  .journey-chapter__body :global(h3) {
+    margin-top: 1.7rem;
+    margin-bottom: 0.6rem;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    letter-spacing: -0.04em;
+  }
+
+  .journey-chapter__body :global(h2) {
+    font-size: clamp(1.55rem, 3vw, 2.1rem);
+  }
+
+  .journey-chapter__body :global(h3) {
+    font-size: 1.2rem;
+  }
+
+  .journey-chapter__body :global(ul) {
+    padding-left: 1.1rem;
+  }
+
+  .journey-chapter__aside {
+    display: grid;
+    gap: 0.85rem;
+    align-content: start;
+  }
+
+  .journey-chapter__stat,
+  .journey-chapter__quote,
+  .journey-chapter__highlights {
+    margin: 0;
+    padding: 1rem 1.05rem;
+    border-radius: 22px;
+    border: 1px solid rgba(243, 237, 225, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .journey-chapter__stat strong {
+    display: block;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .journey-chapter__quote p {
+    margin: 0;
+    color: rgba(243, 237, 225, 0.92);
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+
+  .journey-chapter__highlights ul {
+    margin: 0.65rem 0 0;
+    padding-left: 1rem;
+    color: rgba(243, 237, 225, 0.74);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 900px) {
+    .journey-chapter__layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .journey-chapter {
+      padding: 1rem;
+      border-radius: 24px;
+      scroll-margin-top: 11.75rem;
+    }
+
+    .journey-chapter__header,
+    .journey-chapter__headline {
+      grid-template-columns: 1fr;
+      flex-direction: column;
+    }
+
+    .journey-chapter__step-wrap {
+      grid-auto-flow: column;
+      justify-content: start;
+      align-items: center;
+    }
+
+    .journey-chapter__step {
+      width: 2.7rem;
+      height: 2.7rem;
+    }
+
+    .journey-chapter__headline h2 {
+      font-size: clamp(1.8rem, 8vw, 2.4rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .journey-chapter,
+    .journey-chapter__anchor,
+    .journey-chapter__glow {
+      transition: none;
+    }
+  }
+</style>
+

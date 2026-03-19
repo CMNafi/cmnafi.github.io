@@ -59,4 +59,28 @@ const now = defineCollection({
   })
 });
 
-export const collections = { blog, projects, now };
+const journey = defineCollection({
+  type: 'content',
+  schema: z.object({
+    order: z.number(),
+    place: z.string(),
+    organization: z.string(),
+    region: z.string(),
+    period: z.string(),
+    theme: z.string(),
+    summary: z.string(),
+    mapX: z.string(),
+    mapY: z.string(),
+    featured: z.boolean().default(false),
+    deepLinkLabel: z.string(),
+    atlasLabel: z.string(),
+    highlights: z.array(z.string()).default([]),
+    pullQuote: z.string().optional(),
+    statLabel: z.string().optional(),
+    statValue: z.string().optional()
+  })
+});
+
+export const collections = { blog, projects, now, journey };
+
+
