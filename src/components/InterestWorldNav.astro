@@ -1,5 +1,5 @@
 ---
-import { publicInterestSections, type InterestWorldId } from '@/data/interests';
+import { interestSections, type InterestWorldId } from '@/data/interests';
 
 interface Props {
   current?: InterestWorldId | 'timeline';
@@ -9,7 +9,7 @@ const { current } = Astro.props;
 ---
 
 <nav class="interest-world-nav" aria-label="Interest worlds">
-  {publicInterestSections.map((section) => (
+  {interestSections.map((section) => (
     <a
       class:list={['interest-world-nav__link', section.id === current && 'is-active']}
       href={section.href}

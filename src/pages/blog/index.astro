@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import InterestWorldNav from '@/components/InterestWorldNav.astro';
 import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
-import { getInterestSectionByCategory, publicInterestSections } from '@/data/interests';
+import { getInterestSectionByCategory, interestSections } from '@/data/interests';
 import { formatDate } from '@/utils/format';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft && ['Books', 'Cricket'].includes(data.category))).sort(
@@ -15,7 +15,7 @@ const timelineEntries = posts.map((post) => ({
   section: getInterestSectionByCategory(post.data.category)
 }));
 
-const filters = ['All', ...publicInterestSections.map((section) => section.id)];
+const filters = ['All', ...interestSections.map((section) => section.id)];
 ---
 
 <BaseLayout title="Timeline" description="The public archive now stays simple: cricket writing and the books I have kept notes on.">
@@ -44,7 +44,7 @@ const filters = ['All', ...publicInterestSections.map((section) => section.id)];
       <div class="timeline-page__controls" role="tablist" aria-label="Timeline world filters">
         {filters.map((filter, index) => (
           <button class="directory-tab" role="tab" aria-selected={index === 0 ? 'true' : 'false'} data-timeline-filter={filter}>
-            {filter === 'All' ? 'All entries' : publicInterestSections.find((section) => section.id === filter)?.title}
+            {filter === 'All' ? 'All entries' : interestSections.find((section) => section.id === filter)?.title}
           </button>
         ))}
 
