@@ -1,9 +1,17 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 ---
 
 <BaseLayout title="About" description="A short introduction to C M Nafi and the intent behind the site.">
+  <SiteTreeHeader
+    branch="connect"
+    currentHref="/about"
+    title="About"
+    description="A short explanation of the site, the public system behind it, and the kind of work it is meant to hold."
+  />
+
   <section class="page-section narrow-stack">
     <SectionHeading
       eyebrow="About"

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 
 const appCards = [
   {
@@ -32,6 +33,13 @@ const appCards = [
 ---
 
 <BaseLayout title="Apps" description="Focused product surfaces for research, filings, and public experiments.">
+  <SiteTreeHeader
+    branch="projects"
+    currentHref="/apps"
+    title="Apps"
+    description="Focused tools that sit under the projects branch and turn product thinking into repeatable workflows."
+  />
+
   <section class="page-section apps-overview">
     <div class="panel apps-intro">
       <SectionHeading

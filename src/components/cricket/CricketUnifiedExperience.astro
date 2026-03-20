@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import { siteConfig } from '@/config/site';
 import { cricketPlayerProfile, matchesByDate } from '@/data/cricket';
 import { fromLegacyMatchRecord } from '@/lib/cricket-stats';
@@ -36,6 +37,13 @@ const archiveLinks = [
   description="A cleaner cricket page with a field view, a live match log, and an admin-only entry flow backed by Supabase."
 >
   <div class="cricket-simple-page">
+    <SiteTreeHeader
+      branch="interests"
+      currentHref="/adventures/cricket"
+      title="Cricket Archive"
+      description="The deeper cricket branch with the field view, live log, admin console, and the longer statistical archive."
+    />
+
     <section class="page-section cricket-simple-hero">
       <div class="cricket-simple-hero__copy">
         <p class="eyebrow">Interests / Cricket</p>

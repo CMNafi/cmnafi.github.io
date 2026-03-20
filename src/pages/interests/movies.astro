@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import InterestWorldNav from '@/components/InterestWorldNav.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import { formatDate } from '@/utils/format';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Movies')).sort(
@@ -11,6 +12,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft && data.cat
 
 <BaseLayout title="Movies" description="A cinema-dark page for film notes, ticket-stub entries, and posts built around scenes and atmosphere.">
   <div class="movies-world">
+    <SiteTreeHeader
+      branch="interests"
+      currentHref="/interests/movies"
+      title="Movies"
+      description="The cinema branch for film notes, reviews, and the scenes that keep their voltage."
+    />
+
     <section class="page-section movies-world__hero">
       <div class="movies-world__copy">
         <p class="eyebrow">Movies</p>

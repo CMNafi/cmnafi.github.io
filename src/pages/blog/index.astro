@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import InterestWorldNav from '@/components/InterestWorldNav.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import { getInterestSectionByCategory, interestSections } from '@/data/interests';
 import { formatDate } from '@/utils/format';
 
@@ -19,6 +20,13 @@ const filters = ['All', ...interestSections.map((section) => section.id)];
 
 <BaseLayout title="Timeline" description="A reverse-chronological timeline where cricket, books, movies, and writing all feed into one stream.">
   <div class="timeline-page">
+    <SiteTreeHeader
+      branch="timeline"
+      currentHref="/blog"
+      title="Timeline"
+      description="The unified reverse-chronological feed where every interest world rolls into one readable archive."
+    />
+
     <section class="page-section timeline-page__hero">
       <div class="timeline-page__intro">
         <p class="eyebrow">Timeline</p>

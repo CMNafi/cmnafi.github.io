@@ -4,6 +4,7 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import DirectoryCard from '@/components/DirectoryCard.astro';
 import HighlightCard from '@/components/cricket/HighlightCard.astro';
 import CricketTimeline from '@/components/cricket/CricketTimeline.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import { cricketHighlights, cricketTimeline } from '@/data/cricket';
 
 const adventureCategories = [
@@ -41,6 +42,13 @@ const timelinePreview = cricketTimeline.slice(-3).reverse();
   title="Adventures"
   description="A premium home for lived experience: cricket, future travel notes, and memory-rich archives built to expand over time."
 >
+  <SiteTreeHeader
+    branch="interests"
+    currentHref="/adventures"
+    title="Adventures"
+    description="A broader lived-experience branch that sits under Interests, with cricket as the first major archive and room for travel and field notes later."
+  />
+
   <section class="page-section page-section-hero">
     <div class="panel adventures-landing-hero">
       <p class="eyebrow">Adventures</p>

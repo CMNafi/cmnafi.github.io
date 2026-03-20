@@ -1,9 +1,17 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 ---
 
 <BaseLayout title="Connect" description="Public professional context, working interests, and the kinds of intros worth making.">
+  <SiteTreeHeader
+    branch="connect"
+    currentHref="/connect"
+    title="Connect"
+    description="The public-facing branch for collaboration, context, and the easiest way into conversation."
+  />
+
   <section class="page-section">
     <SectionHeading
       eyebrow="Professional layer"

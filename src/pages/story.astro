@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import JourneyStoryChapter from '@/components/JourneyStoryChapter.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 const routeCountries = ['Bangladesh', 'China', 'USA'];
@@ -47,6 +48,13 @@ const routePoints = chapters
 
 <BaseLayout title="Journey" description="A longform route through Bangladesh, China, and the United States, tracing the path into finance, product systems, and public work.">
   <div class="journey-story">
+    <SiteTreeHeader
+      branch="journey"
+      currentHref="/story"
+      title="Journey"
+      description="The long-form route through Bangladesh, China, and the United States, tracing how place turned into discipline, education, and work."
+    />
+
     <section class="page-section journey-hero">
       <div class="journey-hero__copy">
         <p class="eyebrow">Journey</p>

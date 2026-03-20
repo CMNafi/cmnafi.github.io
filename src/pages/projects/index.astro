@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
 
 const projects = (await getCollection('projects')).sort((a, b) => b.data.priority - a.data.priority);
@@ -11,6 +12,13 @@ const liveCount = projects.filter((project) => project.data.status === 'live').l
 ---
 
 <BaseLayout title="Projects" description="Data tools, research utilities, and public experiments in motion.">
+  <SiteTreeHeader
+    branch="projects"
+    currentHref="/projects"
+    title="Projects"
+    description="The main build library for tools, experiments, and product systems that deserve a longer public life."
+  />
+
   <section class="page-section">
     <SectionHeading
       eyebrow="Public builds"

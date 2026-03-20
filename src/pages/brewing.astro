@@ -2,6 +2,7 @@
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import { formatDate } from '@/utils/format';
 
 const current = await getEntry('now', 'current');
@@ -73,6 +74,12 @@ const siteLinks = [
 
 <BaseLayout title="Brewing" description="Active builds, live tools, and in-progress experiments from C M Nafi.">
   <div class="brewing-page">
+    <SiteTreeHeader
+      branch="connect"
+      currentHref="/brewing"
+      title="Brewing"
+      description="The lab-style branch for active builds, experiments, and work that is still becoming itself."
+    />
 
     <!-- ═══════════ HERO ═══════════ -->
     <section class="page-section brewing-hero-section">

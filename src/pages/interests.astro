@@ -1,8 +1,15 @@
 ---
 import InterestHub from '@/components/InterestHub.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 ---
 
 <BaseLayout title="Interests" description="Four interest worlds, each with its own visual language and archive.">
+  <SiteTreeHeader
+    branch="interests"
+    currentHref="/interests"
+    title="Interests"
+    description="The hub for the site’s themed worlds: cricket, books, movies, and writing, each with its own room and archive behavior."
+  />
   <InterestHub />
 </BaseLayout>
