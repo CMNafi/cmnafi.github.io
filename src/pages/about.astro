@@ -1,18 +1,10 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 ---
 
 <BaseLayout title="About" description="Why this site exists and why I wanted it to sound like a person instead of a personal brand.">
-  <SiteTreeHeader
-    branch="connect"
-    currentHref="/about"
-    title="About"
-    description="Why I wanted this site to feel more like a life in motion than a tidy personal brand."
-  />
-
-  <section class="page-section narrow-stack">
+<section class="page-section narrow-stack">
     <SectionHeading
       eyebrow="About"
       title="A personal site, not a personal brand"

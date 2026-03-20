@@ -1,15 +1,8 @@
 ---
 import InterestHub from '@/components/InterestHub.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 ---
 
 <BaseLayout title="Interests" description="The two public shelves that feel most like me right now: books and cricket.">
-  <SiteTreeHeader
-    branch="interests"
-    currentHref="/interests"
-    title="Interests"
-    description="The part of the site I want people to start with now: books on one side, cricket on the other."
-  />
-  <InterestHub />
+<InterestHub />
 </BaseLayout>

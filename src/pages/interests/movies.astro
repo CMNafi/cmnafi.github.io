@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import InterestWorldNav from '@/components/InterestWorldNav.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import { formatDate } from '@/utils/format';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Movies')).sort(
@@ -12,14 +11,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft && data.cat
 
 <BaseLayout title="Movies" description="Film notes for the movies whose mood, scenes, or performances stayed with me.">
   <div class="movies-world">
-    <SiteTreeHeader
-      branch="interests"
-      currentHref="/interests/movies"
-      title="Movies"
-      description="Film notes for the movies I keep replaying in my head."
-    />
-
-    <section class="page-section movies-world__hero">
+<section class="page-section movies-world__hero">
       <div class="movies-world__copy">
         <p class="eyebrow">Movies</p>
         <h1>The films I keep carrying around after the credits.</h1>

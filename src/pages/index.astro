@@ -125,8 +125,8 @@ const dashboardNav = [
             <img src="/profile.jpg" alt="C M Nafi" width="90" height="90" loading="eager" />
           </div>
           <div class="identity-text">
-            <h1 class="paddock-headline">Hi, I\'m Nafi.</h1>
-            <p class="paddock-job">WELCOME TO MY WEBSITE</p>
+            <h1 class="paddock-headline">C M Nafi</h1>
+            <p class="paddock-job">TECHNOLOGY · FINANCE · WRITING</p>
           </div>
         </div>
 
@@ -136,7 +136,7 @@ const dashboardNav = [
         
         <nav class="paddock-nav" aria-label="Circuit Mapping">
           {dashboardNav.map((item) => (
-            <a href={item.href} class="nav-node">[{item.label}]</a>
+            <a href={item.href} class="nav-node">{item.label}</a>
           ))}
         </nav>
 
@@ -291,13 +291,15 @@ const dashboardNav = [
     border-left: 2px solid rgba(255,255,255,0.1); padding-left: 1rem;
   }
 
-  .paddock-nav { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; justify-content: center; width: 100%; }
+  .paddock-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem; justify-content: center; width: 100%; }
   .nav-node {
-    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.8rem;
     color: var(--text-silver); text-decoration: none; letter-spacing: 0.05em;
+    padding: 0.4rem 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 999px;
+    background: rgba(255,255,255,0.03);
     transition: all 0.3s;
   }
-  .nav-node:hover { color: var(--text-white); text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+  .nav-node:hover { color: var(--text-white); border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); }
 
   .paddock-cta {
     align-self: center; /* Center to match oval logic */

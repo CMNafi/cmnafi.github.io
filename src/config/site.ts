@@ -6,8 +6,9 @@ export const siteConfig = {
   email: 'nafi@cmnafi.com',
   nav: [
     { id: 'story', label: 'My Story', href: '/story' },
-    { id: 'books', label: 'Books', href: '/interests/books' },
-    { id: 'cricket', label: 'Cricket', href: '/interests/cricket' },
+    { id: 'interests', label: 'Interests', href: '/interests' },
+    { id: 'projects', label: 'Projects', href: '/projects' },
+    { id: 'field-notes', label: 'Field Notes', href: '/projects/field-notes' },
     { id: 'connect', label: 'Connect', href: '/connect' }
   ],
   socialLinks: [
@@ -16,10 +17,9 @@ export const siteConfig = {
     { label: 'Email', href: 'mailto:nafi@cmnafi.com' }
   ],
   footerLinks: [
-    { label: 'Story', href: '/story' },
-    { label: 'About', href: '/about' },
-    { label: 'Books', href: '/interests/books' },
-    { label: 'Cricket', href: '/interests/cricket' },
+    { label: 'My Story', href: '/story' },
+    { label: 'Interests', href: '/interests' },
+    { label: 'Projects', href: '/projects' },
     { label: 'Field Notes', href: '/projects/field-notes' },
     { label: 'Connect', href: '/connect' }
   ]

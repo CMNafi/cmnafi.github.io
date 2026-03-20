@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
-
 const capabilities = [
   'Resolve firms through SEC CIK and FINRA CRD identifiers.',
   'Pull the latest Form ADV operating profile and most recent 13F cover page data.',
@@ -22,14 +20,7 @@ const workflow = [
   title="Manager Search"
   description="A manager research tool for getting from a name to the filings, holdings, and context I actually want to see."
 >
-  <SiteTreeHeader
-    branch="projects"
-    currentHref="/apps/manager-search"
-    title="Manager Search"
-    description="A finance research tool built around the workflow I wanted to move faster."
-  />
-
-  <section class="page-section app-detail">
+<section class="page-section app-detail">
     <div class="panel app-detail__hero">
       <SectionHeading
         eyebrow="Manager research"

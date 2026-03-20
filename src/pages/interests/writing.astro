@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import InterestWorldNav from '@/components/InterestWorldNav.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import { formatDate } from '@/utils/format';
 
 const posts = (await getCollection(
@@ -16,14 +15,7 @@ const posts = (await getCollection(
   description="Essays, notebook pages, and the thoughts that did not fit anywhere else on the site."
 >
   <div class="writing-world">
-    <SiteTreeHeader
-      branch="interests"
-      currentHref="/interests/writing"
-      title="Writing"
-      description="The notebook side of the site: essays, drafts, product notes, and the thoughts that needed paper first."
-    />
-
-    <section class="page-section writing-world__hero">
+<section class="page-section writing-world__hero">
       <div class="writing-world__copy">
         <p class="eyebrow">Writing</p>
         <h1>Notebook pages, essays, and thoughts that would not leave me alone.</h1>

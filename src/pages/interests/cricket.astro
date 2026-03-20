@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import InterestWorldNav from '@/components/InterestWorldNav.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import { formatDate } from '@/utils/format';
 
 const cricketPosts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Cricket')).sort(
@@ -28,14 +27,7 @@ const mappedPosts = cricketPosts.map((post, index) => {
   description="A cricket world built like a ground from above, with match stories sitting on the inner circle."
 >
   <div class="cricket-world">
-    <SiteTreeHeader
-      branch="interests"
-      currentHref="/interests/cricket"
-      title="Cricket World"
-      description="The themed cricket room, with match stories arranged on the field before you drop into the deeper archive."
-    />
-
-    <section class="page-section cricket-world__hero">
+<section class="page-section cricket-world__hero">
       <div class="cricket-world__copy">
         <p class="eyebrow">Cricket world</p>
         <h1>The ground becomes the archive.</h1>

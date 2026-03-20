@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
-
 const appCards = [
   {
     eyebrow: 'Flagship app',
@@ -33,14 +31,7 @@ const appCards = [
 ---
 
 <BaseLayout title="Apps" description="The projects that already have a clearer interface or are closest to becoming usable tools.">
-  <SiteTreeHeader
-    branch="projects"
-    currentHref="/apps"
-    title="Apps"
-    description="The more interface-heavy side of my project work."
-  />
-
-  <section class="page-section apps-overview">
+<section class="page-section apps-overview">
     <div class="panel apps-intro">
       <SectionHeading
         eyebrow="Apps"

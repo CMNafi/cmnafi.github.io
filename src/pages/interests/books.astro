@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import InterestWorldNav from '@/components/InterestWorldNav.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import { formatDate } from '@/utils/format';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Books')).sort(
@@ -23,14 +22,7 @@ const shelfRows = Array.from({ length: Math.ceil(posts.length / 6) }, (_, rowInd
 
 <BaseLayout title="Books" description="A warm reading-room page for books, reading notes, and the posts that sit on the shelf.">
   <div class="books-world">
-    <SiteTreeHeader
-      branch="interests"
-      currentHref="/interests/books"
-      title="Books"
-      description="The reading-room branch of the site, where books sit on the shelf first and unfold into fuller notes."
-    />
-
-    <section class="page-section books-world__hero">
+<section class="page-section books-world__hero">
       <div class="books-world__copy">
         <p class="eyebrow">Books</p>
         <h1>A shelf for the books that stay open in the mind.</h1>

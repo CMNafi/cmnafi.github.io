@@ -6,7 +6,6 @@ import FeaturedPostCard from '@/components/FeaturedPostCard.astro';
 import NowPanel from '@/components/NowPanel.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
 import StatusBadge from '@/components/StatusBadge.astro';
 import { homepageConfig } from '@/config/homepage';
 import directories from '@/data/directories.json';
@@ -47,14 +46,7 @@ const directoryItems = directories
 
 <BaseLayout title="Now" description="A personal snapshot of what I am building, reading, and thinking about right now.">
   <div class="home-story home-v2 personal-home brewing-page">
-    <SiteTreeHeader
-      branch="connect"
-      currentHref="/now"
-      title="Now"
-      description="A personal snapshot of what I am building, reading, thinking about, and paying attention to right now."
-    />
-
-    <section class="page-section page-section-hero">
+<section class="page-section page-section-hero">
       <SectionHeading
         eyebrow={`Updated ${formatDate(current.data.updatedAt)}`}
         title="Now"
