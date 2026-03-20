@@ -173,14 +173,15 @@ const dashboardNav = [
         
         <div class="winner-list-layout">
           <div class="winner-list-col">
-            <h4 class="list-heading">Start Here</h4>
-            {shelfItems.map(item => (
-              <a href={item.href} class="list-link">
-                <span class="list-dot" style={`color: ${item.color}`}></span>
-                {item.longName || item.name}
-              </a>
-            ))}
+            <h4 class="list-heading" id="winner-sub-links-title">Start Here</h4>
+            <div id="winner-sub-links"></div>
           </div>
+          
+          <div class="winner-list-col">
+            <h4 class="list-heading">Telemetry Times</h4>
+            <div id="winner-scoreboard"></div>
+          </div>
+
           <div class="winner-list-col">
             <h4 class="list-heading">Explore</h4>
             {dashboardNav.map(item => (
@@ -406,9 +407,11 @@ const dashboardNav = [
   .winner-list-layout { display: flex; gap: 4rem; justify-content: center; margin-bottom: 2.5rem; text-align: left; }
   .winner-list-col { display: flex; flex-direction: column; gap: 0.8rem; min-width: 140px; }
   .list-heading { font-family: 'DM Sans'; font-size: 0.8rem; color: var(--text-silver); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
-  .list-link { font-family: 'Sora'; font-size: 1.1rem; color: var(--text-white); text-decoration: none; display: flex; align-items: center; gap: 0.8rem; transition: 0.2s; font-weight: 600; }
-  .list-link:hover { transform: translateX(5px); color: var(--accent-teal); }
-  .list-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; flex-shrink: 0; }
+  :global(.list-link) { font-family: 'Sora'; font-size: 1.1rem; color: var(--text-white); text-decoration: none; display: flex; align-items: center; gap: 0.8rem; transition: 0.2s; font-weight: 600; margin-bottom: 0.4rem; }
+  :global(.list-link:hover) { transform: translateX(5px); color: var(--accent-teal); }
+  :global(.list-dot) { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; flex-shrink: 0; }
+  
+  #winner-sub-links { display: flex; flex-direction: column; gap: 0.4rem; }
 
   .winner-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
 
@@ -429,6 +432,24 @@ const dashboardNav = [
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const subpagesData = {
+      story: [
+        { label: 'Timeline', href: '/story' },
+        { label: 'Now', href: '/story/now' },
+        { label: 'Notes', href: '/story/notes' }
+      ],
+      interests: [
+        { label: 'Overview', href: '/interests' },
+        { label: 'Cricket', href: '/interests/cricket' },
+        { label: 'Books', href: '/interests/books' }
+      ],
+      projects: [
+        { label: 'Overview', href: '/projects' },
+        { label: 'Apps', href: '/projects/apps' },
+        { label: 'Field Notes', href: '/projects/field-notes' }
+      ]
+    };
+
     const carsLayer = document.getElementById('cars-layer');
     const path = document.getElementById('master-path'); 
     const startBtn = document.getElementById('start-race-btn');
@@ -492,7 +513,7 @@ const dashboardNav = [
           lateralCurrent: lateralOffset,
           drifting: 0,
           // Slower pacing matching user request, majestic and calm telemetry
-          basePace: 1.0 + Math.random() * 0.8 
+          basePace: 15.0 + Math.random() * 2.0 
         };
       });
       document.getElementById('winner-screen').classList.remove('show');
@@ -506,9 +527,9 @@ const dashboardNav = [
           const ptNext = path.getPointAtLength((i + 1) % totalLength);
           const angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x);
           
-          let color = '#F3F3F1';
-          if (i % 600 === 0) color = '#0EA5B7'; // Teal markers
-          else if (i % 450 === 0) color = '#E10600'; // Red markers
+          let color = '#dddd1bff';
+          if (i % 600 === 0) color = '#06c1d6ff'; // Teal markers
+          else if (i % 450 === 0) color = '#753902ce'; // Red markers
           
           // Outer edge light
           const l1 = document.createElement('div');
@@ -534,7 +555,16 @@ const dashboardNav = [
       if (isRacing) return;
       startBtn.disabled = true;
       startBtn.innerHTML = `<span class="cta-pulse" style="animation:none; opacity:0.5;"></span> FOLLOWING THE LINE`;
-      cars.forEach(c => c.el.classList.add('is-racing'));
+      
+      // Reset full telemetry for all
+      window.raceWinner = null;
+      document.getElementById('winner-sub-links').innerHTML = '';
+      document.getElementById('winner-scoreboard').innerHTML = '';
+      cars.forEach(c => {
+         c.finished = false;
+         c.lapTime = null;
+         c.el.classList.add('is-racing');
+      });
       
       const overlay = document.getElementById('countdown-overlay');
       const fixtures = document.querySelectorAll('.light-fixture');
@@ -565,7 +595,7 @@ const dashboardNav = [
           void storyEl.offsetWidth;
           storyEl.classList.add('flash');
           lit++;
-          setTimeout(lightUp, 1000); 
+          setTimeout(lightUp, 400); 
         } else {
           // F1 randomized hold interval before green drop
           const pause = 500 + Math.random() * 1500;
@@ -607,62 +637,96 @@ const dashboardNav = [
 
     function raceLoop() {
       if (!isRacing) return;
-      let winnerFound = null;
+      
+      let allFinished = true;
 
       cars.forEach(car => {
-        // Reduced max speeds, longer drifting per request
-        if (Math.random() < 0.02) car.basePace += (Math.random() * 0.5 - 0.2);
-        if (car.basePace < 0.8) car.basePace = 0.8;
-        if (car.basePace > 3.0) car.basePace = 3.0;
+        if (!car.finished) {
+           allFinished = false;
 
-        car.drifting += (Math.random() * 2 - 1) * 0.2;
-        car.lateralCurrent += car.drifting;
-        if (car.lateralCurrent < -55) { car.lateralCurrent = -55; car.drifting *= -0.5; }
-        if (car.lateralCurrent > 55) { car.lateralCurrent = 55; car.drifting *= -0.5; }
+           // Dynamic bursts for overtaking
+           if (Math.random() < 0.08) car.basePace += (Math.random() * 3.0 - 1.2);
+           
+           // Slipstream boost if behind another car by < 400px
+           const slipstream = cars.some(other => other !== car && other.distanceTraveled > car.distanceTraveled && (other.distanceTraveled - car.distanceTraveled) < 400);
+           if (slipstream) car.basePace += 0.8;
 
-        car.progressRaw += car.basePace;
-        car.distanceTraveled += car.basePace;
-        if (car.progressRaw >= totalLength) car.progressRaw -= totalLength;
+           if (car.basePace < 12.0) car.basePace = 12.0;
+           if (car.basePace > 22.0) car.basePace = 22.0;
 
-        // Strictly prevent 'tbd' from ever winning per user request
-        if (car.distanceTraveled >= raceDistance && !winnerFound && car.id !== 'tbd') {
-           winnerFound = car;
+           car.drifting += (Math.random() * 2 - 1) * 0.2;
+           car.lateralCurrent += car.drifting;
+           if (car.lateralCurrent < -55) { car.lateralCurrent = -55; car.drifting *= -0.5; }
+           if (car.lateralCurrent > 55) { car.lateralCurrent = 55; car.drifting *= -0.5; }
+
+           car.progressRaw += car.basePace;
+           car.distanceTraveled += car.basePace;
+           if (car.progressRaw >= totalLength) car.progressRaw -= totalLength;
+
+           if (car.distanceTraveled >= raceDistance) {
+              car.finished = true;
+              car.lapTime = performance.now() - raceStartTime;
+              const formatTime = (t) => {
+                 const tSec = Math.floor(t / 1000);
+                 const strMin = Math.floor(tSec / 60).toString().padStart(2, '0');
+                 const strSec = (tSec % 60).toString().padStart(2, '0');
+                 const strMs = Math.floor(t % 1000).toString().padStart(3, '0');
+                 return `${strMin}:${strSec}.${strMs}`;
+              };
+              car.formattedTime = formatTime(car.lapTime);
+
+              if (!window.raceWinner && car.id !== 'tbd') {
+                 window.raceWinner = car;
+                 document.getElementById('winner-time').textContent = car.formattedTime;
+                 document.getElementById('winner-clever-msg').textContent = `START WITH ${car.name.toUpperCase()}.`;
+                 document.getElementById('winner-name').textContent = car.name.toUpperCase();
+                 document.getElementById('winner-name').style.color = car.color;
+                 document.getElementById('winner-sub').textContent = car.blurb;
+
+                 // Render subpages links
+                 const linksContainer = document.getElementById('winner-sub-links');
+                 const subpages = subpagesData[car.id] || [];
+                 document.getElementById('winner-sub-links-title').textContent = `${car.name} subpages`;
+                 linksContainer.innerHTML = subpages.map(link => `
+                    <a href="${link.href}" class="list-link">
+                       <span class="list-dot" style="color: ${car.color}"></span>
+                       ${link.label}
+                    </a>
+                 `).join('');
+              }
+
+              // Update Scoreboard row
+              const scoreboard = document.getElementById('winner-scoreboard');
+              const row = document.createElement('div');
+              row.className = 'scoreboard-row';
+              row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; gap:0.5rem; font-family:"DM Sans"; font-size:0.9rem; color:var(--text-silver); margin-bottom:0.4rem;';
+              row.innerHTML = `
+                 <span style="display:flex; align-items:center; gap:0.4rem;"><span style="width:8px; height:8px; border-radius:50%; background:${car.color}; box-shadow:0 0 10px ${car.color};"></span> ${car.name}</span>
+                 <span style="font-family:monospace; border:1px solid rgba(255,255,255,0.05); padding:0.1rem 0.4rem; border-radius:4px; font-size:0.8rem; background:rgba(0,0,0,0.3);">${car.formattedTime}</span>
+              `;
+              scoreboard.appendChild(row);
+           }
+
+           const pt = path.getPointAtLength(car.progressRaw);
+           const ptNext = path.getPointAtLength((car.progressRaw + 1) % totalLength);
+           const angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x);
+           const x = pt.x + Math.cos(angle - Math.PI/2) * car.lateralCurrent;
+           const y = pt.y + Math.sin(angle - Math.PI/2) * car.lateralCurrent;
+           car.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+           car.el.style.zIndex = Math.floor(y);
         }
-
-        const pt = path.getPointAtLength(car.progressRaw);
-        const ptNext = path.getPointAtLength((car.progressRaw + 1) % totalLength);
-        const angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x);
-        
-        const x = pt.x + Math.cos(angle - Math.PI/2) * car.lateralCurrent;
-        const y = pt.y + Math.sin(angle - Math.PI/2) * car.lateralCurrent;
-
-        car.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
-        car.el.style.zIndex = Math.floor(y);
       });
 
-      if (winnerFound) {
-        isRacing = false;
-        cancelAnimationFrame(raceReqId);
-        
-        const durationRaw = performance.now() - raceStartTime;
-        const totalSec = Math.floor(durationRaw / 1000);
-        const strMin = Math.floor(totalSec / 60).toString().padStart(2, '0');
-        const strSec = (totalSec % 60).toString().padStart(2, '0');
-        const strMs = Math.floor(durationRaw % 1000).toString().padStart(3, '0');
-        
-        document.getElementById('winner-time').textContent = `${strMin}:${strSec}.${strMs}`;
-        document.getElementById('winner-clever-msg').textContent = `START WITH ${winnerFound.name.toUpperCase()}.`;
-        document.getElementById('winner-name').textContent = winnerFound.name.toUpperCase();
-        document.getElementById('winner-name').style.color = winnerFound.color;
-        document.getElementById('winner-sub').textContent = winnerFound.blurb;
-
-        setTimeout(() => {
-          document.getElementById('winner-screen').classList.add('show');
-          startBtn.disabled = false;
-          startBtn.innerHTML = `<span class="cta-pulse"></span> FOLLOW MY LINE`;
-        }, 300);
+      if (allFinished) {
+         isRacing = false;
+         cancelAnimationFrame(raceReqId);
+         setTimeout(() => {
+           document.getElementById('winner-screen').classList.add('show');
+           startBtn.disabled = false;
+           startBtn.innerHTML = `<span class="cta-pulse"></span> FOLLOW MY LINE`;
+         }, 300);
       } else {
-        raceReqId = requestAnimationFrame(raceLoop);
+         raceReqId = requestAnimationFrame(raceLoop);
       }
     }
   });
