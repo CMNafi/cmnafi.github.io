@@ -39,6 +39,7 @@ const chapters = await Promise.all(
 
 const defaultChapter = chapters[0];
 const featuredCount = chapters.filter((chapter) => chapter.entry.data.featured).length;
+const featuredChapters = chapters.filter((chapter) => chapter.entry.data.featured);
 const svgWidth = 1000;
 const svgHeight = 620;
 const routePoints = chapters
@@ -63,22 +64,51 @@ const routePoints = chapters
           This page is the longform version of the story: the movement from Bangladesh to China to the United States,
           and the capabilities that formed along the way.
         </p>
+        <div class="journey-hero__stats">
+          <span>{chapters.length} chapters</span>
+          <span>{featuredCount} feature stops</span>
+          <span>{routeCountries.join(' -> ')}</span>
+        </div>
         <a class="button button-primary" href={`#${defaultChapter.entry.slug}`}>Start with the first chapter</a>
       </div>
 
       <aside class="panel journey-hero__card">
-        <p class="eyebrow">Route</p>
+        <p class="eyebrow">Route system</p>
         <h2>{routeCountries.join(' -> ')}</h2>
         <p>
-          Nine stops. Two defining feature chapters. One continuous line from early foundations to product, finance,
-          and public work.
+          The page is organized like a route system: overview first, live map next, then the full chapter stream below.
         </p>
-        <div class="journey-hero__stats">
-          <span>{chapters.length} chapters</span>
-          <span>{featuredCount} feature stops</span>
-          <span>UWC to BlackRock</span>
+        <div class="journey-hero__feature-list">
+          {featuredChapters.map((chapter) => (
+            <a class="journey-hero__feature-card" href={`#${chapter.entry.slug}`}>
+              <strong>{chapter.entry.data.organization}</strong>
+              <span>{chapter.entry.data.place}</span>
+            </a>
+          ))}
         </div>
       </aside>
+    </section>
+
+    <section class="page-section journey-outline">
+      <div class="journey-outline__heading">
+        <p class="eyebrow">Chapter index</p>
+        <h2>The route is easier to read when the stops are visible upfront.</h2>
+        <p>
+          Each chapter acts like a small destination card before it opens into the full story below.
+        </p>
+      </div>
+      <div class="journey-outline__grid">
+        {chapters.map(({ entry, step }) => (
+          <a class:list={['panel', 'journey-outline__card', entry.data.featured && 'journey-outline__card--featured']} href={`#${entry.slug}`}>
+            <span class="journey-outline__step">{step}</span>
+            <div>
+              <p class="journey-outline__theme">{entry.data.theme}</p>
+              <h3>{entry.data.place}</h3>
+              <p>{entry.data.organization}</p>
+            </div>
+          </a>
+        ))}
+      </div>
     </section>
 
     <section class="page-section journey-rail-wrap" id="journey-route">
@@ -284,6 +314,39 @@ const routePoints = chapters
     line-height: 1.02;
   }
 
+  .journey-hero__feature-list {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .journey-hero__feature-card {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(243, 237, 225, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .journey-hero__feature-card:hover,
+  .journey-hero__feature-card:focus-visible {
+    transform: translateY(-1px);
+    border-color: rgba(211, 154, 89, 0.24);
+    background: rgba(255, 255, 255, 0.05);
+    outline: none;
+  }
+
+  .journey-hero__feature-card strong {
+    color: var(--text);
+    font-size: 0.98rem;
+  }
+
+  .journey-hero__feature-card span {
+    color: rgba(243, 237, 225, 0.62);
+    font-size: 0.88rem;
+  }
+
   .journey-hero__stats,
   .journey-rail__stats,
   .journey-rail__active-meta {
@@ -318,6 +381,89 @@ const routePoints = chapters
     color: rgba(243, 237, 225, 0.68);
     border: 1px solid rgba(243, 237, 225, 0.08);
     background: rgba(255, 255, 255, 0.03);
+  }
+
+  .journey-outline {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .journey-outline__heading {
+    max-width: 42rem;
+  }
+
+  .journey-outline__heading h2,
+  .journey-outline__card h3 {
+    margin: 0;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    letter-spacing: -0.05em;
+  }
+
+  .journey-outline__heading h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.02;
+    margin-bottom: 0.6rem;
+  }
+
+  .journey-outline__heading p:last-child,
+  .journey-outline__card p {
+    margin: 0;
+    color: rgba(243, 237, 225, 0.74);
+    line-height: 1.7;
+  }
+
+  .journey-outline__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 0.9rem;
+  }
+
+  .journey-outline__card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+    padding: 1rem 1.05rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top right, rgba(211, 154, 89, 0.08), transparent 34%);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .journey-outline__card:hover,
+  .journey-outline__card:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(211, 154, 89, 0.24);
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.22);
+    outline: none;
+  }
+
+  .journey-outline__card--featured {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.022)),
+      radial-gradient(circle at top right, rgba(211, 154, 89, 0.14), transparent 34%);
+  }
+
+  .journey-outline__step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.7rem;
+    height: 2.7rem;
+    border-radius: 999px;
+    color: var(--accent);
+    background: rgba(211, 154, 89, 0.12);
+    border: 1px solid rgba(211, 154, 89, 0.24);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .journey-outline__theme {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    margin-bottom: 0.35rem;
   }
 
   .journey-rail-wrap {
