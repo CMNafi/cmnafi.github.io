@@ -1,4 +1,4 @@
-﻿---
+---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
@@ -163,17 +163,11 @@ const archiveLinks = [
   <datalist id="cricket-story-slugs">{storySlugs.map((slug) => <option value={slug} />)}</datalist>
   <script id="cricket-stats-env" type="application/json" set:html={JSON.stringify({ supabaseUrl, supabaseAnonKey, adminEmail })}></script>
   <script id="cricket-stats-fallback" type="application/json" set:html={JSON.stringify(fallbackGames)}></script>
-  <script type="module">
+  <script>
     import { createClient } from '@supabase/supabase-js';
-    import { aggregateCricketGames, cricketEntryFields, emptyCricketGame, normalizeCricketGame, toSupabasePayload } from '../../../lib/cricket-stats';
+    import { aggregateCricketGames, cricketEntryFields, emptyCricketGame, normalizeCricketGame, toSupabasePayload } from '../../lib/cricket-stats';
 
-    const env = JSON.parse(document.getElementById('cricket-stats-env')?.textContent || '{}');
-    const fallbackGames = JSON.parse(document.getElementById('cricket-stats-fallback')?.textContent || '[]').map(normalizeCricketGame);
-    const banner = document.querySelector('[data-cricket-stats-banner]');
-    const summaryRoot = document.querySelector('[data-summary-cards]');
-    const filtersRoot = document.querySelector('[data-cricket-filters]');
-    const logRoot = document.querySelector('[data-cricket-log]');
-    const adminRoot = document.querySelector('[data-cricket-admin]');
+    let env = {}, fallbackGames = [], banner, summaryRoot, filtersRoot, logRoot, adminRoot;
 
     const formatValue = (value, digits = 0, fallback = 'Open') => {
       if (value === null || value === undefined || Number.isNaN(value)) return fallback;
@@ -324,8 +318,12 @@ const archiveLinks = [
     };
 
     const renderAdmin = () => {
-      if (!adminRoot) return;
+      if (!adminRoot) {
+        console.error('renderAdmin ABORTED: adminRoot is null!');
+        return;
+      }
       if (!state.supabase) {
+        console.log('renderAdmin: Supabase missing, rendering message.');
         adminRoot.innerHTML = `<div class="panel cricket-admin__message"><h3>Supabase setup required</h3><p>Add <code>PUBLIC_SUPABASE_URL</code> and <code>PUBLIC_SUPABASE_ANON_KEY</code> to enable the live admin workflow.</p></div>`;
         return;
       }
@@ -544,36 +542,38 @@ const archiveLinks = [
     };
 
     const refreshFromSupabase = async () => {
-      if (!state.supabase) {
+      try {
+        if (!state.supabase) {
+          state.isFallback = true;
+          state.games = fallbackGames;
+          renderPublic();
+          renderAdmin();
+          setBanner('<p>Showing the seeded archive while the live connection is unavailable.</p>', 'warning');
+          return;
+        }
+        const { data, error } = await state.supabase.from('cricket_games').select('*').eq('is_archived', false).order('game_date', { ascending: false });
+        if (error) {
+          state.isFallback = true;
+          state.games = fallbackGames;
+          renderPublic();
+          renderAdmin();
+          setBanner(`<p>Supabase is configured, but the live table could not be read yet.</p><small>${error.message}</small>`, 'warning');
+          return;
+        }
+        state.isFallback = false;
+        state.games = (data || []).map(normalizeCricketGame);
+        renderPublic();
+        renderAdmin();
+        setBanner('<p>Live Supabase data connected.</p>', 'success');
+      } catch (err) {
+        console.error('refreshFromSupabase crashed:', err);
+        setBanner(`<p>Supabase interaction failed.</p><small>${err.message || err}</small>`, 'warning');
         state.isFallback = true;
         state.games = fallbackGames;
         renderPublic();
         renderAdmin();
-        setBanner('<p>Showing the seeded archive while the live connection is unavailable.</p>', 'warning');
-        return;
       }
-      const { data, error } = await state.supabase.from('cricket_games').select('*').eq('is_archived', false).order('game_date', { ascending: false });
-      if (error) {
-        state.isFallback = true;
-        state.games = fallbackGames;
-        renderPublic();
-        renderAdmin();
-        setBanner(`<p>Supabase is configured, but the live table could not be read yet.</p><small>${error.message}</small>`, 'warning');
-        return;
-      }
-      state.isFallback = false;
-      state.games = (data || []).map(normalizeCricketGame);
-      renderPublic();
-      renderAdmin();
-      setBanner('<p>Live Supabase data connected.</p>', 'success');
     };
-
-    filtersRoot?.querySelectorAll('input, select').forEach((field) => {
-      field.addEventListener('input', () => {
-        state.filteredGames = filterGames(state.games);
-        renderLog(state.filteredGames);
-      });
-    });
 
     const initSupabase = async () => {
       if (!(env.supabaseUrl && env.supabaseAnonKey)) {
@@ -590,7 +590,38 @@ const archiveLinks = [
       await refreshFromSupabase();
     };
 
-    initSupabase();
+    const start = async () => {
+      const envNode = document.getElementById('cricket-stats-env');
+      if (envNode) env = JSON.parse(envNode.textContent || '{}');
+      
+      const fallbackNode = document.getElementById('cricket-stats-fallback');
+      if (fallbackNode) {
+        fallbackGames = JSON.parse(fallbackNode.textContent || '[]').map(normalizeCricketGame);
+        state.games = fallbackGames;
+        state.filteredGames = fallbackGames;
+      }
+
+      banner = document.querySelector('[data-cricket-stats-banner]');
+      summaryRoot = document.querySelector('[data-summary-cards]');
+      filtersRoot = document.querySelector('[data-cricket-filters]');
+      logRoot = document.querySelector('[data-cricket-log]');
+      adminRoot = document.querySelector('[data-cricket-admin]');
+
+      filtersRoot?.querySelectorAll('input, select').forEach((field) => {
+        field.addEventListener('input', () => {
+          state.filteredGames = filterGames(state.games);
+          renderLog(state.filteredGames);
+        });
+      });
+
+      await initSupabase();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start);
+    } else {
+      start();
+    }
   </script>
 
   <style>
