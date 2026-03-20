@@ -7,7 +7,7 @@ const blog = defineCollection({
     description: z.string(),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
-    category: z.enum(['Books', 'Movies', 'Games', 'Cricket', 'Essays', 'Notes', 'Travel', 'Product']),
+    category: z.enum(['Books', 'Movies', 'Games', 'Cricket', 'Essays', 'Notes', 'Travel', 'Product', 'Finance', 'Tech']),
     tags: z.array(z.string()).default([]),
     coverImage: z.string().optional(),
     excerpt: z.string(),

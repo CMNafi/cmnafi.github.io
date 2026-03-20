@@ -6,7 +6,7 @@ import { interestSections } from '@/data/interests';
   <div class="interest-hub__intro">
     <p class="eyebrow">Interests</p>
     <h1>Choose a world.</h1>
-    <p>Four entry points. Nothing extra in the way.</p>
+    <p>Six entry points. Nothing extra in the way.</p>
   </div>
 
   <div class="interest-hub__grid">
@@ -37,6 +37,26 @@ import { interestSections } from '@/data/interests';
           {section.id === 'movies' && (
             <div class="interest-hub__ticket">
               <span></span>
+            </div>
+          )}
+          {section.id === 'finance' && (
+            <div class="interest-hub__candles">
+              <span class="interest-hub__candle interest-hub__candle--up" style="--h:62%"></span>
+              <span class="interest-hub__candle interest-hub__candle--down" style="--h:45%"></span>
+              <span class="interest-hub__candle interest-hub__candle--up" style="--h:78%"></span>
+              <span class="interest-hub__candle interest-hub__candle--down" style="--h:38%"></span>
+              <span class="interest-hub__candle interest-hub__candle--up" style="--h:55%"></span>
+            </div>
+          )}
+          {section.id === 'tech' && (
+            <div class="interest-hub__pcb">
+              <span class="interest-hub__trace interest-hub__trace--h"></span>
+              <span class="interest-hub__trace interest-hub__trace--v"></span>
+              <span class="interest-hub__node" style="--nx:22%;--ny:28%"></span>
+              <span class="interest-hub__node" style="--nx:50%;--ny:50%"></span>
+              <span class="interest-hub__node" style="--nx:78%;--ny:28%"></span>
+              <span class="interest-hub__node" style="--nx:35%;--ny:72%"></span>
+              <span class="interest-hub__node" style="--nx:65%;--ny:72%"></span>
             </div>
           )}
         </div>
@@ -80,7 +100,7 @@ import { interestSections } from '@/data/interests';
 
   .interest-hub__grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
   }
 
@@ -269,6 +289,98 @@ import { interestSections } from '@/data/interests';
     inset: 0.95rem 1rem;
     border: 1px dashed rgba(255, 210, 195, 0.22);
     border-radius: 14px;
+  }
+
+  /* Finance: candlestick chart */
+  .interest-hub__candles {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 7.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .interest-hub__candle {
+    display: block;
+    width: 0.7rem;
+    height: var(--h);
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .interest-hub__candle::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    top: -0.5rem;
+    bottom: -0.5rem;
+  }
+
+  .interest-hub__candle--up {
+    background: rgba(74, 237, 196, 0.7);
+  }
+
+  .interest-hub__candle--up::before {
+    background: rgba(74, 237, 196, 0.4);
+  }
+
+  .interest-hub__candle--down {
+    background: rgba(255, 99, 99, 0.6);
+  }
+
+  .interest-hub__candle--down::before {
+    background: rgba(255, 99, 99, 0.35);
+  }
+
+  /* Tech: circuit board */
+  .interest-hub__pcb {
+    position: relative;
+    width: min(15rem, 100%);
+    aspect-ratio: 1.4;
+    border-radius: 14px;
+    background: rgba(8, 12, 8, 0.6);
+    border: 1px solid rgba(57, 255, 20, 0.12);
+    overflow: hidden;
+  }
+
+  .interest-hub__trace {
+    position: absolute;
+    background: rgba(57, 255, 20, 0.18);
+  }
+
+  .interest-hub__trace--h {
+    width: 80%;
+    height: 1px;
+    top: 50%;
+    left: 10%;
+  }
+
+  .interest-hub__trace--v {
+    width: 1px;
+    height: 70%;
+    top: 15%;
+    left: 50%;
+  }
+
+  .interest-hub__node {
+    position: absolute;
+    left: var(--nx);
+    top: var(--ny);
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: rgba(57, 255, 20, 0.5);
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+    transform: translate(-50%, -50%);
+  }
+
+  @media (max-width: 1100px) {
+    .interest-hub__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (max-width: 920px) {

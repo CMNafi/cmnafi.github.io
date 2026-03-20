@@ -1,0 +1,406 @@
+---
+import { getCollection } from 'astro:content';
+import InterestWorldNav from '@/components/InterestWorldNav.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
+import { formatDate } from '@/utils/format';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Finance')).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+
+const placeholderCandles = [
+  { height: 58, type: 'up' },
+  { height: 34, type: 'down' },
+  { height: 72, type: 'up' },
+  { height: 26, type: 'down' },
+  { height: 48, type: 'up' },
+  { height: 40, type: 'down' },
+  { height: 66, type: 'up' },
+  { height: 30, type: 'down' },
+  { height: 54, type: 'up' },
+  { height: 44, type: 'down' },
+  { height: 62, type: 'up' },
+  { height: 20, type: 'down' },
+];
+
+const candleData = posts.length > 0
+  ? posts.map((post, i) => ({
+      post,
+      height: 30 + ((post.data.title.length * 7) % 50),
+      type: i % 2 === 0 ? 'up' : 'down'
+    }))
+  : [];
+---
+
+<BaseLayout
+  title="Finance"
+  description="Markets, models, and the patterns that surface when you watch the numbers long enough."
+>
+  <div class="finance-world">
+    <SiteTreeHeader
+      branch="interests"
+      currentHref="/interests/finance"
+      title="Finance"
+      description="The trading-floor branch of the site, where market thinking meets personal writing."
+    />
+
+    <section class="page-section finance-world__hero">
+      <div class="finance-world__copy">
+        <p class="eyebrow">Finance</p>
+        <h1>Markets tell stories in numbers.</h1>
+        <p>
+          This section tracks the patterns, models, and market moments worth writing about — the kind
+          that teach you something whether they go up or down.
+        </p>
+      </div>
+
+      <InterestWorldNav current="finance" />
+    </section>
+
+    <section class="page-section panel finance-world__stage">
+      <div class="finance-world__stage-head">
+        <p class="eyebrow">Chart</p>
+        <h2>Price action, rendered.</h2>
+        <p>Each candle is a post. Green moved up, red pulled back.</p>
+      </div>
+
+      <div class="finance-world__chart">
+        <div class="finance-world__chart-grid" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+
+        {posts.length > 0 ? (
+          <div class="finance-world__candles">
+            {candleData.map(({ post, height, type }) => (
+              <a
+                class={`finance-world__candle finance-world__candle--${type}`}
+                href={`/blog/${post.slug}`}
+                style={`--candle-h:${height}%;`}
+              >
+                <span class="finance-world__wick"></span>
+                <span class="finance-world__body"></span>
+                <span class="finance-world__tooltip">
+                  <strong>{post.data.title}</strong>
+                  <small>{formatDate(post.data.publishedAt)}</small>
+                  <span>{post.data.description}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="finance-world__candles finance-world__candles--empty">
+            {placeholderCandles.map(({ height, type }) => (
+              <div
+                class={`finance-world__candle finance-world__candle--${type} finance-world__candle--placeholder`}
+                style={`--candle-h:${height}%;`}
+              >
+                <span class="finance-world__wick"></span>
+                <span class="finance-world__body"></span>
+              </div>
+            ))}
+            <div class="finance-world__empty-label">
+              <p>The chart is waiting for data.</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+
+    {posts.length > 0 && (
+      <section class="page-section finance-world__ledger">
+        <div class="finance-world__ledger-grid">
+          {posts.map((post) => (
+            <a class="panel finance-world__ledger-card" href={`/blog/${post.slug}`}>
+              <p>{formatDate(post.data.publishedAt)}</p>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .finance-world {
+    position: relative;
+    padding-bottom: 4rem;
+  }
+
+  .finance-world::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(74, 237, 196, 0.1), transparent 24%),
+      radial-gradient(circle at 80% 20%, rgba(74, 237, 196, 0.06), transparent 20%),
+      linear-gradient(180deg, rgba(10, 18, 32, 0.98), rgba(6, 10, 20, 0.99));
+  }
+
+  .finance-world > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .finance-world__hero {
+    display: grid;
+    gap: 1rem;
+    padding-top: clamp(2rem, 6vw, 4rem);
+  }
+
+  .finance-world__copy {
+    max-width: 42rem;
+  }
+
+  .finance-world__copy h1,
+  .finance-world__stage h2,
+  .finance-world__ledger-card h3 {
+    margin: 0;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    letter-spacing: -0.05em;
+  }
+
+  .finance-world__copy h1 {
+    font-size: clamp(3rem, 6vw, 4.8rem);
+    line-height: 0.95;
+    margin-bottom: 0.7rem;
+  }
+
+  .finance-world__copy p,
+  .finance-world__stage p,
+  .finance-world__ledger-card p {
+    margin: 0;
+    color: rgba(224, 247, 239, 0.78);
+    line-height: 1.78;
+  }
+
+  .finance-world__stage {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.2rem, 3vw, 1.7rem);
+    background:
+      linear-gradient(180deg, rgba(12, 22, 40, 0.92), rgba(6, 10, 20, 0.97)),
+      radial-gradient(circle at top, rgba(74, 237, 196, 0.06), transparent 62%);
+    border-color: rgba(74, 237, 196, 0.18);
+  }
+
+  .finance-world__stage h2 {
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    line-height: 1.02;
+    margin-bottom: 0.6rem;
+  }
+
+  .finance-world__chart {
+    position: relative;
+    width: 100%;
+    min-height: 22rem;
+    border-radius: 24px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 80%, rgba(74, 237, 196, 0.04), transparent 54%),
+      linear-gradient(180deg, rgba(8, 14, 26, 0.96), rgba(4, 8, 16, 0.98));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .finance-world__chart-grid {
+    position: absolute;
+    inset: 1.5rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .finance-world__chart-grid span {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: rgba(74, 237, 196, 0.08);
+  }
+
+  .finance-world__candles {
+    position: relative;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    gap: clamp(0.4rem, 2vw, 1rem);
+    height: 100%;
+    min-height: 18rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .finance-world__candle {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: clamp(1rem, 3vw, 1.8rem);
+    height: var(--candle-h);
+    cursor: pointer;
+  }
+
+  .finance-world__wick {
+    position: absolute;
+    width: 2px;
+    top: -0.6rem;
+    bottom: -0.6rem;
+    border-radius: 1px;
+  }
+
+  .finance-world__body {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    position: relative;
+    z-index: 1;
+    transition: filter 180ms ease, transform 180ms ease;
+  }
+
+  .finance-world__candle--up .finance-world__wick {
+    background: rgba(74, 237, 196, 0.35);
+  }
+
+  .finance-world__candle--up .finance-world__body {
+    background: linear-gradient(180deg, rgba(74, 237, 196, 0.85), rgba(74, 237, 196, 0.6));
+    box-shadow: 0 0 12px rgba(74, 237, 196, 0.15);
+  }
+
+  .finance-world__candle--down .finance-world__wick {
+    background: rgba(255, 99, 99, 0.3);
+  }
+
+  .finance-world__candle--down .finance-world__body {
+    background: linear-gradient(180deg, rgba(255, 99, 99, 0.75), rgba(255, 99, 99, 0.5));
+    box-shadow: 0 0 12px rgba(255, 99, 99, 0.1);
+  }
+
+  .finance-world__candle--placeholder {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .finance-world__candle:not(.finance-world__candle--placeholder):hover .finance-world__body {
+    filter: brightness(1.2);
+    transform: scaleY(1.04);
+  }
+
+  .finance-world__tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 1.2rem);
+    transform: translateX(-50%) translateY(0.3rem);
+    width: min(16rem, 62vw);
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.8rem 0.9rem;
+    border-radius: 16px;
+    background: rgba(6, 10, 20, 0.96);
+    border: 1px solid rgba(74, 237, 196, 0.2);
+    color: #e0f7ef;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    z-index: 10;
+  }
+
+  .finance-world__tooltip strong {
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-size: 1.08rem;
+  }
+
+  .finance-world__tooltip small {
+    color: rgba(74, 237, 196, 0.66);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.68rem;
+  }
+
+  .finance-world__tooltip span {
+    color: rgba(224, 247, 239, 0.78);
+    line-height: 1.6;
+    font-size: 0.92rem;
+  }
+
+  .finance-world__candle:not(.finance-world__candle--placeholder):hover .finance-world__tooltip,
+  .finance-world__candle:not(.finance-world__candle--placeholder):focus-visible .finance-world__tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .finance-world__candles--empty {
+    position: relative;
+  }
+
+  .finance-world__empty-label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 5;
+  }
+
+  .finance-world__empty-label p {
+    padding: 0.7rem 1.2rem;
+    border-radius: 16px;
+    background: rgba(6, 10, 20, 0.88);
+    border: 1px solid rgba(74, 237, 196, 0.16);
+    color: rgba(74, 237, 196, 0.8);
+    font-size: 0.88rem;
+    letter-spacing: 0.06em;
+  }
+
+  .finance-world__ledger {
+    margin-top: 1.25rem;
+  }
+
+  .finance-world__ledger-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.9rem;
+  }
+
+  .finance-world__ledger-card {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1rem;
+    border-radius: 22px;
+    border-color: rgba(74, 237, 196, 0.16);
+    background: linear-gradient(180deg, rgba(12, 22, 40, 0.92), rgba(6, 10, 20, 0.96));
+    transition: transform 180ms ease, border-color 180ms ease;
+  }
+
+  .finance-world__ledger-card:hover,
+  .finance-world__ledger-card:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgba(74, 237, 196, 0.28);
+    outline: none;
+  }
+
+  .finance-world__ledger-card > p:first-child {
+    color: rgba(74, 237, 196, 0.86);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 720px) {
+    .finance-world__chart {
+      min-height: 18rem;
+      border-radius: 18px;
+    }
+
+    .finance-world__candles {
+      min-height: 14rem;
+    }
+
+    .finance-world__tooltip {
+      width: min(13rem, 70vw);
+    }
+  }
+</style>

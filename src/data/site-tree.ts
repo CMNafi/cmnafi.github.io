@@ -72,11 +72,13 @@ export const siteBranches: SiteBranch[] = [
     eyebrow: 'Interests branch',
     description: 'Themed worlds for the parts of life and culture that deserve their own visual language.',
     nodes: [
-      { label: 'Interests Hub', href: '/interests', description: 'The four-doorway hub into the site’s themed worlds.' },
+      { label: 'Interests Hub', href: '/interests', description: 'The six-world hub into the themed rooms.' },
       { label: 'Cricket', href: '/interests/cricket', description: 'The story-led cricket world and match writing layer.' },
       { label: 'Books', href: '/interests/books', description: 'The reading-room shelf for books and reflective notes.' },
-      { label: 'Movies', href: '/interests/movies', description: 'The film room for reviews, scenes, and cinema notes.' },
       { label: 'Writing & Ideas', href: '/interests/writing', description: 'The journal-style room for essays, systems, and fragments.' },
+      { label: 'Movies & Shows', href: '/interests/movies', description: 'The cinema room for films, series, and scenes that stay.' },
+      { label: 'Finance', href: '/interests/finance', description: 'The trading floor for markets, models, and price action.' },
+      { label: 'Tech', href: '/interests/tech', description: 'The circuit board for systems, tools, and builds.' },
       { label: 'Cricket Archive', href: '/adventures/cricket', description: 'The deeper cricket archive with live stats and admin tools.', kind: 'secondary' },
       { label: 'Adventures', href: '/adventures', description: 'The broader lived-experience archive around cricket and beyond.', kind: 'secondary' }
     ]
