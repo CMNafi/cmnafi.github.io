@@ -3589,3 +3589,86 @@ main { padding-bottom: 4rem; }
   }
 }
 
+/* Cricket admin */
+
+.cricket-admin__hint {
+  margin: 0;
+  color: rgba(243, 237, 225, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.cricket-admin__validation {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(214, 134, 100, 0.28);
+  border-radius: 16px;
+  background: rgba(74, 28, 18, 0.28);
+}
+
+.cricket-admin__validation p {
+  margin: 0.2rem 0;
+  color: rgba(255, 220, 208, 0.92);
+  font-size: 0.92rem;
+}
+
+.cricket-admin__quickfills {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cricket-admin__quickfills > div {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.cricket-admin__quickfills span {
+  color: rgba(243, 237, 225, 0.62);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cricket-admin__chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.cricket-admin__chip-row .button {
+  min-height: auto;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.82rem;
+}
+
+.cricket-admin__draft {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin: 1rem 0 1.25rem;
+}
+
+.cricket-admin__draft div {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.cricket-admin__draft span {
+  color: rgba(243, 237, 225, 0.56);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cricket-admin__draft strong {
+  font-size: 1rem;
+  color: rgba(255, 248, 238, 0.96);
+}
+
+@media (max-width: 780px) {
+  .cricket-admin__draft {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+

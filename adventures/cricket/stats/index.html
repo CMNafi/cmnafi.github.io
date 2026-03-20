@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"><title>Cricket Stats - C M Nafi</title><meta name="description" content="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."><link rel="canonical" href="https://cmnafi.com/adventures/cricket/stats/"><meta property="og:type" content="website"><meta property="og:title" content="Cricket Stats - C M Nafi"><meta property="og:description" content="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."><meta property="og:url" content="https://cmnafi.com/adventures/cricket/stats/"><meta property="og:image" content="https://cmnafi.com/og-default.svg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Cricket Stats - C M Nafi"><meta name="twitter:description" content="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."><meta name="twitter:image" content="https://cmnafi.com/og-default.svg"><meta name="theme-color" content="#120f0d"><link rel="stylesheet" href="/_astro/about.DV5v213f.css">
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"><title>Cricket Stats - C M Nafi</title><meta name="description" content="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."><link rel="canonical" href="https://cmnafi.com/adventures/cricket/stats/"><meta property="og:type" content="website"><meta property="og:title" content="Cricket Stats - C M Nafi"><meta property="og:description" content="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."><meta property="og:url" content="https://cmnafi.com/adventures/cricket/stats/"><meta property="og:image" content="https://cmnafi.com/og-default.svg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Cricket Stats - C M Nafi"><meta name="twitter:description" content="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."><meta name="twitter:image" content="https://cmnafi.com/og-default.svg"><meta name="theme-color" content="#120f0d"><link rel="stylesheet" href="/_astro/about.CBBdfMUd.css">
 <link rel="stylesheet" href="/_astro/stats.D68B3mBO.css"></head> <body> <div class="page-shell"> <div class="ambient ambient--one"></div> <div class="ambient ambient--two"></div> <div class="grain"></div> <header class="site-header"> <a class="site-mark" href="/"> <span>C M Nafi</span> <small>Work in motion</small> </a> <nav aria-label="Primary navigation"> <ul class="nav-list"> <li> <a href="/story" data-nav-item="journey"> Journey </a> </li><li> <a href="/blog" data-nav-item="timeline"> Timeline </a> </li><li> <a href="/projects" data-nav-item="projects"> Projects </a> </li><li> <a href="/connect" data-nav-item="connect"> Connect </a> </li> </ul> </nav> </header> <main>  <div class="cricket-stats-page" data-astro-cid-vla5mhaf> <section class="page-section cricket-stats-hero" data-astro-cid-vla5mhaf> <div class="cricket-stats-hero__copy" data-astro-cid-vla5mhaf> <p class="eyebrow" data-astro-cid-vla5mhaf>Cricket stats</p> <h1 data-astro-cid-vla5mhaf>The live record page for matches, miles, and the story around them.</h1> <p data-astro-cid-vla5mhaf>
 This page keeps the deep stats view, but makes the match log live. The public side stays readable; the admin side
           lets me enter games directly and keep the archive growing without rewriting JSON by hand.
@@ -26,6 +26,47 @@ This page keeps the deep stats view, but makes the match log live. The public si
     const formatValue = (value, digits = 0, fallback = 'Open') => {
       if (value === null || value === undefined || Number.isNaN(value)) return fallback;
       return digits > 0 ? Number(value).toFixed(digits) : `${value}`;
+    };
+
+    const adminDefaults = {
+      team: ['TB Bengal Tigers', 'SWAT', 'St Pete Shields', 'Bengals'],
+      format: ['Leather ball', 'Tennis ball', 'Unknown'],
+      competition: ['TCL', 'Titan Cup', 'League match', 'Archive memory']
+    };
+
+    const deriveSeasonLabel = (gameDate) => {
+      if (!gameDate) return '';
+      const [year] = String(gameDate).split('-');
+      return year || '';
+    };
+
+    const validateAdminForm = (form) => {
+      const errors = [];
+      if (!form.gameDate) errors.push('Date is required.');
+      if (!form.team?.trim()) errors.push('Team is required.');
+
+      const nonNegativeFields = [
+        ['runs', form.runs],
+        ['balls', form.balls],
+        ['wickets', form.wickets],
+        ['catches', form.catches],
+        ['runOuts', form.runOuts],
+        ['overs', form.overs],
+        ['runsConceded', form.runsConceded],
+        ['distanceDrivenMiles', form.distanceDrivenMiles]
+      ];
+
+      nonNegativeFields.forEach(([label, value]) => {
+        if (value !== null && value !== undefined && value !== '' && Number(value) < 0) {
+          errors.push(`${label} cannot be negative.`);
+        }
+      });
+
+      if (form.balls === 0 && form.runs !== null && form.runs !== undefined) {
+        errors.push('Balls cannot be zero when runs are recorded.');
+      }
+
+      return errors;
     };
 
     const renderStatGrid = (root, rows) => {
@@ -268,10 +309,27 @@ This page keeps the deep stats view, but makes the match log live. The public si
       form: makeFormState(),
       editingId: null,
       saving: false,
+      saveMode: 'stay',
       adminError: '',
+      adminValidation: [],
       publicError: '',
-      isFallback: true
+      isFallback: true,
+      carriedDefaults: {
+        team: '',
+        seasonLabel: '',
+        competition: '',
+        format: '',
+        venue: ''
+      }
     };
+
+    const applyCarriedDefaults = () => ({
+      ...emptyCricketGame(),
+      ...state.carriedDefaults,
+      catches: 0,
+      runOuts: 0,
+      sourceStatus: defaultStatus
+    });
 
     const renderAdmin = () => {
       if (!adminRoot) return;
@@ -298,6 +356,7 @@ This page keeps the deep stats view, but makes the match log live. The public si
               <input type="password" name="password" autocomplete="current-password" required />
             </div>
             <p class="cricket-admin__hint">Admin account: <strong>${env.adminEmail ?? 'nafi@cmnafi.com'}</strong></p>
+            <p class="cricket-admin__hint">Use your Supabase Auth password for that email. Once signed in, you can add and edit matches directly here.</p>
             <button class="button button-primary" type="submit">Sign in as admin</button>
             ${state.adminError ? `<p class="cricket-admin__error">${state.adminError}</p>` : ''}
           </form>
@@ -332,6 +391,28 @@ This page keeps the deep stats view, but makes the match log live. The public si
         </div>
 
         ${state.adminError ? `<p class="cricket-admin__error">${state.adminError}</p>` : ''}
+        ${state.adminValidation.length ? `<div class="cricket-admin__validation">${state.adminValidation.map((item) => `<p>${item}</p>`).join('')}</div>` : ''}
+
+        <div class="cricket-admin__quickfills">
+          <div>
+            <span>Team</span>
+            <div class="cricket-admin__chip-row">
+              ${adminDefaults.team.map((team) => `<button type="button" class="button button-ghost" data-admin-fill="team" data-admin-value="${team}">${team}</button>`).join('')}
+            </div>
+          </div>
+          <div>
+            <span>Format</span>
+            <div class="cricket-admin__chip-row">
+              ${adminDefaults.format.map((format) => `<button type="button" class="button button-ghost" data-admin-fill="format" data-admin-value="${format}">${format}</button>`).join('')}
+            </div>
+          </div>
+          <div>
+            <span>Competition</span>
+            <div class="cricket-admin__chip-row">
+              ${adminDefaults.competition.map((competition) => `<button type="button" class="button button-ghost" data-admin-fill="competition" data-admin-value="${competition}">${competition}</button>`).join('')}
+            </div>
+          </div>
+        </div>
 
         <div class="cricket-admin__entry-table-wrap">
           <table class="cricket-admin__entry-table">
@@ -377,8 +458,28 @@ This page keeps the deep stats view, but makes the match log live. The public si
           <label class="cricket-admin__note-field"><span>Personal note</span><textarea name="personalNote" rows="4" placeholder="Short story note for the archive">${form.personalNote || ''}</textarea></label>
         </div>
 
+        <div class="cricket-admin__draft panel">
+          <div>
+            <span>Season</span>
+            <strong>${form.seasonLabel || deriveSeasonLabel(form.gameDate) || 'Open'}</strong>
+          </div>
+          <div>
+            <span>Strike rate</span>
+            <strong>${form.runs !== null && form.balls ? formatValue((form.runs / form.balls) * 100, 2) : 'Open'}</strong>
+          </div>
+          <div>
+            <span>Economy</span>
+            <strong>${form.runsConceded !== null && form.overs ? formatValue(form.runsConceded / form.overs, 2) : 'Open'}</strong>
+          </div>
+          <div>
+            <span>Drive</span>
+            <strong>${form.distanceDrivenMiles !== null && form.distanceDrivenMiles !== undefined ? `${formatValue(form.distanceDrivenMiles, 1)} mi` : 'Open'}</strong>
+          </div>
+        </div>
+
         <div class="hero-actions cricket-admin__actions">
           <button class="button button-primary" type="button" data-admin-save>${state.saving ? 'Saving...' : (state.editingId ? 'Update game' : 'Add game')}</button>
+          <button class="button button-secondary" type="button" data-admin-save-next>${state.saving ? 'Saving...' : 'Save and add next'}</button>
           <button class="button button-secondary" type="button" data-admin-reset>Reset form</button>
         </div>
 
@@ -422,7 +523,14 @@ This page keeps the deep stats view, but makes the match log live. The public si
             if (target.type === 'number') {
               value = value === '' ? null : Number(value);
             }
-            state.form = { ...state.form, [name]: value };
+            const nextForm = { ...state.form, [name]: value };
+            if (name === 'gameDate' && !state.form.seasonLabel) {
+              nextForm.seasonLabel = deriveSeasonLabel(value);
+              const seasonInput = adminRoot.querySelector('[name="seasonLabel"]');
+              if (seasonInput && !seasonInput.value) seasonInput.value = nextForm.seasonLabel || '';
+            }
+            state.form = nextForm;
+            state.adminValidation = validateAdminForm(state.form);
           });
         });
       };
@@ -431,14 +539,28 @@ This page keeps the deep stats view, but makes the match log live. The public si
 
       adminRoot.querySelector('[data-admin-reset]')?.addEventListener('click', () => {
         state.editingId = null;
-        state.form = makeFormState();
+        state.form = applyCarriedDefaults();
         state.adminError = '';
+        state.adminValidation = [];
         renderAdmin();
       });
 
-      adminRoot.querySelector('[data-admin-save]')?.addEventListener('click', async () => {
-        if (!state.form.gameDate || !state.form.team?.trim()) {
-          state.adminError = 'Date and team are required.';
+      adminRoot.querySelectorAll('[data-admin-fill]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const field = button.getAttribute('data-admin-fill');
+          const value = button.getAttribute('data-admin-value') ?? '';
+          if (!field || !cricketEntryFields.includes(field)) return;
+          state.form = { ...state.form, [field]: value };
+          state.adminValidation = validateAdminForm(state.form);
+          renderAdmin();
+        });
+      });
+
+      const saveGame = async (mode = 'stay') => {
+        state.saveMode = mode;
+        state.adminValidation = validateAdminForm(state.form);
+        if (state.adminValidation.length) {
+          state.adminError = 'Please fix the highlighted entry checks before saving.';
           renderAdmin();
           return;
         }
@@ -464,10 +586,21 @@ This page keeps the deep stats view, but makes the match log live. The public si
           return;
         }
 
+        state.carriedDefaults = {
+          team: state.form.team || '',
+          seasonLabel: state.form.seasonLabel || deriveSeasonLabel(state.form.gameDate),
+          competition: state.form.competition || '',
+          format: state.form.format || '',
+          venue: state.form.venue || ''
+        };
         state.editingId = null;
-        state.form = makeFormState();
+        state.form = mode === 'next' ? applyCarriedDefaults() : makeFormState();
+        state.adminValidation = [];
         await refreshFromSupabase();
-      });
+      };
+
+      adminRoot.querySelector('[data-admin-save]')?.addEventListener('click', async () => saveGame('stay'));
+      adminRoot.querySelector('[data-admin-save-next]')?.addEventListener('click', async () => saveGame('next'));
 
       adminRoot.querySelectorAll('[data-admin-edit]').forEach((button) => {
         button.addEventListener('click', () => {
@@ -476,6 +609,7 @@ This page keeps the deep stats view, but makes the match log live. The public si
           state.editingId = game.id;
           state.form = makeFormState(game);
           state.adminError = '';
+          state.adminValidation = [];
           renderAdmin();
         });
       });
