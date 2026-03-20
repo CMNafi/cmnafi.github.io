@@ -9,17 +9,17 @@ const nextPaths = [
   {
     title: 'Timeline',
     href: '/blog',
-    description: 'The full running archive where books, cricket, movies, and ideas all feed into one stream.'
+    description: 'The running archive where cricket, books, films, and essays sit in one chronological stream.'
   },
   {
     title: 'Projects',
     href: '/projects',
-    description: 'The product, research, and fintech systems that grew out of the same route.'
+    description: 'The fintech, research, and product systems that make the professional side of the route more concrete.'
   },
   {
     title: 'Connect',
     href: '/connect',
-    description: 'A direct way into conversation, collaboration, and the public-facing layer of the work.'
+    description: 'A quieter layer for introductions, collaboration, and the public-facing side of the work.'
   }
 ];
 
@@ -38,7 +38,6 @@ const chapters = await Promise.all(
 );
 
 const defaultChapter = chapters[0];
-const featuredCount = chapters.filter((chapter) => chapter.entry.data.featured).length;
 const featuredChapters = chapters.filter((chapter) => chapter.entry.data.featured);
 const svgWidth = 1000;
 const svgHeight = 620;
@@ -48,7 +47,7 @@ const routePoints = chapters
 ---
 
 <BaseLayout title="Journey" description="A longform route through Bangladesh, China, and the United States, tracing the path into finance, product systems, and public work.">
-  <div class="journey-story">
+  <div class="journey-story" data-mode="professional">
     <SiteTreeHeader
       branch="journey"
       currentHref="/story"
@@ -59,42 +58,87 @@ const routePoints = chapters
     <section class="page-section journey-hero">
       <div class="journey-hero__copy">
         <p class="eyebrow">Journey</p>
-        <h1>The route that explains the work.</h1>
-        <p>
-          This page is the longform version of the story: the movement from Bangladesh to China to the United States,
-          and the capabilities that formed along the way.
+        <h1>The route behind the work.</h1>
+        <p class="journey-hero__deck mode-professional">
+          A long-form reading of the path from Bangladesh to China to the United States, told through discipline,
+          education, institutional finance, and product work.
         </p>
+        <p class="journey-hero__deck mode-personal">
+          A personal reading of the same route: leaving home early, widening the world, and becoming more at ease with
+          movement, change, and identity across places.
+        </p>
+        <div class="journey-mode-toggle" aria-label="Journey mode switch">
+          <button type="button" class="journey-mode-toggle__button is-active" data-journey-mode-toggle="professional" aria-pressed="true">
+            Professional
+          </button>
+          <button type="button" class="journey-mode-toggle__button" data-journey-mode-toggle="personal" aria-pressed="false">
+            Personal
+          </button>
+        </div>
         <div class="journey-hero__stats">
-          <span>{chapters.length} chapters</span>
-          <span>{featuredCount} feature stops</span>
+          <span>{chapters.length} stops</span>
+          <span>{featuredChapters.length} feature chapters</span>
           <span>{routeCountries.join(' -> ')}</span>
         </div>
-        <a class="button button-primary" href={`#${defaultChapter.entry.slug}`}>Start with the first chapter</a>
+        <div class="journey-hero__actions">
+          <a class="button button-primary" href={`#${defaultChapter.entry.slug}`}>Start with the first chapter</a>
+          <a class="journey-hero__text-link" href="#journey-route">View the live map</a>
+        </div>
       </div>
 
-      <aside class="panel journey-hero__card">
-        <p class="eyebrow">Route system</p>
-        <h2>{routeCountries.join(' -> ')}</h2>
-        <p>
-          The page is organized like a route system: overview first, live map next, then the full chapter stream below.
-        </p>
-        <div class="journey-hero__feature-list">
-          {featuredChapters.map((chapter) => (
-            <a class="journey-hero__feature-card" href={`#${chapter.entry.slug}`}>
-              <strong>{chapter.entry.data.organization}</strong>
-              <span>{chapter.entry.data.place}</span>
-            </a>
-          ))}
-        </div>
-      </aside>
+      <div class="journey-hero__gallery">
+        <article class="panel journey-portrait">
+          <div class="journey-portrait__media">
+            <img class="mode-professional" src="/journey-professional.jpg" alt="Professional portrait of C M Nafi in a suit and tie." />
+            <img class="mode-personal" src="/profile.jpg" alt="Portrait of C M Nafi smiling outdoors." />
+          </div>
+
+          <div class="journey-portrait__caption">
+            <div class="mode-professional">
+              <span class="journey-portrait__label">Professional mode</span>
+              <strong>Finance, systems, and product discipline.</strong>
+            </div>
+            <div class="mode-personal">
+              <span class="journey-portrait__label">Personal mode</span>
+              <strong>Movement, identity, and the human side of the route.</strong>
+            </div>
+          </div>
+        </article>
+
+        <aside class="panel journey-route-card">
+          <p class="eyebrow">Route system</p>
+          <h2>{routeCountries.join(' -> ')}</h2>
+          <p class="mode-professional">
+            Read this page like a dossier: hero first, chapter index second, live map always visible, then the full
+            long-form story underneath.
+          </p>
+          <p class="mode-personal">
+            Read this page like a remembered route: the same places stay fixed, but the emotional meaning of each stop
+            becomes more visible.
+          </p>
+          <div class="journey-route-card__features">
+            {featuredChapters.map((chapter) => (
+              <a class="journey-route-card__feature" href={`#${chapter.entry.slug}`}>
+                <strong>{chapter.entry.data.organization}</strong>
+                <span>{chapter.entry.data.place}</span>
+              </a>
+            ))}
+          </div>
+        </aside>
+      </div>
     </section>
 
     <section class="page-section journey-outline">
-      <div class="journey-outline__heading">
+      <div class="journey-outline__intro">
         <p class="eyebrow">Chapter index</p>
-        <h2>The route is easier to read when the stops are visible upfront.</h2>
-        <p>
-          Each chapter acts like a small destination card before it opens into the full story below.
+        <h2>Nine stops, one route, two ways to read it.</h2>
+        <p class="mode-professional">
+          The professional reading follows capability formation: structure, education, method, finance, and product
+          execution.
+        </p>
+        <p class="mode-personal">
+          The personal reading follows distance, adaptation, belonging, pressure, and the way each place changed the
+          shape of the story.
         </p>
       </div>
       <div class="journey-outline__grid">
@@ -102,7 +146,8 @@ const routePoints = chapters
           <a class:list={['panel', 'journey-outline__card', entry.data.featured && 'journey-outline__card--featured']} href={`#${entry.slug}`}>
             <span class="journey-outline__step">{step}</span>
             <div>
-              <p class="journey-outline__theme">{entry.data.theme}</p>
+              <p class="journey-outline__theme mode-professional">{entry.data.theme}</p>
+              <p class="journey-outline__theme mode-personal">{entry.data.personalTheme ?? entry.data.theme}</p>
               <h3>{entry.data.place}</h3>
               <p>{entry.data.organization}</p>
             </div>
@@ -120,8 +165,11 @@ const routePoints = chapters
         <div class="journey-rail__meta">
           <p class="journey-rail__eyebrow">Live map</p>
           <h2>Top rail</h2>
-          <p>
-            The map stays in view while the story scrolls underneath it. Each chapter moves the focus to the next place on the line.
+          <p class="mode-professional">
+            The rail keeps the route visible like a control surface while the chapters below handle the full narrative.
+          </p>
+          <p class="mode-personal">
+            The rail keeps the path in sight while the meaning of each place shifts as the story moves underneath it.
           </p>
           <div class="journey-rail__stats">
             <span>{routeCountries.join(' -> ')}</span>
@@ -196,10 +244,12 @@ const routePoints = chapters
         <div class="journey-rail__active" data-rail-active>
           <span class="journey-rail__step" data-rail-step>{defaultChapter.step}</span>
           <div class="journey-rail__active-copy">
-            <p class="journey-rail__active-eyebrow" data-rail-theme>{defaultChapter.entry.data.theme}</p>
+            <p class="journey-rail__active-eyebrow mode-professional" data-rail-theme-professional>{defaultChapter.entry.data.theme}</p>
+            <p class="journey-rail__active-eyebrow mode-personal" data-rail-theme-personal>{defaultChapter.entry.data.personalTheme ?? defaultChapter.entry.data.theme}</p>
             <h3 data-rail-place>{defaultChapter.entry.data.place}</h3>
             <p class="journey-rail__organization" data-rail-organization>{defaultChapter.entry.data.organization}</p>
-            <p class="journey-rail__summary" data-rail-summary>{defaultChapter.entry.data.summary}</p>
+            <p class="journey-rail__summary mode-professional" data-rail-summary-professional>{defaultChapter.entry.data.professionalSummary ?? defaultChapter.entry.data.summary}</p>
+            <p class="journey-rail__summary mode-personal" data-rail-summary-personal>{defaultChapter.entry.data.personalSummary ?? defaultChapter.entry.data.summary}</p>
             <div class="journey-rail__active-meta">
               <span data-rail-period>{defaultChapter.entry.data.period}</span>
               <span data-rail-atlas>{defaultChapter.entry.data.atlasLabel}</span>
@@ -211,15 +261,18 @@ const routePoints = chapters
     </section>
 
     <section class="page-section journey-stream">
-      {chapters.map(({ entry, Content, step }) => (
-        <JourneyStoryChapter entry={entry} step={step} Content={Content} />
+      {chapters.map(({ entry, Content, step, index }) => (
+        <JourneyStoryChapter entry={entry} step={step} index={index} Content={Content} />
       ))}
 
       <section class="panel journey-finale">
         <p class="eyebrow">After the route</p>
-        <h2>The present chapter is meant to open outward.</h2>
-        <p>
-          Once the route is visible, the rest of the site reads more clearly: the timeline, the project work, and the public-facing layer.
+        <h2>The present chapter opens outward.</h2>
+        <p class="mode-professional">
+          Once the route is visible, the rest of the site reads as connected surfaces: timeline, projects, and public work.
+        </p>
+        <p class="mode-personal">
+          Once the route is visible, the rest of the site feels less like separate pages and more like different rooms in the same life.
         </p>
 
         <div class="journey-finale__grid">
@@ -258,22 +311,33 @@ const routePoints = chapters
     z-index: 1;
   }
 
+  .journey-story[data-mode='professional'] .mode-personal,
+  .journey-story[data-mode='personal'] .mode-professional {
+    display: none !important;
+  }
+
   .journey-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.8fr);
-    gap: clamp(1.25rem, 4vw, 2.4rem);
+    grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+    gap: clamp(1.5rem, 4vw, 2.8rem);
     align-items: end;
     padding-top: clamp(2rem, 5vw, 4rem);
   }
 
-  .journey-hero__copy {
+  .journey-hero__copy,
+  .journey-hero__gallery {
     display: grid;
     gap: 1rem;
+  }
+
+  .journey-hero__copy {
     max-width: 42rem;
+    align-content: start;
   }
 
   .journey-hero__copy h1,
-  .journey-hero__card h2,
+  .journey-route-card h2,
+  .journey-outline__intro h2,
   .journey-rail__meta h2,
   .journey-rail__active h3,
   .journey-finale h2 {
@@ -283,68 +347,52 @@ const routePoints = chapters
   }
 
   .journey-hero__copy h1 {
-    font-size: clamp(3rem, 6vw, 5rem);
-    line-height: 0.95;
-    max-width: 10ch;
+    font-size: clamp(3.3rem, 7vw, 6rem);
+    line-height: 0.92;
+    max-width: 8ch;
   }
 
-  .journey-hero__copy p,
-  .journey-hero__card p,
+  .journey-hero__deck,
+  .journey-route-card p,
+  .journey-outline__intro p:last-child,
   .journey-rail__meta p,
   .journey-rail__summary,
   .journey-finale > p,
   .journey-finale__card p {
     margin: 0;
-    color: rgba(243, 237, 225, 0.75);
+    color: rgba(243, 237, 225, 0.76);
     line-height: 1.78;
   }
 
-  .journey-hero__card {
-    display: grid;
-    gap: 0.9rem;
-    padding: 1.45rem;
-    border-radius: 28px;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
-      radial-gradient(circle at top right, rgba(211, 154, 89, 0.11), transparent 36%);
-  }
-
-  .journey-hero__card h2 {
-    font-size: clamp(1.85rem, 3vw, 2.5rem);
-    line-height: 1.02;
-  }
-
-  .journey-hero__feature-list {
-    display: grid;
-    gap: 0.7rem;
-  }
-
-  .journey-hero__feature-card {
-    display: grid;
-    gap: 0.2rem;
-    padding: 0.9rem 1rem;
-    border-radius: 18px;
+  .journey-mode-toggle {
+    display: inline-flex;
+    width: fit-content;
+    padding: 0.35rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.035);
     border: 1px solid rgba(243, 237, 225, 0.08);
-    background: rgba(255, 255, 255, 0.03);
-    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
   }
 
-  .journey-hero__feature-card:hover,
-  .journey-hero__feature-card:focus-visible {
-    transform: translateY(-1px);
-    border-color: rgba(211, 154, 89, 0.24);
-    background: rgba(255, 255, 255, 0.05);
-    outline: none;
+  .journey-mode-toggle__button {
+    border: 0;
+    background: transparent;
+    color: rgba(243, 237, 225, 0.64);
+    padding: 0.75rem 1.1rem;
+    border-radius: 999px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 180ms ease, color 180ms ease, transform 180ms ease;
   }
 
-  .journey-hero__feature-card strong {
+  .journey-mode-toggle__button.is-active,
+  .journey-mode-toggle__button:hover,
+  .journey-mode-toggle__button:focus-visible {
+    background: rgba(211, 154, 89, 0.14);
     color: var(--text);
-    font-size: 0.98rem;
-  }
-
-  .journey-hero__feature-card span {
-    color: rgba(243, 237, 225, 0.62);
-    font-size: 0.88rem;
+    outline: none;
   }
 
   .journey-hero__stats,
@@ -358,11 +406,10 @@ const routePoints = chapters
   .journey-hero__stats span,
   .journey-rail__stats span,
   .journey-rail__active-meta span,
-  .journey-rail__eyebrow,
-  .journey-rail__link,
-  .journey-rail__active-eyebrow,
   .journey-rail__organization,
-  .journey-rail__step {
+  .journey-rail__step,
+  .journey-rail__link,
+  .journey-portrait__label {
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
@@ -375,12 +422,134 @@ const routePoints = chapters
   .journey-hero__stats span,
   .journey-rail__stats span,
   .journey-rail__active-meta span,
-  .journey-rail__link,
-  .journey-rail__organization {
+  .journey-rail__organization,
+  .journey-rail__link {
     padding: 0.34rem 0.72rem;
     color: rgba(243, 237, 225, 0.68);
     border: 1px solid rgba(243, 237, 225, 0.08);
     background: rgba(255, 255, 255, 0.03);
+  }
+
+  .journey-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .journey-hero__text-link {
+    color: rgba(243, 237, 225, 0.74);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-family: 'Manrope', sans-serif;
+  }
+
+  .journey-hero__text-link:hover,
+  .journey-hero__text-link:focus-visible {
+    color: var(--accent);
+    outline: none;
+  }
+
+  .journey-hero__gallery {
+    align-content: start;
+  }
+
+  .journey-portrait,
+  .journey-route-card {
+    overflow: hidden;
+    border-radius: 30px;
+  }
+
+  .journey-portrait {
+    display: grid;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top right, rgba(211, 154, 89, 0.12), transparent 36%);
+  }
+
+  .journey-portrait__media {
+    position: relative;
+    aspect-ratio: 1 / 1.05;
+    background: rgba(9, 11, 16, 0.6);
+  }
+
+  .journey-portrait__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .journey-portrait__caption {
+    display: grid;
+    gap: 0.3rem;
+    padding: 1rem 1.15rem 1.15rem;
+  }
+
+  .journey-portrait__caption strong {
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-size: 1.3rem;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .journey-portrait__label {
+    color: var(--accent);
+    margin-bottom: 0.35rem;
+  }
+
+  .journey-route-card {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.25rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top right, rgba(211, 154, 89, 0.11), transparent 36%);
+  }
+
+  .journey-route-card h2 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 0.96;
+  }
+
+  .journey-route-card__features {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .journey-route-card__feature {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(243, 237, 225, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    text-decoration: none;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .journey-route-card__feature:hover,
+  .journey-route-card__feature:focus-visible,
+  .journey-finale__card:hover,
+  .journey-finale__card:focus-visible {
+    transform: translateY(-1px);
+    border-color: rgba(211, 154, 89, 0.24);
+    background: rgba(255, 255, 255, 0.05);
+    outline: none;
+  }
+
+  .journey-route-card__feature strong,
+  .journey-finale__card span {
+    color: var(--text);
+    font-size: 0.98rem;
+  }
+
+  .journey-route-card__feature span {
+    color: rgba(243, 237, 225, 0.62);
+    font-size: 0.88rem;
   }
 
   .journey-outline {
@@ -388,28 +557,14 @@ const routePoints = chapters
     gap: 1rem;
   }
 
-  .journey-outline__heading {
-    max-width: 42rem;
+  .journey-outline__intro {
+    max-width: 44rem;
   }
 
-  .journey-outline__heading h2,
-  .journey-outline__card h3 {
-    margin: 0;
-    font-family: 'Fraunces', 'Times New Roman', serif;
-    letter-spacing: -0.05em;
-  }
-
-  .journey-outline__heading h2 {
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.02;
-    margin-bottom: 0.6rem;
-  }
-
-  .journey-outline__heading p:last-child,
-  .journey-outline__card p {
-    margin: 0;
-    color: rgba(243, 237, 225, 0.74);
-    line-height: 1.7;
+  .journey-outline__intro h2 {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 0.96;
+    margin-bottom: 0.7rem;
   }
 
   .journey-outline__grid {
@@ -423,6 +578,7 @@ const routePoints = chapters
     grid-template-columns: auto minmax(0, 1fr);
     gap: 0.9rem;
     padding: 1rem 1.05rem;
+    text-decoration: none;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
       radial-gradient(circle at top right, rgba(211, 154, 89, 0.08), transparent 34%);
@@ -438,6 +594,7 @@ const routePoints = chapters
   }
 
   .journey-outline__card--featured {
+    grid-column: span 2;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.022)),
       radial-gradient(circle at top right, rgba(211, 154, 89, 0.14), transparent 34%);
@@ -459,15 +616,28 @@ const routePoints = chapters
   }
 
   .journey-outline__theme {
+    margin: 0 0 0.35rem;
     color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.14em;
     font-size: 0.72rem;
-    margin-bottom: 0.35rem;
+  }
+
+  .journey-outline__card h3 {
+    margin: 0 0 0.25rem;
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    letter-spacing: -0.05em;
+    color: var(--text);
+  }
+
+  .journey-outline__card p:last-child {
+    margin: 0;
+    color: rgba(243, 237, 225, 0.74);
+    line-height: 1.65;
   }
 
   .journey-rail-wrap {
-    margin-top: 1.5rem;
+    margin-top: 1.4rem;
   }
 
   .journey-rail {
@@ -475,7 +645,7 @@ const routePoints = chapters
     top: 5.15rem;
     z-index: 8;
     display: grid;
-    grid-template-columns: minmax(220px, 0.74fr) minmax(0, 1.3fr) minmax(280px, 0.86fr);
+    grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.32fr) minmax(280px, 0.88fr);
     gap: 1rem;
     padding: 1rem;
     border-radius: 30px;
@@ -518,10 +688,11 @@ const routePoints = chapters
 
   .journey-rail__eyebrow,
   .journey-rail__active-eyebrow {
-    padding: 0;
-    border: 0;
-    background: transparent;
+    margin: 0;
     color: var(--accent);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
   }
 
   .journey-rail__meta h2 {
@@ -559,139 +730,136 @@ const routePoints = chapters
   }
 
   .journey-map__route--progress {
-    opacity: 0.95;
-    filter: drop-shadow(0 0 10px rgba(211, 154, 89, 0.25));
-    transition: stroke-dasharray 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    filter: drop-shadow(0 0 14px rgba(243, 237, 225, 0.15));
+    transition: stroke-dasharray 420ms ease;
   }
 
   .journey-map__focus {
-    left: var(--focus-x);
-    top: var(--focus-y);
-    width: 6.25rem;
-    height: 6.25rem;
-    transform: translate(-50%, -50%);
+    left: calc(var(--focus-x) - 3.8rem);
+    top: calc(var(--focus-y) - 3.8rem);
+    width: 7.6rem;
+    height: 7.6rem;
     border-radius: 50%;
+    border: 1px solid rgba(243, 237, 225, 0.18);
     background:
-      radial-gradient(circle, rgba(243, 237, 225, 0.12), rgba(211, 154, 89, 0.1) 38%, rgba(211, 154, 89, 0) 72%);
-    filter: blur(4px);
-    pointer-events: none;
-    transition: left 420ms cubic-bezier(0.2, 0.7, 0.2, 1), top 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+      radial-gradient(circle, rgba(243, 237, 225, 0.16), rgba(211, 154, 89, 0.16), transparent 72%);
+    transform: translate3d(0, 0, 0);
+    transition:
+      left 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      top 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 220ms ease;
+    filter: blur(0.4px);
   }
 
   .journey-map__node {
-    transform: translate(-50%, -50%);
     display: grid;
-    gap: 0.3rem;
-    justify-items: center;
+    gap: 0.45rem;
+    transform: translate(-50%, -50%);
     background: transparent;
     border: 0;
     padding: 0;
-    color: rgba(243, 237, 225, 0.68);
-    transition: transform 180ms ease, color 180ms ease;
+    color: rgba(243, 237, 225, 0.82);
+    cursor: pointer;
+    transition: transform 180ms ease;
   }
 
   .journey-map__node:hover,
-  .journey-map__node:focus-visible,
-  .journey-map__node.is-active {
-    color: var(--text);
-    transform: translate(-50%, -50%) scale(1.04);
+  .journey-map__node:focus-visible {
+    transform: translate(-50%, -50%) scale(1.03);
     outline: none;
   }
 
   .journey-map__dot {
     width: 0.9rem;
     height: 0.9rem;
+    margin-inline: auto;
     border-radius: 50%;
-    background: rgba(243, 237, 225, 0.88);
-    border: 2px solid rgba(18, 15, 13, 0.8);
-    box-shadow: 0 0 0 0 rgba(211, 154, 89, 0.22);
-    transition: box-shadow 180ms ease, background 180ms ease, transform 180ms ease;
-  }
-
-  .journey-map__node--featured .journey-map__dot {
-    background: var(--accent);
+    background: rgba(243, 237, 225, 0.72);
+    border: 2px solid rgba(22, 19, 17, 0.9);
+    box-shadow: 0 0 0 1px rgba(243, 237, 225, 0.12);
+    transition: background 220ms ease, box-shadow 220ms ease, transform 220ms ease;
   }
 
   .journey-map__node.is-active .journey-map__dot,
-  .journey-map__node:hover .journey-map__dot,
-  .journey-map__node:focus-visible .journey-map__dot {
-    transform: scale(1.08);
-    box-shadow: 0 0 0 0.45rem rgba(211, 154, 89, 0.18);
+  .journey-map__node--featured .journey-map__dot {
+    background: var(--accent);
+    box-shadow:
+      0 0 0 1px rgba(243, 237, 225, 0.12),
+      0 0 18px rgba(211, 154, 89, 0.25);
+  }
+
+  .journey-map__node.is-active .journey-map__dot {
+    transform: scale(1.16);
   }
 
   .journey-map__label {
-    padding: 0.22rem 0.48rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.26rem 0.5rem;
     border-radius: 999px;
-    background: rgba(8, 11, 15, 0.7);
+    background: rgba(10, 11, 15, 0.6);
     border: 1px solid rgba(243, 237, 225, 0.08);
+    font-family: 'Manrope', sans-serif;
     font-size: 0.58rem;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     white-space: nowrap;
-    backdrop-filter: blur(10px);
   }
 
   .journey-rail__active {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 0.9rem;
     align-items: start;
+    gap: 0.9rem;
+    grid-template-columns: auto 1fr;
   }
 
   .journey-rail__step {
     justify-content: center;
-    width: 3.1rem;
-    height: 3.1rem;
+    width: 3.2rem;
+    height: 3.2rem;
     color: var(--accent);
     background: rgba(211, 154, 89, 0.12);
     border: 1px solid rgba(211, 154, 89, 0.28);
-    font-weight: 700;
-    flex-shrink: 0;
   }
 
   .journey-rail__active-copy {
     display: grid;
-    gap: 0.65rem;
-    min-width: 0;
+    gap: 0.75rem;
   }
 
   .journey-rail__active h3 {
-    font-size: clamp(1.55rem, 3vw, 2.2rem);
-    line-height: 1.04;
-  }
-
-  .journey-rail__summary {
-    max-width: 30rem;
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+    line-height: 0.98;
   }
 
   .journey-rail__link {
-    color: rgba(243, 237, 225, 0.82);
     width: fit-content;
-    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
   }
 
   .journey-rail__link:hover,
   .journey-rail__link:focus-visible {
     transform: translateY(-1px);
-    border-color: rgba(211, 154, 89, 0.2);
-    background: rgba(211, 154, 89, 0.08);
+    border-color: rgba(211, 154, 89, 0.24);
     outline: none;
   }
 
   .journey-stream {
     display: grid;
-    gap: 1.2rem;
-    margin-top: 1.35rem;
+    gap: 1.4rem;
   }
 
   .journey-finale {
     display: grid;
     gap: 1rem;
-    padding: clamp(1.2rem, 3vw, 1.65rem);
+    padding: clamp(1.35rem, 4vw, 2rem);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.022)),
+      radial-gradient(circle at top right, rgba(211, 154, 89, 0.12), transparent 36%);
   }
 
   .journey-finale h2 {
-    font-size: clamp(2rem, 4vw, 2.8rem);
-    line-height: 1.02;
+    font-size: clamp(2.1rem, 4vw, 3.2rem);
+    line-height: 0.98;
   }
 
   .journey-finale__grid {
@@ -702,26 +870,13 @@ const routePoints = chapters
 
   .journey-finale__card {
     display: grid;
-    gap: 0.5rem;
-    padding: 1rem;
-    border-radius: 20px;
+    gap: 0.55rem;
+    padding: 1rem 1.1rem;
+    text-decoration: none;
+    border-radius: 22px;
     border: 1px solid rgba(243, 237, 225, 0.08);
     background: rgba(255, 255, 255, 0.03);
     transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-  }
-
-  .journey-finale__card span {
-    font-family: 'Fraunces', 'Times New Roman', serif;
-    font-size: 1.1rem;
-    color: rgba(243, 237, 225, 0.96);
-  }
-
-  .journey-finale__card:hover,
-  .journey-finale__card:focus-visible {
-    transform: translateY(-2px);
-    border-color: rgba(211, 154, 89, 0.24);
-    background: rgba(255, 255, 255, 0.05);
-    outline: none;
   }
 
   @keyframes routeDrift {
@@ -738,6 +893,10 @@ const routePoints = chapters
     .journey-hero,
     .journey-rail {
       grid-template-columns: 1fr;
+    }
+
+    .journey-outline__card--featured {
+      grid-column: span 1;
     }
 
     .journey-rail {
@@ -764,6 +923,8 @@ const routePoints = chapters
     .journey-map__focus {
       width: 4.8rem;
       height: 4.8rem;
+      left: calc(var(--focus-x) - 2.4rem);
+      top: calc(var(--focus-y) - 2.4rem);
     }
 
     .journey-map__label {
@@ -796,7 +957,8 @@ const routePoints = chapters
     .journey-map__route--progress,
     .journey-map__node,
     .journey-finale__card,
-    .journey-rail__link {
+    .journey-route-card__feature,
+    .journey-mode-toggle__button {
       transition: none;
     }
   }
@@ -804,24 +966,29 @@ const routePoints = chapters
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const story = document.querySelector('.journey-story');
     const rail = document.querySelector('[data-journey-rail]');
     const stops = Array.from(document.querySelectorAll('[data-journey-stop]'));
     const nodes = Array.from(document.querySelectorAll('[data-journey-node]'));
     const progressLine = document.querySelector('[data-journey-progress]');
+    const toggleButtons = Array.from(document.querySelectorAll('[data-journey-mode-toggle]'));
     const stepField = document.querySelector('[data-rail-step]');
-    const themeField = document.querySelector('[data-rail-theme]');
+    const professionalThemeField = document.querySelector('[data-rail-theme-professional]');
+    const personalThemeField = document.querySelector('[data-rail-theme-personal]');
     const placeField = document.querySelector('[data-rail-place]');
     const organizationField = document.querySelector('[data-rail-organization]');
-    const summaryField = document.querySelector('[data-rail-summary]');
+    const professionalSummaryField = document.querySelector('[data-rail-summary-professional]');
+    const personalSummaryField = document.querySelector('[data-rail-summary-personal]');
     const periodField = document.querySelector('[data-rail-period]');
     const atlasField = document.querySelector('[data-rail-atlas]');
     const linkField = document.querySelector('[data-rail-link]');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (!rail || !stops.length) {
+    if (!story || !rail || !stops.length) {
       return;
     }
 
+    let activeStop = stops[0];
     let routeLength = 0;
 
     if (progressLine && typeof progressLine.getTotalLength === 'function') {
@@ -829,6 +996,8 @@ const routePoints = chapters
       progressLine.style.strokeDasharray = `0 ${routeLength}`;
       progressLine.style.strokeDashoffset = '0';
     }
+
+    const getMode = () => story.dataset.mode === 'personal' ? 'personal' : 'professional';
 
     const setRouteProgress = (stop) => {
       if (!progressLine || !routeLength) {
@@ -843,21 +1012,28 @@ const routePoints = chapters
 
     const activateStop = (stop, options = {}) => {
       const { updateHash = true } = options;
+      const mode = getMode();
       const {
         stopId,
         stopStep,
         stopPlace,
         stopOrganization,
-        stopSummary,
         stopMapX,
         stopMapY,
         stopPeriod,
-        stopTheme,
         stopAtlas,
         stopFeatured,
         stopLink
       } = stop.dataset;
 
+      const stopTheme = mode === 'personal'
+        ? stop.dataset.stopPersonalTheme ?? stop.dataset.stopProfessionalTheme
+        : stop.dataset.stopProfessionalTheme ?? stop.dataset.stopPersonalTheme;
+      const stopSummary = mode === 'personal'
+        ? stop.dataset.stopPersonalSummary ?? stop.dataset.stopProfessionalSummary
+        : stop.dataset.stopProfessionalSummary ?? stop.dataset.stopPersonalSummary;
+
+      activeStop = stop;
       rail.dataset.activeStop = stopId ?? '';
       rail.classList.toggle('is-featured-stop', stopFeatured === 'true');
 
@@ -870,8 +1046,12 @@ const routePoints = chapters
         stepField.textContent = stopStep;
       }
 
-      if (themeField && stopTheme) {
-        themeField.textContent = stopTheme;
+      if (professionalThemeField && stopTheme) {
+        professionalThemeField.textContent = stopTheme;
+      }
+
+      if (personalThemeField && stopTheme) {
+        personalThemeField.textContent = stopTheme;
       }
 
       if (placeField && stopPlace) {
@@ -882,8 +1062,12 @@ const routePoints = chapters
         organizationField.textContent = stopOrganization;
       }
 
-      if (summaryField && stopSummary) {
-        summaryField.textContent = stopSummary;
+      if (professionalSummaryField && stopSummary) {
+        professionalSummaryField.textContent = stopSummary;
+      }
+
+      if (personalSummaryField && stopSummary) {
+        personalSummaryField.textContent = stopSummary;
       }
 
       if (periodField && stopPeriod) {
@@ -914,6 +1098,17 @@ const routePoints = chapters
           window.history.replaceState(null, '', nextHash);
         }
       }
+    };
+
+    const setMode = (mode) => {
+      story.dataset.mode = mode;
+      toggleButtons.forEach((button) => {
+        const active = button.dataset.journeyModeToggle === mode;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      window.localStorage.setItem('journeyMode', mode);
+      activateStop(activeStop, { updateHash: false });
     };
 
     const ratios = new Map();
@@ -950,11 +1145,16 @@ const routePoints = chapters
 
     stops.forEach((stop) => observer.observe(stop));
 
+    const savedMode = window.localStorage.getItem('journeyMode');
+    const initialMode = savedMode === 'personal' ? 'personal' : 'professional';
+    story.dataset.mode = initialMode;
+
     const hashId = decodeURIComponent(window.location.hash.replace('#', ''));
     const hashTarget = hashId ? document.getElementById(hashId) : null;
     const initialStop = hashTarget && stops.includes(hashTarget) ? hashTarget : stops[0];
-    activateStop(initialStop, { updateHash: false });
     initialStop.classList.add('is-visible');
+    activeStop = initialStop;
+    setMode(initialMode);
 
     nodes.forEach((node) => {
       node.addEventListener('click', () => {
@@ -966,6 +1166,15 @@ const routePoints = chapters
 
         activateStop(target);
         target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+      });
+    });
+
+    toggleButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const mode = button.dataset.journeyModeToggle;
+        if (mode === 'professional' || mode === 'personal') {
+          setMode(mode);
+        }
       });
     });
 
