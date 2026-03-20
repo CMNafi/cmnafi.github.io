@@ -1,11 +1,161 @@
-<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"><title>Cricket - C M Nafi</title><meta name="description" content="A cleaner cricket page with a field view, a live match log, and an admin-only entry flow backed by Supabase."><link rel="canonical" href="https://cmnafi.com/adventures/cricket/"><meta property="og:type" content="website"><meta property="og:title" content="Cricket - C M Nafi"><meta property="og:description" content="A cleaner cricket page with a field view, a live match log, and an admin-only entry flow backed by Supabase."><meta property="og:url" content="https://cmnafi.com/adventures/cricket/"><meta property="og:image" content="https://cmnafi.com/og-default.svg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Cricket - C M Nafi"><meta name="twitter:description" content="A cleaner cricket page with a field view, a live match log, and an admin-only entry flow backed by Supabase."><meta name="twitter:image" content="https://cmnafi.com/og-default.svg"><meta name="theme-color" content="#120f0d"><link rel="stylesheet" href="/_astro/index.CBBdfMUd.css">
-<link rel="stylesheet" href="/_astro/index.KOG1Uicj.css"></head> <body> <div class="page-shell"> <div class="ambient ambient--one"></div> <div class="ambient ambient--two"></div> <div class="grain"></div> <header class="site-header"> <a class="site-mark" href="/"> <span>C M Nafi</span> <small>Work in motion</small> </a> <nav aria-label="Primary navigation"> <ul class="nav-list"> <li> <a href="/story" data-nav-item="journey"> Journey </a> </li><li> <a href="/blog" data-nav-item="timeline"> Timeline </a> </li><li> <a href="/projects" data-nav-item="projects"> Projects </a> </li><li> <a href="/connect" data-nav-item="connect"> Connect </a> </li> </ul> </nav> </header> <main>  <div class="cricket-simple-page" data-astro-cid-tljr3bpu> <section class="page-section cricket-simple-hero" data-astro-cid-tljr3bpu> <div class="cricket-simple-hero__copy" data-astro-cid-tljr3bpu> <p class="eyebrow" data-astro-cid-tljr3bpu>Interests / Cricket</p> <h1 data-astro-cid-tljr3bpu>A cleaner cricket home for the field, the log, and the stories behind it.</h1> <p data-astro-cid-tljr3bpu>
-This page does one job now: field view first, live stats under it, and the admin console close enough to use
+﻿---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { siteConfig } from '@/config/site';
+import { cricketPlayerProfile, matchesByDate } from '@/data/cricket';
+import { fromLegacyMatchRecord } from '@/lib/cricket-stats';
+import { formatDate } from '@/utils/format';
+
+const fallbackGames = matchesByDate.map((match) => fromLegacyMatchRecord(match));
+const cricketPosts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Cricket')).sort(
+  (a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime()
+);
+const recentStories = [...cricketPosts].sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()).slice(0, 4);
+const storySlugs = cricketPosts.map((post) => post.slug).sort();
+const mappedPosts = cricketPosts.map((post, index) => {
+  const angle = cricketPosts.length === 1 ? -90 : 210 - (index * 240) / (cricketPosts.length - 1);
+  const radians = (angle * Math.PI) / 180;
+  const left = 50 + Math.cos(radians) * 29;
+  const top = 50 + Math.sin(radians) * 22;
+
+  return { post, left, top };
+});
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+const adminEmail = siteConfig.email;
+const archiveLinks = [
+  { href: '/adventures/cricket/highlights', title: 'Highlights', copy: 'The best innings, spells, and pressure finishes without the rest of the archive noise.' },
+  { href: '/adventures/cricket/records', title: 'Records', copy: 'The deeper batting and bowling ledger when you want the longer statistical layer.' },
+  { href: '/adventures/cricket/timeline', title: 'Timeline', copy: 'The broader cricket chronology across years, teams, and formats.' }
+];
+---
+
+<BaseLayout
+  title="Cricket"
+  description="A cleaner cricket page with a field view, a live match log, and an admin-only entry flow backed by Supabase."
+>
+  <div class="cricket-simple-page">
+    <section class="page-section cricket-simple-hero">
+      <div class="cricket-simple-hero__copy">
+        <p class="eyebrow">Interests / Cricket</p>
+        <h1>A cleaner cricket home for the field, the log, and the stories behind it.</h1>
+        <p>
+          This page does one job now: field view first, live stats under it, and the admin console close enough to use
           without digging through five separate cricket pages.
-</p> <div class="hero-actions" data-astro-cid-tljr3bpu> <a class="button button-primary" href="#cricket-log" data-astro-cid-tljr3bpu>Open match log</a> <a class="button button-secondary" href="#cricket-admin" data-astro-cid-tljr3bpu>Open admin console</a> </div> </div> <aside class="panel cricket-simple-hero__card" data-astro-cid-tljr3bpu> <p class="eyebrow" data-astro-cid-tljr3bpu>Player reference</p> <h2 data-astro-cid-tljr3bpu>C M Nafi</h2> <ul data-astro-cid-tljr3bpu> <li data-astro-cid-tljr3bpu><span data-astro-cid-tljr3bpu>Player ID</span><strong data-astro-cid-tljr3bpu>4593171</strong></li> <li data-astro-cid-tljr3bpu><span data-astro-cid-tljr3bpu>Current team</span><strong data-astro-cid-tljr3bpu>TB Bengal Tigers</strong></li> <li data-astro-cid-tljr3bpu><span data-astro-cid-tljr3bpu>Admin account</span><strong data-astro-cid-tljr3bpu>nafi@cmnafi.com</strong></li> </ul> <a class="button button-ghost" href="https://cricclubs.com/TCL/viewPlayer.do?playerId=4593171&clubId=1091" target="_blank" rel="noreferrer" data-astro-cid-tljr3bpu>Open CricClubs profile</a> </aside> </section> <section class="page-section panel cricket-simple-field" data-astro-cid-tljr3bpu> <div class="cricket-simple-field__copy" data-astro-cid-tljr3bpu> <p class="eyebrow" data-astro-cid-tljr3bpu>Field view</p> <h2 data-astro-cid-tljr3bpu>The page is built around the ground itself.</h2> <p data-astro-cid-tljr3bpu>
-Match stories sit around the inner circle, the live data sits just below, and the whole page reads like one
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#cricket-log">Open match log</a>
+          <a class="button button-secondary" href="#cricket-admin">Open admin console</a>
+        </div>
+      </div>
+
+      <aside class="panel cricket-simple-hero__card">
+        <p class="eyebrow">Player reference</p>
+        <h2>{cricketPlayerProfile.name}</h2>
+        <ul>
+          <li><span>Player ID</span><strong>{cricketPlayerProfile.playerId}</strong></li>
+          <li><span>Current team</span><strong>{cricketPlayerProfile.currentTeam}</strong></li>
+          <li><span>Admin account</span><strong>{adminEmail}</strong></li>
+        </ul>
+        <a class="button button-ghost" href={cricketPlayerProfile.profileUrl} target="_blank" rel="noreferrer">Open CricClubs profile</a>
+      </aside>
+    </section>
+
+    <section class="page-section panel cricket-simple-field">
+      <div class="cricket-simple-field__copy">
+        <p class="eyebrow">Field view</p>
+        <h2>The page is built around the ground itself.</h2>
+        <p>
+          Match stories sit around the inner circle, the live data sits just below, and the whole page reads like one
           cricket workspace instead of a pile of disconnected views.
-</p> </div> <div class="cricket-simple-field__grid" data-astro-cid-tljr3bpu> <div class="cricket-ground" data-astro-cid-tljr3bpu> <div class="cricket-ground__oval" data-astro-cid-tljr3bpu></div> <div class="cricket-ground__inner-circle" data-astro-cid-tljr3bpu></div> <div class="cricket-ground__pitch" data-astro-cid-tljr3bpu> <span class="cricket-ground__crease cricket-ground__crease--top" data-astro-cid-tljr3bpu></span> <span class="cricket-ground__crease cricket-ground__crease--bottom" data-astro-cid-tljr3bpu></span> <span class="cricket-ground__stumps cricket-ground__stumps--top" data-astro-cid-tljr3bpu></span> <span class="cricket-ground__stumps cricket-ground__stumps--bottom" data-astro-cid-tljr3bpu></span> </div> <a class="cricket-ground__node" href="/blog/seven-to-defend-swat-vs-royal-phoenix" style="left:24.88526329025128%; top:39%;" data-astro-cid-tljr3bpu> <span class="cricket-ground__dot" data-astro-cid-tljr3bpu></span> <span class="cricket-ground__tooltip" data-astro-cid-tljr3bpu> <strong data-astro-cid-tljr3bpu>Seven to defend: SWAT vs Royal Phoenix</strong> <small data-astro-cid-tljr3bpu>October 1, 2024</small> <span data-astro-cid-tljr3bpu>An October 1, 2024 match story about scoring 29 off 24 and defending 7 in the last over to win by 3 runs.</span> </span> </a><a class="cricket-ground__node" href="/blog/78-off-47-bengals-vs-tpcc" style="left:31.35915931909036%; top:66.85297774861752%;" data-astro-cid-tljr3bpu> <span class="cricket-ground__dot" data-astro-cid-tljr3bpu></span> <span class="cricket-ground__tooltip" data-astro-cid-tljr3bpu> <strong data-astro-cid-tljr3bpu>78 off 47: Bengals vs TPCC</strong> <small data-astro-cid-tljr3bpu>May 18, 2025</small> <span data-astro-cid-tljr3bpu>A May 18, 2025 chase at Evans Park where the innings flowed and the Bengals closed it out by 8 wickets.</span> </span> </a><a class="cricket-ground__node" href="/blog/one-of-those-days-swat-vs-tampa-telugu-titans" style="left:68.64084068090963%; top:66.85297774861752%;" data-astro-cid-tljr3bpu> <span class="cricket-ground__dot" data-astro-cid-tljr3bpu></span> <span class="cricket-ground__tooltip" data-astro-cid-tljr3bpu> <strong data-astro-cid-tljr3bpu>One of those days: SWAT vs Tampa Telugu Titans</strong> <small data-astro-cid-tljr3bpu>June 22, 2025</small> <span data-astro-cid-tljr3bpu>A June 22, 2025 match where 54 runs and 5 wickets mattered, but the team made the day special.</span> </span> </a><a class="cricket-ground__node" href="/blog/cricket-matches-worth-remembering" style="left:75.11473670974873%; top:39%;" data-astro-cid-tljr3bpu> <span class="cricket-ground__dot" data-astro-cid-tljr3bpu></span> <span class="cricket-ground__tooltip" data-astro-cid-tljr3bpu> <strong data-astro-cid-tljr3bpu>Cricket matches worth remembering</strong> <small data-astro-cid-tljr3bpu>January 14, 2026</small> <span data-astro-cid-tljr3bpu>The kinds of games that linger because of tension, timing, and nerve.</span> </span> </a> </div> <aside class="cricket-simple-field__rail" data-astro-cid-tljr3bpu> <div class="panel cricket-simple-field__lead" data-astro-cid-tljr3bpu> <p class="eyebrow" data-astro-cid-tljr3bpu>Story layer</p> <h3 data-astro-cid-tljr3bpu>Recent match writing stays connected to the field.</h3> <p data-astro-cid-tljr3bpu>The blog is still where the full story lives. This page now gives those stories the right context instead of burying them.</p> </div> <div class="cricket-simple-field__stories" data-astro-cid-tljr3bpu> <a class="panel cricket-simple-field__story-card" href="/blog/cricket-matches-worth-remembering" data-astro-cid-tljr3bpu> <span class="eyebrow" data-astro-cid-tljr3bpu>January 14, 2026</span> <strong data-astro-cid-tljr3bpu>Cricket matches worth remembering</strong> <p data-astro-cid-tljr3bpu>The kinds of games that linger because of tension, timing, and nerve.</p> </a><a class="panel cricket-simple-field__story-card" href="/blog/one-of-those-days-swat-vs-tampa-telugu-titans" data-astro-cid-tljr3bpu> <span class="eyebrow" data-astro-cid-tljr3bpu>June 22, 2025</span> <strong data-astro-cid-tljr3bpu>One of those days: SWAT vs Tampa Telugu Titans</strong> <p data-astro-cid-tljr3bpu>A June 22, 2025 match where 54 runs and 5 wickets mattered, but the team made the day special.</p> </a><a class="panel cricket-simple-field__story-card" href="/blog/78-off-47-bengals-vs-tpcc" data-astro-cid-tljr3bpu> <span class="eyebrow" data-astro-cid-tljr3bpu>May 18, 2025</span> <strong data-astro-cid-tljr3bpu>78 off 47: Bengals vs TPCC</strong> <p data-astro-cid-tljr3bpu>A May 18, 2025 chase at Evans Park where the innings flowed and the Bengals closed it out by 8 wickets.</p> </a><a class="panel cricket-simple-field__story-card" href="/blog/seven-to-defend-swat-vs-royal-phoenix" data-astro-cid-tljr3bpu> <span class="eyebrow" data-astro-cid-tljr3bpu>October 1, 2024</span> <strong data-astro-cid-tljr3bpu>Seven to defend: SWAT vs Royal Phoenix</strong> <p data-astro-cid-tljr3bpu>An October 1, 2024 match story about scoring 29 off 24 and defending 7 in the last over to win by 3 runs.</p> </a> </div> </aside> </div> </section> <section class="page-section" id="cricket-summary" data-astro-cid-tljr3bpu> <div class="section-heading"> <p class="eyebrow">Live stats</p> <h2>The live cricket view is one clean strip, not a dashboard maze.</h2> <p class="section-description">The summary comes from Supabase when connected. The seeded archive stays as a safe fallback until a live row exists.</p> </div> <div class="cricket-stats-banner panel" data-cricket-stats-banner data-astro-cid-tljr3bpu><p data-astro-cid-tljr3bpu>Loading live cricket stats.</p></div> <div class="cricket-simple-summary" data-summary-cards data-astro-cid-tljr3bpu></div> </section> <section class="page-section" id="cricket-log" data-astro-cid-tljr3bpu> <div class="section-heading"> <p class="eyebrow">Match log</p> <h2>Every game lives in one chronological stream.</h2> <p class="section-description">Filter by year or team, keep the story link close, and use the admin console below when you need to add the next match.</p> </div> <div class="cricket-stats-filters panel cricket-stats-filters--embedded" data-cricket-filters data-astro-cid-tljr3bpu> <label class="search-input cricket-stats-filters__search" data-astro-cid-tljr3bpu> <span class="sr-only" data-astro-cid-tljr3bpu>Search games</span> <input type="search" placeholder="Search opponent, venue, or note" data-cricket-filter-search data-astro-cid-tljr3bpu> </label> <label data-astro-cid-tljr3bpu><span data-astro-cid-tljr3bpu>Year</span><select data-cricket-filter-year data-astro-cid-tljr3bpu></select></label> <label data-astro-cid-tljr3bpu><span data-astro-cid-tljr3bpu>Team</span><select data-cricket-filter-team data-astro-cid-tljr3bpu></select></label> </div> <div class="panel cricket-stats-log cricket-stats-log--embedded" data-cricket-log data-astro-cid-tljr3bpu></div> </section> <section class="page-section" id="cricket-admin" data-astro-cid-tljr3bpu> <div class="section-heading"> <p class="eyebrow">Admin console</p> <h2>Add, edit, and archive matches from the same page.</h2> <p class="section-description">Only nafi@cmnafi.com can write. The public page stays readable for everyone else.</p> </div> <div class="cricket-admin-shell" data-cricket-admin data-astro-cid-tljr3bpu></div> </section> <section class="page-section" data-astro-cid-tljr3bpu> <div class="section-heading"> <p class="eyebrow">Further layers</p> <h2>The supporting cricket pages still exist, but they no longer compete with the main page.</h2> <p class="section-description">Use these when you want a deeper slice without breaking the main page structure.</p> </div> <div class="three-up-grid" data-astro-cid-tljr3bpu> <a class="panel archive-link-card archive-link-card--quiet" href="/adventures/cricket/highlights" data-astro-cid-tljr3bpu> <h3 data-astro-cid-tljr3bpu>Highlights</h3> <p data-astro-cid-tljr3bpu>The best innings, spells, and pressure finishes without the rest of the archive noise.</p> <span data-astro-cid-tljr3bpu>Open</span> </a><a class="panel archive-link-card archive-link-card--quiet" href="/adventures/cricket/records" data-astro-cid-tljr3bpu> <h3 data-astro-cid-tljr3bpu>Records</h3> <p data-astro-cid-tljr3bpu>The deeper batting and bowling ledger when you want the longer statistical layer.</p> <span data-astro-cid-tljr3bpu>Open</span> </a><a class="panel archive-link-card archive-link-card--quiet" href="/adventures/cricket/timeline" data-astro-cid-tljr3bpu> <h3 data-astro-cid-tljr3bpu>Timeline</h3> <p data-astro-cid-tljr3bpu>The broader cricket chronology across years, teams, and formats.</p> <span data-astro-cid-tljr3bpu>Open</span> </a> </div> </section> </div> <datalist id="cricket-story-slugs" data-astro-cid-tljr3bpu><option value="78-off-47-bengals-vs-tpcc" data-astro-cid-tljr3bpu></option><option value="cricket-matches-worth-remembering" data-astro-cid-tljr3bpu></option><option value="one-of-those-days-swat-vs-tampa-telugu-titans" data-astro-cid-tljr3bpu></option><option value="seven-to-defend-swat-vs-royal-phoenix" data-astro-cid-tljr3bpu></option></datalist> <script id="cricket-stats-env" type="application/json">{"supabaseUrl":"https://uzllftrykhkmrdgvigqo.supabase.co","supabaseAnonKey":"sb_publishable_2ytxloyRs3x-P3se7xWjbA_XFF5asfg","adminEmail":"nafi@cmnafi.com"}</script> <script id="cricket-stats-fallback" type="application/json">[{"id":"2026-02-19-allies-vs-tb-bengal-tigers","gameDate":"2026-02-19","seasonLabel":"2026","competition":"TCL","format":"Leather ball","team":"TB Bengal Tigers","opponent":"Allies","venue":"TCL ground","result":"Result not yet imported","runs":2,"balls":3,"wickets":0,"overs":0,"runsConceded":0,"catches":2,"runOuts":0,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"A light batting outing, but the kind of match remembered for staying switched on in the field and finishing with two catches.","sourceStatus":"verified","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2026-season-high-63","gameDate":"2026-01-25","seasonLabel":"2026","competition":"TB Bengal Tigers chapter","format":"Leather ball","team":"TB Bengal Tigers","opponent":"TBD from import","venue":"To be added","result":"Awaiting full scorecard import","runs":63,"balls":null,"wickets":null,"overs":null,"runsConceded":null,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"The current headline innings in the archive. It is the kind of knock that deserves front-page space even before the full scorecard detail is attached.","sourceStatus":"imported","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2025-swat-54","gameDate":"2025-08-10","seasonLabel":"2025","competition":"Titan Cup XI","format":"Leather ball","team":"SWAT","opponent":"TBD from import","venue":"To be added","result":"Awaiting full scorecard import","runs":54,"balls":null,"wickets":null,"overs":null,"runsConceded":null,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"A reminder that some seasons are defined by the innings that arrive under pressure and hold the campaign together.","sourceStatus":"imported","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2024-swat-4-30","gameDate":"2024-11-02","seasonLabel":"2024","competition":"TPL 2024 Fall Series","format":"Tennis ball","team":"SWAT","opponent":"TBD from import","venue":"To be added","result":"Awaiting full scorecard import","runs":null,"balls":null,"wickets":4,"overs":null,"runsConceded":30,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"The clearest bowling burst in the current archive and the best example of the all-round story being real, not just a label.","sourceStatus":"imported","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2024-10-01-swat-vs-royal-phoenix","gameDate":"2024-10-01","seasonLabel":"2024","competition":"League match","format":"Unknown","team":"SWAT","opponent":"Royal Phoenix","venue":"To be added","result":"SWAT won by 3 runs","runs":29,"balls":24,"wickets":1,"overs":null,"runsConceded":null,"catches":0,"runOuts":0,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"A 29 off 24 helped SWAT reach 95, but the memory is the final over: seven to defend, wides that nearly flipped the game, Amit Saha's wicket at the key moment, and a dot ball to finish it.","sourceStatus":"manually added","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2024-st-pete-shields-33","gameDate":"2024-06-22","seasonLabel":"2024","competition":"Titan Cup X","format":"Leather ball","team":"St Pete Shields","opponent":"TBD from import","venue":"To be added","result":"Awaiting full scorecard import","runs":33,"balls":null,"wickets":null,"overs":null,"runsConceded":null,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"A compact finishing or stabilizing innings entry held here until the full scorecard details arrive.","sourceStatus":"imported","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"manual-memory-placeholder","gameDate":"2023-12-01","seasonLabel":"Pre-archive","competition":"Archive memory","format":"Unknown","team":"Bengals","opponent":"Add manually","venue":"Add manually","result":"Manual memory entry","runs":null,"balls":null,"wickets":null,"overs":null,"runsConceded":null,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"Reserved for matches that matter before the scorecards are fully available: community games, remembered transitions, and the stories the raw data never captures on its own.","sourceStatus":"manually added","isArchived":false,"createdAt":null,"updatedAt":null}]</script> <script type="module">
+        </p>
+      </div>
+
+      <div class="cricket-simple-field__grid">
+        <div class="cricket-ground">
+          <div class="cricket-ground__oval"></div>
+          <div class="cricket-ground__inner-circle"></div>
+          <div class="cricket-ground__pitch">
+            <span class="cricket-ground__crease cricket-ground__crease--top"></span>
+            <span class="cricket-ground__crease cricket-ground__crease--bottom"></span>
+            <span class="cricket-ground__stumps cricket-ground__stumps--top"></span>
+            <span class="cricket-ground__stumps cricket-ground__stumps--bottom"></span>
+          </div>
+
+          {mappedPosts.map(({ post, left, top }) => (
+            <a class="cricket-ground__node" href={`/blog/${post.slug}`} style={`left:${left}%; top:${top}%;`}>
+              <span class="cricket-ground__dot"></span>
+              <span class="cricket-ground__tooltip">
+                <strong>{post.data.title}</strong>
+                <small>{formatDate(post.data.publishedAt)}</small>
+                <span>{post.data.description}</span>
+              </span>
+            </a>
+          ))}
+        </div>
+
+        <aside class="cricket-simple-field__rail">
+          <div class="panel cricket-simple-field__lead">
+            <p class="eyebrow">Story layer</p>
+            <h3>Recent match writing stays connected to the field.</h3>
+            <p>The blog is still where the full story lives. This page now gives those stories the right context instead of burying them.</p>
+          </div>
+          <div class="cricket-simple-field__stories">
+            {recentStories.map((story) => (
+              <a class="panel cricket-simple-field__story-card" href={`/blog/${story.slug}`}>
+                <span class="eyebrow">{formatDate(story.data.publishedAt)}</span>
+                <strong>{story.data.title}</strong>
+                <p>{story.data.description}</p>
+              </a>
+            ))}
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page-section" id="cricket-summary">
+      <SectionHeading eyebrow="Live stats" title="The live cricket view is one clean strip, not a dashboard maze." description="The summary comes from Supabase when connected. The seeded archive stays as a safe fallback until a live row exists." />
+      <div class="cricket-stats-banner panel" data-cricket-stats-banner><p>Loading live cricket stats.</p></div>
+      <div class="cricket-simple-summary" data-summary-cards></div>
+    </section>
+
+    <section class="page-section" id="cricket-log">
+      <SectionHeading eyebrow="Match log" title="Every game lives in one chronological stream." description="Filter by year or team, keep the story link close, and use the admin console below when you need to add the next match." />
+      <div class="cricket-stats-filters panel cricket-stats-filters--embedded" data-cricket-filters>
+        <label class="search-input cricket-stats-filters__search">
+          <span class="sr-only">Search games</span>
+          <input type="search" placeholder="Search opponent, venue, or note" data-cricket-filter-search />
+        </label>
+        <label><span>Year</span><select data-cricket-filter-year></select></label>
+        <label><span>Team</span><select data-cricket-filter-team></select></label>
+      </div>
+      <div class="panel cricket-stats-log cricket-stats-log--embedded" data-cricket-log></div>
+    </section>
+
+    <section class="page-section" id="cricket-admin">
+      <SectionHeading eyebrow="Admin console" title="Add, edit, and archive matches from the same page." description={`Only ${adminEmail} can write. The public page stays readable for everyone else.`} />
+      <div class="cricket-admin-shell" data-cricket-admin></div>
+    </section>
+
+    <section class="page-section">
+      <SectionHeading eyebrow="Further layers" title="The supporting cricket pages still exist, but they no longer compete with the main page." description="Use these when you want a deeper slice without breaking the main page structure." />
+      <div class="three-up-grid">
+        {archiveLinks.map((link) => (
+          <a class="panel archive-link-card archive-link-card--quiet" href={link.href}>
+            <h3>{link.title}</h3>
+            <p>{link.copy}</p>
+            <span>Open</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <datalist id="cricket-story-slugs">{storySlugs.map((slug) => <option value={slug} />)}</datalist>
+  <script id="cricket-stats-env" type="application/json" set:html={JSON.stringify({ supabaseUrl, supabaseAnonKey, adminEmail })}></script>
+  <script id="cricket-stats-fallback" type="application/json" set:html={JSON.stringify(fallbackGames)}></script>
+  <script type="module">
     import { createClient } from '@supabase/supabase-js';
     import { aggregateCricketGames, cricketEntryFields, emptyCricketGame, normalizeCricketGame, toSupabasePayload } from '../../../lib/cricket-stats';
 
@@ -433,4 +583,90 @@ Match stories sit around the inner circle, the live data sits just below, and th
     };
 
     initSupabase();
-  </script>   </main> <footer class="site-footer"> <div> <a class="footer-title" href="/">C M Nafi</a> <p class="footer-copy">A calm home for interest worlds, timelines, and public-facing work.</p> </div> <nav class="footer-nav" aria-label="Footer navigation"> <a href="/story">Story</a><a href="/about">About</a><a href="/brewing">Brewing</a><a href="/interests">Interests</a><a href="/connect">Connect</a> </nav> <div class="footer-links"> <a href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a> <a href="https://github.com/cmnafi" target="_blank" rel="noreferrer"> GitHub </a><a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noreferrer"> LinkedIn </a><a href="mailto:nafi@cmnafi.com" rel="noreferrer"> Email </a> </div> <div class="footer-meta"> <span>Copyright 2026</span> <span>Last updated Mar 20, 2026</span> </div> </footer> </div> </body></html>
+  </script>
+
+  <style>
+    .cricket-simple-page { position: relative; padding-bottom: 4rem; }
+    .cricket-simple-page::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(circle at 16% 14%, rgba(156, 187, 118, 0.14), transparent 24%), radial-gradient(circle at 82% 18%, rgba(222, 194, 122, 0.08), transparent 20%), linear-gradient(180deg, rgba(8, 20, 10, 0.96), rgba(16, 34, 18, 0.98)); }
+    .cricket-simple-page > * { position: relative; z-index: 1; }
+    .cricket-simple-hero { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.72fr); gap: 1.2rem; align-items: start; padding-top: clamp(2rem, 6vw, 4rem); }
+    .cricket-simple-hero__copy h1, .cricket-simple-field h2 { margin: 0; font-family: 'Fraunces', 'Times New Roman', serif; letter-spacing: -0.05em; color: rgba(248, 243, 230, 0.98); }
+    .cricket-simple-hero__copy h1 { font-size: clamp(3rem, 5.8vw, 4.9rem); line-height: 0.96; margin-bottom: 0.7rem; max-width: 11ch; }
+    .cricket-simple-hero__copy p, .cricket-simple-field p { margin: 0; color: rgba(237, 244, 216, 0.78); line-height: 1.75; }
+    .cricket-simple-hero__card { padding: 1.25rem; background: linear-gradient(180deg, rgba(18, 31, 22, 0.88), rgba(13, 22, 16, 0.95)); border-color: rgba(208, 188, 132, 0.18); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18); }
+    .cricket-simple-hero__card h2 { margin: 0.2rem 0 0; font-size: 1.5rem; color: rgba(250, 246, 238, 0.96); }
+    .cricket-simple-hero__card ul { list-style: none; margin: 1rem 0 1.2rem; padding: 0; display: grid; gap: 0.75rem; }
+    .cricket-simple-hero__card li { display: flex; justify-content: space-between; gap: 1rem; color: rgba(237, 244, 216, 0.74); }
+    .cricket-simple-hero__card li strong { color: rgba(250, 246, 238, 0.96); text-align: right; }
+    .cricket-simple-field { display: grid; gap: 1rem; padding: clamp(1.2rem, 3vw, 1.7rem); background: linear-gradient(180deg, rgba(34, 67, 34, 0.9), rgba(16, 34, 18, 0.96)), radial-gradient(circle at top, rgba(216, 191, 122, 0.08), transparent 62%); border-color: rgba(182, 215, 143, 0.22); }
+    .cricket-simple-field h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); line-height: 1.02; margin-bottom: 0.5rem; }
+    .cricket-simple-field__grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.7fr); gap: 1rem; align-items: start; }
+    .cricket-simple-field__rail { display: grid; gap: 0.9rem; }
+    .cricket-simple-field__lead { padding: 1rem 1.1rem; background: rgba(10, 18, 13, 0.68); }
+    .cricket-simple-field__lead h3 { margin: 0.2rem 0 0.5rem; color: rgba(250, 246, 238, 0.96); }
+    .cricket-simple-field__stories { display: grid; gap: 0.75rem; }
+    .cricket-simple-field__story-card { display: grid; gap: 0.35rem; text-decoration: none; padding: 1rem 1.1rem; background: rgba(10, 18, 13, 0.72); border-color: rgba(237, 231, 215, 0.08); transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease; }
+    .cricket-simple-field__story-card:hover, .cricket-simple-field__story-card:focus-visible { transform: translateY(-2px); border-color: rgba(217, 185, 114, 0.24); background: rgba(14, 24, 18, 0.86); }
+    .cricket-simple-field__story-card strong { color: rgba(250, 246, 238, 0.95); font-size: 1rem; }
+    .cricket-ground { position: relative; width: 100%; min-height: 32rem; border-radius: 42px; overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(182, 215, 143, 0.06), transparent 54%), repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 3%, transparent 3%, transparent 7%), linear-gradient(180deg, rgba(47, 91, 44, 0.95), rgba(28, 54, 27, 0.98)); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 18px 40px rgba(0, 0, 0, 0.18); }
+    .cricket-ground__oval, .cricket-ground__inner-circle, .cricket-ground__pitch { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); }
+    .cricket-ground__oval { width: 84%; height: 86%; border-radius: 50%; border: 2px solid rgba(237, 244, 216, 0.18); }
+    .cricket-ground__inner-circle { width: 58%; height: 60%; border-radius: 50%; border: 1px solid rgba(237, 244, 216, 0.2); }
+    .cricket-ground__pitch { width: 12%; height: 66%; border-radius: 28px; background: linear-gradient(180deg, rgba(168, 127, 72, 0.94), rgba(111, 73, 38, 0.98)); }
+    .cricket-ground__crease, .cricket-ground__stumps { position: absolute; left: 50%; transform: translateX(-50%); }
+    .cricket-ground__crease { width: 190%; height: 2px; background: rgba(237, 244, 216, 0.38); }
+    .cricket-ground__crease--top { top: 10%; } .cricket-ground__crease--bottom { bottom: 10%; }
+    .cricket-ground__stumps { width: 1.25rem; height: 1rem; background: linear-gradient(90deg, rgba(237,244,216,0.7) 0 18%, transparent 18% 40%, rgba(237,244,216,0.7) 40% 58%, transparent 58% 80%, rgba(237,244,216,0.7) 80% 100%); }
+    .cricket-ground__stumps--top { top: 4.5%; } .cricket-ground__stumps--bottom { bottom: 4.5%; }
+    .cricket-ground__node { position: absolute; display: block; transform: translate(-50%, -50%); text-decoration: none; }
+    .cricket-ground__dot { display: block; width: 1rem; height: 1rem; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.9), rgba(214,163,93,0.92) 45%, rgba(93,51,18,0.98)); box-shadow: 0 0 0 7px rgba(250, 230, 188, 0.08), 0 12px 25px rgba(0,0,0,0.25); animation: cricketNodePulse 3.8s ease-in-out infinite; }
+    .cricket-ground__tooltip { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); width: min(16rem, 56vw); display: grid; gap: 0.2rem; padding: 0.85rem 1rem; border-radius: 16px; background: rgba(9, 17, 10, 0.92); border: 1px solid rgba(239, 228, 197, 0.14); color: rgba(243, 237, 225, 0.88); box-shadow: 0 18px 40px rgba(0,0,0,0.26); opacity: 0; pointer-events: none; transition: opacity 180ms ease, transform 180ms ease; }
+    .cricket-ground__tooltip small { color: rgba(243, 237, 225, 0.52); } .cricket-ground__tooltip span { font-size: 0.88rem; line-height: 1.55; }
+    .cricket-ground__node:hover .cricket-ground__tooltip, .cricket-ground__node:focus-visible .cricket-ground__tooltip { opacity: 1; transform: translateY(-50%) translateX(4px); }
+    .cricket-simple-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.9rem; margin-top: 1rem; }
+    .cricket-simple-summary__card { display: grid; gap: 0.3rem; padding: 1rem 1.1rem; background: rgba(13, 22, 16, 0.76); }
+    .cricket-simple-summary__card span { color: rgba(243, 237, 225, 0.58); font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .cricket-simple-summary__card strong { font-size: 1.5rem; color: rgba(255, 248, 238, 0.96); }
+    .cricket-stats-filters--embedded { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: end; }
+    .cricket-stats-filters--embedded label { display: grid; gap: 0.35rem; min-width: 10rem; }
+    .cricket-stats-filters--embedded span, .cricket-admin__login span, .cricket-admin__details-grid span, .cricket-admin__quickfills span { color: rgba(243, 237, 225, 0.58); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .cricket-stats-filters--embedded input, .cricket-stats-filters--embedded select, .cricket-admin-shell input, .cricket-admin-shell textarea { width: 100%; border-radius: 14px; border: 1px solid rgba(236, 231, 214, 0.12); background: rgba(8, 14, 10, 0.82); color: rgba(248, 243, 230, 0.96); padding: 0.82rem 0.95rem; }
+    .cricket-log-table--professional thead th { color: rgba(243, 237, 225, 0.58); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem; }
+    .cricket-admin-shell { display: grid; gap: 1rem; }
+    .cricket-admin__shell { display: grid; grid-template-columns: minmax(16rem, 0.82fr) minmax(0, 1.3fr) minmax(16rem, 0.84fr); gap: 1rem; }
+    .cricket-admin__shell--signed-out { grid-template-columns: minmax(18rem, 0.9fr) minmax(16rem, 1fr); }
+    .cricket-admin__status-card, .cricket-admin__form-card, .cricket-admin__recent-card, .cricket-admin__guide-card, .cricket-admin__message { background: rgba(11, 17, 13, 0.8); border-color: rgba(237, 231, 215, 0.08); padding: 1rem; }
+    .cricket-admin__status-card h3, .cricket-admin__recent-card h3, .cricket-admin__guide-card h3 { margin: 0.2rem 0 0.5rem; color: rgba(250, 246, 238, 0.96); }
+    .cricket-admin__status-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.9rem; }
+    .cricket-admin__login, .cricket-admin__details-grid { display: grid; gap: 0.8rem; }
+    .cricket-admin__login label, .cricket-admin__details-grid label { display: grid; gap: 0.35rem; }
+    .cricket-admin__guide-card ul { margin: 0.9rem 0 0; padding-left: 1.2rem; color: rgba(236, 241, 222, 0.78); line-height: 1.75; }
+    .cricket-admin__quickfills { display: grid; gap: 0.85rem; margin-bottom: 1rem; }
+    .cricket-admin__chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.45rem; }
+    .cricket-admin__entry-table-wrap { overflow-x: auto; border-radius: 18px; border: 1px solid rgba(236, 231, 214, 0.08); }
+    .cricket-admin__entry-table { width: 100%; border-collapse: collapse; min-width: 52rem; }
+    .cricket-admin__entry-table th, .cricket-admin__entry-table td { padding: 0.75rem; vertical-align: top; border-bottom: 1px solid rgba(236, 231, 214, 0.06); }
+    .cricket-admin__entry-table th { color: rgba(243, 237, 225, 0.58); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; text-align: left; }
+    .cricket-admin__details-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
+    .cricket-admin__note-field { grid-column: 1 / -1; }
+    .cricket-admin__draft { margin-top: 1rem; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; background: rgba(14, 21, 16, 0.78); }
+    .cricket-admin__draft span { color: rgba(243, 237, 225, 0.58); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .cricket-admin__draft strong { display: block; margin-top: 0.25rem; color: rgba(250, 246, 238, 0.96); }
+    .cricket-admin__actions { margin-top: 1rem; }
+    .cricket-admin__recent-list { display: grid; gap: 0.75rem; }
+    .cricket-admin__recent-row { display: grid; gap: 0.65rem; padding: 0.9rem 0; border-bottom: 1px solid rgba(236, 231, 214, 0.08); }
+    .cricket-admin__recent-row:last-child { border-bottom: 0; }
+    .cricket-admin__recent-row strong { color: rgba(250, 246, 238, 0.96); }
+    .cricket-admin__recent-row p { margin: 0.35rem 0 0; color: rgba(236, 241, 222, 0.72); line-height: 1.6; }
+    .cricket-admin__recent-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .cricket-admin__notice { color: rgba(182, 230, 174, 0.9); }
+    .cricket-admin__error, .cricket-admin__validation p { color: rgba(255, 178, 161, 0.92); }
+    .cricket-admin__validation { margin-top: 0.8rem; padding: 0.85rem 0.9rem; border-radius: 16px; background: rgba(70, 24, 20, 0.24); border: 1px solid rgba(255, 178, 161, 0.18); }
+    .archive-link-card--quiet { background: rgba(10, 17, 13, 0.7); border-color: rgba(237, 231, 215, 0.08); }
+    .archive-link-card--quiet span { color: rgba(216, 185, 114, 0.92); }
+    @keyframes cricketNodePulse { 0%, 100% { box-shadow: 0 0 0 7px rgba(250, 230, 188, 0.08), 0 12px 25px rgba(0,0,0,0.25); } 50% { box-shadow: 0 0 0 11px rgba(250, 230, 188, 0.12), 0 12px 25px rgba(0,0,0,0.28); } }
+    @media (max-width: 1080px) { .cricket-simple-hero, .cricket-simple-field__grid, .cricket-admin__shell, .cricket-admin__shell--signed-out { grid-template-columns: 1fr; } .cricket-admin__draft { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 720px) { .cricket-simple-hero__copy h1 { font-size: clamp(2.5rem, 13vw, 3.6rem); } .cricket-ground { min-height: 24rem; } .cricket-simple-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cricket-admin__details-grid, .cricket-admin__draft { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { .cricket-ground__dot, .cricket-simple-field__story-card { animation: none; transition: none; } .cricket-ground__tooltip { transition: none; } }
+  </style>
+</BaseLayout>
