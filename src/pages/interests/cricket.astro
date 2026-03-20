@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import InterestWorldNav from '@/components/InterestWorldNav.astro';
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { formatDate } from '@/utils/format';
 
@@ -37,13 +37,10 @@ const mappedPosts = cricketPosts.map((post, index) => {
         </p>
         <div class="cricket-world__actions">
           <a class="button button-secondary" href="/adventures/cricket">Open full cricket archive</a>
-          <a class="button button-ghost" href="/blog">Open full timeline</a>
         </div>
       </div>
 
-      <div class="cricket-world__nav-wrap">
-        <InterestWorldNav current="cricket" />
-      </div>
+
     </section>
 
     <section class="page-section panel cricket-world__stage">

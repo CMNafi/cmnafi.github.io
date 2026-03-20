@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import InterestWorldNav from '@/components/InterestWorldNav.astro';
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { formatDate } from '@/utils/format';
 
@@ -25,7 +25,7 @@ const posts = (await getCollection(
         </p>
       </div>
 
-      <InterestWorldNav current="writing" />
+
     </section>
 
     <section class="page-section writing-world__stack">

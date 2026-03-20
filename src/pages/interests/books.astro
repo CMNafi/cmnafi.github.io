@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import InterestWorldNav from '@/components/InterestWorldNav.astro';
+
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { formatDate } from '@/utils/format';
 
@@ -32,7 +32,7 @@ const shelfRows = Array.from({ length: Math.ceil(posts.length / 6) }, (_, rowInd
         </p>
       </div>
 
-      <InterestWorldNav current="books" />
+
     </section>
 
     <section class="page-section panel books-world__shelf-panel">

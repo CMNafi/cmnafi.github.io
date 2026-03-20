@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import InterestWorldNav from '@/components/InterestWorldNav.astro';
 import { getInterestSectionByCategory, interestSections } from '@/data/interests';
 import { formatDate } from '@/utils/format';
 
@@ -29,7 +28,7 @@ const filters = ['All', ...interestSections.map((section) => section.id)];
         </p>
       </div>
 
-      <InterestWorldNav current="timeline" />
+
     </section>
 
     <section class="page-section panel timeline-page__panel">
