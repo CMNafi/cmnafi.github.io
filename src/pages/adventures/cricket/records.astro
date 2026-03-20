@@ -20,6 +20,10 @@ const byTeam = cricketTeams.filter((team) => team.aggregateStats.matches !== nul
       title="Deep stats with enough warmth to still feel personal"
       description="This page is structured for full career depth later, but useful right now with public totals, seeded snapshots, milestones, and elegant visual summaries."
     />
+    <div class="hero-actions">
+      <a class="button button-primary" href="/adventures/cricket/stats">Open live stats page</a>
+      <a class="button button-secondary" href="/adventures/cricket/matches">Open match archive</a>
+    </div>
     <RecordTabs summary={cricketCareerSummary} seasons={cricketSeasons} />
   </section>
 

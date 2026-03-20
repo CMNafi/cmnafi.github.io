@@ -1,0 +1,624 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"><title>Cricket Stats - C M Nafi</title><meta name="description" content="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."><link rel="canonical" href="https://cmnafi.com/adventures/cricket/stats/"><meta property="og:type" content="website"><meta property="og:title" content="Cricket Stats - C M Nafi"><meta property="og:description" content="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."><meta property="og:url" content="https://cmnafi.com/adventures/cricket/stats/"><meta property="og:image" content="https://cmnafi.com/og-default.svg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Cricket Stats - C M Nafi"><meta name="twitter:description" content="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."><meta name="twitter:image" content="https://cmnafi.com/og-default.svg"><meta name="theme-color" content="#120f0d"><link rel="stylesheet" href="/_astro/about.DV5v213f.css">
+<link rel="stylesheet" href="/_astro/stats.D68B3mBO.css"></head> <body> <div class="page-shell"> <div class="ambient ambient--one"></div> <div class="ambient ambient--two"></div> <div class="grain"></div> <header class="site-header"> <a class="site-mark" href="/"> <span>C M Nafi</span> <small>Work in motion</small> </a> <nav aria-label="Primary navigation"> <ul class="nav-list"> <li> <a href="/story" data-nav-item="journey"> Journey </a> </li><li> <a href="/blog" data-nav-item="timeline"> Timeline </a> </li><li> <a href="/projects" data-nav-item="projects"> Projects </a> </li><li> <a href="/connect" data-nav-item="connect"> Connect </a> </li> </ul> </nav> </header> <main>  <div class="cricket-stats-page" data-astro-cid-vla5mhaf> <section class="page-section cricket-stats-hero" data-astro-cid-vla5mhaf> <div class="cricket-stats-hero__copy" data-astro-cid-vla5mhaf> <p class="eyebrow" data-astro-cid-vla5mhaf>Cricket stats</p> <h1 data-astro-cid-vla5mhaf>The live record page for matches, miles, and the story around them.</h1> <p data-astro-cid-vla5mhaf>
+This page keeps the deep stats view, but makes the match log live. The public side stays readable; the admin side
+          lets me enter games directly and keep the archive growing without rewriting JSON by hand.
+</p> <div class="hero-actions" data-astro-cid-vla5mhaf> <a class="button button-primary" href="#cricket-stats-log" data-astro-cid-vla5mhaf>Open live game log</a> <a class="button button-secondary" href="/adventures/cricket/records" data-astro-cid-vla5mhaf>Compare with records archive</a> </div> </div> <aside class="panel cricket-stats-hero__card" data-astro-cid-vla5mhaf> <p class="eyebrow" data-astro-cid-vla5mhaf>Player reference</p> <h2 data-astro-cid-vla5mhaf>C M Nafi</h2> <ul data-astro-cid-vla5mhaf> <li data-astro-cid-vla5mhaf><span data-astro-cid-vla5mhaf>Player ID</span><strong data-astro-cid-vla5mhaf>4593171</strong></li> <li data-astro-cid-vla5mhaf><span data-astro-cid-vla5mhaf>Current team</span><strong data-astro-cid-vla5mhaf>TB Bengal Tigers</strong></li> <li data-astro-cid-vla5mhaf><span data-astro-cid-vla5mhaf>Archive mode</span><strong data-astro-cid-vla5mhaf>Static fallback + Supabase live</strong></li> </ul> <a class="button button-ghost" href="https://cricclubs.com/TCL/viewPlayer.do?playerId=4593171&clubId=1091" target="_blank" rel="noreferrer" data-astro-cid-vla5mhaf>Open CricClubs profile</a> </aside> </section> <section class="page-section" data-astro-cid-vla5mhaf> <div class="section-heading"> <p class="eyebrow">Live overview</p> <h2>A records page that now has a proper database behind it.</h2> <p class="section-description">Batting, bowling, fielding, season breakdowns, team records, and a game log all draw from the same source. Driving distance adds a little character to the archive.</p> </div> <div class="cricket-stats-banner panel" data-cricket-stats-banner data-astro-cid-vla5mhaf> <p data-astro-cid-vla5mhaf>Loading live cricket stats.</p> </div> </section> <section class="page-section" data-astro-cid-vla5mhaf> <div class="record-tabs panel" data-live-record-tabs data-astro-cid-vla5mhaf> <div class="record-tabs__nav toggle-group" role="tablist" aria-label="Live cricket record views" data-astro-cid-vla5mhaf> <button type="button" class="record-tab is-active" data-live-tab-target="batting" role="tab" aria-selected="true" data-astro-cid-vla5mhaf>Batting</button> <button type="button" class="record-tab" data-live-tab-target="bowling" role="tab" aria-selected="false" data-astro-cid-vla5mhaf>Bowling</button> <button type="button" class="record-tab" data-live-tab-target="fielding" role="tab" aria-selected="false" data-astro-cid-vla5mhaf>Fielding</button> <button type="button" class="record-tab" data-live-tab-target="driving" role="tab" aria-selected="false" data-astro-cid-vla5mhaf>Driving</button> </div> <section class="record-panel is-active" data-live-tab-panel="batting" data-astro-cid-vla5mhaf> <div class="record-panel__header" data-astro-cid-vla5mhaf> <div data-astro-cid-vla5mhaf> <h3 data-astro-cid-vla5mhaf>Batting summary</h3> <p data-astro-cid-vla5mhaf>Live runs, balls, average, strike rate, and scoring markers derived from the stored game log.</p> </div> </div> <div class="record-grid-table" data-summary-batting data-astro-cid-vla5mhaf></div> </section> <section class="record-panel" data-live-tab-panel="bowling" hidden data-astro-cid-vla5mhaf> <div class="record-panel__header" data-astro-cid-vla5mhaf> <div data-astro-cid-vla5mhaf> <h3 data-astro-cid-vla5mhaf>Bowling summary</h3> <p data-astro-cid-vla5mhaf>Wickets, overs, runs conceded, and economy update as soon as a match is saved.</p> </div> </div> <div class="record-grid-table" data-summary-bowling data-astro-cid-vla5mhaf></div> </section> <section class="record-panel" data-live-tab-panel="fielding" hidden data-astro-cid-vla5mhaf> <div class="record-panel__header" data-astro-cid-vla5mhaf> <div data-astro-cid-vla5mhaf> <h3 data-astro-cid-vla5mhaf>Fielding summary</h3> <p data-astro-cid-vla5mhaf>Catches and run outs stay close to the rest of the record instead of living in a separate note pile.</p> </div> </div> <div class="record-grid-table" data-summary-fielding data-astro-cid-vla5mhaf></div> </section> <section class="record-panel" data-live-tab-panel="driving" hidden data-astro-cid-vla5mhaf> <div class="record-panel__header" data-astro-cid-vla5mhaf> <div data-astro-cid-vla5mhaf> <h3 data-astro-cid-vla5mhaf>Driving stats</h3> <p data-astro-cid-vla5mhaf>A fun layer for the archive: how far I drove for the game, how much road time sits behind the cricket story, and which trip was the longest.</p> </div> </div> <div class="record-grid-table" data-summary-driving data-astro-cid-vla5mhaf></div> </section> </div> </section> <section class="page-section" data-astro-cid-vla5mhaf> <div class="section-heading"> <p class="eyebrow">Markers</p> <h2>Live markers for the archive</h2> <p class="section-description">Headline stats, best performances, and road-mile signals stay visible even as the game table grows.</p> </div> <div class="cricket-stats-markers" data-cricket-markers data-astro-cid-vla5mhaf></div> </section> <section class="page-section chart-grid-two-up cricket-stats-charts" data-cricket-charts data-astro-cid-vla5mhaf></section> <section class="page-section two-up cricket-stats-breakdowns" data-astro-cid-vla5mhaf> <div data-astro-cid-vla5mhaf> <div class="section-heading"> <p class="eyebrow">By season</p> <h2>Season cards</h2> <p class="section-description">The season layer is generated from the database, so every new row feeds the summary automatically.</p> </div> <div class="narrow-stack compact-stack" data-cricket-seasons data-astro-cid-vla5mhaf></div> </div> <div data-astro-cid-vla5mhaf> <div class="section-heading"> <p class="eyebrow">By team</p> <h2>Team record view</h2> <p class="section-description">Team chapters stay compact, but they update from the same underlying match log.</p> </div> <div class="record-grid-table panel" data-cricket-teams data-astro-cid-vla5mhaf></div> <div class="panel records-note-card cricket-focus-card" data-cricket-best-note data-astro-cid-vla5mhaf></div> </div> </section> <section class="page-section" id="cricket-stats-log" data-astro-cid-vla5mhaf> <div class="section-heading"> <p class="eyebrow">Game log</p> <h2>Every match, filterable and story-aware</h2> <p class="section-description">Search by opponent, filter by season, team, competition, or format, and jump into the matching blog story when one exists.</p> </div> <div class="cricket-stats-filters panel" data-cricket-filters data-astro-cid-vla5mhaf> <label class="search-input cricket-stats-filters__search" data-astro-cid-vla5mhaf> <span class="sr-only" data-astro-cid-vla5mhaf>Search games</span> <input type="search" placeholder="Search opponent, venue, or note" data-cricket-filter-search data-astro-cid-vla5mhaf> </label> <label data-astro-cid-vla5mhaf> <span data-astro-cid-vla5mhaf>Year</span> <select data-cricket-filter-year data-astro-cid-vla5mhaf></select> </label> <label data-astro-cid-vla5mhaf> <span data-astro-cid-vla5mhaf>Team</span> <select data-cricket-filter-team data-astro-cid-vla5mhaf></select> </label> <label data-astro-cid-vla5mhaf> <span data-astro-cid-vla5mhaf>Competition</span> <select data-cricket-filter-competition data-astro-cid-vla5mhaf></select> </label> <label data-astro-cid-vla5mhaf> <span data-astro-cid-vla5mhaf>Format</span> <select data-cricket-filter-format data-astro-cid-vla5mhaf></select> </label> </div> <div class="panel cricket-stats-log" data-cricket-log data-astro-cid-vla5mhaf></div> </section> <section class="page-section" data-astro-cid-vla5mhaf> <div class="section-heading"> <p class="eyebrow">Admin entry</p> <h2>Admin-only database entry for new games</h2> <p class="section-description">Only signed-in admin credentials can write. Public visitors can see the stats page, but not the editing controls.</p> </div> <div class="panel cricket-admin" data-cricket-admin data-astro-cid-vla5mhaf></div> </section> </div> <datalist id="cricket-story-slugs" data-astro-cid-vla5mhaf> <option value="78-off-47-bengals-vs-tpcc" data-astro-cid-vla5mhaf></option><option value="becoming" data-astro-cid-vla5mhaf></option><option value="creativity-inc" data-astro-cid-vla5mhaf></option><option value="cricket-matches-worth-remembering" data-astro-cid-vla5mhaf></option><option value="designing-your-life" data-astro-cid-vla5mhaf></option><option value="eat-pray-love" data-astro-cid-vla5mhaf></option><option value="educated" data-astro-cid-vla5mhaf></option><option value="elon-musk" data-astro-cid-vla5mhaf></option><option value="flash-boys" data-astro-cid-vla5mhaf></option><option value="games-that-changed-how-i-think" data-astro-cid-vla5mhaf></option><option value="going-infinite" data-astro-cid-vla5mhaf></option><option value="good-to-great" data-astro-cid-vla5mhaf></option><option value="liars-poker" data-astro-cid-vla5mhaf></option><option value="mans-search-for-meaning" data-astro-cid-vla5mhaf></option><option value="one-of-those-days-swat-vs-tampa-telugu-titans" data-astro-cid-vla5mhaf></option><option value="seven-to-defend-swat-vs-royal-phoenix" data-astro-cid-vla5mhaf></option><option value="shoe-dog" data-astro-cid-vla5mhaf></option><option value="siddhartha" data-astro-cid-vla5mhaf></option><option value="steve-jobs" data-astro-cid-vla5mhaf></option><option value="the-accidental-billionaires" data-astro-cid-vla5mhaf></option><option value="the-everything-store" data-astro-cid-vla5mhaf></option><option value="the-heart-of-business" data-astro-cid-vla5mhaf></option><option value="the-last-lecture" data-astro-cid-vla5mhaf></option><option value="the-ride-of-a-lifetime" data-astro-cid-vla5mhaf></option><option value="the-spy-and-the-traitor" data-astro-cid-vla5mhaf></option><option value="the-subtle-art-of-not-giving-a-fck" data-astro-cid-vla5mhaf></option><option value="things-im-building-quietly" data-astro-cid-vla5mhaf></option><option value="what-i-look-for-in-a-great-book" data-astro-cid-vla5mhaf></option><option value="what-it-takes" data-astro-cid-vla5mhaf></option><option value="why-some-movies-stay-with-you" data-astro-cid-vla5mhaf></option><option value="zero-to-one" data-astro-cid-vla5mhaf></option> </datalist> <script id="cricket-stats-env" type="application/json">{"supabaseUrl":"","supabaseAnonKey":""}</script> <script id="cricket-stats-fallback" type="application/json">[{"id":"2026-02-19-allies-vs-tb-bengal-tigers","gameDate":"2026-02-19","seasonLabel":"2026","competition":"TCL","format":"Leather ball","team":"TB Bengal Tigers","opponent":"Allies","venue":"TCL ground","result":"Result not yet imported","runs":2,"balls":3,"wickets":0,"overs":0,"runsConceded":0,"catches":2,"runOuts":0,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"A light batting outing, but the kind of match remembered for staying switched on in the field and finishing with two catches.","sourceStatus":"verified","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2026-season-high-63","gameDate":"2026-01-25","seasonLabel":"2026","competition":"TB Bengal Tigers chapter","format":"Leather ball","team":"TB Bengal Tigers","opponent":"TBD from import","venue":"To be added","result":"Awaiting full scorecard import","runs":63,"balls":null,"wickets":null,"overs":null,"runsConceded":null,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"The current headline innings in the archive. It is the kind of knock that deserves front-page space even before the full scorecard detail is attached.","sourceStatus":"imported","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2025-swat-54","gameDate":"2025-08-10","seasonLabel":"2025","competition":"Titan Cup XI","format":"Leather ball","team":"SWAT","opponent":"TBD from import","venue":"To be added","result":"Awaiting full scorecard import","runs":54,"balls":null,"wickets":null,"overs":null,"runsConceded":null,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"A reminder that some seasons are defined by the innings that arrive under pressure and hold the campaign together.","sourceStatus":"imported","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2024-swat-4-30","gameDate":"2024-11-02","seasonLabel":"2024","competition":"TPL 2024 Fall Series","format":"Tennis ball","team":"SWAT","opponent":"TBD from import","venue":"To be added","result":"Awaiting full scorecard import","runs":null,"balls":null,"wickets":4,"overs":null,"runsConceded":30,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"The clearest bowling burst in the current archive and the best example of the all-round story being real, not just a label.","sourceStatus":"imported","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2024-10-01-swat-vs-royal-phoenix","gameDate":"2024-10-01","seasonLabel":"2024","competition":"League match","format":"Unknown","team":"SWAT","opponent":"Royal Phoenix","venue":"To be added","result":"SWAT won by 3 runs","runs":29,"balls":24,"wickets":1,"overs":null,"runsConceded":null,"catches":0,"runOuts":0,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"A 29 off 24 helped SWAT reach 95, but the memory is the final over: seven to defend, wides that nearly flipped the game, Amit Saha's wicket at the key moment, and a dot ball to finish it.","sourceStatus":"manually added","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"2024-st-pete-shields-33","gameDate":"2024-06-22","seasonLabel":"2024","competition":"Titan Cup X","format":"Leather ball","team":"St Pete Shields","opponent":"TBD from import","venue":"To be added","result":"Awaiting full scorecard import","runs":33,"balls":null,"wickets":null,"overs":null,"runsConceded":null,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"A compact finishing or stabilizing innings entry held here until the full scorecard details arrive.","sourceStatus":"imported","isArchived":false,"createdAt":null,"updatedAt":null},{"id":"manual-memory-placeholder","gameDate":"2023-12-01","seasonLabel":"Pre-archive","competition":"Archive memory","format":"Unknown","team":"Bengals","opponent":"Add manually","venue":"Add manually","result":"Manual memory entry","runs":null,"balls":null,"wickets":null,"overs":null,"runsConceded":null,"catches":null,"runOuts":null,"distanceDrivenMiles":null,"scorecardUrl":null,"storySlug":null,"personalNote":"Reserved for matches that matter before the scorecards are fully available: community games, remembered transitions, and the stories the raw data never captures on its own.","sourceStatus":"manually added","isArchived":false,"createdAt":null,"updatedAt":null}]</script> <script type="module">
+    import { createClient } from '@supabase/supabase-js';
+    import { aggregateCricketGames, cricketEntryFields, emptyCricketGame, normalizeCricketGame, toSupabasePayload } from '../../../lib/cricket-stats';
+
+    const env = JSON.parse(document.getElementById('cricket-stats-env')?.textContent || '{}');
+    const fallbackGames = JSON.parse(document.getElementById('cricket-stats-fallback')?.textContent || '[]').map(normalizeCricketGame);
+
+    const banner = document.querySelector('[data-cricket-stats-banner]');
+    const battingRoot = document.querySelector('[data-summary-batting]');
+    const bowlingRoot = document.querySelector('[data-summary-bowling]');
+    const fieldingRoot = document.querySelector('[data-summary-fielding]');
+    const drivingRoot = document.querySelector('[data-summary-driving]');
+    const markersRoot = document.querySelector('[data-cricket-markers]');
+    const chartsRoot = document.querySelector('[data-cricket-charts]');
+    const seasonsRoot = document.querySelector('[data-cricket-seasons]');
+    const teamsRoot = document.querySelector('[data-cricket-teams]');
+    const bestNoteRoot = document.querySelector('[data-cricket-best-note]');
+    const filtersRoot = document.querySelector('[data-cricket-filters]');
+    const logRoot = document.querySelector('[data-cricket-log]');
+    const adminRoot = document.querySelector('[data-cricket-admin]');
+
+    const formatValue = (value, digits = 0, fallback = 'Open') => {
+      if (value === null || value === undefined || Number.isNaN(value)) return fallback;
+      return digits > 0 ? Number(value).toFixed(digits) : `${value}`;
+    };
+
+    const renderStatGrid = (root, rows) => {
+      if (!root) return;
+      root.innerHTML = rows.map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('');
+    };
+
+    const renderMarkers = (summary, seasonRows) => {
+      if (!markersRoot) return;
+      const latestSeason = seasonRows[0]?.seasonLabel ?? 'No season yet';
+      const cards = [
+        ['Matches logged', summary.matches],
+        ['Best score', summary.bestScore ?? 'Open'],
+        ['Best spell', summary.bestBowling ?? 'Open'],
+        ['Miles driven', formatValue(summary.totalDriveMiles, 1)],
+        ['Average drive', summary.averageDriveMiles !== null ? `${formatValue(summary.averageDriveMiles, 1)} miles` : 'Open'],
+        ['Latest season', latestSeason]
+      ];
+      markersRoot.innerHTML = cards.map(([label, value]) => `
+        <article class="panel cricket-stats-marker">
+          <span>${label}</span>
+          <strong>${value}</strong>
+        </article>
+      `).join('');
+    };
+
+    const renderCharts = (seasonRows) => {
+      if (!chartsRoot) return;
+      const chartSpecs = [
+        {
+          title: 'Runs by season',
+          subtitle: 'Batting volume from stored match rows',
+          rows: seasonRows.map((season) => ({ label: season.seasonLabel, value: season.runs, meta: season.team }))
+        },
+        {
+          title: 'Wickets by season',
+          subtitle: 'Bowling output from recorded games',
+          rows: seasonRows.map((season) => ({ label: season.seasonLabel, value: season.wickets, meta: season.team }))
+        },
+        {
+          title: 'Catch count by season',
+          subtitle: 'Fielding tracked directly in the match table',
+          rows: seasonRows.map((season) => ({ label: season.seasonLabel, value: season.catches, meta: season.team }))
+        },
+        {
+          title: 'Miles driven by season',
+          subtitle: 'The road layer behind the cricket archive',
+          rows: seasonRows.map((season) => ({ label: season.seasonLabel, value: season.driveMiles, meta: season.team }))
+        }
+      ];
+
+      chartsRoot.innerHTML = chartSpecs.map((chart) => {
+        const peak = Math.max(...chart.rows.map((row) => row.value || 0), 1);
+        return `
+          <article class="panel cricket-mini-chart">
+            <div class="cricket-mini-chart__head">
+              <h3>${chart.title}</h3>
+              <p>${chart.subtitle}</p>
+            </div>
+            <div class="cricket-mini-chart__rows">
+              ${chart.rows.map((row) => `
+                <div class="cricket-mini-chart__row">
+                  <div>
+                    <strong>${row.label}</strong>
+                    <span>${row.meta}</span>
+                  </div>
+                  <div class="cricket-mini-chart__bar-wrap">
+                    <span class="cricket-mini-chart__bar" style="width:${Math.max((row.value / peak) * 100, row.value > 0 ? 8 : 0)}%"></span>
+                    <em>${formatValue(row.value, chart.title.includes('Miles') ? 1 : 0)}</em>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </article>
+        `;
+      }).join('');
+    };
+
+    const renderSeasons = (seasonRows) => {
+      if (!seasonsRoot) return;
+      seasonsRoot.innerHTML = seasonRows.map((season) => `
+        <article class="panel season-card">
+          <div class="season-card__top">
+            <div>
+              <p class="eyebrow">${season.year || 'Open'} � ${season.format}</p>
+              <h3>${season.seasonLabel}</h3>
+              <p>${season.team} � ${season.competition}</p>
+            </div>
+            <span class="tag-chip">Database</span>
+          </div>
+          <div class="season-card__stats">
+            <div><span>Matches</span><strong>${season.matches}</strong></div>
+            <div><span>Runs</span><strong>${season.runs}</strong></div>
+            <div><span>Wickets</span><strong>${season.wickets}</strong></div>
+            <div><span>Catches</span><strong>${season.catches}</strong></div>
+            <div><span>High score</span><strong>${season.highScore ?? '�'}</strong></div>
+            <div><span>Drive miles</span><strong>${formatValue(season.driveMiles, 1)}</strong></div>
+          </div>
+        </article>
+      `).join('');
+    };
+
+    const renderTeams = (teamRows) => {
+      if (!teamsRoot) return;
+      teamsRoot.innerHTML = teamRows.map((team) => `
+        <div>
+          <span>${team.team}</span>
+          <strong>${team.runs} runs � ${team.wickets} wickets � ${formatValue(team.driveMiles, 1)} miles</strong>
+        </div>
+      `).join('');
+    };
+    const renderBestNote = (summary, games) => {
+      if (!bestNoteRoot) return;
+      const farthestGame = [...games].filter((game) => game.distanceDrivenMiles !== null).sort((a, b) => (b.distanceDrivenMiles ?? 0) - (a.distanceDrivenMiles ?? 0))[0];
+      bestNoteRoot.innerHTML = `
+        <p class="eyebrow">Best performances</p>
+        <ul>
+          <li>Best known score: ${summary.bestScore ?? 'Open'}.</li>
+          <li>Best known spell: ${summary.bestBowling ?? 'Open'}.</li>
+          <li>Total catches logged: ${summary.catches}.</li>
+          <li>Longest recorded drive: ${farthestGame ? `${formatValue(farthestGame.distanceDrivenMiles, 1)} miles for ${farthestGame.team} vs ${farthestGame.opponent ?? 'Unknown opponent'}` : 'Open'}.</li>
+        </ul>
+      `;
+    };
+
+    const optionMarkup = (label, value = '') => `<option value="${value}">${label}</option>`;
+
+    const renderFilterOptions = (filters) => {
+      if (!filtersRoot) return;
+      filtersRoot.querySelector('[data-cricket-filter-year]').innerHTML = optionMarkup('All years') + filters.years.map((year) => optionMarkup(year, year)).join('');
+      filtersRoot.querySelector('[data-cricket-filter-team]').innerHTML = optionMarkup('All teams') + filters.teams.map((team) => optionMarkup(team, team)).join('');
+      filtersRoot.querySelector('[data-cricket-filter-competition]').innerHTML = optionMarkup('All competitions') + filters.competitions.map((competition) => optionMarkup(competition, competition)).join('');
+      filtersRoot.querySelector('[data-cricket-filter-format]').innerHTML = optionMarkup('All formats') + filters.formats.map((format) => optionMarkup(format, format)).join('');
+    };
+
+    const getFilterState = () => ({
+      search: String(filtersRoot?.querySelector('[data-cricket-filter-search]')?.value ?? '').trim().toLowerCase(),
+      year: String(filtersRoot?.querySelector('[data-cricket-filter-year]')?.value ?? ''),
+      team: String(filtersRoot?.querySelector('[data-cricket-filter-team]')?.value ?? ''),
+      competition: String(filtersRoot?.querySelector('[data-cricket-filter-competition]')?.value ?? ''),
+      format: String(filtersRoot?.querySelector('[data-cricket-filter-format]')?.value ?? '')
+    });
+
+    const filterGames = (games) => {
+      const { search, year, team, competition, format } = getFilterState();
+      return games.filter((game) => {
+        const haystack = [game.opponent, game.venue, game.personalNote, game.team, game.result].filter(Boolean).join(' ').toLowerCase();
+        return (!search || haystack.includes(search))
+          && (!year || game.gameDate.startsWith(year))
+          && (!team || game.team === team)
+          && (!competition || game.competition === competition)
+          && (!format || game.format === format);
+      });
+    };
+
+    const renderLog = (games) => {
+      if (!logRoot) return;
+      if (!games.length) {
+        logRoot.innerHTML = `
+          <div class="cricket-stats-empty">
+            <h3>No games match the current filters.</h3>
+            <p>Reset the filters or add a new match in the admin panel.</p>
+          </div>
+        `;
+        return;
+      }
+
+      logRoot.innerHTML = `
+        <div class="cricket-log-table-wrap">
+          <table class="cricket-log-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Team</th>
+                <th>Opponent</th>
+                <th>Runs</th>
+                <th>Balls</th>
+                <th>Wickets</th>
+                <th>Catches</th>
+                <th>Drive</th>
+                <th>Result</th>
+                <th>Story</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${games.map((game) => `
+                <tr>
+                  <td>
+                    <strong>${game.gameDate}</strong>
+                    <small>${game.competition ?? 'Open competition'}</small>
+                  </td>
+                  <td>${game.team}</td>
+                  <td>${game.opponent ?? 'TBD'}</td>
+                  <td>${game.runs ?? '�'}</td>
+                  <td>${game.balls ?? '�'}</td>
+                  <td>${game.wickets ?? '�'}</td>
+                  <td>${game.catches ?? 0}</td>
+                  <td>${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : '�'}</td>
+                  <td>${game.result ?? 'Open'}</td>
+                  <td>${game.storySlug ? `<a href="/blog/${game.storySlug}">Open</a>` : '<span class="cricket-log-table__muted">None</span>'}</td>
+                </tr>
+                <tr class="cricket-log-table__detail-row">
+                  <td colspan="10">
+                    <div class="cricket-log-table__detail-grid">
+                      <div><span>Format</span><strong>${game.format ?? 'Open'}</strong></div>
+                      <div><span>Venue</span><strong>${game.venue ?? 'Open'}</strong></div>
+                      <div><span>Bowling</span><strong>${game.overs ?? '�'} overs � ${game.runsConceded ?? '�'} conceded</strong></div>
+                      <div><span>Strike rate</span><strong>${game.runs !== null && game.balls ? formatValue((game.runs / game.balls) * 100, 2) : '�'}</strong></div>
+                      <div><span>Economy</span><strong>${game.runsConceded !== null && game.overs ? formatValue(game.runsConceded / game.overs, 2) : '�'}</strong></div>
+                      <div><span>Scorecard</span><strong>${game.scorecardUrl ? `<a href="${game.scorecardUrl}" target="_blank" rel="noreferrer">Open ?</a>` : 'Pending'}</strong></div>
+                    </div>
+                    ${game.personalNote ? `<p class="cricket-log-table__note">${game.personalNote}</p>` : ''}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    };
+
+    const setBanner = (html, tone = 'info') => {
+      if (!banner) return;
+      banner.setAttribute('data-tone', tone);
+      banner.innerHTML = html;
+    };
+
+    const defaultStatus = 'manually added';
+    const makeFormState = (game = emptyCricketGame()) => ({
+      ...emptyCricketGame(),
+      ...game,
+      sourceStatus: game.sourceStatus || defaultStatus
+    });
+
+    const state = {
+      supabase: null,
+      session: null,
+      games: fallbackGames,
+      filteredGames: fallbackGames,
+      form: makeFormState(),
+      editingId: null,
+      saving: false,
+      adminError: '',
+      publicError: '',
+      isFallback: true
+    };
+
+    const renderAdmin = () => {
+      if (!adminRoot) return;
+
+      if (!state.supabase) {
+        adminRoot.innerHTML = `
+          <div class="cricket-admin__message">
+            <h3>Supabase setup required</h3>
+            <p>Add <code>PUBLIC_SUPABASE_URL</code> and <code>PUBLIC_SUPABASE_ANON_KEY</code> to enable the live admin workflow. Until then, this page uses the seeded static archive as a read-only fallback.</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (!state.session) {
+        adminRoot.innerHTML = `
+          <form class="cricket-admin__login" data-admin-login>
+            <div>
+              <label>Email</label>
+              <input type="email" name="email" autocomplete="username" required />
+            </div>
+            <div>
+              <label>Password</label>
+              <input type="password" name="password" autocomplete="current-password" required />
+            </div>
+            <button class="button button-primary" type="submit">Sign in as admin</button>
+            ${state.adminError ? `<p class="cricket-admin__error">${state.adminError}</p>` : ''}
+          </form>
+        `;
+
+        adminRoot.querySelector('[data-admin-login]')?.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const formData = new FormData(event.currentTarget);
+          state.adminError = '';
+          const { error } = await state.supabase.auth.signInWithPassword({
+            email: String(formData.get('email') ?? ''),
+            password: String(formData.get('password') ?? '')
+          });
+          if (error) {
+            state.adminError = error.message;
+            renderAdmin();
+            return;
+          }
+          await refreshFromSupabase();
+        });
+        return;
+      }
+      const form = state.form;
+      adminRoot.innerHTML = `
+        <div class="cricket-admin__header">
+          <div>
+            <p class="eyebrow">Signed in</p>
+            <h3>Admin entry table</h3>
+            <p>Core score fields are entered in the row below. The detail section covers competition, venue, story link, and the rest of the archive context.</p>
+          </div>
+          <button class="button button-ghost" type="button" data-admin-signout>Sign out</button>
+        </div>
+
+        ${state.adminError ? `<p class="cricket-admin__error">${state.adminError}</p>` : ''}
+
+        <div class="cricket-admin__entry-table-wrap">
+          <table class="cricket-admin__entry-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Team</th>
+                <th>Opponent</th>
+                <th>Runs</th>
+                <th>Balls</th>
+                <th>Wickets</th>
+                <th>Catches</th>
+                <th>Drive (mi)</th>
+                <th>Story slug</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input name="gameDate" type="date" value="${form.gameDate || ''}" /></td>
+                <td><input name="team" type="text" value="${form.team || ''}" placeholder="SWAT" /></td>
+                <td><input name="opponent" type="text" value="${form.opponent || ''}" placeholder="Opponent" /></td>
+                <td><input name="runs" type="number" min="0" value="${form.runs ?? ''}" /></td>
+                <td><input name="balls" type="number" min="0" value="${form.balls ?? ''}" /></td>
+                <td><input name="wickets" type="number" min="0" value="${form.wickets ?? ''}" /></td>
+                <td><input name="catches" type="number" min="0" value="${form.catches ?? 0}" /></td>
+                <td><input name="distanceDrivenMiles" type="number" min="0" step="0.1" value="${form.distanceDrivenMiles ?? ''}" /></td>
+                <td><input name="storySlug" list="cricket-story-slugs" type="text" value="${form.storySlug || ''}" placeholder="blog slug" /></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cricket-admin__details-grid">
+          <label><span>Season label</span><input name="seasonLabel" type="text" value="${form.seasonLabel || ''}" placeholder="Spring 2025" /></label>
+          <label><span>Competition</span><input name="competition" type="text" value="${form.competition || ''}" placeholder="TCL" /></label>
+          <label><span>Format</span><input name="format" type="text" value="${form.format || ''}" placeholder="Leather ball" /></label>
+          <label><span>Venue</span><input name="venue" type="text" value="${form.venue || ''}" placeholder="Temple Terrace" /></label>
+          <label><span>Result</span><input name="result" type="text" value="${form.result || ''}" placeholder="Won by 3 runs" /></label>
+          <label><span>Overs</span><input name="overs" type="number" min="0" step="0.1" value="${form.overs ?? ''}" /></label>
+          <label><span>Runs conceded</span><input name="runsConceded" type="number" min="0" value="${form.runsConceded ?? ''}" /></label>
+          <label><span>Run outs</span><input name="runOuts" type="number" min="0" value="${form.runOuts ?? 0}" /></label>
+          <label><span>Scorecard URL</span><input name="scorecardUrl" type="url" value="${form.scorecardUrl || ''}" placeholder="https://..." /></label>
+          <label class="cricket-admin__note-field"><span>Personal note</span><textarea name="personalNote" rows="4" placeholder="Short story note for the archive">${form.personalNote || ''}</textarea></label>
+        </div>
+
+        <div class="hero-actions cricket-admin__actions">
+          <button class="button button-primary" type="button" data-admin-save>${state.saving ? 'Saving...' : (state.editingId ? 'Update game' : 'Add game')}</button>
+          <button class="button button-secondary" type="button" data-admin-reset>Reset form</button>
+        </div>
+
+        <div class="cricket-admin__existing panel">
+          <div class="cricket-admin__existing-head">
+            <h4>Existing entries</h4>
+            <p>${state.games.length} games currently in the live log.</p>
+          </div>
+          <div class="cricket-admin__existing-rows">
+            ${state.games.map((game) => `
+              <div class="cricket-admin__existing-row${game.isArchived ? ' is-archived' : ''}">
+                <div>
+                  <strong>${game.gameDate}</strong>
+                  <span>${game.team} vs ${game.opponent ?? 'TBD'} � ${game.runs ?? '�'} runs � ${game.wickets ?? '�'} wickets � ${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : 'no drive'}</span>
+                </div>
+                <div class="cricket-admin__existing-actions">
+                  <button type="button" data-admin-edit="${game.id}">Edit</button>
+                  <button type="button" data-admin-archive="${game.id}">${game.isArchived ? 'Restore' : 'Archive'}</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      adminRoot.querySelector('[data-admin-signout]')?.addEventListener('click', async () => {
+        await state.supabase.auth.signOut();
+        state.session = null;
+        state.editingId = null;
+        state.form = makeFormState();
+        renderAdmin();
+      });
+
+      const syncInputs = () => {
+        adminRoot.querySelectorAll('[name]').forEach((field) => {
+          field.addEventListener('input', (event) => {
+            const target = event.currentTarget;
+            const name = target.getAttribute('name');
+            if (!name || !cricketEntryFields.includes(name)) return;
+            let value = target.value;
+            if (target.type === 'number') {
+              value = value === '' ? null : Number(value);
+            }
+            state.form = { ...state.form, [name]: value };
+          });
+        });
+      };
+
+      syncInputs();
+
+      adminRoot.querySelector('[data-admin-reset]')?.addEventListener('click', () => {
+        state.editingId = null;
+        state.form = makeFormState();
+        state.adminError = '';
+        renderAdmin();
+      });
+
+      adminRoot.querySelector('[data-admin-save]')?.addEventListener('click', async () => {
+        if (!state.form.gameDate || !state.form.team?.trim()) {
+          state.adminError = 'Date and team are required.';
+          renderAdmin();
+          return;
+        }
+
+        state.saving = true;
+        state.adminError = '';
+        renderAdmin();
+
+        const payload = toSupabasePayload({ ...state.form, sourceStatus: defaultStatus });
+        let response;
+
+        if (state.editingId) {
+          response = await state.supabase.from('cricket_games').update(payload).eq('id', state.editingId);
+        } else {
+          response = await state.supabase.from('cricket_games').insert(payload);
+        }
+
+        state.saving = false;
+
+        if (response.error) {
+          state.adminError = response.error.message;
+          renderAdmin();
+          return;
+        }
+
+        state.editingId = null;
+        state.form = makeFormState();
+        await refreshFromSupabase();
+      });
+
+      adminRoot.querySelectorAll('[data-admin-edit]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const game = state.games.find((candidate) => candidate.id === button.getAttribute('data-admin-edit'));
+          if (!game) return;
+          state.editingId = game.id;
+          state.form = makeFormState(game);
+          state.adminError = '';
+          renderAdmin();
+        });
+      });
+
+      adminRoot.querySelectorAll('[data-admin-archive]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const game = state.games.find((candidate) => candidate.id === button.getAttribute('data-admin-archive'));
+          if (!game) return;
+          const { error } = await state.supabase.from('cricket_games').update({ is_archived: !game.isArchived }).eq('id', game.id);
+          if (error) {
+            state.adminError = error.message;
+            renderAdmin();
+            return;
+          }
+          await refreshFromSupabase();
+        });
+      });
+    };
+
+    const renderTabs = () => {
+      document.querySelectorAll('[data-live-record-tabs]').forEach((wrapper) => {
+        const buttons = Array.from(wrapper.querySelectorAll('[data-live-tab-target]'));
+        const panels = Array.from(wrapper.querySelectorAll('[data-live-tab-panel]'));
+        buttons.forEach((button) => {
+          button.addEventListener('click', () => {
+            const target = button.getAttribute('data-live-tab-target');
+            buttons.forEach((candidate) => {
+              candidate.classList.toggle('is-active', candidate === button);
+              candidate.setAttribute('aria-selected', String(candidate === button));
+            });
+            panels.forEach((panel) => {
+              const active = panel.getAttribute('data-live-tab-panel') === target;
+              panel.classList.toggle('is-active', active);
+              panel.toggleAttribute('hidden', !active);
+            });
+          });
+        });
+      });
+    };
+    const renderPublic = () => {
+      const { summary, seasonRows, teamRows, filters } = aggregateCricketGames(state.games);
+      state.filteredGames = filterGames(state.games);
+
+      renderStatGrid(battingRoot, [
+        ['Matches', summary.matches],
+        ['Runs', summary.runs],
+        ['Balls', summary.balls],
+        ['Average', formatValue(summary.battingAverage, 2)],
+        ['Strike rate', formatValue(summary.strikeRate, 2)],
+        ['50s', summary.fifties],
+        ['100s', summary.hundreds],
+        ['Best score', summary.bestScore ?? 'Open']
+      ]);
+
+      renderStatGrid(bowlingRoot, [
+        ['Wickets', summary.wickets],
+        ['Overs', formatValue(summary.overs, 1)],
+        ['Runs conceded', summary.runsConceded],
+        ['Economy', formatValue(summary.economy, 2)],
+        ['Best spell', summary.bestBowling ?? 'Open']
+      ]);
+
+      renderStatGrid(fieldingRoot, [
+        ['Catches', summary.catches],
+        ['Run outs', summary.runOuts],
+        ['Matches logged', summary.matches]
+      ]);
+
+      renderStatGrid(drivingRoot, [
+        ['Total miles', `${formatValue(summary.totalDriveMiles, 1)} miles`],
+        ['Average drive', summary.averageDriveMiles !== null ? `${formatValue(summary.averageDriveMiles, 1)} miles` : 'Open'],
+        ['Farthest trip', summary.farthestDriveMiles !== null ? `${formatValue(summary.farthestDriveMiles, 1)} miles` : 'Open']
+      ]);
+
+      renderMarkers(summary, seasonRows);
+      renderCharts(seasonRows);
+      renderSeasons(seasonRows);
+      renderTeams(teamRows);
+      renderBestNote(summary, state.games);
+      renderFilterOptions(filters);
+      renderLog(state.filteredGames);
+    };
+
+    const refreshFromSupabase = async () => {
+      if (!state.supabase) {
+        state.isFallback = true;
+        state.games = fallbackGames;
+        state.publicError = '';
+        renderPublic();
+        renderAdmin();
+        setBanner('<p>Showing the seeded archive. Add Supabase env vars to switch this page into live database mode.</p>', 'warning');
+        return;
+      }
+
+      const { data, error } = await state.supabase
+        .from('cricket_games')
+        .select('*')
+        .order('game_date', { ascending: false });
+
+      if (error) {
+        state.isFallback = true;
+        state.games = fallbackGames;
+        state.publicError = error.message;
+        renderPublic();
+        renderAdmin();
+        setBanner(`<p>Supabase is configured, but the live table could not be read yet. Showing the seeded archive for now.</p><small>${error.message}</small>`, 'warning');
+        return;
+      }
+
+      state.isFallback = false;
+      state.games = (data || []).map(normalizeCricketGame);
+      state.publicError = '';
+      renderPublic();
+      renderAdmin();
+      setBanner('<p>Live Supabase data connected. Public stats and admin entry are now reading from the database.</p>', 'success');
+    };
+
+    const initFilters = () => {
+      filtersRoot?.querySelectorAll('input, select').forEach((field) => {
+        field.addEventListener('input', () => {
+          state.filteredGames = filterGames(state.games);
+          renderLog(state.filteredGames);
+        });
+      });
+    };
+
+    const initSupabase = async () => {
+      const hasEnv = Boolean(env.supabaseUrl && env.supabaseAnonKey);
+      if (!hasEnv) {
+        await refreshFromSupabase();
+        return;
+      }
+
+      state.supabase = createClient(env.supabaseUrl, env.supabaseAnonKey);
+      const { data } = await state.supabase.auth.getSession();
+      state.session = data.session;
+      state.supabase.auth.onAuthStateChange((_event, session) => {
+        state.session = session;
+        renderAdmin();
+      });
+      await refreshFromSupabase();
+    };
+
+    renderTabs();
+    initFilters();
+    initSupabase();
+  </script>  </main> <footer class="site-footer"> <div> <a class="footer-title" href="/">C M Nafi</a> <p class="footer-copy">A calm home for interest worlds, timelines, and public-facing work.</p> </div> <nav class="footer-nav" aria-label="Footer navigation"> <a href="/story">Story</a><a href="/about">About</a><a href="/brewing">Brewing</a><a href="/interests">Interests</a><a href="/connect">Connect</a> </nav> <div class="footer-links"> <a href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a> <a href="https://github.com/cmnafi" target="_blank" rel="noreferrer"> GitHub </a><a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noreferrer"> LinkedIn </a><a href="mailto:nafi@cmnafi.com" rel="noreferrer"> Email </a> </div> <div class="footer-meta"> <span>Copyright 2026</span> <span>Last updated Mar 20, 2026</span> </div> </footer> </div> </body></html> 

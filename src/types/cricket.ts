@@ -159,3 +159,81 @@ export interface SourceRegistryItem {
   parserStatus: 'ready' | 'planned' | 'manual';
   notes: string;
 }
+
+export interface CricketGameEntry {
+  id: string;
+  gameDate: string;
+  seasonLabel: string | null;
+  competition: string | null;
+  format: string | null;
+  team: string;
+  opponent: string | null;
+  venue: string | null;
+  result: string | null;
+  runs: number | null;
+  balls: number | null;
+  wickets: number | null;
+  overs: number | null;
+  runsConceded: number | null;
+  catches: number | null;
+  runOuts: number | null;
+  distanceDrivenMiles: number | null;
+  scorecardUrl: string | null;
+  storySlug: string | null;
+  personalNote: string | null;
+  sourceStatus: SourceStatus;
+  isArchived: boolean;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+}
+
+export interface CricketStatsSummary {
+  matches: number;
+  runs: number;
+  balls: number;
+  battingAverage: number | null;
+  strikeRate: number | null;
+  fifties: number;
+  hundreds: number;
+  wickets: number;
+  overs: number;
+  runsConceded: number;
+  economy: number | null;
+  catches: number;
+  runOuts: number;
+  bestScore: number | null;
+  bestBowling: string | null;
+  totalDriveMiles: number;
+  averageDriveMiles: number | null;
+  farthestDriveMiles: number | null;
+}
+
+export interface CricketSeasonAggregate {
+  seasonLabel: string;
+  year: number;
+  competition: string;
+  format: string;
+  team: string;
+  matches: number;
+  runs: number;
+  wickets: number;
+  catches: number;
+  driveMiles: number;
+  battingAverage: number | null;
+  strikeRate: number | null;
+  economy: number | null;
+  highScore: number | null;
+  bestBowling: string | null;
+}
+
+export interface CricketTeamAggregate {
+  team: string;
+  matches: number;
+  runs: number;
+  wickets: number;
+  catches: number;
+  driveMiles: number;
+  battingAverage: number | null;
+  strikeRate: number | null;
+  economy: number | null;
+}

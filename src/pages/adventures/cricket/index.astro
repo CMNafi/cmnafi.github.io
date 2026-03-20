@@ -11,6 +11,7 @@ const standoutSpells = matchesByDate.filter((match) => (match.wickets ?? 0) >= 4
 const teamList = cricketPlayerProfile.teams.join(', ');
 
 const linkBlocks = [
+  { href: '/adventures/cricket/stats', title: 'Stats', copy: 'The live cricket database view with game logs, season summaries, driving miles, and admin-only entry.' },
   { href: '/adventures/cricket/records', title: 'Records', copy: 'Headline totals, partial season snapshots, and the deeper batting and bowling ledger.' },
   { href: '/adventures/cricket/matches', title: 'Matches', copy: 'Search the match archive and expand rows for notes, source status, and stat detail.' },
   { href: '/adventures/cricket/highlights', title: 'Highlights', copy: 'A tighter page for standout innings, wicket spells, and editorial cricket notes.' },
