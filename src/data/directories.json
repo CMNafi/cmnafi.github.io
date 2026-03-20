@@ -2,7 +2,7 @@
   {
     "title": "Blog",
     "slug": "/blog",
-    "description": "Essays, notes, reviews, match reflections, and product thinking.",
+    "description": "Everything I have published, from match stories to book notes to the occasional personal essay.",
     "category": "Blog",
     "status": "live",
     "icon": "\u2726",
@@ -12,7 +12,7 @@
   {
     "title": "Projects",
     "slug": "/projects",
-    "description": "Data tools, experiments, and public builds that are taking shape.",
+    "description": "The finance and research tools I started building because the existing workflows kept annoying me.",
     "category": "Projects",
     "status": "live",
     "icon": "\u25cc",
@@ -22,7 +22,7 @@
   {
     "title": "Adventures",
     "slug": "/adventures",
-    "description": "A premium archive for cricket, travel, and memorable chapters on the move.",
+    "description": "Cricket first, then the other parts of life that earn a place by staying memorable.",
     "category": "Adventures",
     "status": "live",
     "icon": "\u2197",
@@ -32,7 +32,7 @@
   {
     "title": "Apps",
     "slug": "/apps",
-    "description": "Productized tools and focused interfaces for real workflows.",
+    "description": "The projects that already have a more direct interface and are closest to real use.",
     "category": "Apps",
     "status": "brewing",
     "icon": "\u2318",
@@ -42,7 +42,7 @@
   {
     "title": "Notes",
     "slug": "/notes",
-    "description": "Short-form observations, half-formed ideas, and quick references.",
+    "description": "The shorter observations and half-finished thoughts that are still worth keeping.",
     "category": "Notes",
     "status": "coming soon",
     "icon": "\u22ef",
@@ -52,7 +52,7 @@
   {
     "title": "Writing",
     "slug": "/writing",
-    "description": "Longer-form writing, series, and future editorial collections.",
+    "description": "Longer pieces and future series once they have enough shape to stand on their own.",
     "category": "Writing",
     "status": "coming soon",
     "icon": "\u270e",
@@ -62,7 +62,7 @@
   {
     "title": "Library",
     "slug": "/library",
-    "description": "Books, articles, matches, and media worth revisiting.",
+    "description": "The shelf of books, matches, and media that keep pulling me back.",
     "category": "Notes",
     "status": "brewing",
     "icon": "\u2630",

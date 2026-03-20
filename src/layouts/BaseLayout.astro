@@ -9,6 +9,7 @@ interface Props {
   canonical?: string;
   image?: string;
   type?: 'website' | 'article';
+  hideHeader?: boolean;
 }
 
 const {
@@ -16,7 +17,8 @@ const {
   description = siteConfig.description,
   canonical,
   image = '/og-default.svg',
-  type = 'website'
+  type = 'website',
+  hideHeader = false
 } = Astro.props;
 
 const pageTitle = title === siteConfig.title ? title : `${title} - ${siteConfig.title}`;
@@ -56,31 +58,33 @@ const currentPath = Astro.url.pathname;
       <div class="ambient ambient--one"></div>
       <div class="ambient ambient--two"></div>
       <div class="grain"></div>
-      <header class="site-header">
-        <a class="site-mark" href="/">
-          <span>C M Nafi</span>
-          <small>Work in motion</small>
-        </a>
-        <nav aria-label="Primary navigation">
-          <ul class="nav-list">
-            {siteConfig.nav.map((item) => {
-              const isCurrent = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(`${item.href}/`));
+      {!hideHeader && (
+        <header class="site-header">
+          <a class="site-mark" href="/">
+            <span>C M Nafi</span>
+            <small>Story, books, cricket</small>
+          </a>
+          <nav aria-label="Primary navigation">
+            <ul class="nav-list">
+              {siteConfig.nav.map((item) => {
+                const isCurrent = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(`${item.href}/`));
 
-              return (
-                <li>
-                  <a
-                    href={item.href}
-                    data-nav-item={item.id}
-                    aria-current={isCurrent ? 'page' : undefined}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </header>
+                return (
+                  <li>
+                    <a
+                      href={item.href}
+                      data-nav-item={item.id}
+                      aria-current={isCurrent ? 'page' : undefined}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        </header>
+      )}
       <main>
         <slot />
       </main>

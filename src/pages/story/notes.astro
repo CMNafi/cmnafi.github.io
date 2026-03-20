@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteTreeHeader from '@/components/SiteTreeHeader.astro';
+---
+
+<BaseLayout title="Notes" description="Shorter observations and quick notes will live here once I start publishing them.">
+  <SiteTreeHeader
+    branch="timeline"
+    currentHref="/notes"
+    title="Notes"
+    description="A future home for quick observations, fragments, and thoughts that do not need a full essay."
+  />
+
+  <section class="page-section narrow-stack">
+    <div class="panel prose">
+      <p class="eyebrow">Coming soon</p>
+      <h1>Notes</h1>
+      <p>I still jot down plenty of smaller thoughts, but I have not built the right habit for publishing them yet. This page will hold those shorter notes when I do.</p>
+    </div>
+  </section>
+</BaseLayout>

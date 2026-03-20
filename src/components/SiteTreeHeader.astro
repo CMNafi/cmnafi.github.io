@@ -51,7 +51,7 @@ if (currentNode.href !== branchData.href) {
   </div>
 
   <aside class="panel site-tree-header__panel">
-    <p class="eyebrow">Site tree</p>
+    <p class="eyebrow">Around this section</p>
     <div class="site-tree-header__root">
       <span class="site-tree-header__connector" aria-hidden="true"></span>
       <a class:list={['site-tree-header__root-link', currentHref === branchData.href && 'is-active']} href={branchData.href}>
@@ -74,7 +74,7 @@ if (currentNode.href !== branchData.href) {
 
     {secondaryNodes.length > 0 && (
       <div class="site-tree-header__secondary">
-        <p>Secondary pages in this branch</p>
+        <p>Also in this section</p>
         <div class="site-tree-header__secondary-links">
           {secondaryNodes.map((node) => (
             <a class:list={[node.href === currentHref && 'is-active']} href={node.href}>{node.label}</a>

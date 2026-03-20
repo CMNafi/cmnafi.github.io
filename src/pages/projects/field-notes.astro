@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+
+const tbdSections = [
+  {
+    title: 'Writing',
+    href: '/interests/writing',
+    label: 'Notebook',
+    description: 'Essays, games, and notes that still feel too loose to sit in the main public archive.'
+  },
+  {
+    title: 'Movies',
+    href: '/interests/movies',
+    label: 'Film notes',
+    description: 'The movie page stays here for now until it sounds more like my actual taste and less like a category page.'
+  },
+  {
+    title: 'Projects',
+    href: '/projects',
+    label: 'Work shelf',
+    description: 'The product and workflow pages still need a more personal voice, so they live here for now.'
+  },
+  {
+    title: 'Apps',
+    href: '/projects/apps',
+    label: 'Tool demos',
+    description: 'Interface-heavy tools and experiments that are useful, but not part of the core site identity yet.'
+  },
+  {
+    title: 'Notes',
+    href: '/story/notes',
+    label: 'Loose pieces',
+    description: 'Shorter observations and half-formed entries that are not ready to be treated as finished writing.'
+  }
+] as const;
+---
+
+<BaseLayout title="Field Notes" description="The rougher parts of the site that are still being sorted out, rewritten, or pushed into a more personal voice.">
+  <section class="page-section narrow-stack">
+    <SectionHeading
+      eyebrow="Field Notes"
+      title="Everything here is still under review."
+      description="These are the parts of the site that do not feel fully personal yet. I am keeping them out of the main path until they sound more like me."
+    />
+
+    <div class="tbd-grid">
+      {tbdSections.map((section) => (
+        <a class="panel tbd-card" href={section.href}>
+          <div class="tbd-card__meta">
+            <span>{section.label}</span>
+            <span>WIP</span>
+          </div>
+          <h2>{section.title}</h2>
+          <p>{section.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tbd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+  .tbd-card { display: flex; flex-direction: column; gap: 0.75rem; padding: 2rem; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.05); background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; position: relative; overflow: hidden; text-decoration: none; }
+  .tbd-card::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 2px; background: #0EA5B7; transform: scaleY(0); transition: transform 0.4s ease; transform-origin: top; }
+  .tbd-card:hover { transform: translateY(-4px); background: rgba(255, 255, 255, 0.04); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .tbd-card:hover::before { transform: scaleY(1); }
+  .tbd-card__meta { display: flex; justify-content: space-between; gap: 0.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #8B919A; }
+  .tbd-card h2 { margin: 0; font-family: 'Fraunces', serif; font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.1; letter-spacing: -0.02em; color: #F3F3F1; }
+  .tbd-card p { margin: 0; color: #8B919A; line-height: 1.6; font-family: 'Manrope', sans-serif; }
+</style>

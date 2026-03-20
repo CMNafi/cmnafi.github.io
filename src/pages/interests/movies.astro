@@ -10,22 +10,22 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft && data.cat
 );
 ---
 
-<BaseLayout title="Movies" description="A cinema-dark page for film notes, ticket-stub entries, and posts built around scenes and atmosphere.">
+<BaseLayout title="Movies" description="Film notes for the movies whose mood, scenes, or performances stayed with me.">
   <div class="movies-world">
     <SiteTreeHeader
       branch="interests"
       currentHref="/interests/movies"
       title="Movies"
-      description="The cinema branch for film notes, reviews, and the scenes that keep their voltage."
+      description="Film notes for the movies I keep replaying in my head."
     />
 
     <section class="page-section movies-world__hero">
       <div class="movies-world__copy">
         <p class="eyebrow">Movies</p>
-        <h1>Film notes lit like ticket stubs in the dark.</h1>
+        <h1>The films I keep carrying around after the credits.</h1>
         <p>
-          This world leans into the cinema palette: near-black, warm coral, and the feeling that some scenes still carry
-          voltage long after the credits are gone.
+          I do not write about every movie I watch. The ones here are the ones that changed the pressure in the room,
+          gave me an image I could not shake, or stayed alive longer than plot alone should allow.
         </p>
       </div>
 

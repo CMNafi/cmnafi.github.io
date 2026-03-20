@@ -11,7 +11,7 @@ const adventureCategories = [
   {
     title: 'Cricket',
     slug: '/adventures/cricket',
-    description: 'A premium personal sports archive: teams, seasons, matches, milestones, and the stories between them.',
+    description: 'The deepest record on the site: teams, matches, seasons, milestones, and the stories I still remember clearly.',
     category: 'Adventures',
     status: 'live',
     icon: '🏏'
@@ -19,7 +19,7 @@ const adventureCategories = [
   {
     title: 'Travel notes',
     slug: '/adventures',
-    description: 'Future city walks, tournament trips, detours, and field notes gathered away from routine.',
+    description: 'A future home for trips, walks, detours, and the places that deserve more than a photo dump.',
     category: 'Adventures',
     status: 'brewing',
     icon: '✈️'
@@ -27,7 +27,7 @@ const adventureCategories = [
   {
     title: 'Photo journals',
     slug: '/adventures',
-    description: 'A later layer for image-led memory keeping, visual essays, and story fragments.',
+    description: 'A later layer for photos and visual fragments once I know how I want them to live here.',
     category: 'Adventures',
     status: 'coming soon',
     icon: '📷'
@@ -40,21 +40,21 @@ const timelinePreview = cricketTimeline.slice(-3).reverse();
 
 <BaseLayout
   title="Adventures"
-  description="A premium home for lived experience: cricket, future travel notes, and memory-rich archives built to expand over time."
+  description="The part of the site that keeps score of the life outside work, starting with cricket."
 >
   <SiteTreeHeader
     branch="interests"
     currentHref="/adventures"
     title="Adventures"
-    description="A broader lived-experience branch that sits under Interests, with cricket as the first major archive and room for travel and field notes later."
+    description="The broader life archive, with cricket as the first and strongest chapter."
   />
 
   <section class="page-section page-section-hero">
     <div class="panel adventures-landing-hero">
       <p class="eyebrow">Adventures</p>
-      <h1>Personal archives for the parts of life that keep moving.</h1>
+      <h1>The parts of life I do not want to treat like side notes.</h1>
       <p class="hero-description">
-        Adventures is where lived experience gets treated with the same care as work: matches, tournament seasons, travel, moments of growth, and the stories that only make sense once enough time has passed.
+        This section starts with cricket because cricket has earned it. Over time it will also hold trips, photos, and the kinds of memories that keep their shape years later.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="/adventures/cricket">Enter cricket archive</a>
@@ -66,8 +66,8 @@ const timelinePreview = cricketTimeline.slice(-3).reverse();
   <section class="page-section">
     <SectionHeading
       eyebrow="Adventure domains"
-      title="Cricket leads, but the system leaves room for the rest of life"
-      description="This hub is designed to grow into travel, tournaments, life moments, tennis, and photo-led journals without losing the premium editorial feeling of the site."
+      title="Cricket comes first, but it is not the only part of life worth keeping."
+      description="This section is meant to grow slowly and honestly, starting with the archive that already matters most."
     />
     <div class="spotlight-grid">
       {adventureCategories.map((item) => <DirectoryCard item={item} />)}
@@ -77,9 +77,9 @@ const timelinePreview = cricketTimeline.slice(-3).reverse();
   <section class="page-section two-up cricket-spotlight-grid">
     <article class="panel cricket-spotlight-card">
       <p class="eyebrow">Flagship archive</p>
-      <h2>Cricket is the first major chapter under Adventures.</h2>
+      <h2>Cricket is the center of gravity here.</h2>
       <p>
-        Built around teams, matches, season snapshots, and personal notes, the cricket section works as both performance log and sports memory bank. It is data-rich without becoming a cold scoreboard.
+        Built around teams, matches, season snapshots, and personal notes, the cricket section works as both record and memory. I wanted it to keep the numbers without losing the feeling.
       </p>
       <div class="tag-row">
         <span class="tag-chip">player profile</span>
@@ -96,8 +96,8 @@ const timelinePreview = cricketTimeline.slice(-3).reverse();
     <article class="panel panel-stack">
       <SectionHeading
         eyebrow="Recent highlights"
-        title="A quick preview of what the archive keeps visible"
-        description="Each highlight balances a stat line with context, leaving space for photos, notes, and scorecards later."
+        title="A quick look at the stories I do not want to lose"
+        description="The stats matter, but the context is what makes me keep coming back to them."
       />
       <div class="narrow-stack">
         {recentHighlights.map((highlight) => <HighlightCard highlight={highlight} />)}
@@ -109,7 +109,7 @@ const timelinePreview = cricketTimeline.slice(-3).reverse();
     <SectionHeading
       eyebrow="Timeline preview"
       title="The shape of the journey matters as much as the totals"
-      description="A small look at the chronological layer that turns isolated snapshots into a sports biography."
+      description="A small look at how separate match memories start turning into a longer sporting life."
     />
     <CricketTimeline items={timelinePreview} />
   </section>

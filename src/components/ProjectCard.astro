@@ -5,20 +5,55 @@ import { formatDate } from '@/utils/format';
 const { project } = Astro.props;
 ---
 
-<article class="project-card panel" data-category={project.data.category}>
-  <div class="project-card__meta">
-    <StatusBadge status={project.data.status} />
-    <span>{project.data.category}</span>
-    <span>Updated {formatDate(project.data.updatedAt ?? project.data.startedAt)}</span>
+<article class="project-card compact-row" data-category={project.data.category}>
+  <div class="card-core">
+    <div class="meta-row">
+      <StatusBadge status={project.data.status} />
+      <span class="category-text">{project.data.category}</span>
+    </div>
+    <h3 class="title-text"><a href={`/projects/${project.slug}`}>{project.data.title}</a></h3>
+    <p class="desc-text">{project.data.summary}</p>
   </div>
-  <h3><a href={`/projects/${project.slug}`}>{project.data.title}</a></h3>
-  <p>{project.data.summary}</p>
-  <div class="tag-row">
-    {project.data.stack.slice(0, 4).map((item: string) => <span class="tag-chip">{item}</span>)}
-  </div>
-  <div class="project-actions">
-    <a href={`/projects/${project.slug}`}>View details</a>
-    {project.data.liveUrl && <a href={project.data.liveUrl} target="_blank" rel="noreferrer">Live demo</a>}
-    {project.data.repoUrl && <a href={project.data.repoUrl} target="_blank" rel="noreferrer">GitHub repo</a>}
+  <div class="action-core">
+    <div class="tag-row">
+      {project.data.stack.slice(0, 3).map((item: string) => <span class="tag-chip">{item}</span>)}
+    </div>
+    <div class="project-actions">
+      <a href={`/projects/${project.slug}`} class="primary-action">Read Case Study &rarr;</a>
+    </div>
   </div>
 </article>
+
+<style>
+  .compact-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 2rem;
+    padding: 2.5rem 2rem; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s ease; position: relative; overflow: hidden;
+  }
+  .compact-row::before {
+    content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%;
+    background: #E10600; transform: scaleY(0); transition: transform 0.3s ease; transform-origin: bottom;
+  }
+  .compact-row:hover { background: rgba(255,255,255,0.02); }
+  .compact-row:hover::before { transform: scaleY(1); }
+  
+  .card-core { display: flex; flex-direction: column; gap: 0.75rem; max-width: 600px; }
+  .meta-row { display: flex; gap: 1rem; align-items: center; }
+  .category-text { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #8B919A; }
+  .title-text { margin: 0; font-family: 'Sora', 'Fraunces', serif; font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.02em; }
+  .title-text a { color: #F3F3F1; text-decoration: none; }
+  .desc-text { margin: 0; font-family: 'Manrope', sans-serif; font-size: 1rem; color: #8B919A; line-height: 1.6; }
+  
+  .action-core { display: flex; flex-direction: column; gap: 1.5rem; align-items: flex-end; }
+  .tag-row { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+  .tag-chip { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.05); color: #8B919A; border-radius: 4px; }
+  
+  .primary-action { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.85rem; color: #F3F3F1; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; transition: color 0.3s; }
+  .compact-row:hover .primary-action { color: #E10600; }
+  
+  @media(max-width: 800px) {
+    .compact-row { flex-direction: column; align-items: flex-start; padding: 2rem 1rem; }
+    .action-core { align-items: flex-start; width: 100%; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 1rem;}
+    .tag-row { justify-content: flex-start; }
+  }
+</style>

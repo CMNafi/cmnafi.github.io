@@ -2,21 +2,21 @@
 title: Current focus
 updatedAt: 2026-03-15
 building:
-  - Designing the first public surfaces for ADV Screener and 13F Data Finder.
-  - Turning this site into a system that can absorb future sections with minimal layout changes.
-  - Building repeatable workflows for writing, product notes, and experiments.
+  - Turning ADV Screener and 13F Data Finder into tools I would actually want to use during finance research.
+  - Rewriting this site so it sounds more like my life and less like polished internet filler.
+  - Finding a rhythm for publishing project notes, essays, and shorter observations without sanding down the personality.
 reading:
-  - Books that balance clarity with emotional precision.
-  - Product essays about interface design for research-heavy work.
-  - Smart sports and culture writing that rewards re-reading.
+  - Books that feel sharp, humane, and worth revisiting a second time.
+  - Writing on product design for finance and research-heavy work.
+  - Sports and culture writing that remembers detail instead of just summarizing events.
 exploring:
-  - Calm interfaces for complicated data problems.
-  - AI-assisted workflows that preserve judgment and taste.
-  - Ways to make personal publishing feel more alive without adding complexity.
+  - Cleaner ways to move from public filings to an answer that is actually useful.
+  - AI workflows that help with judgment instead of replacing it with generic confidence.
+  - How to make personal publishing feel alive without making the site noisy.
 meeting:
-  - Builders in fintech, data, and applied AI.
-  - Writers thinking about systems, taste, and useful internet homes.
-  - People working on diligence, research, or public knowledge tools.
+  - Builders in fintech, diligence, data, and practical AI.
+  - Writers and curious generalists who care about taste, memory, and voice.
+  - People making research, filing, or knowledge-heavy work less painful.
 ---
 
-This page is intentionally manual. It should be easy to refresh once or twice a month without changing any code.
+This page is intentionally manual. I want it to read like a real check-in, not like status copy generated on autopilot.

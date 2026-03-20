@@ -11,19 +11,19 @@ const categories = ['All', ...new Set(projects.map((project) => project.data.cat
 const liveCount = projects.filter((project) => project.data.status === 'live').length;
 ---
 
-<BaseLayout title="Projects" description="Data tools, research utilities, and public experiments in motion.">
+<BaseLayout title="Projects" description="The tools I am building because I kept running into the same finance and research frustrations myself.">
   <SiteTreeHeader
     branch="projects"
     currentHref="/projects"
     title="Projects"
-    description="The main build library for tools, experiments, and product systems that deserve a longer public life."
+    description="The main shelf for the things I am building, testing, and trying to make genuinely useful."
   />
 
   <section class="page-section">
     <SectionHeading
-      eyebrow="Public builds"
+      eyebrow="Projects"
       title="Projects"
-      description="A home for technical projects, future-facing tools, and public experiments designed to become more useful over time."
+      description="These projects mostly come from the same place: I ran into a workflow that felt clumsy, repetitive, or harder than it needed to be, and I kept thinking about how I would rather use it."
     />
     <div class="stats-row">
       <div class="panel stat-card"><strong>{projects.length}</strong><span>tracked builds</span></div>
@@ -33,8 +33,8 @@ const liveCount = projects.filter((project) => project.data.status === 'live').l
   </section>
 
   <section class="page-section">
-    <SectionHeading eyebrow="Featured" title="Priority builds" description="The strongest current signals from the product and tooling side of the site." />
-    <div class="project-grid">
+    <SectionHeading eyebrow="Featured" title="The ones I am pushing hardest" description="A few projects that best show the kind of work I want to keep doing." />
+    <div class="project-list" style="display: flex; flex-direction: column; gap: 0;">
       {featuredProjects.map((project) => <ProjectCard project={project} />)}
     </div>
   </section>
@@ -47,7 +47,7 @@ const liveCount = projects.filter((project) => project.data.status === 'live').l
         </button>
       ))}
     </div>
-    <div class="project-grid" data-project-grid>
+    <div class="project-list" data-project-grid style="display: flex; flex-direction: column; gap: 0; margin-top: 2rem;">
       {projects.map((project) => <ProjectCard project={project} />)}
     </div>
   </section>

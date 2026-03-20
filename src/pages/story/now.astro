@@ -45,20 +45,20 @@ const directoryItems = directories
   }));
 ---
 
-<BaseLayout title="Brewing in progress" description={homepageConfig.brewingPage.description}>
+<BaseLayout title="Now" description="A personal snapshot of what I am building, reading, and thinking about right now.">
   <div class="home-story home-v2 personal-home brewing-page">
     <SiteTreeHeader
       branch="connect"
       currentHref="/now"
       title="Now"
-      description="A current snapshot of active work, site direction, and the things that are taking shape right now."
+      description="A personal snapshot of what I am building, reading, thinking about, and paying attention to right now."
     />
 
     <section class="page-section page-section-hero">
       <SectionHeading
         eyebrow={`Updated ${formatDate(current.data.updatedAt)}`}
-        title={homepageConfig.brewingPage.title}
-        description={homepageConfig.brewingPage.description}
+        title="Now"
+        description="This is the more personal page. If /brewing is about the work itself, this one is about what is holding my attention lately."
       />
       <div class="home-brewing-grid">
         <article class="panel home-brewing-card">
@@ -67,9 +67,9 @@ const directoryItems = directories
             <span></span>
           </div>
           <SectionHeading
-            eyebrow="Currently brewing"
-            title="Active work, active archives, active questions"
-            description={homepageConfig.currentBrewingIntro}
+            eyebrow="Right now"
+            title="What has my attention at the moment"
+            description="A short read on the projects, questions, and habits that feel most alive to me right now."
           />
           <ul>
             {homepageConfig.currentBrewing.map((item) => <li>{item}</li>)}
@@ -87,9 +87,9 @@ const directoryItems = directories
 
     <section class="page-section page-section-positioning">
       <SectionHeading
-        eyebrow={homepageConfig.positioning.eyebrow}
-        title={homepageConfig.positioning.title}
-        description={homepageConfig.positioning.description}
+        eyebrow="What this site is trying to do"
+        title="I want this site to feel like one life, not two separate selves."
+        description="The writing, project work, cricket archive, and personal timeline all belong together. This page is the quickest way to see that mix in the present tense."
       />
       <div class="home-positioning-grid">
         {homepageConfig.positioning.cards.map((card) => (
@@ -104,8 +104,8 @@ const directoryItems = directories
     <section class="page-section page-section-destinations">
       <SectionHeading
         eyebrow="Start here"
-        title="Everything else lives here."
-        description="The richer overview of writing, tools, adventures, and current direction sits on this page instead of crowding the homepage."
+        title="The rest of the site, in plain language"
+        description="If you want the fuller picture, these are the pages I would send you to next."
       />
       <div class="home-destination-grid">
         {featuredDestinations.map((item) => (
@@ -124,7 +124,7 @@ const directoryItems = directories
     <section class="page-section page-section-selected">
       <SectionHeading
         eyebrow="Selected work"
-        title="Signals from writing, products, and the field"
+        title="A few pieces that show the mix"
         description={homepageConfig.selectedEntryIntro}
       />
       <div class="home-selected-grid">

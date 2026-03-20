@@ -1,785 +1,664 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
-const interests = [
-  { id: 'cricket', name: 'Cricket', icon: '🏏', color: '#4ADE80', href: '/interests/cricket', badge: '04' },
-  { id: 'books', name: 'Books', icon: '📚', color: '#F59E0B', href: '/interests/books', badge: '12' },
-  { id: 'movies', name: 'Movies', icon: '🎬', color: '#EF4444', href: '/interests/movies', badge: '77' },
-  { id: 'writing', name: 'Writing', icon: '✍️', color: '#A78BFA', href: '/interests/writing', badge: '55' },
-  { id: 'finance', name: 'Finance', icon: '📈', color: '#22D3EE', href: '#', badge: '11' },
-  { id: 'tech', name: 'Tech', icon: '💻', color: '#F472B6', href: '#', badge: '33' },
-  { id: 'data', name: 'Data', icon: '🧠', color: '#FB923C', href: '#', badge: '07' },
+const racingNodes = [
+  { id: 'interests', name: 'Interests', longName: 'Cricket, Books, & Films', color: '#0EA5B7', href: '/interests', badge: 'S1', blurb: 'A collection of the things that quietly shape my days.' },
+  { id: 'story', name: 'My Story', longName: 'The route through Bangladesh and beyond', color: '#8B919A', href: '/story', badge: 'S2', blurb: 'The timeline of places and schools that explains the rest.' },
+  { id: 'projects', name: 'Projects', longName: 'Building tools and systems', color: '#F3F3F1', href: '/projects', badge: 'S3', blurb: 'Where the loose thoughts and concepts finally land.' }
+];
+
+const shelfItems = [
+  { id: 'cricket', name: 'Cricket', longName: 'My weekend cricket journal', color: '#0EA5B7', href: '/interests/cricket', badge: 'S1', blurb: 'Cricket is one of the clearest ways to understand me.' },
+  { id: 'books', name: 'Books', longName: 'Books that are on my bookshelf', color: '#F3F3F1', href: '/interests/books', badge: 'S2', blurb: 'Books have shaped my taste and inner life for years.' },
+  { id: 'story', name: 'Story', longName: 'The route through my story', color: '#8B919A', href: '/story', badge: 'S3', blurb: 'The route through Bangladesh, China, and the United States explains the rest.' },
+  { id: 'tbd', name: 'TBD', longName: 'Drafts and incoming work', color: '#E10600', href: '/tbd', badge: 'S4', blurb: 'The rougher sections live here until they sound more like me.' },
 ];
 
 const dashboardNav = [
   { label: 'My Story', href: '/story' },
   { label: 'Interests', href: '/interests' },
   { label: 'Projects', href: '/projects' },
+  { label: 'Field Notes', href: '/projects/field-notes' },
   { label: 'Connect', href: '/connect' },
 ];
 ---
-<BaseLayout description="Hi, I am Nafi. Brewing exciting topics. Welcome to my personal blog.">
+<BaseLayout description="A personal homepage shaped by movement across Bangladesh, China, and the United States, with books and cricket at the center." hideHeader={true}>
+  
+  <main class="paddock-arena" aria-label="The Circuit">
+    
+    <!-- 1. ENGINEERED PERIMETER TRACK -->
+    <svg class="circuit-map" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <defs>
+        <!-- Intense asphalt noise (only rendered on track surface) -->
+        <filter id="asphalt-noise" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise" />
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.1 0" in="noise" result="coloredNoise" />
+          <feComposite operator="in" in="coloredNoise" in2="SourceGraphic" result="composite" />
+          <feBlend mode="multiply" in="composite" in2="SourceGraphic" />
+        </filter>
 
-  <!-- HERO SECTION -->
-  <section class="hero-center" aria-label="Hero Section">
-    <div class="hero-inner">
-      <div class="hero-profile">
-        <img src="/profile.jpg" alt="C M Nafi" width="160" height="160" loading="eager" />
-      </div>
-      <h1 class="hero-headline">
-        {"Hi, I am Nafi.".split('').map((char, i) => (
-          <span class={`hero-letter ${char === ' ' ? 'hero-letter--space' : ''}`} style={`--i:${i}`}>{char === ' ' ? '\u00A0' : char}</span>
-        ))}
-      </h1>
-      <p class="hero-subline">Welcome to my website. These are my current obsessions, racing against each other.</p>
-      
-      <div class="hero-nav">
-        {dashboardNav.map((item, i) => (
-          <a href={item.href} class="hero-nav-btn" style={`--i:${i}`}>
-            {item.label}
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- RACETRACK SECTION -->
-  <section class="grand-prix" aria-label="The Interest Grand Prix">
-    <div class="gp-header">
-      <h2 class="gp-title">THE GRAND PRIX</h2>
-      <p class="gp-subtitle">7 interests. 1 massive track. Overtaking allowed.</p>
-      
-      <button id="start-race-btn" class="gp-start-btn">START RACE</button>
-    </div>
-
-    <div class="track-area">
-      <!-- SVG Track Background -->
-      <svg class="track-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <pattern id="checker" width="20" height="20" patternUnits="userSpaceOnUse">
-            <rect width="10" height="10" fill="#fff" />
-            <rect x="10" width="10" height="10" fill="#111" />
-            <rect y="10" width="10" height="10" fill="#111" />
-            <rect x="10" y="10" width="10" height="10" fill="#fff" />
-          </pattern>
-        </defs>
+        <pattern id="grid-checker" width="30" height="30" patternUnits="userSpaceOnUse">
+          <rect width="15" height="15" fill="#F3F3F1" />
+          <rect x="15" width="15" height="15" fill="#05070B" />
+          <rect y="15" width="15" height="15" fill="#05070B" />
+          <rect x="15" y="15" width="15" height="15" fill="#F3F3F1" />
+        </pattern>
         
-        <!-- Thick Main Road -->
-        <path d="M 50 150 C 400 150, 400 450, 800 450 C 1100 450, 1050 150, 1300 150" 
-              fill="none" stroke="#222" stroke-width="200" stroke-linecap="round"/>
-              
-        <!-- Road Edges / Curbs -->
-        <path d="M 50 150 C 400 150, 400 450, 800 450 C 1100 450, 1050 150, 1300 150" 
-              fill="none" stroke="#e11d48" stroke-width="216" stroke-dasharray="30 30" stroke-linecap="round" style="opacity: 0.6; z-index: -1;"/>
-        <path d="M 50 150 C 400 150, 400 450, 800 450 C 1100 450, 1050 150, 1300 150" 
-              fill="none" stroke="#fff" stroke-width="216" stroke-dasharray="0 30 30 0" stroke-linecap="round" style="opacity: 0.6; z-index: -1;"/>
-              
-        <!-- Invisible Center Racing Line for JS Math -->
-        <path id="racing-line" d="M 50 150 C 400 150, 400 450, 800 450 C 1100 450, 1050 150, 1150 150" 
-              fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="4" stroke-dasharray="10 10"/>
-        
-        <!-- Start & Finish Lines overlapping the road -->
-        <line x1="150" y1="50" x2="150" y2="250" stroke="url(#checker)" stroke-width="20" />
-        <line x1="1100" y1="50" x2="1100" y2="250" stroke="url(#checker)" stroke-width="20" />
-        <text x="1100" y="40" fill="#fff" font-family="Sora" font-weight="bold" font-size="20" text-anchor="middle">FINISH</text>
-      </svg>
+        <filter id="teal-glow">
+          <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
 
-      <!-- Overlay for Countdown -->
-      <div class="countdown-overlay" id="countdown-overlay">
-        <div class="countdown-text" id="countdown-text">3</div>
-      </div>
+        <!-- Red/White Kerbs gradient for corners -->
+        <pattern id="kerb-pattern" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="20" height="40" fill="#E10600" />
+          <rect x="20" width="20" height="40" fill="#F3F3F1" />
+        </pattern>
 
-      <!-- Cars Container - Scaled by JS to match SVG coordinate system -->
-      <div class="cars-layer" id="cars-layer">
-        {interests.map((item, index) => (
-          <a
-            href={item.href}
-            class="f1-car"
-            id={`car-${item.id}`}
-            data-index={index}
-            data-id={item.id}
-            data-name={item.name}
-            data-href={item.href}
-            target="_blank"
-            style={`--accent: ${item.color};`}
-          >
-            <div class="f1-car__badge">{item.badge}</div>
-            <div class="f1-car__icon">{item.icon}</div>
-            <div class="f1-car__name">{item.name}</div>
-          </a>
-        ))}
-      </div>
+        <!-- Highly Technical Multi-Apex F1 Track -->
+        <path id="master-path" d="M 960 150 L 1600 150 C 1750 150, 1770 250, 1770 350 C 1770 450, 1700 500, 1700 550 C 1700 600, 1770 700, 1770 850 C 1770 930, 1750 930, 1600 930 L 400 930 C 250 930, 150 850, 150 750 C 150 650, 250 600, 250 550 C 250 450, 150 350, 150 250 C 150 150, 250 150, 960 150 Z" />
+      </defs>
       
-      <!-- Winner Transition Screen -->
-      <div class="winner-screen" id="winner-screen">
-        <div class="winner-content">
-          <h2 class="winner-title">RACE FINISHED</h2>
-          <div class="winner-card" id="winner-card">
-            <span class="winner-card__icon" id="winner-icon"></span>
-            <span class="winner-card__name" id="winner-name"></span>
+      <!-- Track Inset shadow base (outer dark ring) -->
+      <use href="#master-path" fill="none" stroke="#05070B" stroke-width="230" />
+      
+      <!-- Track Borders (Bright Painted Limits) -->
+      <use href="#master-path" fill="none" stroke="rgba(243, 237, 225, 0.35)" stroke-width="196" />
+      
+      <!-- Asphalt Core with Noise Grain -->
+      <use href="#master-path" fill="none" class="core-asphalt" stroke="#1A1D22" stroke-width="190" filter="url(#asphalt-noise)" />
+
+      <!-- Rubber/Braking smudges at apexes (faint black opacity) -->
+      <use href="#master-path" fill="none" stroke="#111317" stroke-width="180" stroke-dasharray="0 450 350 480" opacity="0.8" filter="blur(8px)" />
+
+      <!-- Sleek Dynamic Racing Line -->
+      <use href="#master-path" id="racing-line" fill="none" stroke="#8B919A" stroke-width="3" stroke-dasharray="20 40" opacity="0.3" />
+      
+      <!-- Staggered Start/Finish Grid Painted -->
+      <g class="start-grid" transform="translate(0,0)">
+        <line x1="960" y1="50" x2="960" y2="250" stroke="#F3F3F1" stroke-width="6" />
+        <line x1="970" y1="50" x2="970" y2="250" stroke="url(#grid-checker)" stroke-width="12" opacity="0.8" />
+        
+        <!-- 3-Wide Starting Grid -->
+        <rect x="880" y="85" width="40" height="20" fill="none" stroke="#F3F3F1" stroke-width="2" opacity="0.4" />
+        <text x="895" y="100" fill="#F3F3F1" font-family="'DM Sans', sans-serif" font-size="12" font-weight="900" opacity="0.4">P1</text>
+        
+        <rect x="880" y="140" width="40" height="20" fill="none" stroke="#F3F3F1" stroke-width="2" opacity="0.4" />
+        <text x="895" y="155" fill="#F3F3F1" font-family="'DM Sans', sans-serif" font-size="12" font-weight="900" opacity="0.4">P2</text>
+        
+        <rect x="880" y="195" width="40" height="20" fill="none" stroke="#F3F3F1" stroke-width="2" opacity="0.4" />
+        <text x="895" y="210" fill="#F3F3F1" font-family="'DM Sans', sans-serif" font-size="12" font-weight="900" opacity="0.4">P3</text>
+      </g>
+    </svg>
+
+    <!-- 2. TELEMETRY SECTOR NODES (Only active racing nodes via user config) -->
+    <div class="sectors-layer" id="cars-layer" aria-hidden="true">
+      {racingNodes.map((item, index) => (
+        <a
+          href={item.href}
+          class="telemetry-node"
+          data-index={index}
+          data-id={item.id}
+          data-name={item.name}
+          data-href={item.href}
+          data-blurb={item.blurb}
+          style={`--sector-color: ${item.color};`}
+        >
+          <div class="node-core"></div>
+          <div class="node-hud">
+            <div class="node-badge">SECTOR {index + 1}</div>
+            <div class="node-label">{item.name.toUpperCase()}</div>
           </div>
-          <p class="winner-msg" id="winner-msg">Let's explore my journey.</p>
-          <div class="winner-actions">
-            <a href="#" class="winner-explore-btn" id="winner-explore-btn">Explore Now &rarr;</a>
-            <button class="winner-replay-btn" id="winner-replay-btn">🔄 Race Again</button>
+        </a>
+      ))}
+    </div>
+
+    <!-- 3. COMMAND CENTER HERO (Embedded Paddock) -->
+    <section class="command-paddock">
+      <div class="paddock-content">
+        
+        <div class="paddock-identity">
+          <div class="profile-ring">
+            <img src="/profile.jpg" alt="C M Nafi" width="90" height="90" loading="eager" />
           </div>
+          <div class="identity-text">
+            <h1 class="paddock-headline">Hi, I\'m Nafi.</h1>
+            <p class="paddock-job">WELCOME TO MY WEBSITE</p>
+          </div>
+        </div>
+
+        <p class="paddock-editorial">
+          I built this space to share my story, the projects I\'m building, and the ideas I keep returning to across technology, finance, writing, sports, and life.
+        </p>
+        
+        <nav class="paddock-nav" aria-label="Circuit Mapping">
+          {dashboardNav.map((item) => (
+            <a href={item.href} class="nav-node">[{item.label}]</a>
+          ))}
+        </nav>
+
+        <button id="start-race-btn" class="paddock-cta">
+          <span class="cta-pulse"></span>
+          FOLLOW MY LINE
+        </button>
+
+      </div>
+    </section>
+
+    <!-- 4. CINEMATIC OVERLAYS -->
+    <div class="cinematic-overlay" id="countdown-overlay" aria-hidden="true">
+      <div class="race-lights-container" id="race-lights">
+        <!-- 5 Light Pods -->
+        <div class="light-pod"><div class="light-fixture"></div></div>
+        <div class="light-pod"><div class="light-fixture"></div></div>
+        <div class="light-pod"><div class="light-fixture"></div></div>
+        <div class="light-pod"><div class="light-fixture"></div></div>
+        <div class="light-pod"><div class="light-fixture"></div></div>
+      </div>
+      <div class="story-flashback" id="light-story"></div>
+    </div>
+    
+    <div class="cinematic-overlay" id="winner-screen" aria-hidden="true">
+      <div class="end-sequence-card">
+        <p class="end-title" id="winner-clever-msg">START WITH THE PART YOU OPENED FIRST.</p>
+        <div class="end-identity">
+          <div class="p1-badge">P1</div>
+          <span class="end-name" id="winner-name">CRICKET</span>
+          <div class="lap-time" id="winner-time">00:00.000</div>
+        </div>
+        <p class="end-sub" id="winner-sub">That section is one honest way into me. The rest of the site will still be here when you want the fuller picture.</p>
+        
+        <div class="winner-list-layout">
+          <div class="winner-list-col">
+            <h4 class="list-heading">Start Here</h4>
+            {shelfItems.map(item => (
+              <a href={item.href} class="list-link">
+                <span class="list-dot" style={`color: ${item.color}`}></span>
+                {item.longName || item.name}
+              </a>
+            ))}
+          </div>
+          <div class="winner-list-col">
+            <h4 class="list-heading">Explore</h4>
+            {dashboardNav.map(item => (
+              <a href={item.href} class="list-link">
+                <span class="list-dot" style="color: var(--text-silver)"></span>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+        <div class="winner-actions">
+          <button class="btn-ghost-replay" id="winner-replay-btn">🔄 Restart Sequence</button>
+          <button class="btn-ghost-close" id="winner-close-btn">✖ Back to Main Page</button>
         </div>
       </div>
     </div>
-  </section>
-
+  </main>
 </BaseLayout>
 
 <style>
   :root {
-    --track-bg: #111;
-  }
-
-  /* =========== HERO CENTER =========== */
-  .hero-center {
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 6rem 1.5rem 4rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-center::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at center, rgba(34, 211, 238, 0.08) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .hero-inner {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    max-width: 900px;
-  }
-
-  .hero-profile {
-    margin-bottom: 1rem;
-  }
-
-  .hero-profile img {
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid rgba(255,255,255,0.1);
-    box-shadow: 0 0 40px rgba(34, 211, 238, 0.2);
-    animation: float 6s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); box-shadow: 0 15px 40px rgba(34, 211, 238, 0.3); }
-  }
-
-  .hero-headline {
-    font-family: 'Sora', 'Manrope', ui-sans-serif, system-ui, sans-serif;
-    font-size: clamp(3.2rem, 8vw, 6rem);
-    font-weight: 800;
-    line-height: 1.05;
-    color: #f3ede1;
-    margin: 0;
-    letter-spacing: -0.02em;
-  }
-
-  .hero-letter {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: letter-enter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    animation-delay: calc(var(--i) * 0.04s + 0.2s);
-  }
-  .hero-letter--space { width: 0.2em; }
-
-  @keyframes letter-enter {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .hero-subline {
-    font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
-    font-size: clamp(1.1rem, 3vw, 1.4rem);
-    color: #b8ad9a;
-    margin: 0;
-    max-width: 600px;
-    opacity: 0;
-    animation: fade-up 0.8s ease forwards;
-    animation-delay: 1s;
-  }
-
-  @keyframes fade-up {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .hero-nav {
-    display: flex;
-    gap: 1.2rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .hero-nav-btn {
-    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
-    padding: 0.8rem 2.2rem;
-    border-radius: 40px;
-    background: rgba(255,255,255,0.04);
-    color: #f3ede1;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.05rem;
-    border: 1px solid rgba(255,255,255,0.08);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    backdrop-filter: blur(10px);
-    opacity: 0;
-    animation: nav-enter 0.5s ease forwards;
-    animation-delay: calc(var(--i) * 0.1s + 1.2s);
-  }
-
-  @keyframes nav-enter {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .hero-nav-btn:hover {
-    background: rgba(34, 211, 238, 0.12);
-    border-color: rgba(34, 211, 238, 0.4);
-    box-shadow: 0 0 25px rgba(34, 211, 238, 0.25);
-    transform: translateY(-4px) scale(1.05);
-  }
-
-  /* =========== RACETRACK =========== */
-  .grand-prix {
-    padding: 2rem 1.5rem 6rem;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  .gp-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-  }
-
-  .gp-title {
-    font-family: 'Sora', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2rem, 5vw, 3rem);
-    letter-spacing: 0.05em;
-    margin: 0 0 0.5rem;
-    color: #f3ede1;
-  }
-
-  .gp-subtitle {
-    font-family: 'Manrope', sans-serif;
-    font-size: 1.1rem;
-    color: #b8ad9a;
-    margin: 0 0 1.5rem;
-  }
-
-  .gp-start-btn {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 800;
-    font-size: 1.2rem;
-    padding: 1rem 3rem;
-    border-radius: 50px;
-    background: #e11d48;
-    color: white;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 0 25px rgba(225, 29, 72, 0.4);
-    transition: all 0.3s ease;
-  }
-  .gp-start-btn:hover {
-    background: #be123c;
-    box-shadow: 0 0 40px rgba(225, 29, 72, 0.6);
-    transform: scale(1.05);
-  }
-  .gp-start-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    background: #555;
-    box-shadow: none;
-  }
-
-  /* Single Track Rendering */
-  .track-area {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 2 / 1;
-    background: repeating-linear-gradient(to bottom, #141414, #141414 40px, #1a1a1a 40px, #1a1a1a 42px);
-    border: 1px solid #333;
-    border-radius: 24px;
-    overflow: hidden;
-    /* ensure scale transform orig matches layout */
-  }
-
-  .track-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%; 
-    height: 100%;
-  }
-
-  /* Cars Overlay Grid */
-  .cars-layer {
-    position: absolute;
-    top: 0; left: 0;
-    width: 1200px;
-    height: 600px;
-    transform-origin: top left;
-    pointer-events: none; /* Let SVG clicks pass if needed, but cars enable pointer-events */
-  }
-
-  /* F1 Car Architecture */
-  .f1-car {
-    position: absolute;
-    /* top left mapped to 0 0 of the SVG coordinate system */
-    top: 0; left: 0;
-    display: flex;
-    align-items: center;
-    background: rgba(15, 15, 15, 0.95);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 24px;
-    padding: 0 1rem;
-    height: 40px;
-    width: 160px;
-    text-decoration: none;
-    color: #f3ede1;
-    z-index: 10;
-    will-change: transform;
-    pointer-events: auto; /* clickable while racing or idle */
-    transition: box-shadow 0.2s, background 0.2s;
-  }
-
-  .f1-car::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 26px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    z-index: -1;
-    opacity: 0.5;
-    transition: opacity 0.3s;
+    --page-bg: #05070B;
+    --surface-bg: #0B0F14;
+    --accent-red: #E10600;
+    --text-white: #F3F3F1;
+    --text-silver: #8B919A;
+    --accent-teal: #0EA5B7;
   }
   
-  .f1-car:hover {
-    box-shadow: 0 0 20px var(--accent);
-    background: rgba(30, 30, 30, 0.95);
-    z-index: 999 !important; /* Jump to top on hover */
+  body, html { margin: 0; padding: 0; min-height: 100vh; background: var(--page-bg); }
+
+  /* 1. UNIFIED ARENA CONTAINER */
+  .paddock-arena {
+    position: relative; width: 100vw; height: calc(100vh - 54px);
+    background: var(--page-bg);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
   }
 
-  .f1-car__badge {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 800;
-    font-size: 0.8rem;
-    color: var(--accent);
-    margin-right: 0.5rem;
-    width: 18px;
+  .circuit-map {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%; z-index: 1; pointer-events: none;
   }
 
-  .f1-car__icon {
-    font-size: 1.1rem;
-    margin-right: 0.5rem;
-    transform: translateY(-1px);
+  .sectors-layer {
+    position: absolute; top: 50%; left: 50%;
+    width: 1920px; height: 1080px;
+    transform: translate(-50%, -50%); /* Base JS scaled */
+    pointer-events: none; z-index: 5;
   }
 
-  .f1-car__name {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 0.85rem;
-    white-space: nowrap;
+  /* 2. COMMAND PADDOCK (Embedded deeply) */
+  .command-paddock {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 1.5rem 3rem;
+    
+    /* Premium Carbon & Surfaces */
+    background-color: var(--surface-bg);
+    background-image: 
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, transparent 1px, transparent 10px, rgba(255,255,255,0.01) 11px),
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.01) 0px, transparent 1px, transparent 10px, rgba(255,255,255,0.01) 11px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(14, 165, 183, 0.3); /* subtle teal top edge */
+    border-bottom: 2px solid var(--accent-red); /* strict red bottom line */
+    border-radius: 60px; /* Highly rounded oval per user request */
+    max-width: 700px; width: 90vw;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.9), inset 0 20px 40px rgba(255,255,255,0.01);
+    animation: paddock-reveal 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
   }
 
-  /* Drafting / Speed trail */
-  .f1-car::after {
-    content: '';
-    position: absolute;
-    right: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 50%;
-    width: 80px;
-    background: linear-gradient(to right, transparent, var(--accent));
-    opacity: 0;
-    transition: opacity 0.2s;
-    pointer-events: none;
-  }
-  .f1-car.is-racing::after {
-    opacity: 0.8;
+  @keyframes paddock-reveal {
+    0% { opacity: 0; transform: translateY(30px); filter: blur(10px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
 
-  /* Overlays */
-  .countdown-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
+  .paddock-identity {
+    display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.2rem;
+    text-align: left;
   }
-  .countdown-overlay.show { opacity: 1; }
+  .profile-ring {
+    position: relative; width: 75px; height: 75px;
+    border-radius: 50%; padding: 4px;
+    background: conic-gradient(from 0deg, var(--accent-teal), transparent 40%, var(--accent-red) 60%, transparent 100%);
+    animation: spin-ring 10s linear infinite;
+  }
+  @keyframes spin-ring { 100% { transform: rotate(360deg); } }
+  
+  .profile-ring img {
+    width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+    background: var(--page-bg); border: 2px solid var(--surface-bg);
+    animation: counter-spin 10s linear infinite; /* Keeps upright */
+  }
+  @keyframes counter-spin { 100% { transform: rotate(-360deg); } }
 
-  .countdown-text {
-    font-family: 'Sora', sans-serif;
-    font-size: 10rem;
-    font-weight: 900;
-    color: #fff;
-    transform: scale(0.5);
-    opacity: 0;
+  .paddock-headline {
+    font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800;
+    color: var(--text-white); margin: 0; letter-spacing: 0.05em;
   }
-  .countdown-text.animate {
-    animation: count-boom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  }
-
-  @keyframes count-boom {
-    0% { transform: scale(0.5); opacity: 0; }
-    30% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 0; }
+  .paddock-job {
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 700;
+    color: var(--accent-teal); letter-spacing: 0.1em; margin: 0.2rem 0 0;
   }
 
-  /* Winner Post-Race Screen */
-  .winner-screen {
-    position: absolute;
-    inset: 0;
-    background: rgba(10,10,10,0.92);
-    backdrop-filter: blur(12px);
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.6s ease;
-  }
-  .winner-screen.show {
-    opacity: 1;
-    pointer-events: auto;
+  .paddock-editorial {
+    font-family: 'Manrope', sans-serif; font-size: 0.85rem; color: var(--text-silver);
+    line-height: 1.6; margin: 0 0 1.5rem; max-width: 500px; text-align: left;
+    border-left: 2px solid rgba(255,255,255,0.1); padding-left: 1rem;
   }
 
-  .winner-content {
-    text-align: center;
-    transform: translateY(30px) scale(0.95);
-    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  .paddock-nav { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; justify-content: center; width: 100%; }
+  .nav-node {
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem;
+    color: var(--text-silver); text-decoration: none; letter-spacing: 0.05em;
+    transition: all 0.3s;
   }
-  .winner-screen.show .winner-content {
-    transform: translateY(0) scale(1);
+  .nav-node:hover { color: var(--text-white); text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+
+  .paddock-cta {
+    align-self: center; /* Center to match oval logic */
+    background: var(--accent-red); color: var(--text-white); border: none;
+    padding: 0.8rem 2rem; font-family: 'Sora', sans-serif; font-weight: 800;
+    font-size: 0.85rem; letter-spacing: 0.1em; cursor: pointer;
+    border-radius: 40px;
+    transition: background 0.3s, transform 0.2s;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .paddock-cta:hover { background: #b00500; transform: translateY(-2px); }
+  .paddock-cta:disabled { background: #333; cursor: not-allowed; transform: none; color: #888; }
+  
+  .cta-pulse {
+    display: block; width: 8px; height: 8px; background: #fff; border-radius: 50%;
+    box-shadow: 0 0 10px #fff; animation: pulse-dot 1.5s infinite;
+  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* 3. TELEMETRY SECTORS (Orbital Logic) */
+  .telemetry-node {
+    position: absolute; top: 0; left: 0; z-index: 10;
+    display: flex; align-items: center; gap: 1rem;
+    pointer-events: auto; text-decoration: none; will-change: transform;
   }
 
-  .winner-title {
-    font-family: 'Sora', sans-serif;
-    color: #facc15;
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    letter-spacing: 0.15em;
-    margin: 0 0 2rem;
-    text-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+  .node-core {
+    width: 14px; height: 14px; background: var(--sector-color);
+    border-radius: 50%; box-shadow: 0 0 20px var(--sector-color);
+    border: 2px solid var(--page-bg); transition: transform 0.3s;
+  }
+  .telemetry-node:hover .node-core { transform: scale(1.5); box-shadow: 0 0 30px var(--sector-color); }
+
+  .node-hud {
+    display: flex; flex-direction: column; background: rgba(11, 15, 20, 0.85);
+    backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1);
+    border-left: 2px solid var(--sector-color); padding: 0.4rem 0.8rem;
+    opacity: 1; transform: translateX(0); /* always visible */
+    pointer-events: none; margin-left: 6px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: opacity 0.3s;
+  }
+  .telemetry-node:hover { z-index: 9999 !important; }
+  .track-light {
+    position: absolute; top: 0; left: 0; z-index: 2;
+    width: 3px; height: 3px; border-radius: 50%;
+    background: #fff; box-shadow: 0 0 10px 5px var(--light-color, #F3F3F1);
   }
 
-  .winner-card {
-    display: inline-flex;
-    align-items: center;
-    gap: 1.2rem;
-    padding: 1.5rem 3.5rem;
-    border-radius: 60px;
-    background: rgba(255,255,255,0.06);
-    border: 3px solid var(--accent, #fff);
-    box-shadow: 0 0 40px var(--accent, transparent), inset 0 0 20px var(--accent, transparent);
-    margin-bottom: 1.5rem;
-    will-change: transform;
-    animation: winner-pulse 2s infinite alternate ease-in-out;
-  }
+  .node-badge { font-family: 'DM Sans'; font-weight: 800; font-size: 0.65rem; color: var(--sector-color); }
+  .node-label { font-family: 'Sora'; font-weight: 700; font-size: 0.85rem; color: var(--text-white); margin-top: 0.1rem;}
 
-  @keyframes winner-pulse {
-    from { transform: scale(1); }
-    to { transform: scale(1.03); }
+  /* 4. CINEMATIC OVERLAYS & WINNER SCREEN */
+  .cinematic-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(5,7,11,0.85); backdrop-filter: blur(10px);
+    display: grid; place-items: center; 
+    opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+    overflow-y: auto; padding: 3rem 1rem;
   }
+  .cinematic-overlay.show { opacity: 1; pointer-events: auto; }
 
-  .winner-card__icon { font-size: 3rem; }
-  .winner-card__name { font-family: 'Sora', sans-serif; font-size: 3rem; font-weight: 800; color: #fff; }
+  .race-lights-container {
+    display: flex; gap: clamp(0.5rem, 2vw, 1.5rem);
+    background: #0B0F14; padding: 2rem clamp(1.5rem, 3vw, 2.5rem);
+    border-radius: 20px; border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 10px 30px rgba(0,0,0,0.5);
+    transform: translateY(-20px);
+  }
+  .light-pod {
+    background: #05070B; padding: clamp(0.5rem, 1vw, 1rem); border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 5px 10px rgba(0,0,0,0.8);
+  }
+  .light-fixture {
+    width: clamp(30px, 5vw, 60px); height: clamp(30px, 5vw, 60px); border-radius: 50%;
+    background: #2a0808; box-shadow: inset 0 0 10px #000;
+    transition: background 0.05s, box-shadow 0.05s;
+  }
+  .light-fixture.red { background: #E10600; box-shadow: 0 0 40px rgba(225, 6, 0, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.5); }
+  .light-fixture.green { background: #10B981; box-shadow: 0 0 40px rgba(16, 185, 129, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.5); }
 
-  .winner-msg {
-    font-family: 'Manrope', sans-serif;
-    font-size: 1.5rem;
-    color: #e4d2b8;
-    margin-bottom: 3rem;
+  .story-flashback {
+    position: absolute; bottom: clamp(10%, 20vh, 25%); width: 90%; max-width: 1200px; text-align: center;
+    font-family: 'Sora', sans-serif; font-size: clamp(1.2rem, 3vw, 2.5rem); font-weight: 800;
+    color: var(--text-white); letter-spacing: 0.1em; text-transform: uppercase;
+    opacity: 0; filter: blur(10px); transition: all 0.3s ease; text-shadow: 0 0 20px rgba(255,255,255,0.5);
   }
+  .story-flashback.flash { opacity: 1; filter: blur(0); transform: scale(1.02); }
 
-  .winner-actions {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
+  .end-sequence-card {
+    text-align: center; border: 1px solid rgba(255,255,255,0.1);
+    background: var(--surface-bg); padding: 3rem 4rem 2rem; border-top: 2px solid var(--accent-red);
+    transform: translateY(20px); transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.9); max-width: 650px; width: 90%;
   }
+  .cinematic-overlay.show .end-sequence-card { transform: translateY(0); }
 
-  .winner-explore-btn {
-    background: var(--accent, #4ade80);
-    color: #000;
-    padding: 1.2rem 3.5rem;
-    border-radius: 50px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 800;
-    font-size: 1.2rem;
-    text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 0 20px var(--accent);
-  }
-  .winner-explore-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px var(--accent);
-  }
+  .end-title { font-family: 'DM Sans'; font-size: 1rem; color: var(--accent-red); font-weight: 800; letter-spacing: 0.2em; margin: 0 0 1.5rem; text-transform: uppercase; }
+  .end-name { font-family: 'Sora'; font-size: 4rem; font-weight: 800; color: var(--text-white); letter-spacing: 0.05em; text-transform: uppercase; line-height: 1; }
+  .end-identity { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-bottom: 2rem; }
+  .p1-badge { background: var(--accent-red); color: white; font-family: 'Sora', sans-serif; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 1.2rem; line-height: 1; }
+  .lap-time { font-family: 'DM Sans', sans-serif; font-size: 1.2rem; color: var(--text-silver); font-weight: 600; letter-spacing: 0.1em; border: 1px solid rgba(255,255,255,0.1); padding: 0.3rem 0.8rem; border-radius: 6px; background: rgba(0,0,0,0.4); line-height: 1; }
+  .end-sub { font-family: 'Manrope'; font-size: 1rem; color: var(--text-silver); margin: 0 0 2.5rem; line-height: 1.6; }
+  
+  .winner-list-layout { display: flex; gap: 4rem; justify-content: center; margin-bottom: 2.5rem; text-align: left; }
+  .winner-list-col { display: flex; flex-direction: column; gap: 0.8rem; min-width: 140px; }
+  .list-heading { font-family: 'DM Sans'; font-size: 0.8rem; color: var(--text-silver); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+  .list-link { font-family: 'Sora'; font-size: 1.1rem; color: var(--text-white); text-decoration: none; display: flex; align-items: center; gap: 0.8rem; transition: 0.2s; font-weight: 600; }
+  .list-link:hover { transform: translateX(5px); color: var(--accent-teal); }
+  .list-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; flex-shrink: 0; }
 
-  .winner-replay-btn {
-    background: transparent;
-    color: #fff;
-    border: 2px solid rgba(255,255,255,0.2);
-    padding: 1.2rem 2.5rem;
-    border-radius: 50px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .winner-replay-btn:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.4);
-  }
+  .winner-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
 
-  @media (max-width: 768px) {
-    .track-area {
-      aspect-ratio: 1 / 1; /* Squarer on mobile so scale fits better */
-    }
-    .winner-card { padding: 1rem 2rem; }
-    .winner-card__icon { font-size: 2rem; }
-    .winner-card__name { font-size: 2rem; }
+  .btn-ghost-replay { 
+    background: transparent; color: var(--text-silver); border: none; padding: 1rem; 
+    font-family: 'DM Sans'; font-size: 0; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 1rem;
   }
+  .btn-ghost-replay::after { content: 'Pick Another Route'; font-size: 0.85rem; }
+  .btn-ghost-replay:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
-  @media (prefers-reduced-motion: reduce) {
-    .f1-car { transition: none !important; }
-    .winner-card { animation: none; }
-    .hero-profile img { animation: none; }
-    .hero-letter, .hero-subline, .hero-nav-btn { animation: none; opacity: 1; transform: none; }
+  .btn-ghost-close { 
+    background: transparent; color: var(--text-silver); border: none; padding: 1rem; 
+    font-family: 'DM Sans'; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 1rem;
   }
+  .btn-ghost-close:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Basic elements
-    const trackArea = document.querySelector('.track-area');
     const carsLayer = document.getElementById('cars-layer');
-    const path = document.getElementById('racing-line');
+    const path = document.getElementById('master-path'); 
     const startBtn = document.getElementById('start-race-btn');
-    const countdownOverlay = document.getElementById('countdown-overlay');
-    const countdownText = document.getElementById('countdown-text');
     
-    // Winner screen elements
-    const winnerScreen = document.getElementById('winner-screen');
-    const winnerCard = document.getElementById('winner-card');
-    const winnerIcon = document.getElementById('winner-icon');
-    const winnerName = document.getElementById('winner-name');
-    const winnerMsg = document.getElementById('winner-msg');
-    const winnerExploreBtn = document.getElementById('winner-explore-btn');
-    const winnerReplayBtn = document.getElementById('winner-replay-btn');
-
-    if (!path || !carsLayer) return;
-
-    // We mathematically scale the cars-layer to match the viewport container
-    // Because the SVG viewBox goes from 0-1200, we wrote cars-layer to be 1200px.
-    // CSS scale handles the mapping automatically!
-    function handleResize() {
-      const scale = trackArea.clientWidth / 1200;
-      // Also scale height to match the aspect ratio shift on mobile if any
-      const scaleY = trackArea.clientHeight / 600; 
-      carsLayer.style.transform = `scale(${scale}, ${scaleY})`;
+    function scaleOverlays() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      // 'meet' behavior guarantees the track perfectly bounds to the shortest dimension
+      const boundingScale = Math.min(vw / 1920, vh / 1080);
+      
+      carsLayer.style.transform = `translate(-50%, -50%) scale(${boundingScale})`;
     }
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const carsElements = Array.from(document.querySelectorAll('.f1-car'));
-    const totalLength = path.getTotalLength();
     
-    // Math logic for starting positions.
-    // Start line is around X=150, which is length offset on the path.
-    // The path starts at X=50, Y=150. Distance to X=150 is ~100 length units.
-    const startOffsetLength = 100; // where cars line up
-    const finishOffsetLength = totalLength - 100; // Finish line logic
-    const raceDistance = finishOffsetLength - startOffsetLength;
+    window.addEventListener('resize', scaleOverlays);
+    scaleOverlays();
+
+    if (!path) return;
 
     let cars = [];
     let isRacing = false;
     let raceReqId = null;
+    let raceStartTime = 0;
+    const totalLength = path.getTotalLength();
+    const raceDistance = totalLength;
+
+    const carsElements = Array.from(document.querySelectorAll('.telemetry-node'));
 
     function initCars() {
       cars = carsElements.map((el, i) => {
         el.classList.remove('is-racing');
         
-        // Staggered grid formation at start offset
-        const gridRow = Math.floor(i / 2);
-        const isOutside = i % 2 !== 0; // Odd index outside line
+        // Start line is mapped to length 0 (X=960 top straight)
+        // 3-Wide Fair Start per user request
+        let lengthRaw = totalLength - 80; // All explicitly on row 1
+        if (lengthRaw < 0) lengthRaw += totalLength; 
         
-        const startingLength = startOffsetLength - (gridRow * 35); // stagger back
-        const lateralOffset = isOutside ? -45 : 45; // two columns
+        let lateralOffset = 0;
+        if (i === 0) lateralOffset = -55;      // Top slot
+        else if (i === 1) lateralOffset = 0;   // Mid slot
+        else lateralOffset = 55;               // Bot slot
         
-        const pt = path.getPointAtLength(startingLength);
-        const ptNext = path.getPointAtLength(startingLength + 1);
+        const pt = path.getPointAtLength(lengthRaw);
+        const ptNext = path.getPointAtLength((lengthRaw + 1) % totalLength);
         const angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x);
-        const nx = Math.cos(angle - Math.PI/2);
-        const ny = Math.sin(angle - Math.PI/2);
         
-        const x = pt.x + nx * lateralOffset;
-        const y = pt.y + ny * lateralOffset;
+        const x = pt.x + Math.cos(angle - Math.PI/2) * lateralOffset;
+        const y = pt.y + Math.sin(angle - Math.PI/2) * lateralOffset;
         
-        el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) rotate(${angle}rad)`;
+        el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`; 
         
         return {
           el,
           id: el.getAttribute('data-id'),
           name: el.getAttribute('data-name'),
           href: el.getAttribute('data-href'),
-          icon: el.querySelector('.f1-car__icon').textContent,
-          color: el.style.getPropertyValue('--accent').trim(),
+          blurb: el.getAttribute('data-blurb'),
+          color: el.style.getPropertyValue('--sector-color').trim(),
           
-          progressRaw: startingLength, // length traversed
-          lateralBase: lateralOffset,
+          progressRaw: lengthRaw,
+          distanceTraveled: -80, 
           lateralCurrent: lateralOffset,
-          speed: 0,
-          drifting: 0, // lateral change per frame
-          basePace: 2 + Math.random() * 1.5, // units per frame
-          finished: false
+          drifting: 0,
+          // Slower pacing matching user request, majestic and calm telemetry
+          basePace: 1.0 + Math.random() * 0.8 
         };
       });
-      winnerScreen.classList.remove('show');
+      document.getElementById('winner-screen').classList.remove('show');
+      
+      // Spawn real-world night race edge lights safely once
+      if (!window.lightsRendered) {
+        window.lightsRendered = true;
+        const frag = document.createDocumentFragment();
+        for (let i=0; i<totalLength; i+= 150) {
+          const pt = path.getPointAtLength(i);
+          const ptNext = path.getPointAtLength((i + 1) % totalLength);
+          const angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x);
+          
+          let color = '#F3F3F1';
+          if (i % 600 === 0) color = '#0EA5B7'; // Teal markers
+          else if (i % 450 === 0) color = '#E10600'; // Red markers
+          
+          // Outer edge light
+          const l1 = document.createElement('div');
+          l1.className = 'track-light';
+          l1.style.transform = `translate(${pt.x + Math.cos(angle - Math.PI/2) * 105}px, ${pt.y + Math.sin(angle - Math.PI/2) * 105}px) translate(-50%, -50%)`;
+          l1.style.setProperty('--light-color', color);
+          frag.appendChild(l1);
+          
+          // Inner edge light
+          const l2 = document.createElement('div');
+          l2.className = 'track-light';
+          l2.style.transform = `translate(${pt.x + Math.cos(angle + Math.PI/2) * 105}px, ${pt.y + Math.sin(angle + Math.PI/2) * 105}px) translate(-50%, -50%)`;
+          l2.style.setProperty('--light-color', color);
+          frag.appendChild(l2);
+        }
+        carsLayer.appendChild(frag);
+      }
     }
 
     initCars();
 
-    startBtn.addEventListener('click', startRaceSequence);
-    winnerReplayBtn.addEventListener('click', () => {
-      initCars();
-      startRaceSequence();
+    startBtn.addEventListener('click', () => {
+      if (isRacing) return;
+      startBtn.disabled = true;
+      startBtn.innerHTML = `<span class="cta-pulse" style="animation:none; opacity:0.5;"></span> FOLLOWING THE LINE`;
+      cars.forEach(c => c.el.classList.add('is-racing'));
+      
+      const overlay = document.getElementById('countdown-overlay');
+      const fixtures = document.querySelectorAll('.light-fixture');
+      const storyEl = document.getElementById('light-story');
+      overlay.classList.add('show');
+      
+      // Reset all lights to unlit state
+      fixtures.forEach(f => { f.classList.remove('red', 'green'); });
+      storyEl.classList.remove('flash');
+      storyEl.textContent = "";
+      storyEl.style.color = "var(--text-white)";
+      storyEl.style.textShadow = "0 0 20px rgba(255,255,255,0.5)";
+
+      const lightStories = [
+        "GREW UP IN BANGLADESH",
+        "MOVED TO CHINA ALONE AT 16",
+        "MOVED TO AN 8000 PEOPLE TOWN IN IOWA, USA FOR COLLEGE",
+        "STARTED WORKING (BLACKROCK, MAYO CLINIC, SKYBRIDGE)",
+        "LIVING IN TAMPA FLORIDA AND WORKING AT DASSETI"
+      ];
+      
+      let lit = 0;
+      function lightUp() {
+        if (lit < 5) {
+          fixtures[lit].classList.add('red');
+          storyEl.textContent = lightStories[lit];
+          storyEl.classList.remove('flash');
+          void storyEl.offsetWidth;
+          storyEl.classList.add('flash');
+          lit++;
+          setTimeout(lightUp, 1000); 
+        } else {
+          // F1 randomized hold interval before green drop
+          const pause = 500 + Math.random() * 1500;
+          setTimeout(() => {
+            fixtures.forEach(f => {
+              f.classList.remove('red');
+              f.classList.add('green');
+            });
+            storyEl.textContent = "THE ROUTE EXPLAINS THE REST.";
+            storyEl.style.color = "#10B981";
+            storyEl.style.textShadow = "0 0 30px rgba(16, 185, 129, 0.8)";
+            storyEl.classList.remove('flash');
+            void storyEl.offsetWidth;
+            storyEl.classList.add('flash');
+            
+            setTimeout(() => {
+              overlay.classList.remove('show');
+              isRacing = true;
+              raceStartTime = performance.now();
+              raceReqId = requestAnimationFrame(raceLoop);
+              setTimeout(() => { fixtures.forEach(f => f.classList.remove('green')); }, 500);
+            }, 600);
+          }, pause);
+        }
+      }
+      setTimeout(lightUp, 500);
     });
 
-    function startRaceSequence() {
-      if (isRacing) return;
-      if (prefersReducedMotion) return; // Disallow heavy race animation if requested
-      
-      startBtn.disabled = true;
-      startBtn.textContent = 'RACING...';
-      
-      cars.forEach(car => car.el.classList.add('is-racing'));
-      
-      countdownOverlay.classList.add('show');
-      const counts = ['3', '2', '1', 'GO!'];
-      let step = 0;
-
-      function nextCount() {
-        if (step >= counts.length) {
-          countdownOverlay.classList.remove('show');
-          isRacing = true;
-          raceReqId = requestAnimationFrame(raceLoop);
-          return;
-        }
-        countdownText.textContent = counts[step];
-        countdownText.classList.remove('animate');
-        void countdownText.offsetWidth;
-        countdownText.classList.add('animate');
-        
-        countdownText.style.color = counts[step] === 'GO!' ? '#4ade80' : '#fff';
-        countdownText.style.textShadow = counts[step] === 'GO!' ? '0 0 30px #4ade80' : '0 0 30px #e11d48';
-
-        step++;
-        setTimeout(nextCount, 1000);
-      }
-      nextCount();
-    }
-
-    function triggerWinner(winningCar) {
-      isRacing = false;
-      cancelAnimationFrame(raceReqId);
-      
-      // Setup Winner Screen
-      winnerCard.style.setProperty('--accent', winningCar.color);
-      winnerIcon.textContent = winningCar.icon;
-      winnerName.textContent = winningCar.name;
-      winnerMsg.textContent = `Let's explore my ${winningCar.name.toLowerCase()} journey.`;
-      
-      winnerExploreBtn.href = winningCar.href;
-      winnerExploreBtn.style.setProperty('--accent', winningCar.color);
-      
-      // Delay slightly for dramatic effect
-      setTimeout(() => {
-        winnerScreen.classList.add('show');
-        startBtn.textContent = 'START RACE';
-        startBtn.disabled = false;
-      }, 500);
-    }
+    document.getElementById('winner-replay-btn').addEventListener('click', () => {
+      initCars();
+      startBtn.click();
+    });
+    
+    document.getElementById('winner-close-btn').addEventListener('click', () => {
+      document.getElementById('winner-screen').classList.remove('show');
+      startBtn.disabled = false;
+      startBtn.innerHTML = `<span class="cta-pulse"></span> FOLLOW MY LINE`;
+    });
 
     function raceLoop() {
       if (!isRacing) return;
-      
       let winnerFound = null;
 
       cars.forEach(car => {
-        // AI Speed logic + slipstream drafting
-        // Random microbursts
-        if (Math.random() < 0.05) {
-          car.basePace += (Math.random() * 0.8 - 0.3); // Burst
-        }
-        
-        if (car.basePace < 1.5) car.basePace = 1.5;
-        if (car.basePace > 4.5) car.basePace = 4.5;
+        // Reduced max speeds, longer drifting per request
+        if (Math.random() < 0.02) car.basePace += (Math.random() * 0.5 - 0.2);
+        if (car.basePace < 0.8) car.basePace = 0.8;
+        if (car.basePace > 3.0) car.basePace = 3.0;
 
-        // Overtaking & Lane changes
-        car.drifting += (Math.random() * 2 - 1) * 0.5;
-        if (car.drifting > +2) car.drifting = +2;
-        if (car.drifting < -2) car.drifting = -2;
-        
+        car.drifting += (Math.random() * 2 - 1) * 0.2;
         car.lateralCurrent += car.drifting;
-        // Keep cars on the track (Track is ~200px wide, center is 0. So +/- 80px)
-        if (car.lateralCurrent < -70) { car.lateralCurrent = -70; car.drifting *= -1; }
-        if (car.lateralCurrent > 70) { car.lateralCurrent = 70; car.drifting *= -1; }
+        if (car.lateralCurrent < -55) { car.lateralCurrent = -55; car.drifting *= -0.5; }
+        if (car.lateralCurrent > 55) { car.lateralCurrent = 55; car.drifting *= -0.5; }
 
         car.progressRaw += car.basePace;
+        car.distanceTraveled += car.basePace;
+        if (car.progressRaw >= totalLength) car.progressRaw -= totalLength;
 
-        if (car.progressRaw >= finishOffsetLength && !winnerFound) {
+        // Strictly prevent 'tbd' from ever winning per user request
+        if (car.distanceTraveled >= raceDistance && !winnerFound && car.id !== 'tbd') {
            winnerFound = car;
         }
 
-        // Extrapolate transform
-        let pt = path.getPointAtLength(car.progressRaw);
-        let ptNext = path.getPointAtLength(Math.min(car.progressRaw + 1, totalLength));
-        let angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x);
+        const pt = path.getPointAtLength(car.progressRaw);
+        const ptNext = path.getPointAtLength((car.progressRaw + 1) % totalLength);
+        const angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x);
         
-        let nx = Math.cos(angle - Math.PI/2);
-        let ny = Math.sin(angle - Math.PI/2);
-        
-        let x = pt.x + nx * car.lateralCurrent;
-        let y = pt.y + ny * car.lateralCurrent;
+        const x = pt.x + Math.cos(angle - Math.PI/2) * car.lateralCurrent;
+        const y = pt.y + Math.sin(angle - Math.PI/2) * car.lateralCurrent;
 
-        car.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) rotate(${angle}rad)`;
-        car.el.style.zIndex = Math.floor(y); // Overlapping logic (closest to bottom overlaps)
+        car.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+        car.el.style.zIndex = Math.floor(y);
       });
 
       if (winnerFound) {
-        triggerWinner(winnerFound);
+        isRacing = false;
+        cancelAnimationFrame(raceReqId);
+        
+        const durationRaw = performance.now() - raceStartTime;
+        const totalSec = Math.floor(durationRaw / 1000);
+        const strMin = Math.floor(totalSec / 60).toString().padStart(2, '0');
+        const strSec = (totalSec % 60).toString().padStart(2, '0');
+        const strMs = Math.floor(durationRaw % 1000).toString().padStart(3, '0');
+        
+        document.getElementById('winner-time').textContent = `${strMin}:${strSec}.${strMs}`;
+        document.getElementById('winner-clever-msg').textContent = `START WITH ${winnerFound.name.toUpperCase()}.`;
+        document.getElementById('winner-name').textContent = winnerFound.name.toUpperCase();
+        document.getElementById('winner-name').style.color = winnerFound.color;
+        document.getElementById('winner-sub').textContent = winnerFound.blurb;
+
+        setTimeout(() => {
+          document.getElementById('winner-screen').classList.add('show');
+          startBtn.disabled = false;
+          startBtn.innerHTML = `<span class="cta-pulse"></span> FOLLOW MY LINE`;
+        }, 300);
       } else {
         raceReqId = requestAnimationFrame(raceLoop);
       }

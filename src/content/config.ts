@@ -65,6 +65,8 @@ const journey = defineCollection({
     order: z.number(),
     place: z.string(),
     organization: z.string(),
+    role: z.string().optional(),
+    blurb: z.string().optional(),
     region: z.string(),
     period: z.string(),
     theme: z.string(),

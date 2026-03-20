@@ -21,64 +21,63 @@ export const siteBranches: SiteBranch[] = [
     id: 'journey',
     label: 'Journey',
     href: '/story',
-    eyebrow: 'Journey branch',
-    description: 'Biography, movement, geography, and the long-form route that explains the work.',
+    eyebrow: 'Journey',
+    description: 'The places, schools, cities, and jobs that made the rest of the site make sense.',
     nodes: [
-      { label: 'Journey', href: '/story', description: 'The main long-form route through places, institutions, and work.' },
-      { label: 'Life Walk Preview', href: '/walking-through-life', description: 'An alternate cinematic version of the same personal route.', kind: 'secondary' }
+      { label: 'Journey', href: '/story', description: 'The longer account of how I moved from Dinajpur to where I am now.' },
+      { label: 'Life Walk Preview', href: '/walking-through-life', description: 'A more visual version of the same route through places and turning points.', kind: 'secondary' }
     ]
   },
   {
     id: 'timeline',
     label: 'Timeline',
     href: '/blog',
-    eyebrow: 'Timeline branch',
-    description: 'The chronological stream where books, cricket, movies, and writing meet in one place.',
+    eyebrow: 'Timeline',
+    description: 'The running archive for my cricket writing and the books I have kept notes on.',
     nodes: [
-      { label: 'Timeline', href: '/blog', description: 'The unified reverse-chronological feed for the whole site.' },
-      { label: 'Interests Hub', href: '/interests', description: 'A world-first way into the same content through themed rooms.', kind: 'secondary' },
-      { label: 'Notes', href: '/notes', description: 'A shorter-form layer for fragments, signals, and in-between ideas.', kind: 'secondary' }
+      { label: 'Timeline', href: '/blog', description: 'Everything I still want public, gathered into one readable stream.' },
+      { label: 'Interests', href: '/interests', description: 'The same archive split into books and cricket.', kind: 'secondary' },
+      { label: 'TBD', href: '/tbd', description: 'The rougher sections that are not ready to sit beside the core pages yet.', kind: 'secondary' }
     ]
   },
   {
     id: 'projects',
     label: 'Projects',
     href: '/projects',
-    eyebrow: 'Projects branch',
-    description: 'Products, tools, apps, and the more practical systems built out of the same thinking.',
+    eyebrow: 'Projects',
+    description: 'The tools I keep building because I have run into the friction myself.',
     nodes: [
-      { label: 'Projects', href: '/projects', description: 'The main library of builds, public tools, and experiments.' },
-      { label: 'Apps', href: '/apps', description: 'Focused app surfaces for deeper workflows and productized tools.', kind: 'secondary' },
-      { label: 'Manager Search', href: '/apps/manager-search', description: 'The flagship institutional-intelligence app.', kind: 'secondary' }
+      { label: 'Projects', href: '/projects', description: 'The main shelf for product ideas, tools, and working prototypes.' },
+      { label: 'Apps', href: '/apps', description: 'The projects that already have a more direct interface or demo.', kind: 'secondary' },
+      { label: 'Manager Search', href: '/apps/manager-search', description: 'A finance research tool built around a workflow I wanted to move faster.', kind: 'secondary' }
     ]
   },
   {
     id: 'connect',
     label: 'Connect',
     href: '/connect',
-    eyebrow: 'Connect branch',
-    description: 'Public context, current direction, and the pages that help people understand how to reach out.',
+    eyebrow: 'Connect',
+    description: 'The pages that explain what I am doing now, what I care about, and how to reach me.',
     nodes: [
-      { label: 'Connect', href: '/connect', description: 'The direct public-facing page for conversations and collaboration.' },
-      { label: 'About', href: '/about', description: 'The short explanation of the site and the thinking behind it.', kind: 'secondary' },
-      { label: 'Now', href: '/now', description: 'The current snapshot of what is active and in motion.', kind: 'secondary' },
-      { label: 'Brewing', href: '/brewing', description: 'The lab layer for active builds, experiments, and work in progress.', kind: 'secondary' }
+      { label: 'Connect', href: '/connect', description: 'The easiest way to understand what kinds of conversations I want to have.' },
+      { label: 'About', href: '/about', description: 'Why this site exists and what I wanted it to hold.', kind: 'secondary' },
+      { label: 'Now', href: '/now', description: 'A more personal snapshot of what I am reading, building, and thinking about.', kind: 'secondary' },
+      { label: 'TBD', href: '/tbd', description: 'The sections that are still rough and not fully in my voice yet.', kind: 'secondary' }
     ]
   },
   {
     id: 'interests',
     label: 'Interests',
     href: '/interests',
-    eyebrow: 'Interests branch',
-    description: 'Themed worlds for the parts of life and culture that deserve their own visual language.',
+    eyebrow: 'Interests',
+    description: 'The two public rooms that feel most like me now: books and cricket.',
     nodes: [
-      { label: 'Interests Hub', href: '/interests', description: 'The four-doorway hub into the site’s themed worlds.' },
-      { label: 'Cricket', href: '/interests/cricket', description: 'The story-led cricket world and match writing layer.' },
-      { label: 'Books', href: '/interests/books', description: 'The reading-room shelf for books and reflective notes.' },
-      { label: 'Movies', href: '/interests/movies', description: 'The film room for reviews, scenes, and cinema notes.' },
-      { label: 'Writing & Ideas', href: '/interests/writing', description: 'The journal-style room for essays, systems, and fragments.' },
-      { label: 'Cricket Archive', href: '/adventures/cricket', description: 'The deeper cricket archive with live stats and admin tools.', kind: 'secondary' },
-      { label: 'Adventures', href: '/adventures', description: 'The broader lived-experience archive around cricket and beyond.', kind: 'secondary' }
+      { label: 'Interests', href: '/interests', description: 'The public split between my book shelf and my cricket writing.' },
+      { label: 'Cricket', href: '/interests/cricket', description: 'Match stories, pressure moments, and the game as I actually remember it.' },
+      { label: 'Books', href: '/interests/books', description: 'The books that stayed with me strongly enough to deserve a note.' },
+      { label: 'TBD', href: '/tbd', description: 'Movies, writing, projects, and the rougher edges that are not core yet.', kind: 'secondary' },
+      { label: 'Cricket Archive', href: '/adventures/cricket', description: 'The deeper cricket record with stats, teams, and longer memory.', kind: 'secondary' },
+      { label: 'Adventures', href: '/adventures', description: 'The broader life archive, with cricket leading the way.', kind: 'secondary' }
     ]
   }
 ];

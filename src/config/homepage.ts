@@ -1,101 +1,101 @@
 export const homepageConfig = {
   hero: {
     eyebrow: 'C M Nafi',
-    title: 'Brewing',
-    descriptor: 'Writing, projects, adventures, and work in progress.',
+    title: 'Now',
+    descriptor: 'The parts of my life and work that are most active right now.',
     intro:
-      'A very clean front door. The fuller snapshot of what I am building, exploring, and publishing lives on the brewing in progress page.',
+      'This site makes more sense once you see the whole mix: the books I keep returning to, the cricket memories I refuse to lose, the tools I am building for finance work, and the notes that connect them.',
     ctas: [
-      { label: 'Brewing in progress', href: '/now', variant: 'primary' },
-      { label: 'Blog', href: '/blog', variant: 'ghost' }
+      { label: 'What I am up to now', href: '/now', variant: 'primary' },
+      { label: 'Read the timeline', href: '/blog', variant: 'ghost' }
     ]
   },
   brewingPage: {
-    title: 'Brewing in progress',
+    title: 'Work in progress',
     description:
-      'A fuller snapshot of current work, selected signals, and the parts of the site that are still evolving.'
+      'The projects, tools, and half-finished ideas I am actively pushing forward, without pretending they are more polished than they are.'
   },
   processChapters: [
     {
-      phase: 'Observe',
-      title: 'Ideas start with signal',
-      subtitle: 'Books, products, matches, trips, and questions worth following',
+      phase: 'Notice',
+      title: 'Most things start because they stay in my head',
+      subtitle: 'A book, a match, a clumsy workflow, a line I want to keep',
       description:
-        'The site begins with curiosity: a note, a line, a sports memory, a product problem, or a moment that keeps returning.',
-      cue: 'Early signal'
+        'I usually begin with irritation or attachment. Something feels memorable, awkward, useful, or unfinished enough that I keep returning to it.',
+      cue: 'The thing that sticks'
     },
     {
-      phase: 'Shape',
-      title: 'Fragments become structure',
-      subtitle: 'Thoughts are refined before they are published',
+      phase: 'Write',
+      title: 'I try to understand it in words first',
+      subtitle: 'Notes, drafts, screenshots, and rough structure',
       description:
-        'Signals gain form through drafting, testing, comparing, and editing until they are clear enough to share with intent.',
-      cue: 'Structure before release'
+        'Before I build or publish anything, I usually write around it. That is how I find out whether I care about it or just liked the idea of caring about it.',
+      cue: 'Thinking on paper'
     },
     {
-      phase: 'Publish',
-      title: 'Work enters public form',
-      subtitle: 'Essays, products, and field notes become visible',
+      phase: 'Build',
+      title: 'Some notes want to become tools',
+      subtitle: 'Especially when the same friction shows up more than once',
       description:
-        'Writing, interfaces, records, and public notes are released in the format that best fits what they are trying to do.',
-      cue: 'Public release'
+        'The product side of the site comes from repeated annoyance: research steps that take too long, filing workflows that feel clumsy, or interfaces that ask for too much patience.',
+      cue: 'From note to build'
     },
     {
-      phase: 'Archive',
-      title: 'The site stays ready to expand',
-      subtitle: 'A calm home for current work and future additions',
+      phase: 'Keep',
+      title: 'Then I give it a place to live',
+      subtitle: 'So it does not disappear after one good week',
       description:
-        'Everything lands in a system designed to grow into more posts, projects, adventure logs, apps, notes, and living archives.',
-      cue: 'Extensible by design'
+        'This site is partly an archive for the things I want to keep visible: writing, projects, cricket, films, and the parts of my life that explain each other.',
+      cue: 'Worth keeping'
     }
   ],
   positioning: {
-    eyebrow: 'About this site',
-    title: 'A personal website that holds work, curiosity, and lived experience together.',
+    eyebrow: 'Why this site exists',
+    title: 'I wanted one place where my taste, memory, and work could sit next to each other without pretending to be separate lives.',
     description:
-      'This is not just a portfolio. It is where ideas turn into essays, tools, records, and archives that can keep growing without losing their shape.',
+      'Most personal sites flatten people into resumes or vague personal brands. I wanted this one to feel closer to how my mind actually works.',
     cards: [
       {
         title: 'Writing',
         description:
-          'Books, movies, games, product thinking, and essays that deserve more care than a quick timeline post.'
+          'Books, films, games, and personal notes live here because they shape how I think just as much as any professional milestone does.'
       },
       {
         title: 'Projects',
         description:
-          'ADV Screener, 13F and data research products, AI-supported workflows, and public experiments built in the open.'
+          'The tools come from real finance and diligence frustrations I have run into and could not stop trying to improve.'
       },
       {
         title: 'Adventures',
         description:
-          'Cricket records, future travel logs, and field notes that feel central to identity rather than decorative.'
+          'Cricket is not decorative on this site. It is one of the clearest ways to understand my memory, discipline, and joy.'
       }
     ]
   },
   featuredDestinations: [
     {
-      title: 'Blog',
+      title: 'Timeline',
       href: '/blog',
       eyebrow: 'Writing',
-      description: 'Essays, notes, reviews, and product thinking published in public.'
+      description: 'Everything I have published in one running stream, from book notes to cricket stories to the occasional personal essay.'
     },
     {
       title: 'Projects',
       href: '/projects',
-      eyebrow: 'Tools',
-      description: 'Research products, data tools, and practical experiments in motion.'
+      eyebrow: 'Work',
+      description: 'The tools I am building because finance workflows still make simple things harder than they should be.'
     },
     {
       title: 'Adventures',
       href: '/adventures',
-      eyebrow: 'Field notes',
-      description: 'Cricket, travel, and story-led archives built with the same care as the work.'
+      eyebrow: 'Life',
+      description: 'Cricket first, then whatever else in life earns a place here by staying vivid.'
     },
     {
       title: 'Now',
       href: '/now',
-      eyebrow: 'Current focus',
-      description: 'A living snapshot of what I am building, reading, exploring, and paying attention to.'
+      eyebrow: 'Personal snapshot',
+      description: 'A plainspoken look at what I am building, reading, thinking about, and who I want to meet.'
     }
   ],
   directoryTabs: ['All', 'Blog', 'Projects', 'Adventures', 'Apps', 'Notes'],
@@ -104,31 +104,31 @@ export const homepageConfig = {
     featuredProject: true
   },
   currentBrewingIntro:
-    'This is the one place where the brewing metaphor still fits: active work, live experiments, and archives that are still taking shape.',
+    'This page holds the work side of my attention: active products, ideas I am still shaping, and the projects that are not finished enough to pretend otherwise.',
   currentBrewing: [
-    'Designing calmer public surfaces for research products like ADV Screener and 13F Data Finder.',
-    'Writing across books, movies, games, work, cricket, and the product choices that shape modern life.',
-    'Expanding Adventures into a stronger home for cricket records, travel logs, and story-driven field notes.',
-    'Keeping the site modular so new apps, notes, and archives can be added without redesigning the whole system.'
+    'Turning ADV Screener and 13F Data Finder into tools I would have wanted while doing real finance research.',
+    'Cleaning up how I describe my projects so they sound like my own frustrations and not startup wallpaper.',
+    'Growing the cricket archive into something that keeps both the score and the feeling of the day.',
+    'Keeping the site flexible enough to hold new writing, tools, and side paths without losing its center.'
   ],
   featuredAdventure: {
     eyebrow: 'Featured adventure',
     title: 'Cricket archive',
     href: '/adventures/cricket',
     description:
-      'A living archive for matches, milestones, teams, seasons, and the personal notes that make the record feel human.',
-    meta: 'Records, timeline, highlights',
-    tags: ['cricket', 'archive', 'field notes']
+      'A record of teams, matches, milestones, and the small details that make a scorecard feel like an actual memory.',
+    meta: 'Matches, records, stories',
+    tags: ['cricket', 'archive', 'memory']
   },
   archive: {
-    eyebrow: 'Archive system',
-    title: 'A modular home that can keep expanding.',
+    eyebrow: 'How the site is arranged',
+    title: 'Everything has a room, but it still belongs to the same life.',
     description:
-      'Blog posts, projects, adventure entries, apps, notes, and now updates all have a clear place in the system.',
-    noteTitle: 'Built to scale',
+      'The writing, projects, cricket archive, apps, notes, and now page are separate on purpose, but they should still feel like they were made by one person.',
+    noteTitle: 'Built to stay readable',
     noteCopy:
-      'Adding a new post, project, field note, app, or update should stay low-friction, readable, and easy to maintain.'
+      'When I add a new post, project, or archive page, it should fit naturally instead of making the whole site feel noisier.'
   },
   selectedEntryIntro:
-    'A few current signals across the site, spanning writing, tools, and field notes.'
+    'A few current entries that show the mix: one piece of writing, one piece of work, and one part of life I keep returning to.'
 } as const;

@@ -23,7 +23,7 @@ export const interestSections: InterestWorldConfig[] = [
     title: 'Cricket',
     cardTitle: 'On the cricket field',
     href: '/interests/cricket',
-    description: 'Match stories, pressure finishes, scorelines, and the games that stay vivid long after the result.',
+    description: 'Match stories, pressure finishes, scorelines, and the days I can still replay ball by ball.',
     deck: 'Field green, willow, leather, and a top-down view of the ground.',
     categories: ['Cricket'],
     palette: {
@@ -39,7 +39,7 @@ export const interestSections: InterestWorldConfig[] = [
     title: 'Books',
     cardTitle: 'Books',
     href: '/interests/books',
-    description: 'Biographies, ideas, and the books that deepen over time instead of fading after the last page.',
+    description: 'Biographies, memoirs, and idea-driven books that keep getting better after I close them.',
     deck: 'Warm amber shelves, cream paper, and a quiet reading-room atmosphere.',
     categories: ['Books'],
     palette: {
@@ -52,11 +52,11 @@ export const interestSections: InterestWorldConfig[] = [
   },
   {
     id: 'writing',
-    title: 'Writing & Ideas',
-    cardTitle: 'Writing & ideas',
+    title: 'Writing',
+    cardTitle: 'Writing',
     href: '/interests/writing',
-    description: 'Essays, systems, games, notes, and unfinished thoughts that eventually settle into something readable.',
-    deck: 'Ink-dark purple, paper grain, and journal pages gathered into one workspace.',
+    description: 'Essays, notebook pages, games, and personal notes that do not fit anywhere else on the site.',
+    deck: 'Ink-dark paper, late-night notes, and a stack of pages that looks actually used.',
     categories: ['Essays', 'Games', 'Notes', 'Product', 'Travel'],
     palette: {
       accent: '#b89cf1',
@@ -71,7 +71,7 @@ export const interestSections: InterestWorldConfig[] = [
     title: 'Movies',
     cardTitle: 'Movies',
     href: '/interests/movies',
-    description: 'Film notes, atmosphere, and the scenes that keep their voltage long after the credits roll.',
+    description: 'Film notes for the scenes, moods, and performances that keep echoing after the credits.',
     deck: 'Near-black cinema palettes, ticket stubs, projector warmth, and frame-by-frame memory.',
     categories: ['Movies'],
     palette: {
@@ -83,6 +83,10 @@ export const interestSections: InterestWorldConfig[] = [
     }
   }
 ];
+
+export const publicInterestSections = interestSections.filter((section) =>
+  ['cricket', 'books'].includes(section.id)
+);
 
 export const interestSectionMap = Object.fromEntries(
   interestSections.map((section) => [section.id, section])

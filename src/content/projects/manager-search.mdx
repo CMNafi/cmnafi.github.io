@@ -1,7 +1,7 @@
 ---
 title: Manager Search
-summary: A manager intelligence dashboard that ties together entity resolution, Form ADV data, 13F holdings, and narrative summaries.
-description: Manager Search is a focused research application for resolving institutional investment managers through CRD and CIK identifiers, reading Form ADV operating data, summarizing 13F holdings, and turning public filings into a cleaner diligence surface.
+summary: "A manager research tool for getting from a name to the filings, holdings, and context I actually want to see."
+description: "Manager Search grew out of a very specific frustration: too many finance workflows still make you piece together the same manager story from too many separate places."
 status: brewing
 category: web app
 stack:
@@ -17,25 +17,25 @@ featured: true
 priority: 95
 startedAt: 2026-03-19
 updatedAt: 2026-03-19
-problem: Public filings contain the right answers, but the path from manager name to a usable diligence snapshot is still too fragmented and manual.
-solution: Build one dashboard that resolves entities, gathers key regulatory and holdings data, prunes the raw inputs responsibly, and produces a readable summary for faster research.
-whoItsFor: Investors, allocators, analysts, and diligence teams who need a faster path from name lookup to a trustworthy manager snapshot.
+problem: "Public filings contain the answers, but it still takes too much manual stitching to turn a manager name into a usable diligence snapshot."
+solution: "Build one interface that handles entity resolution, core filing context, holdings data, and a readable summary in the same workflow."
+whoItsFor: "Investors, allocators, analysts, and diligence teams who want a faster path from manager name to useful context."
 keyFeatures:
-  - Debounced entity search with CRD and CIK resolution.
-  - Deep links to SEC EDGAR and IAPD profiles.
-  - Top-holdings rollup from 13F data with deterministic value calculations.
-  - LLM summary generation using only pruned and labeled inputs.
+  - Debounced search with CRD and CIK resolution.
+  - Direct links out to EDGAR and IAPD when deeper checking is needed.
+  - Top-holdings context from 13F data.
+  - Summary generation grounded in labeled source inputs.
 roadmap:
   - Add comparison mode for multiple managers.
-  - Surface filing change detection between quarters.
-  - Expand into a broader manager research platform.
+  - Highlight filing changes between periods more clearly.
+  - Decide which parts should become broader platform features.
 seoTitle: Manager Search
-seoDescription: A manager intelligence dashboard for Form ADV, 13F holdings, and AI-assisted diligence summaries.
+seoDescription: A manager research tool for Form ADV, 13F holdings, and faster diligence.
 relatedPosts: []
 ---
 
-Manager Search is a product direction that sits directly between public regulatory data and a real research workflow.
+Manager Search sits right in the middle of the kind of work I keep wanting to improve: finance research that should feel clearer long before it feels clever.
 
 ## Why it matters
 
-The work is less about making filings look pretty and more about making them usable. A name should resolve into a manager profile quickly, the key identifiers should be obvious, and the holdings view should support the next decision instead of creating more cleanup work.
+I do not need filings to look fancy. I need them to become usable faster. A name should resolve cleanly, the identifiers should be obvious, and the next question should come into focus without extra cleanup work.
