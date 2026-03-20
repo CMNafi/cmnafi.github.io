@@ -5,194 +5,125 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import { siteConfig } from '@/config/site';
 import { cricketPlayerProfile, matchesByDate } from '@/data/cricket';
 import { fromLegacyMatchRecord } from '@/lib/cricket-stats';
+import { formatDate } from '@/utils/format';
 
 const fallbackGames = matchesByDate.map((match) => fromLegacyMatchRecord(match));
-const blogPosts = await getCollection('blog', ({ data }) => !data.draft);
-const storySlugs = blogPosts.map((post) => post.slug).sort();
+const cricketPosts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Cricket')).sort(
+  (a, b) => a.data.publishedAt.getTime() - b.data.publishedAt.getTime()
+);
+const storySlugs = cricketPosts.map((post) => post.slug).sort();
+const mappedPosts = cricketPosts.map((post, index) => {
+  const angle = cricketPosts.length === 1 ? -90 : 210 - (index * 240) / (cricketPosts.length - 1);
+  const radians = (angle * Math.PI) / 180;
+  const left = 50 + Math.cos(radians) * 29;
+  const top = 50 + Math.sin(radians) * 22;
+
+  return { post, left, top };
+});
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 const adminEmail = siteConfig.email;
 ---
 
 <BaseLayout
-  title="Cricket Stats"
-  description="A live cricket stats page with public record views, game-level tracking, driving miles, and an admin-only entry workflow backed by Supabase."
+  title="Cricket"
+  description="A cleaner cricket page with a field view, a live match log, and an admin-only entry flow backed by Supabase."
 >
-  <div class="cricket-stats-page">
-    <section class="page-section cricket-stats-hero">
-      <div class="cricket-stats-hero__copy">
-        <p class="eyebrow">Cricket stats</p>
-        <h1>The live record page for matches, miles, and the story around them.</h1>
+  <div class="cricket-simple-page">
+    <section class="page-section cricket-simple-hero">
+      <div class="cricket-simple-hero__copy">
+        <p class="eyebrow">Interests / Cricket</p>
+        <h1>Cricket</h1>
         <p>
-          This page keeps the deep stats view, but makes the match log live. The public side stays readable; the admin side
-          lets me enter games directly and keep the archive growing without rewriting JSON by hand.
+          One page, one structure: the field first, the live stats right under it, and the admin entry close enough to
+          use without digging through extra panels.
         </p>
         <div class="hero-actions">
-          <a class="button button-primary" href="#cricket-stats-log">Open live game log</a>
-          <a class="button button-secondary" href="/adventures/cricket/records">Compare with records archive</a>
+          <a class="button button-primary" href="#cricket-summary">Jump to stats</a>
+          <a class="button button-secondary" href="#cricket-admin">Go to admin entry</a>
         </div>
       </div>
 
-      <aside class="panel cricket-stats-hero__card">
+      <aside class="panel cricket-simple-hero__card">
         <p class="eyebrow">Player reference</p>
         <h2>{cricketPlayerProfile.name}</h2>
         <ul>
           <li><span>Player ID</span><strong>{cricketPlayerProfile.playerId}</strong></li>
           <li><span>Current team</span><strong>{cricketPlayerProfile.currentTeam}</strong></li>
-          <li><span>Archive mode</span><strong>Static fallback + Supabase live</strong></li>
+          <li><span>Admin account</span><strong>{adminEmail}</strong></li>
         </ul>
-        <a class="button button-ghost" href={cricketPlayerProfile.profileUrl} target="_blank" rel="noreferrer">Open CricClubs profile</a>
       </aside>
     </section>
 
-    <section class="page-section">
-      <SectionHeading
-        eyebrow="Live overview"
-        title="A records page that now has a proper database behind it."
-        description="Batting, bowling, fielding, season breakdowns, team records, and a game log all draw from the same source. Driving distance adds a little character to the archive."
-      />
-
-      <div class="cricket-stats-banner panel" data-cricket-stats-banner>
-        <p>Loading live cricket stats.</p>
+    <section class="page-section panel cricket-simple-field">
+      <div class="cricket-simple-field__copy">
+        <p class="eyebrow">Field view</p>
+        <h2>The match stories live around the circle.</h2>
+        <p>
+          This keeps the cricket page grounded in the field itself. Hover a point for the memory; open the story when you
+          want the full match behind it.
+        </p>
       </div>
-    </section>
 
-    <section class="page-section">
-      <div class="record-tabs panel" data-live-record-tabs>
-        <div class="record-tabs__nav toggle-group" role="tablist" aria-label="Live cricket record views">
-          <button type="button" class="record-tab is-active" data-live-tab-target="batting" role="tab" aria-selected="true">Batting</button>
-          <button type="button" class="record-tab" data-live-tab-target="bowling" role="tab" aria-selected="false">Bowling</button>
-          <button type="button" class="record-tab" data-live-tab-target="fielding" role="tab" aria-selected="false">Fielding</button>
-          <button type="button" class="record-tab" data-live-tab-target="driving" role="tab" aria-selected="false">Driving</button>
+      <div class="cricket-ground">
+        <div class="cricket-ground__oval"></div>
+        <div class="cricket-ground__inner-circle"></div>
+        <div class="cricket-ground__pitch">
+          <span class="cricket-ground__crease cricket-ground__crease--top"></span>
+          <span class="cricket-ground__crease cricket-ground__crease--bottom"></span>
+          <span class="cricket-ground__stumps cricket-ground__stumps--top"></span>
+          <span class="cricket-ground__stumps cricket-ground__stumps--bottom"></span>
         </div>
 
-        <section class="record-panel is-active" data-live-tab-panel="batting">
-          <div class="record-panel__header">
-            <div>
-              <h3>Batting summary</h3>
-              <p>Live runs, balls, average, strike rate, and scoring markers derived from the stored game log.</p>
-            </div>
-          </div>
-          <div class="record-grid-table" data-summary-batting></div>
-        </section>
-
-        <section class="record-panel" data-live-tab-panel="bowling" hidden>
-          <div class="record-panel__header">
-            <div>
-              <h3>Bowling summary</h3>
-              <p>Wickets, overs, runs conceded, and economy update as soon as a match is saved.</p>
-            </div>
-          </div>
-          <div class="record-grid-table" data-summary-bowling></div>
-        </section>
-
-        <section class="record-panel" data-live-tab-panel="fielding" hidden>
-          <div class="record-panel__header">
-            <div>
-              <h3>Fielding summary</h3>
-              <p>Catches and run outs stay close to the rest of the record instead of living in a separate note pile.</p>
-            </div>
-          </div>
-          <div class="record-grid-table" data-summary-fielding></div>
-        </section>
-
-        <section class="record-panel" data-live-tab-panel="driving" hidden>
-          <div class="record-panel__header">
-            <div>
-              <h3>Driving stats</h3>
-              <p>A fun layer for the archive: how far I drove for the game, how much road time sits behind the cricket story, and which trip was the longest.</p>
-            </div>
-          </div>
-          <div class="record-grid-table" data-summary-driving></div>
-        </section>
+        {mappedPosts.map(({ post, left, top }) => (
+          <a class="cricket-ground__node" href={`/blog/${post.slug}`} style={`left:${left}%; top:${top}%;`}>
+            <span class="cricket-ground__dot"></span>
+            <span class="cricket-ground__tooltip">
+              <strong>{post.data.title}</strong>
+              <small>{formatDate(post.data.publishedAt)}</small>
+              <span>{post.data.description}</span>
+            </span>
+          </a>
+        ))}
       </div>
     </section>
 
-    <section class="page-section">
-      <SectionHeading eyebrow="Markers" title="Live markers for the archive" description="Headline stats, best performances, and road-mile signals stay visible even as the game table grows." />
-      <div class="cricket-stats-markers" data-cricket-markers></div>
+    <section class="page-section" id="cricket-summary">
+      <SectionHeading eyebrow="Stats" title="Live cricket stats, kept simple" description="No extra dashboard clutter. Just the live summary, the match log, and the story link when a post exists." />
+      <div class="cricket-stats-banner panel" data-cricket-stats-banner><p>Loading live cricket stats.</p></div>
+      <div class="cricket-simple-summary" data-summary-cards></div>
     </section>
 
-    <section class="page-section chart-grid-two-up cricket-stats-charts" data-cricket-charts></section>
-
-    <section class="page-section two-up cricket-stats-breakdowns">
-      <div>
-        <SectionHeading eyebrow="By season" title="Season cards" description="The season layer is generated from the database, so every new row feeds the summary automatically." />
-        <div class="narrow-stack compact-stack" data-cricket-seasons></div>
-      </div>
-      <div>
-        <SectionHeading eyebrow="By team" title="Team record view" description="Team chapters stay compact, but they update from the same underlying match log." />
-        <div class="record-grid-table panel" data-cricket-teams></div>
-        <div class="panel records-note-card cricket-focus-card" data-cricket-best-note></div>
-      </div>
-    </section>
-    <section class="page-section" id="cricket-stats-log">
-      <SectionHeading
-        eyebrow="Game log"
-        title="Every match, filterable and story-aware"
-        description="Search by opponent, filter by season, team, competition, or format, and jump into the matching blog story when one exists."
-      />
-
+    <section class="page-section" id="cricket-log">
+      <SectionHeading eyebrow="Match log" title="Every match in one stream" description="Filter by year or team, then open the story if there is one." />
       <div class="cricket-stats-filters panel" data-cricket-filters>
         <label class="search-input cricket-stats-filters__search">
           <span class="sr-only">Search games</span>
           <input type="search" placeholder="Search opponent, venue, or note" data-cricket-filter-search />
         </label>
-        <label>
-          <span>Year</span>
-          <select data-cricket-filter-year></select>
-        </label>
-        <label>
-          <span>Team</span>
-          <select data-cricket-filter-team></select>
-        </label>
-        <label>
-          <span>Competition</span>
-          <select data-cricket-filter-competition></select>
-        </label>
-        <label>
-          <span>Format</span>
-          <select data-cricket-filter-format></select>
-        </label>
+        <label><span>Year</span><select data-cricket-filter-year></select></label>
+        <label><span>Team</span><select data-cricket-filter-team></select></label>
       </div>
-
       <div class="panel cricket-stats-log" data-cricket-log></div>
     </section>
 
-    <section class="page-section">
-      <SectionHeading
-        eyebrow="Admin entry"
-        title="Admin-only database entry for new games"
-        description="Only signed-in admin credentials can write. Public visitors can see the stats page, but not the editing controls."
-      />
+    <section class="page-section" id="cricket-admin">
+      <SectionHeading eyebrow="Admin entry" title="Add a match" description={`Sign in with ${adminEmail} to add or edit records directly from this page.`} />
       <div class="panel cricket-admin" data-cricket-admin></div>
     </section>
   </div>
 
-  <datalist id="cricket-story-slugs">
-    {storySlugs.map((slug) => <option value={slug} />)}
-  </datalist>
-
-  <script id="cricket-stats-env" type="application/json" set:html={JSON.stringify({ supabaseUrl, supabaseAnonKey })}></script>
+  <datalist id="cricket-story-slugs">{storySlugs.map((slug) => <option value={slug} />)}</datalist>
+  <script id="cricket-stats-env" type="application/json" set:html={JSON.stringify({ supabaseUrl, supabaseAnonKey, adminEmail })}></script>
   <script id="cricket-stats-fallback" type="application/json" set:html={JSON.stringify(fallbackGames)}></script>
-
   <script type="module">
     import { createClient } from '@supabase/supabase-js';
     import { aggregateCricketGames, cricketEntryFields, emptyCricketGame, normalizeCricketGame, toSupabasePayload } from '../../../lib/cricket-stats';
 
     const env = JSON.parse(document.getElementById('cricket-stats-env')?.textContent || '{}');
     const fallbackGames = JSON.parse(document.getElementById('cricket-stats-fallback')?.textContent || '[]').map(normalizeCricketGame);
-
     const banner = document.querySelector('[data-cricket-stats-banner]');
-    const battingRoot = document.querySelector('[data-summary-batting]');
-    const bowlingRoot = document.querySelector('[data-summary-bowling]');
-    const fieldingRoot = document.querySelector('[data-summary-fielding]');
-    const drivingRoot = document.querySelector('[data-summary-driving]');
-    const markersRoot = document.querySelector('[data-cricket-markers]');
-    const chartsRoot = document.querySelector('[data-cricket-charts]');
-    const seasonsRoot = document.querySelector('[data-cricket-seasons]');
-    const teamsRoot = document.querySelector('[data-cricket-teams]');
-    const bestNoteRoot = document.querySelector('[data-cricket-best-note]');
+    const summaryRoot = document.querySelector('[data-summary-cards]');
     const filtersRoot = document.querySelector('[data-cricket-filters]');
     const logRoot = document.querySelector('[data-cricket-log]');
     const adminRoot = document.querySelector('[data-cricket-admin]');
@@ -218,248 +149,11 @@ const adminEmail = siteConfig.email;
       const errors = [];
       if (!form.gameDate) errors.push('Date is required.');
       if (!form.team?.trim()) errors.push('Team is required.');
-
-      const nonNegativeFields = [
-        ['runs', form.runs],
-        ['balls', form.balls],
-        ['wickets', form.wickets],
-        ['catches', form.catches],
-        ['runOuts', form.runOuts],
-        ['overs', form.overs],
-        ['runsConceded', form.runsConceded],
-        ['distanceDrivenMiles', form.distanceDrivenMiles]
-      ];
-
-      nonNegativeFields.forEach(([label, value]) => {
-        if (value !== null && value !== undefined && value !== '' && Number(value) < 0) {
-          errors.push(`${label} cannot be negative.`);
-        }
+      [['runs', form.runs], ['balls', form.balls], ['wickets', form.wickets], ['catches', form.catches], ['runOuts', form.runOuts], ['overs', form.overs], ['runsConceded', form.runsConceded], ['distanceDrivenMiles', form.distanceDrivenMiles]].forEach(([label, value]) => {
+        if (value !== null && value !== undefined && value !== '' && Number(value) < 0) errors.push(`${label} cannot be negative.`);
       });
-
-      if (form.balls === 0 && form.runs !== null && form.runs !== undefined) {
-        errors.push('Balls cannot be zero when runs are recorded.');
-      }
-
+      if (form.balls === 0 && form.runs !== null && form.runs !== undefined) errors.push('Balls cannot be zero when runs are recorded.');
       return errors;
-    };
-
-    const renderStatGrid = (root, rows) => {
-      if (!root) return;
-      root.innerHTML = rows.map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('');
-    };
-
-    const renderMarkers = (summary, seasonRows) => {
-      if (!markersRoot) return;
-      const latestSeason = seasonRows[0]?.seasonLabel ?? 'No season yet';
-      const cards = [
-        ['Matches logged', summary.matches],
-        ['Best score', summary.bestScore ?? 'Open'],
-        ['Best spell', summary.bestBowling ?? 'Open'],
-        ['Miles driven', formatValue(summary.totalDriveMiles, 1)],
-        ['Average drive', summary.averageDriveMiles !== null ? `${formatValue(summary.averageDriveMiles, 1)} miles` : 'Open'],
-        ['Latest season', latestSeason]
-      ];
-      markersRoot.innerHTML = cards.map(([label, value]) => `
-        <article class="panel cricket-stats-marker">
-          <span>${label}</span>
-          <strong>${value}</strong>
-        </article>
-      `).join('');
-    };
-
-    const renderCharts = (seasonRows) => {
-      if (!chartsRoot) return;
-      const chartSpecs = [
-        {
-          title: 'Runs by season',
-          subtitle: 'Batting volume from stored match rows',
-          rows: seasonRows.map((season) => ({ label: season.seasonLabel, value: season.runs, meta: season.team }))
-        },
-        {
-          title: 'Wickets by season',
-          subtitle: 'Bowling output from recorded games',
-          rows: seasonRows.map((season) => ({ label: season.seasonLabel, value: season.wickets, meta: season.team }))
-        },
-        {
-          title: 'Catch count by season',
-          subtitle: 'Fielding tracked directly in the match table',
-          rows: seasonRows.map((season) => ({ label: season.seasonLabel, value: season.catches, meta: season.team }))
-        },
-        {
-          title: 'Miles driven by season',
-          subtitle: 'The road layer behind the cricket archive',
-          rows: seasonRows.map((season) => ({ label: season.seasonLabel, value: season.driveMiles, meta: season.team }))
-        }
-      ];
-
-      chartsRoot.innerHTML = chartSpecs.map((chart) => {
-        const peak = Math.max(...chart.rows.map((row) => row.value || 0), 1);
-        return `
-          <article class="panel cricket-mini-chart">
-            <div class="cricket-mini-chart__head">
-              <h3>${chart.title}</h3>
-              <p>${chart.subtitle}</p>
-            </div>
-            <div class="cricket-mini-chart__rows">
-              ${chart.rows.map((row) => `
-                <div class="cricket-mini-chart__row">
-                  <div>
-                    <strong>${row.label}</strong>
-                    <span>${row.meta}</span>
-                  </div>
-                  <div class="cricket-mini-chart__bar-wrap">
-                    <span class="cricket-mini-chart__bar" style="width:${Math.max((row.value / peak) * 100, row.value > 0 ? 8 : 0)}%"></span>
-                    <em>${formatValue(row.value, chart.title.includes('Miles') ? 1 : 0)}</em>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </article>
-        `;
-      }).join('');
-    };
-
-    const renderSeasons = (seasonRows) => {
-      if (!seasonsRoot) return;
-      seasonsRoot.innerHTML = seasonRows.map((season) => `
-        <article class="panel season-card">
-          <div class="season-card__top">
-            <div>
-              <p class="eyebrow">${season.year || 'Open'} · ${season.format}</p>
-              <h3>${season.seasonLabel}</h3>
-              <p>${season.team} · ${season.competition}</p>
-            </div>
-            <span class="tag-chip">Database</span>
-          </div>
-          <div class="season-card__stats">
-            <div><span>Matches</span><strong>${season.matches}</strong></div>
-            <div><span>Runs</span><strong>${season.runs}</strong></div>
-            <div><span>Wickets</span><strong>${season.wickets}</strong></div>
-            <div><span>Catches</span><strong>${season.catches}</strong></div>
-            <div><span>High score</span><strong>${season.highScore ?? '—'}</strong></div>
-            <div><span>Drive miles</span><strong>${formatValue(season.driveMiles, 1)}</strong></div>
-          </div>
-        </article>
-      `).join('');
-    };
-
-    const renderTeams = (teamRows) => {
-      if (!teamsRoot) return;
-      teamsRoot.innerHTML = teamRows.map((team) => `
-        <div>
-          <span>${team.team}</span>
-          <strong>${team.runs} runs · ${team.wickets} wickets · ${formatValue(team.driveMiles, 1)} miles</strong>
-        </div>
-      `).join('');
-    };
-    const renderBestNote = (summary, games) => {
-      if (!bestNoteRoot) return;
-      const farthestGame = [...games].filter((game) => game.distanceDrivenMiles !== null).sort((a, b) => (b.distanceDrivenMiles ?? 0) - (a.distanceDrivenMiles ?? 0))[0];
-      bestNoteRoot.innerHTML = `
-        <p class="eyebrow">Best performances</p>
-        <ul>
-          <li>Best known score: ${summary.bestScore ?? 'Open'}.</li>
-          <li>Best known spell: ${summary.bestBowling ?? 'Open'}.</li>
-          <li>Total catches logged: ${summary.catches}.</li>
-          <li>Longest recorded drive: ${farthestGame ? `${formatValue(farthestGame.distanceDrivenMiles, 1)} miles for ${farthestGame.team} vs ${farthestGame.opponent ?? 'Unknown opponent'}` : 'Open'}.</li>
-        </ul>
-      `;
-    };
-
-    const optionMarkup = (label, value = '') => `<option value="${value}">${label}</option>`;
-
-    const renderFilterOptions = (filters) => {
-      if (!filtersRoot) return;
-      filtersRoot.querySelector('[data-cricket-filter-year]').innerHTML = optionMarkup('All years') + filters.years.map((year) => optionMarkup(year, year)).join('');
-      filtersRoot.querySelector('[data-cricket-filter-team]').innerHTML = optionMarkup('All teams') + filters.teams.map((team) => optionMarkup(team, team)).join('');
-      filtersRoot.querySelector('[data-cricket-filter-competition]').innerHTML = optionMarkup('All competitions') + filters.competitions.map((competition) => optionMarkup(competition, competition)).join('');
-      filtersRoot.querySelector('[data-cricket-filter-format]').innerHTML = optionMarkup('All formats') + filters.formats.map((format) => optionMarkup(format, format)).join('');
-    };
-
-    const getFilterState = () => ({
-      search: String(filtersRoot?.querySelector('[data-cricket-filter-search]')?.value ?? '').trim().toLowerCase(),
-      year: String(filtersRoot?.querySelector('[data-cricket-filter-year]')?.value ?? ''),
-      team: String(filtersRoot?.querySelector('[data-cricket-filter-team]')?.value ?? ''),
-      competition: String(filtersRoot?.querySelector('[data-cricket-filter-competition]')?.value ?? ''),
-      format: String(filtersRoot?.querySelector('[data-cricket-filter-format]')?.value ?? '')
-    });
-
-    const filterGames = (games) => {
-      const { search, year, team, competition, format } = getFilterState();
-      return games.filter((game) => {
-        const haystack = [game.opponent, game.venue, game.personalNote, game.team, game.result].filter(Boolean).join(' ').toLowerCase();
-        return (!search || haystack.includes(search))
-          && (!year || game.gameDate.startsWith(year))
-          && (!team || game.team === team)
-          && (!competition || game.competition === competition)
-          && (!format || game.format === format);
-      });
-    };
-
-    const renderLog = (games) => {
-      if (!logRoot) return;
-      if (!games.length) {
-        logRoot.innerHTML = `
-          <div class="cricket-stats-empty">
-            <h3>No games match the current filters.</h3>
-            <p>Reset the filters or add a new match in the admin panel.</p>
-          </div>
-        `;
-        return;
-      }
-
-      logRoot.innerHTML = `
-        <div class="cricket-log-table-wrap">
-          <table class="cricket-log-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Team</th>
-                <th>Opponent</th>
-                <th>Runs</th>
-                <th>Balls</th>
-                <th>Wickets</th>
-                <th>Catches</th>
-                <th>Drive</th>
-                <th>Result</th>
-                <th>Story</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${games.map((game) => `
-                <tr>
-                  <td>
-                    <strong>${game.gameDate}</strong>
-                    <small>${game.competition ?? 'Open competition'}</small>
-                  </td>
-                  <td>${game.team}</td>
-                  <td>${game.opponent ?? 'TBD'}</td>
-                  <td>${game.runs ?? '—'}</td>
-                  <td>${game.balls ?? '—'}</td>
-                  <td>${game.wickets ?? '—'}</td>
-                  <td>${game.catches ?? 0}</td>
-                  <td>${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : '—'}</td>
-                  <td>${game.result ?? 'Open'}</td>
-                  <td>${game.storySlug ? `<a href="/blog/${game.storySlug}">Open</a>` : '<span class="cricket-log-table__muted">None</span>'}</td>
-                </tr>
-                <tr class="cricket-log-table__detail-row">
-                  <td colspan="10">
-                    <div class="cricket-log-table__detail-grid">
-                      <div><span>Format</span><strong>${game.format ?? 'Open'}</strong></div>
-                      <div><span>Venue</span><strong>${game.venue ?? 'Open'}</strong></div>
-                      <div><span>Bowling</span><strong>${game.overs ?? '—'} overs · ${game.runsConceded ?? '—'} conceded</strong></div>
-                      <div><span>Strike rate</span><strong>${game.runs !== null && game.balls ? formatValue((game.runs / game.balls) * 100, 2) : '—'}</strong></div>
-                      <div><span>Economy</span><strong>${game.runsConceded !== null && game.overs ? formatValue(game.runsConceded / game.overs, 2) : '—'}</strong></div>
-                      <div><span>Scorecard</span><strong>${game.scorecardUrl ? `<a href="${game.scorecardUrl}" target="_blank" rel="noreferrer">Open ?</a>` : 'Pending'}</strong></div>
-                    </div>
-                    ${game.personalNote ? `<p class="cricket-log-table__note">${game.personalNote}</p>` : ''}
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
     };
 
     const setBanner = (html, tone = 'info') => {
@@ -468,12 +162,85 @@ const adminEmail = siteConfig.email;
       banner.innerHTML = html;
     };
 
+    const renderSummary = (summary) => {
+      if (!summaryRoot) return;
+      const cards = [
+        ['Matches', summary.matches],
+        ['Runs', summary.runs],
+        ['Wickets', summary.wickets],
+        ['Catches', summary.catches],
+        ['Best score', summary.bestScore ?? 'Open'],
+        ['Best spell', summary.bestBowling ?? 'Open'],
+        ['Miles driven', summary.totalDriveMiles ? `${formatValue(summary.totalDriveMiles, 1)} mi` : 'Open'],
+        ['Avg drive', summary.averageDriveMiles !== null ? `${formatValue(summary.averageDriveMiles, 1)} mi` : 'Open']
+      ];
+
+      summaryRoot.innerHTML = cards.map(([label, value]) => `<div class="panel cricket-simple-summary__card"><span>${label}</span><strong>${value}</strong></div>`).join('');
+    };
+
+    const renderFilterOptions = (filters) => {
+      if (!filtersRoot) return;
+      const apply = (selector, values) => {
+        const select = filtersRoot.querySelector(selector);
+        if (!select) return;
+        const current = select.value;
+        select.innerHTML = ['<option value="">All</option>'].concat(values.map((value) => `<option value="${value}">${value}</option>`)).join('');
+        if (values.includes(current)) select.value = current;
+      };
+      apply('[data-cricket-filter-year]', filters.years);
+      apply('[data-cricket-filter-team]', filters.teams);
+    };
+
+    const filterGames = (games) => {
+      const search = filtersRoot?.querySelector('[data-cricket-filter-search]')?.value?.trim().toLowerCase() ?? '';
+      const year = filtersRoot?.querySelector('[data-cricket-filter-year]')?.value ?? '';
+      const team = filtersRoot?.querySelector('[data-cricket-filter-team]')?.value ?? '';
+      return games.filter((game) => {
+        const haystack = [game.opponent, game.venue, game.personalNote, game.result, game.team].join(' ').toLowerCase();
+        return (!search || haystack.includes(search)) && (!year || String(game.gameDate).startsWith(year)) && (!team || game.team === team);
+      });
+    };
+
+    const renderLog = (games) => {
+      if (!logRoot) return;
+      if (!games.length) {
+        logRoot.innerHTML = `<div class="cricket-stats-empty"><h3>No games match the current filters.</h3><p>Reset the filters or add a new match in the admin panel.</p></div>`;
+        return;
+      }
+      logRoot.innerHTML = `
+        <div class="cricket-log-table-wrap">
+          <table class="cricket-log-table">
+            <thead><tr><th>Date</th><th>Team</th><th>Opponent</th><th>Runs</th><th>Wickets</th><th>Catches</th><th>Drive</th><th>Story</th></tr></thead>
+            <tbody>
+              ${games.map((game) => `
+                <tr>
+                  <td><strong>${game.gameDate}</strong><small>${game.competition ?? 'Open'}</small></td>
+                  <td>${game.team}</td>
+                  <td>${game.opponent ?? 'TBD'}</td>
+                  <td>${game.runs ?? '—'}${game.balls ? ` <small>off ${game.balls}</small>` : ''}</td>
+                  <td>${game.wickets ?? '—'}</td>
+                  <td>${game.catches ?? 0}</td>
+                  <td>${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : '—'}</td>
+                  <td>${game.storySlug ? `<a href="/blog/${game.storySlug}">Open</a>` : '<span class="cricket-log-table__muted">None</span>'}</td>
+                </tr>
+                <tr class="cricket-log-table__detail-row">
+                  <td colspan="8">
+                    <div class="cricket-log-table__detail-grid">
+                      <div><span>Result</span><strong>${game.result ?? 'Open'}</strong></div>
+                      <div><span>Venue</span><strong>${game.venue ?? 'Open'}</strong></div>
+                      <div><span>Format</span><strong>${game.format ?? 'Open'}</strong></div>
+                      <div><span>Bowling</span><strong>${game.overs ?? '—'} overs · ${game.runsConceded ?? '—'} conceded</strong></div>
+                    </div>
+                    ${game.personalNote ? `<p class="cricket-log-table__note">${game.personalNote}</p>` : ''}
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+    };
+
     const defaultStatus = 'manually added';
-    const makeFormState = (game = emptyCricketGame()) => ({
-      ...emptyCricketGame(),
-      ...game,
-      sourceStatus: game.sourceStatus || defaultStatus
-    });
+    const makeFormState = (game = emptyCricketGame()) => ({ ...emptyCricketGame(), ...game, sourceStatus: game.sourceStatus || defaultStatus });
 
     const state = {
       supabase: null,
@@ -483,67 +250,34 @@ const adminEmail = siteConfig.email;
       form: makeFormState(),
       editingId: null,
       saving: false,
-      saveMode: 'stay',
       adminError: '',
       adminValidation: [],
-      publicError: '',
       isFallback: true,
-      carriedDefaults: {
-        team: '',
-        seasonLabel: '',
-        competition: '',
-        format: '',
-        venue: ''
-      }
+      carriedDefaults: { team: '', seasonLabel: '', competition: '', format: '', venue: '' }
     };
 
-    const applyCarriedDefaults = () => ({
-      ...emptyCricketGame(),
-      ...state.carriedDefaults,
-      catches: 0,
-      runOuts: 0,
-      sourceStatus: defaultStatus
-    });
+    const applyCarriedDefaults = () => ({ ...emptyCricketGame(), ...state.carriedDefaults, catches: 0, runOuts: 0, sourceStatus: defaultStatus });
 
     const renderAdmin = () => {
       if (!adminRoot) return;
-
       if (!state.supabase) {
-        adminRoot.innerHTML = `
-          <div class="cricket-admin__message">
-            <h3>Supabase setup required</h3>
-            <p>Add <code>PUBLIC_SUPABASE_URL</code> and <code>PUBLIC_SUPABASE_ANON_KEY</code> to enable the live admin workflow. Until then, this page uses the seeded static archive as a read-only fallback.</p>
-          </div>
-        `;
+        adminRoot.innerHTML = `<div class="cricket-admin__message"><h3>Supabase setup required</h3><p>Add <code>PUBLIC_SUPABASE_URL</code> and <code>PUBLIC_SUPABASE_ANON_KEY</code> to enable the live admin workflow.</p></div>`;
         return;
       }
-
       if (!state.session) {
         adminRoot.innerHTML = `
           <form class="cricket-admin__login" data-admin-login>
-            <div>
-              <label>Email</label>
-              <input type="email" name="email" autocomplete="username" required />
-            </div>
-            <div>
-              <label>Password</label>
-              <input type="password" name="password" autocomplete="current-password" required />
-            </div>
+            <div><label>Email</label><input type="email" name="email" autocomplete="username" required /></div>
+            <div><label>Password</label><input type="password" name="password" autocomplete="current-password" required /></div>
             <p class="cricket-admin__hint">Admin account: <strong>${env.adminEmail ?? 'nafi@cmnafi.com'}</strong></p>
-            <p class="cricket-admin__hint">Use your Supabase Auth password for that email. Once signed in, you can add and edit matches directly here.</p>
             <button class="button button-primary" type="submit">Sign in as admin</button>
             ${state.adminError ? `<p class="cricket-admin__error">${state.adminError}</p>` : ''}
-          </form>
-        `;
-
+          </form>`;
         adminRoot.querySelector('[data-admin-login]')?.addEventListener('submit', async (event) => {
           event.preventDefault();
           const formData = new FormData(event.currentTarget);
           state.adminError = '';
-          const { error } = await state.supabase.auth.signInWithPassword({
-            email: String(formData.get('email') ?? ''),
-            password: String(formData.get('password') ?? '')
-          });
+          const { error } = await state.supabase.auth.signInWithPassword({ email: String(formData.get('email') ?? ''), password: String(formData.get('password') ?? '') });
           if (error) {
             state.adminError = error.message;
             renderAdmin();
@@ -555,72 +289,27 @@ const adminEmail = siteConfig.email;
       }
       const form = state.form;
       adminRoot.innerHTML = `
-        <div class="cricket-admin__header">
-          <div>
-            <p class="eyebrow">Signed in</p>
-            <h3>Admin entry table</h3>
-            <p>Signed in as <strong>${state.session?.user?.email ?? env.adminEmail ?? 'admin'}</strong>. Core score fields are entered in the row below. The detail section covers competition, venue, story link, and the rest of the archive context.</p>
-          </div>
-          <button class="button button-ghost" type="button" data-admin-signout>Sign out</button>
-        </div>
-
+        <div class="cricket-admin__header"><div><p class="eyebrow">Signed in</p><h3>Add or update a match</h3><p>Signed in as <strong>${state.session?.user?.email ?? env.adminEmail ?? 'admin'}</strong>.</p></div><button class="button button-ghost" type="button" data-admin-signout>Sign out</button></div>
         ${state.adminError ? `<p class="cricket-admin__error">${state.adminError}</p>` : ''}
         ${state.adminValidation.length ? `<div class="cricket-admin__validation">${state.adminValidation.map((item) => `<p>${item}</p>`).join('')}</div>` : ''}
-
         <div class="cricket-admin__quickfills">
-          <div>
-            <span>Team</span>
-            <div class="cricket-admin__chip-row">
-              ${adminDefaults.team.map((team) => `<button type="button" class="button button-ghost" data-admin-fill="team" data-admin-value="${team}">${team}</button>`).join('')}
-            </div>
-          </div>
-          <div>
-            <span>Format</span>
-            <div class="cricket-admin__chip-row">
-              ${adminDefaults.format.map((format) => `<button type="button" class="button button-ghost" data-admin-fill="format" data-admin-value="${format}">${format}</button>`).join('')}
-            </div>
-          </div>
-          <div>
-            <span>Competition</span>
-            <div class="cricket-admin__chip-row">
-              ${adminDefaults.competition.map((competition) => `<button type="button" class="button button-ghost" data-admin-fill="competition" data-admin-value="${competition}">${competition}</button>`).join('')}
-            </div>
-          </div>
+          <div><span>Team</span><div class="cricket-admin__chip-row">${adminDefaults.team.map((team) => `<button type="button" class="button button-ghost" data-admin-fill="team" data-admin-value="${team}">${team}</button>`).join('')}</div></div>
+          <div><span>Format</span><div class="cricket-admin__chip-row">${adminDefaults.format.map((format) => `<button type="button" class="button button-ghost" data-admin-fill="format" data-admin-value="${format}">${format}</button>`).join('')}</div></div>
+          <div><span>Competition</span><div class="cricket-admin__chip-row">${adminDefaults.competition.map((competition) => `<button type="button" class="button button-ghost" data-admin-fill="competition" data-admin-value="${competition}">${competition}</button>`).join('')}</div></div>
         </div>
-
-        <div class="cricket-admin__entry-table-wrap">
-          <table class="cricket-admin__entry-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Team</th>
-                <th>Opponent</th>
-                <th>Runs</th>
-                <th>Balls</th>
-                <th>Wickets</th>
-                <th>Catches</th>
-                <th>Drive (mi)</th>
-                <th>Story slug</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input name="gameDate" type="date" value="${form.gameDate || ''}" /></td>
-                <td><input name="team" type="text" value="${form.team || ''}" placeholder="SWAT" /></td>
-                <td><input name="opponent" type="text" value="${form.opponent || ''}" placeholder="Opponent" /></td>
-                <td><input name="runs" type="number" min="0" value="${form.runs ?? ''}" /></td>
-                <td><input name="balls" type="number" min="0" value="${form.balls ?? ''}" /></td>
-                <td><input name="wickets" type="number" min="0" value="${form.wickets ?? ''}" /></td>
-                <td><input name="catches" type="number" min="0" value="${form.catches ?? 0}" /></td>
-                <td><input name="distanceDrivenMiles" type="number" min="0" step="0.1" value="${form.distanceDrivenMiles ?? ''}" /></td>
-                <td><input name="storySlug" list="cricket-story-slugs" type="text" value="${form.storySlug || ''}" placeholder="blog slug" /></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
+        <div class="cricket-admin__entry-table-wrap"><table class="cricket-admin__entry-table"><thead><tr><th>Date</th><th>Team</th><th>Opponent</th><th>Runs</th><th>Balls</th><th>Wickets</th><th>Catches</th><th>Drive (mi)</th><th>Story slug</th></tr></thead><tbody><tr>
+          <td><input name="gameDate" type="date" value="${form.gameDate || ''}" /></td>
+          <td><input name="team" type="text" value="${form.team || ''}" placeholder="SWAT" /></td>
+          <td><input name="opponent" type="text" value="${form.opponent || ''}" placeholder="Opponent" /></td>
+          <td><input name="runs" type="number" min="0" value="${form.runs ?? ''}" /></td>
+          <td><input name="balls" type="number" min="0" value="${form.balls ?? ''}" /></td>
+          <td><input name="wickets" type="number" min="0" value="${form.wickets ?? ''}" /></td>
+          <td><input name="catches" type="number" min="0" value="${form.catches ?? 0}" /></td>
+          <td><input name="distanceDrivenMiles" type="number" min="0" step="0.1" value="${form.distanceDrivenMiles ?? ''}" /></td>
+          <td><input name="storySlug" list="cricket-story-slugs" type="text" value="${form.storySlug || ''}" placeholder="blog slug" /></td>
+        </tr></tbody></table></div>
         <div class="cricket-admin__details-grid">
-          <label><span>Season label</span><input name="seasonLabel" type="text" value="${form.seasonLabel || ''}" placeholder="Spring 2025" /></label>
+          <label><span>Season label</span><input name="seasonLabel" type="text" value="${form.seasonLabel || ''}" placeholder="2026" /></label>
           <label><span>Competition</span><input name="competition" type="text" value="${form.competition || ''}" placeholder="TCL" /></label>
           <label><span>Format</span><input name="format" type="text" value="${form.format || ''}" placeholder="Leather ball" /></label>
           <label><span>Venue</span><input name="venue" type="text" value="${form.venue || ''}" placeholder="Temple Terrace" /></label>
@@ -629,55 +318,15 @@ const adminEmail = siteConfig.email;
           <label><span>Runs conceded</span><input name="runsConceded" type="number" min="0" value="${form.runsConceded ?? ''}" /></label>
           <label><span>Run outs</span><input name="runOuts" type="number" min="0" value="${form.runOuts ?? 0}" /></label>
           <label><span>Scorecard URL</span><input name="scorecardUrl" type="url" value="${form.scorecardUrl || ''}" placeholder="https://..." /></label>
-          <label class="cricket-admin__note-field"><span>Personal note</span><textarea name="personalNote" rows="4" placeholder="Short story note for the archive">${form.personalNote || ''}</textarea></label>
+          <label class="cricket-admin__note-field"><span>Personal note</span><textarea name="personalNote" rows="4" placeholder="Short note for the archive">${form.personalNote || ''}</textarea></label>
         </div>
-
         <div class="cricket-admin__draft panel">
-          <div>
-            <span>Season</span>
-            <strong>${form.seasonLabel || deriveSeasonLabel(form.gameDate) || 'Open'}</strong>
-          </div>
-          <div>
-            <span>Strike rate</span>
-            <strong>${form.runs !== null && form.balls ? formatValue((form.runs / form.balls) * 100, 2) : 'Open'}</strong>
-          </div>
-          <div>
-            <span>Economy</span>
-            <strong>${form.runsConceded !== null && form.overs ? formatValue(form.runsConceded / form.overs, 2) : 'Open'}</strong>
-          </div>
-          <div>
-            <span>Drive</span>
-            <strong>${form.distanceDrivenMiles !== null && form.distanceDrivenMiles !== undefined ? `${formatValue(form.distanceDrivenMiles, 1)} mi` : 'Open'}</strong>
-          </div>
+          <div><span>Season</span><strong>${form.seasonLabel || deriveSeasonLabel(form.gameDate) || 'Open'}</strong></div>
+          <div><span>Strike rate</span><strong>${form.runs !== null && form.balls ? formatValue((form.runs / form.balls) * 100, 2) : 'Open'}</strong></div>
+          <div><span>Economy</span><strong>${form.runsConceded !== null && form.overs ? formatValue(form.runsConceded / form.overs, 2) : 'Open'}</strong></div>
+          <div><span>Drive</span><strong>${form.distanceDrivenMiles !== null && form.distanceDrivenMiles !== undefined ? `${formatValue(form.distanceDrivenMiles, 1)} mi` : 'Open'}</strong></div>
         </div>
-
-        <div class="hero-actions cricket-admin__actions">
-          <button class="button button-primary" type="button" data-admin-save>${state.saving ? 'Saving...' : (state.editingId ? 'Update game' : 'Add game')}</button>
-          <button class="button button-secondary" type="button" data-admin-save-next>${state.saving ? 'Saving...' : 'Save and add next'}</button>
-          <button class="button button-secondary" type="button" data-admin-reset>Reset form</button>
-        </div>
-
-        <div class="cricket-admin__existing panel">
-          <div class="cricket-admin__existing-head">
-            <h4>Existing entries</h4>
-            <p>${state.games.length} games currently in the live log.</p>
-          </div>
-          <div class="cricket-admin__existing-rows">
-            ${state.games.map((game) => `
-              <div class="cricket-admin__existing-row${game.isArchived ? ' is-archived' : ''}">
-                <div>
-                  <strong>${game.gameDate}</strong>
-                  <span>${game.team} vs ${game.opponent ?? 'TBD'} · ${game.runs ?? '—'} runs · ${game.wickets ?? '—'} wickets · ${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : 'no drive'}</span>
-                </div>
-                <div class="cricket-admin__existing-actions">
-                  <button type="button" data-admin-edit="${game.id}">Edit</button>
-                  <button type="button" data-admin-archive="${game.id}">${game.isArchived ? 'Restore' : 'Archive'}</button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
+        <div class="hero-actions cricket-admin__actions"><button class="button button-primary" type="button" data-admin-save>${state.saving ? 'Saving...' : (state.editingId ? 'Update game' : 'Add game')}</button><button class="button button-secondary" type="button" data-admin-save-next>${state.saving ? 'Saving...' : 'Save and add next'}</button><button class="button button-secondary" type="button" data-admin-reset>Reset form</button></div>`;
 
       adminRoot.querySelector('[data-admin-signout]')?.addEventListener('click', async () => {
         await state.supabase.auth.signOut();
@@ -687,36 +336,18 @@ const adminEmail = siteConfig.email;
         renderAdmin();
       });
 
-      const syncInputs = () => {
-        adminRoot.querySelectorAll('[name]').forEach((field) => {
-          field.addEventListener('input', (event) => {
-            const target = event.currentTarget;
-            const name = target.getAttribute('name');
-            if (!name || !cricketEntryFields.includes(name)) return;
-            let value = target.value;
-            if (target.type === 'number') {
-              value = value === '' ? null : Number(value);
-            }
-            const nextForm = { ...state.form, [name]: value };
-            if (name === 'gameDate' && !state.form.seasonLabel) {
-              nextForm.seasonLabel = deriveSeasonLabel(value);
-              const seasonInput = adminRoot.querySelector('[name="seasonLabel"]');
-              if (seasonInput && !seasonInput.value) seasonInput.value = nextForm.seasonLabel || '';
-            }
-            state.form = nextForm;
-            state.adminValidation = validateAdminForm(state.form);
-          });
+      adminRoot.querySelectorAll('[name]').forEach((field) => {
+        field.addEventListener('input', (event) => {
+          const target = event.currentTarget;
+          const name = target.getAttribute('name');
+          if (!name || !cricketEntryFields.includes(name)) return;
+          let value = target.value;
+          if (target.type === 'number') value = value === '' ? null : Number(value);
+          const nextForm = { ...state.form, [name]: value };
+          if (name === 'gameDate' && !state.form.seasonLabel) nextForm.seasonLabel = deriveSeasonLabel(value);
+          state.form = nextForm;
+          state.adminValidation = validateAdminForm(state.form);
         });
-      };
-
-      syncInputs();
-
-      adminRoot.querySelector('[data-admin-reset]')?.addEventListener('click', () => {
-        state.editingId = null;
-        state.form = applyCarriedDefaults();
-        state.adminError = '';
-        state.adminValidation = [];
-        renderAdmin();
       });
 
       adminRoot.querySelectorAll('[data-admin-fill]').forEach((button) => {
@@ -730,43 +361,35 @@ const adminEmail = siteConfig.email;
         });
       });
 
+      adminRoot.querySelector('[data-admin-reset]')?.addEventListener('click', () => {
+        state.editingId = null;
+        state.form = applyCarriedDefaults();
+        state.adminError = '';
+        state.adminValidation = [];
+        renderAdmin();
+      });
+
       const saveGame = async (mode = 'stay') => {
-        state.saveMode = mode;
         state.adminValidation = validateAdminForm(state.form);
         if (state.adminValidation.length) {
-          state.adminError = 'Please fix the highlighted entry checks before saving.';
+          state.adminError = 'Please fix the entry checks before saving.';
           renderAdmin();
           return;
         }
-
         state.saving = true;
         state.adminError = '';
         renderAdmin();
-
         const payload = toSupabasePayload({ ...state.form, sourceStatus: defaultStatus });
-        let response;
-
-        if (state.editingId) {
-          response = await state.supabase.from('cricket_games').update(payload).eq('id', state.editingId);
-        } else {
-          response = await state.supabase.from('cricket_games').insert(payload);
-        }
-
+        const response = state.editingId
+          ? await state.supabase.from('cricket_games').update(payload).eq('id', state.editingId)
+          : await state.supabase.from('cricket_games').insert(payload);
         state.saving = false;
-
         if (response.error) {
           state.adminError = response.error.message;
           renderAdmin();
           return;
         }
-
-        state.carriedDefaults = {
-          team: state.form.team || '',
-          seasonLabel: state.form.seasonLabel || deriveSeasonLabel(state.form.gameDate),
-          competition: state.form.competition || '',
-          format: state.form.format || '',
-          venue: state.form.venue || ''
-        };
+        state.carriedDefaults = { team: state.form.team || '', seasonLabel: state.form.seasonLabel || deriveSeasonLabel(state.form.gameDate), competition: state.form.competition || '', format: state.form.format || '', venue: state.form.venue || '' };
         state.editingId = null;
         state.form = mode === 'next' ? applyCarriedDefaults() : makeFormState();
         state.adminValidation = [];
@@ -775,94 +398,12 @@ const adminEmail = siteConfig.email;
 
       adminRoot.querySelector('[data-admin-save]')?.addEventListener('click', async () => saveGame('stay'));
       adminRoot.querySelector('[data-admin-save-next]')?.addEventListener('click', async () => saveGame('next'));
-
-      adminRoot.querySelectorAll('[data-admin-edit]').forEach((button) => {
-        button.addEventListener('click', () => {
-          const game = state.games.find((candidate) => candidate.id === button.getAttribute('data-admin-edit'));
-          if (!game) return;
-          state.editingId = game.id;
-          state.form = makeFormState(game);
-          state.adminError = '';
-          state.adminValidation = [];
-          renderAdmin();
-        });
-      });
-
-      adminRoot.querySelectorAll('[data-admin-archive]').forEach((button) => {
-        button.addEventListener('click', async () => {
-          const game = state.games.find((candidate) => candidate.id === button.getAttribute('data-admin-archive'));
-          if (!game) return;
-          const { error } = await state.supabase.from('cricket_games').update({ is_archived: !game.isArchived }).eq('id', game.id);
-          if (error) {
-            state.adminError = error.message;
-            renderAdmin();
-            return;
-          }
-          await refreshFromSupabase();
-        });
-      });
     };
 
-    const renderTabs = () => {
-      document.querySelectorAll('[data-live-record-tabs]').forEach((wrapper) => {
-        const buttons = Array.from(wrapper.querySelectorAll('[data-live-tab-target]'));
-        const panels = Array.from(wrapper.querySelectorAll('[data-live-tab-panel]'));
-        buttons.forEach((button) => {
-          button.addEventListener('click', () => {
-            const target = button.getAttribute('data-live-tab-target');
-            buttons.forEach((candidate) => {
-              candidate.classList.toggle('is-active', candidate === button);
-              candidate.setAttribute('aria-selected', String(candidate === button));
-            });
-            panels.forEach((panel) => {
-              const active = panel.getAttribute('data-live-tab-panel') === target;
-              panel.classList.toggle('is-active', active);
-              panel.toggleAttribute('hidden', !active);
-            });
-          });
-        });
-      });
-    };
     const renderPublic = () => {
-      const { summary, seasonRows, teamRows, filters } = aggregateCricketGames(state.games);
+      const { summary, filters } = aggregateCricketGames(state.games);
       state.filteredGames = filterGames(state.games);
-
-      renderStatGrid(battingRoot, [
-        ['Matches', summary.matches],
-        ['Runs', summary.runs],
-        ['Balls', summary.balls],
-        ['Average', formatValue(summary.battingAverage, 2)],
-        ['Strike rate', formatValue(summary.strikeRate, 2)],
-        ['50s', summary.fifties],
-        ['100s', summary.hundreds],
-        ['Best score', summary.bestScore ?? 'Open']
-      ]);
-
-      renderStatGrid(bowlingRoot, [
-        ['Wickets', summary.wickets],
-        ['Overs', formatValue(summary.overs, 1)],
-        ['Runs conceded', summary.runsConceded],
-        ['Economy', formatValue(summary.economy, 2)],
-        ['Best spell', summary.bestBowling ?? 'Open']
-      ]);
-
-      renderStatGrid(fieldingRoot, [
-        ['Catches', summary.catches],
-        ['Run outs', summary.runOuts],
-        ['Matches logged', summary.matches]
-      ]);
-
-      renderStatGrid(drivingRoot, [
-        ['Total miles', `${formatValue(summary.totalDriveMiles, 1)} miles`],
-        ['Average drive', summary.averageDriveMiles !== null ? `${formatValue(summary.averageDriveMiles, 1)} miles` : 'Open'],
-        ['Farthest trip', summary.farthestDriveMiles !== null ? `${formatValue(summary.farthestDriveMiles, 1)} miles` : 'Open']
-      ]);
-
-      renderMarkers(summary, seasonRows);
-      renderCharts(seasonRows);
-      renderSeasons(seasonRows);
-      renderTeams(teamRows);
-      renderBestNote(summary, state.games);
+      renderSummary(summary);
       renderFilterOptions(filters);
       renderLog(state.filteredGames);
     };
@@ -871,52 +412,39 @@ const adminEmail = siteConfig.email;
       if (!state.supabase) {
         state.isFallback = true;
         state.games = fallbackGames;
-        state.publicError = '';
         renderPublic();
         renderAdmin();
-        setBanner('<p>Showing the seeded archive. Add Supabase env vars to switch this page into live database mode.</p>', 'warning');
+        setBanner('<p>Showing the seeded archive while the live connection is unavailable.</p>', 'warning');
         return;
       }
-
-      const { data, error } = await state.supabase
-        .from('cricket_games')
-        .select('*')
-        .order('game_date', { ascending: false });
-
+      const { data, error } = await state.supabase.from('cricket_games').select('*').order('game_date', { ascending: false });
       if (error) {
         state.isFallback = true;
         state.games = fallbackGames;
-        state.publicError = error.message;
         renderPublic();
         renderAdmin();
-        setBanner(`<p>Supabase is configured, but the live table could not be read yet. Showing the seeded archive for now.</p><small>${error.message}</small>`, 'warning');
+        setBanner(`<p>Supabase is configured, but the live table could not be read yet.</p><small>${error.message}</small>`, 'warning');
         return;
       }
-
       state.isFallback = false;
       state.games = (data || []).map(normalizeCricketGame);
-      state.publicError = '';
       renderPublic();
       renderAdmin();
-      setBanner('<p>Live Supabase data connected. Public stats and admin entry are now reading from the database.</p>', 'success');
+      setBanner('<p>Live Supabase data connected.</p>', 'success');
     };
 
-    const initFilters = () => {
-      filtersRoot?.querySelectorAll('input, select').forEach((field) => {
-        field.addEventListener('input', () => {
-          state.filteredGames = filterGames(state.games);
-          renderLog(state.filteredGames);
-        });
+    filtersRoot?.querySelectorAll('input, select').forEach((field) => {
+      field.addEventListener('input', () => {
+        state.filteredGames = filterGames(state.games);
+        renderLog(state.filteredGames);
       });
-    };
+    });
 
     const initSupabase = async () => {
-      const hasEnv = Boolean(env.supabaseUrl && env.supabaseAnonKey);
-      if (!hasEnv) {
+      if (!(env.supabaseUrl && env.supabaseAnonKey)) {
         await refreshFromSupabase();
         return;
       }
-
       state.supabase = createClient(env.supabaseUrl, env.supabaseAnonKey);
       const { data } = await state.supabase.auth.getSession();
       state.session = data.session;
@@ -927,367 +455,41 @@ const adminEmail = siteConfig.email;
       await refreshFromSupabase();
     };
 
-    renderTabs();
-    initFilters();
     initSupabase();
   </script>
+
+  <style>
+    .cricket-simple-page { position: relative; padding-bottom: 4rem; }
+    .cricket-simple-page::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(circle at 16% 14%, rgba(156, 187, 118, 0.14), transparent 24%), radial-gradient(circle at 82% 18%, rgba(222, 194, 122, 0.08), transparent 20%), linear-gradient(180deg, rgba(8, 20, 10, 0.96), rgba(16, 34, 18, 0.98)); }
+    .cricket-simple-page > * { position: relative; z-index: 1; }
+    .cricket-simple-hero { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.8fr); gap: 1.2rem; align-items: start; padding-top: clamp(2rem, 6vw, 4rem); }
+    .cricket-simple-hero__copy h1, .cricket-simple-field h2 { margin: 0; font-family: 'Fraunces', 'Times New Roman', serif; letter-spacing: -0.05em; }
+    .cricket-simple-hero__copy h1 { font-size: clamp(3rem, 6vw, 4.6rem); line-height: 0.96; margin-bottom: 0.7rem; }
+    .cricket-simple-hero__copy p, .cricket-simple-field p { margin: 0; color: rgba(237, 244, 216, 0.78); line-height: 1.75; }
+    .cricket-simple-hero__card ul { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.75rem; }
+    .cricket-simple-hero__card li { display: flex; justify-content: space-between; gap: 1rem; color: rgba(237, 244, 216, 0.74); }
+    .cricket-simple-field { display: grid; gap: 1rem; padding: clamp(1.2rem, 3vw, 1.7rem); background: linear-gradient(180deg, rgba(34, 67, 34, 0.9), rgba(16, 34, 18, 0.96)), radial-gradient(circle at top, rgba(216, 191, 122, 0.08), transparent 62%); border-color: rgba(182, 215, 143, 0.22); }
+    .cricket-simple-field h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); line-height: 1.02; margin-bottom: 0.5rem; }
+    .cricket-ground { position: relative; width: 100%; min-height: 32rem; border-radius: 42px; overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(182, 215, 143, 0.06), transparent 54%), repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 3%, transparent 3%, transparent 7%), linear-gradient(180deg, rgba(47, 91, 44, 0.95), rgba(28, 54, 27, 0.98)); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); }
+    .cricket-ground__oval, .cricket-ground__inner-circle, .cricket-ground__pitch { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); }
+    .cricket-ground__oval { width: 84%; height: 86%; border-radius: 50%; border: 2px solid rgba(237, 244, 216, 0.18); }
+    .cricket-ground__inner-circle { width: 58%; height: 60%; border-radius: 50%; border: 1px solid rgba(237, 244, 216, 0.2); }
+    .cricket-ground__pitch { width: 12%; height: 66%; border-radius: 28px; background: linear-gradient(180deg, rgba(168, 127, 72, 0.94), rgba(111, 73, 38, 0.98)); }
+    .cricket-ground__crease, .cricket-ground__stumps { position: absolute; left: 50%; transform: translateX(-50%); }
+    .cricket-ground__crease { width: 190%; height: 2px; background: rgba(237, 244, 216, 0.38); }
+    .cricket-ground__crease--top { top: 10%; } .cricket-ground__crease--bottom { bottom: 10%; }
+    .cricket-ground__stumps { width: 1.25rem; height: 1rem; background: linear-gradient(90deg, rgba(237,244,216,0.7) 0 18%, transparent 18% 40%, rgba(237,244,216,0.7) 40% 58%, transparent 58% 80%, rgba(237,244,216,0.7) 80% 100%); }
+    .cricket-ground__stumps--top { top: 4.5%; } .cricket-ground__stumps--bottom { bottom: 4.5%; }
+    .cricket-ground__node { position: absolute; display: block; transform: translate(-50%, -50%); text-decoration: none; }
+    .cricket-ground__dot { display: block; width: 1rem; height: 1rem; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.9), rgba(214,163,93,0.92) 45%, rgba(93,51,18,0.98)); box-shadow: 0 0 0 7px rgba(250, 230, 188, 0.08), 0 12px 25px rgba(0,0,0,0.25); }
+    .cricket-ground__tooltip { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); width: min(16rem, 56vw); display: grid; gap: 0.2rem; padding: 0.85rem 1rem; border-radius: 16px; background: rgba(9, 17, 10, 0.92); border: 1px solid rgba(239, 228, 197, 0.14); color: rgba(243, 237, 225, 0.88); box-shadow: 0 18px 40px rgba(0,0,0,0.26); opacity: 0; pointer-events: none; transition: opacity 180ms ease, transform 180ms ease; }
+    .cricket-ground__tooltip small { color: rgba(243, 237, 225, 0.52); } .cricket-ground__tooltip span { font-size: 0.88rem; line-height: 1.55; }
+    .cricket-ground__node:hover .cricket-ground__tooltip, .cricket-ground__node:focus-visible .cricket-ground__tooltip { opacity: 1; transform: translateY(-50%) translateX(4px); }
+    .cricket-simple-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.9rem; margin-top: 1rem; }
+    .cricket-simple-summary__card { display: grid; gap: 0.3rem; padding: 1rem 1.1rem; }
+    .cricket-simple-summary__card span { color: rgba(243, 237, 225, 0.58); font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .cricket-simple-summary__card strong { font-size: 1.5rem; color: rgba(255, 248, 238, 0.96); }
+    @media (max-width: 820px) { .cricket-simple-hero { grid-template-columns: 1fr; } .cricket-ground { min-height: 25rem; } }
+    @media (prefers-reduced-motion: reduce) { .cricket-ground__tooltip { transition: none; } }
+  </style>
 </BaseLayout>
-
-<style>
-  .cricket-stats-page {
-    padding-bottom: 4rem;
-  }
-
-  .cricket-stats-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.06fr) minmax(300px, 0.8fr);
-    gap: 1.5rem;
-    padding-top: clamp(2rem, 5vw, 4rem);
-  }
-
-  .cricket-stats-hero__copy {
-    display: grid;
-    gap: 1rem;
-    max-width: 44rem;
-  }
-
-  .cricket-stats-hero__copy h1,
-  .cricket-stats-hero__card h2,
-  .cricket-mini-chart h3,
-  .cricket-admin__header h3,
-  .cricket-admin__existing-head h4,
-  .cricket-stats-empty h3 {
-    margin: 0;
-    font-family: 'Fraunces', 'Times New Roman', serif;
-    letter-spacing: -0.05em;
-  }
-
-  .cricket-stats-hero__copy h1 {
-    font-size: clamp(3rem, 6vw, 5rem);
-    line-height: 0.94;
-    max-width: 12ch;
-  }
-
-  .cricket-stats-hero__copy p,
-  .cricket-stats-hero__card li,
-  .cricket-mini-chart p,
-  .cricket-admin__header p,
-  .cricket-admin__message p,
-  .cricket-admin__login label,
-  .cricket-log-table__note,
-  .cricket-stats-empty p {
-    color: rgba(243, 237, 225, 0.76);
-    line-height: 1.78;
-  }
-
-  .cricket-stats-hero__card {
-    display: grid;
-    gap: 0.9rem;
-    padding: 1.4rem;
-    border-radius: 28px;
-  }
-
-  .cricket-stats-hero__card ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0.7rem;
-  }
-
-  .cricket-stats-hero__card li,
-  .cricket-admin__existing-row span,
-  .cricket-log-table td small,
-  .cricket-log-table__muted {
-    display: block;
-    color: rgba(243, 237, 225, 0.62);
-    font-size: 0.9rem;
-  }
-
-  .cricket-stats-hero__card li strong {
-    display: block;
-    color: var(--text);
-    font-size: 1rem;
-  }
-  .cricket-stats-banner,
-  .cricket-admin,
-  .cricket-stats-filters,
-  .cricket-stats-log,
-  .cricket-mini-chart,
-  .cricket-stats-marker {
-    padding: 1rem 1.1rem;
-  }
-
-  .cricket-stats-banner {
-    border-color: rgba(226, 186, 116, 0.18);
-  }
-
-  .cricket-stats-banner[data-tone='success'] {
-    border-color: rgba(140, 196, 137, 0.24);
-    background: linear-gradient(180deg, rgba(110, 161, 102, 0.12), rgba(255, 255, 255, 0.02));
-  }
-
-  .cricket-stats-banner[data-tone='warning'] {
-    border-color: rgba(226, 186, 116, 0.2);
-    background: linear-gradient(180deg, rgba(226, 186, 116, 0.12), rgba(255, 255, 255, 0.02));
-  }
-
-  .cricket-stats-banner p,
-  .cricket-stats-banner small {
-    margin: 0;
-    color: rgba(243, 237, 225, 0.78);
-  }
-
-  .cricket-stats-markers {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.9rem;
-  }
-
-  .cricket-stats-marker {
-    display: grid;
-    gap: 0.45rem;
-    border-radius: 24px;
-  }
-
-  .cricket-stats-marker span,
-  .cricket-mini-chart__row span,
-  .cricket-admin__existing-head p,
-  .cricket-admin__details-grid label span,
-  .cricket-stats-filters label span,
-  .cricket-log-table__detail-grid span {
-    color: rgba(243, 237, 225, 0.62);
-    font-size: 0.74rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-
-  .cricket-stats-marker strong {
-    font-size: 1.2rem;
-  }
-
-  .cricket-mini-chart {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .cricket-mini-chart__rows {
-    display: grid;
-    gap: 0.9rem;
-  }
-
-  .cricket-mini-chart__row {
-    display: grid;
-    grid-template-columns: minmax(0, 150px) minmax(0, 1fr);
-    gap: 0.9rem;
-    align-items: center;
-  }
-
-  .cricket-mini-chart__row strong,
-  .cricket-log-table td strong,
-  .cricket-log-table__detail-grid strong {
-    display: block;
-    color: var(--text);
-  }
-
-  .cricket-mini-chart__bar-wrap {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.75rem;
-    align-items: center;
-  }
-
-  .cricket-mini-chart__bar {
-    display: block;
-    min-height: 0.65rem;
-    border-radius: 999px;
-    background: linear-gradient(90deg, rgba(211, 154, 89, 0.95), rgba(126, 134, 157, 0.82));
-    box-shadow: 0 0 24px rgba(211, 154, 89, 0.16);
-  }
-
-  .cricket-mini-chart__bar-wrap em {
-    font-style: normal;
-    color: rgba(243, 237, 225, 0.78);
-  }
-
-  .cricket-stats-filters {
-    display: grid;
-    grid-template-columns: minmax(220px, 1.2fr) repeat(4, minmax(0, 1fr));
-    gap: 0.8rem;
-    align-items: end;
-  }
-
-  .cricket-stats-filters label {
-    display: grid;
-    gap: 0.4rem;
-  }
-
-  .cricket-stats-filters input,
-  .cricket-stats-filters select,
-  .cricket-admin input,
-  .cricket-admin textarea {
-    width: 100%;
-    padding: 0.75rem 0.8rem;
-    border-radius: 14px;
-    border: 1px solid rgba(243, 237, 225, 0.1);
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--text);
-  }
-
-  .cricket-log-table-wrap,
-  .cricket-admin__entry-table-wrap {
-    overflow-x: auto;
-  }
-
-  .cricket-log-table,
-  .cricket-admin__entry-table {
-    width: 100%;
-    min-width: 980px;
-    border-collapse: collapse;
-  }
-
-  .cricket-log-table th,
-  .cricket-log-table td,
-  .cricket-admin__entry-table th,
-  .cricket-admin__entry-table td {
-    padding: 0.9rem 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid rgba(243, 237, 225, 0.08);
-    vertical-align: top;
-  }
-
-  .cricket-log-table th,
-  .cricket-admin__entry-table th {
-    color: rgba(243, 237, 225, 0.7);
-    font-size: 0.76rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-
-  .cricket-log-table__detail-row td {
-    padding-top: 0;
-    background: rgba(255, 255, 255, 0.02);
-  }
-
-  .cricket-log-table__detail-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.85rem;
-    padding-top: 0.9rem;
-  }
-
-  .cricket-log-table__note {
-    margin: 0.9rem 0 0;
-  }
-
-  .cricket-admin {
-    display: grid;
-    gap: 1.2rem;
-  }
-
-  .cricket-admin__header,
-  .cricket-admin__existing-row,
-  .cricket-admin__existing-actions,
-  .cricket-admin__actions {
-    display: flex;
-    gap: 0.8rem;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .cricket-admin__details-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.9rem;
-  }
-
-  .cricket-admin__details-grid label {
-    display: grid;
-    gap: 0.4rem;
-  }
-
-  .cricket-admin__note-field {
-    grid-column: 1 / -1;
-  }
-
-  .cricket-admin__login {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.9rem;
-    align-items: end;
-  }
-
-  .cricket-admin__existing {
-    padding: 1rem;
-  }
-
-  .cricket-admin__existing-rows {
-    display: grid;
-    gap: 0.7rem;
-    margin-top: 0.85rem;
-  }
-
-  .cricket-admin__existing-row {
-    padding: 0.85rem 0;
-    border-top: 1px solid rgba(243, 237, 225, 0.08);
-  }
-
-  .cricket-admin__existing-row.is-archived {
-    opacity: 0.55;
-  }
-
-  .cricket-admin__existing-actions button {
-    padding: 0.45rem 0.7rem;
-    border-radius: 999px;
-    border: 1px solid rgba(243, 237, 225, 0.1);
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--text);
-  }
-
-  .cricket-admin__error {
-    margin: 0;
-    color: #f2b3ab;
-  }
-
-  .cricket-admin__message h3 {
-    margin-bottom: 0.5rem;
-  }
-
-  .cricket-stats-empty {
-    padding: 2rem 1rem;
-    text-align: center;
-  }
-
-  @media (max-width: 1080px) {
-    .cricket-stats-hero,
-    .cricket-stats-breakdowns,
-    .cricket-admin__details-grid,
-    .cricket-stats-filters {
-      grid-template-columns: 1fr;
-    }
-
-    .cricket-stats-markers {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 720px) {
-    .cricket-stats-hero__copy h1 {
-      font-size: clamp(2.5rem, 10vw, 3.7rem);
-    }
-
-    .cricket-stats-markers,
-    .cricket-log-table__detail-grid,
-    .cricket-admin__login,
-    .cricket-mini-chart__row {
-      grid-template-columns: 1fr;
-    }
-
-    .cricket-log-table,
-    .cricket-admin__entry-table {
-      min-width: 820px;
-    }
-  }
-</style>
-
