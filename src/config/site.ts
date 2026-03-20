@@ -5,8 +5,8 @@ export const siteConfig = {
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',
   nav: [
-    { id: 'journey', label: 'Journey', href: '/story' },
-    { id: 'timeline', label: 'Timeline', href: '/blog' },
+    { id: 'story', label: 'My Story', href: '/story' },
+    { id: 'interests', label: 'Interests', href: '/interests' },
     { id: 'projects', label: 'Projects', href: '/projects' },
     { id: 'connect', label: 'Connect', href: '/connect' }
   ],

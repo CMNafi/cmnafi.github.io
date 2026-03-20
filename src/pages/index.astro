@@ -13,8 +13,9 @@ const interests = [
 
 const dashboardNav = [
   { label: 'My Story', href: '/story' },
-  { label: 'Interest', href: '/blog' },
+  { label: 'Interests', href: '/interests' },
   { label: 'Projects', href: '/projects' },
+  { label: 'Connect', href: '/connect' },
 ];
 ---
 <BaseLayout description="Hi, I am Nafi. Brewing exciting topics. Welcome to my personal blog.">
@@ -30,7 +31,7 @@ const dashboardNav = [
           <span class={`hero-letter ${char === ' ' ? 'hero-letter--space' : ''}`} style={`--i:${i}`}>{char === ' ' ? '\u00A0' : char}</span>
         ))}
       </h1>
-      <p class="hero-subline">Brewing exciting topics. Welcome to my personal blog.</p>
+      <p class="hero-subline">Welcome to my website. These are my current obsessions, racing against each other.</p>
       
       <div class="hero-nav">
         {dashboardNav.map((item, i) => (
