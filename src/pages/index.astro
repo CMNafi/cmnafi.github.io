@@ -2,486 +2,790 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 const interests = [
-  { name: 'Cricket', icon: '🏏', color: '#4ADE80', href: '/interests/cricket', tooltip: 'Match stories & pressure finishes', lane: 1, speed: '8s', delay: '0s' },
-  { name: 'Books', icon: '📚', color: '#F59E0B', href: '/interests/books', tooltip: 'Biographies & ideas that deepen over time', lane: 2, speed: '11s', delay: '2s' },
-  { name: 'Movies', icon: '🎬', color: '#EF4444', href: '/interests/movies', tooltip: 'Film notes & scenes that keep their voltage', lane: 1, speed: '13s', delay: '4s' },
-  { name: 'Writing', icon: '✍️', color: '#A78BFA', href: '/interests/writing', tooltip: 'Essays, systems & unfinished thoughts', lane: 2, speed: '9s', delay: '6s' },
-  { name: 'Finance', icon: '📈', color: '#22D3EE', href: '#', tooltip: 'Markets, investing & financial thinking', lane: 3, speed: '7s', delay: '1s' },
-  { name: 'Tech', icon: '💻', color: '#F472B6', href: '#', tooltip: 'Code, tools & the tech landscape', lane: 3, speed: '12s', delay: '5s' },
-  { name: 'Data Science', icon: '🧠', color: '#FB923C', href: '#', tooltip: 'Models, analysis & making sense of data', lane: 4, speed: '10s', delay: '3s' },
+  { id: 'cricket', name: 'Cricket', icon: '🏏', color: '#4ADE80', href: '/interests/cricket', tooltip: 'Match stories & pressure finishes', badge: '04', lane: 1 },
+  { id: 'books', name: 'Books', icon: '📚', color: '#F59E0B', href: '/interests/books', tooltip: 'Biographies & ideas that deepen over time', badge: '12', lane: 2 },
+  { id: 'movies', name: 'Movies', icon: '🎬', color: '#EF4444', href: '/interests/movies', tooltip: 'Film notes & scenes that keep their voltage', badge: '77', lane: 3 },
+  { id: 'writing', name: 'Writing', icon: '✍️', color: '#A78BFA', href: '/interests/writing', tooltip: 'Essays, systems & unfinished thoughts', badge: '55', lane: 4 },
+  { id: 'finance', name: 'Finance', icon: '📈', color: '#22D3EE', href: '#', tooltip: 'Markets, investing & financial thinking', badge: '11', lane: 5 },
+  { id: 'tech', name: 'Tech', icon: '💻', color: '#F472B6', href: '#', tooltip: 'Code, tools & the tech landscape', badge: '33', lane: 6 },
+  { id: 'data', name: 'Data Science', icon: '🧠', color: '#FB923C', href: '#', tooltip: 'Models, analysis & making sense of data', badge: '07', lane: 7 },
 ];
 
-const lanes = [
-  { dir: 'ltr', items: interests.filter(i => i.lane === 1) },
-  { dir: 'rtl', items: interests.filter(i => i.lane === 2) },
-  { dir: 'ltr', items: interests.filter(i => i.lane === 3) },
-  { dir: 'rtl', items: interests.filter(i => i.lane === 4) },
+const dashboardNav = [
+  { label: 'Journey', href: '/story' },
+  { label: 'Timeline', href: '/blog' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Connect', href: '/connect' },
 ];
 ---
 
-<BaseLayout description="Hi, I am Nafi. Brewing exciting topics — cricket, books, movies, writing, finance, tech & data science.">
-
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <div class="hero__inner">
-      <img
-        class="hero__photo"
-        src="/profile.jpg"
-        alt="C M Nafi"
-        width="140"
-        height="140"
-        loading="eager"
-      />
-      <div class="hero__text">
-        <h1 class="hero__headline" aria-label="Hi, I am Nafi.">
-          <span class="hero__letter" style="--i:0">H</span><span class="hero__letter" style="--i:1">i</span><span class="hero__letter" style="--i:2">,</span><span class="hero__letter hero__letter--space" style="--i:3">&nbsp;</span><span class="hero__letter" style="--i:4">I</span><span class="hero__letter hero__letter--space" style="--i:5">&nbsp;</span><span class="hero__letter" style="--i:6">a</span><span class="hero__letter" style="--i:7">m</span><span class="hero__letter hero__letter--space" style="--i:8">&nbsp;</span><span class="hero__letter" style="--i:9">N</span><span class="hero__letter" style="--i:10">a</span><span class="hero__letter" style="--i:11">f</span><span class="hero__letter" style="--i:12">i</span><span class="hero__letter" style="--i:13">.</span>
-        </h1>
-        <p class="hero__sub">Brewing exciting topics. Welcome to my personal blog.</p>
+<BaseLayout description="Hi, I am Nafi. Brewing exciting topics. Welcome to my personal blog.">
+  
+  <section class="cockpit-section" aria-label="Hero Section">
+    <div class="cockpit">
+      <div class="cockpit__driver-badge">01</div>
+      <div class="cockpit__texture"></div>
+      
+      <div class="cockpit__inner">
+        <div class="cockpit__profile">
+          <img src="/profile.jpg" alt="C M Nafi" width="130" height="130" loading="eager" />
+        </div>
+        <div class="cockpit__content">
+          <h1 class="cockpit__headline" aria-label="Hi, I am Nafi.">
+            {"Hi, I am Nafi.".split('').map((char, i) => (
+              <span class={`cockpit__letter ${char === ' ' ? 'cockpit__letter--space' : ''}`} style={`--i:${i}`}>{char === ' ' ? '\u00A0' : char}</span>
+            ))}
+          </h1>
+          <p class="cockpit__subline">Brewing exciting topics. Welcome to my personal blog.</p>
+          
+          <div class="cockpit__nav">
+            {dashboardNav.map((item, i) => (
+              <a href={item.href} class="cockpit__nav-btn" style={`--i:${i}`}>
+                {item.label} &rarr;
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- F1 RACING STRIP -->
-  <section class="f1-section" aria-label="Nafi's interests — animated showcase">
-    <p class="f1-section__label">What I'm Into</p>
-    <div class="f1-track">
-      <div class="f1-track__lines" aria-hidden="true"></div>
-      {lanes.map((lane) => (
-        <div class={`f1-lane f1-lane--${lane.dir}`}>
-          {lane.items.map((item) => (
-            <a
-              href={item.href}
-              class={`f1-item f1-item--${lane.dir}`}
-              style={`--speed:${item.speed};--delay:${item.delay};--accent:${item.color};`}
-              data-tooltip={item.tooltip}
-            >
-              <span class="f1-item__accent" aria-hidden="true"></span>
-              <span class="f1-item__icon">{item.icon}</span>
-              <span class="f1-item__label">{item.name}</span>
-            </a>
-          ))}
-        </div>
-      ))}
+  <section class="racetrack-section" aria-label="The Interest Grand Prix">
+    <div class="racetrack-header">
+      <h2 class="racetrack-title">THE INTEREST GRAND PRIX</h2>
+      <p class="racetrack-subtitle">7 interests. 1 winner. Every race is different.</p>
     </div>
-    <div class="f1-mobile-link">
-      <a href="/interests">See all interests &rarr;</a>
+
+    <div class="racetrack-controls">
+      <button id="start-race-btn" class="race-btn">
+        <span class="race-btn__text">START RACE</span>
+      </button>
+    </div>
+
+    <div class="racetrack-container" aria-live="polite">
+      <div class="countdown-overlay" id="countdown-overlay" aria-hidden="true">
+        <div class="countdown-text" id="countdown-text">3</div>
+      </div>
+      
+      <div class="results-banner" id="results-banner" aria-hidden="true">
+        <h3>RACE RESULTS</h3>
+        <div class="results-list" id="results-list"></div>
+        <button id="race-again-btn" class="race-btn race-btn--secondary">🔄 RACE AGAIN</button>
+      </div>
+
+      <div class="track">
+        <div class="track-finish-line"></div>
+        <div class="track-start-line"></div>
+        
+        {interests.map((item, index) => (
+          <div class="track-lane">
+            <a 
+              href={item.href} 
+              class={`car-capsule ${index % 2 === 0 ? 'car-start-even' : 'car-start-odd'}`}
+              id={`car-${item.id}`}
+              data-id={item.id}
+              data-name={item.name}
+              data-tooltip={item.tooltip}
+              style={`--accent: ${item.color};`}
+            >
+              <div class="car-capsule__badge">{item.badge}</div>
+              <div class="car-capsule__icon">{item.icon}</div>
+              <div class="car-capsule__name">{item.name}</div>
+              <div class="car-capsule__speed-trail"></div>
+            </a>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
-
 </BaseLayout>
 
 <style>
-  /* ========== HERO ========== */
-  .hero {
-    padding: 4rem 1.5rem 2rem;
+  :root {
+    --track-bg: #1a1a1a;
   }
 
-  .hero__inner {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-    max-width: var(--max-width, 1180px);
+  /* COCKPIT SECTION */
+  .cockpit-section {
+    padding: 2rem 1.5rem 4rem;
+    max-width: 1000px;
     margin: 0 auto;
   }
 
-  .hero__photo {
-    width: 140px;
-    height: 140px;
+  .cockpit {
+    position: relative;
+    background: rgba(20, 20, 20, 0.85);
+    border-radius: 60px 16px 16px 60px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    border-top: 4px solid;
+    border-image: linear-gradient(90deg, #4ADE80, #22D3EE, #A78BFA) 1;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    padding: 3rem;
+    animation: cockpit-enter 0.6s ease-out forwards;
+    transform: translateY(40px);
+    opacity: 0;
+  }
+
+  @keyframes cockpit-enter {
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .cockpit__texture {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 1px, transparent 4px), repeating-linear-gradient(-45deg, #fff 0, #fff 1px, transparent 1px, transparent 4px);
+    z-index: 0;
+  }
+
+  .cockpit__driver-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.05);
+    z-index: 1;
+  }
+
+  .cockpit__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .cockpit__profile img {
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid rgba(228, 210, 184, 0.15);
-    flex-shrink: 0;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+    animation: pulse-glow 3s infinite alternate ease-in-out;
   }
 
-  .hero__text {
+  @keyframes pulse-glow {
+    from { box-shadow: 0 0 15px rgba(34, 211, 238, 0.2); border-color: rgba(255,255,255,0.1); }
+    to { box-shadow: 0 0 30px rgba(34, 211, 238, 0.5); border-color: rgba(34,211,238,0.4); }
+  }
+
+  .cockpit__content {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 1rem;
   }
 
-  /* Stagger letter animation */
-  .hero__headline {
-    font-family: 'Sora', 'Manrope', ui-sans-serif, system-ui, sans-serif;
-    font-size: clamp(2.4rem, 5vw, 3.8rem);
+  .cockpit__headline {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
     font-weight: 800;
-    line-height: 1.15;
+    line-height: 1.1;
     margin: 0;
-    color: var(--text, #f3ede1);
+    color: #f3ede1;
   }
 
-  .hero__letter {
+  .cockpit__letter {
     display: inline-block;
     opacity: 0;
-    transform: translateY(18px);
-    animation: letter-in 0.08s ease forwards;
-    animation-delay: calc(var(--i) * 0.07s);
+    transform: translateY(20px);
+    animation: letter-enter 0.1s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.05s + 0.3s);
+  }
+  .cockpit__letter--space { width: 0.25em; }
+
+  @keyframes letter-enter {
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .hero__letter--space {
-    width: 0.3em;
-  }
-
-  @keyframes letter-in {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .hero__sub {
-    font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    color: var(--muted, #b8ad9a);
+  .cockpit__subline {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.25rem;
+    color: #b8ad9a;
     margin: 0;
     opacity: 0;
-    animation: fade-up 0.6s ease forwards;
+    animation: fade-in 0.6s ease forwards;
     animation-delay: 1.2s;
-    line-height: 1.5;
   }
 
-  @keyframes fade-up {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  @keyframes fade-in {
+    to { opacity: 1; }
   }
 
-  /* Mobile hero: centered stack */
-  @media (max-width: 640px) {
-    .hero {
-      padding: 3rem 1.5rem 1.5rem;
-    }
+  .cockpit__nav {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
 
-    .hero__inner {
+  .cockpit__nav-btn {
+    font-family: 'DM Sans', sans-serif;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    color: #f3ede1;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: translateX(-10px);
+    animation: btn-enter 0.4s ease forwards;
+    animation-delay: calc(var(--i) * 0.1s + 1.5s);
+  }
+
+  @keyframes btn-enter {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .cockpit__nav-btn:hover {
+    background: rgba(34, 211, 238, 0.15);
+    border-color: rgba(34, 211, 238, 0.4);
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .cockpit {
+      border-radius: 24px;
+      padding: 2rem 1.5rem;
+    }
+    .cockpit__inner {
       flex-direction: column;
       text-align: center;
       gap: 1.5rem;
     }
-
-    .hero__photo {
-      width: 120px;
-      height: 120px;
+    .cockpit__nav {
+      justify-content: center;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
     }
+    .cockpit__driver-badge { display: none; }
   }
 
-  /* ========== F1 SECTION ========== */
-  .f1-section {
-    padding: 2rem 0 4rem;
+  /* RACETRACK SECTION */
+  .racetrack-section {
+    padding: 4rem 1.5rem;
+    overflow: hidden;
   }
 
-  .f1-section__label {
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--muted, #b8ad9a);
-    opacity: 0.55;
+  .racetrack-header {
     text-align: center;
-    margin: 0 0 2rem;
+    margin-bottom: 2rem;
+  }
+  .racetrack-title {
+    font-family: 'Sora', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.5rem;
+    color: #f3ede1;
+  }
+  .racetrack-subtitle {
+    font-family: 'Manrope', sans-serif;
+    color: #b8ad9a;
+    margin: 0;
   }
 
-  /* Track container */
-  .f1-track {
-    width: 100%;
-    overflow: hidden;
+  .racetrack-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .race-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.8rem 2.5rem;
+    border-radius: 30px;
+    background: #e11d48;
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(225, 29, 72, 0.4);
+    transition: all 0.3s ease;
+  }
+  .race-btn:hover {
+    background: #be123c;
+    box-shadow: 0 0 30px rgba(225, 29, 72, 0.6);
+    transform: scale(1.05);
+  }
+  .race-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .race-btn--secondary {
+    background: #2563eb;
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+    margin-top: 1rem;
+  }
+  .race-btn--secondary:hover {
+    background: #1d4ed8;
+    box-shadow: 0 0 30px rgba(37, 99, 235, 0.6);
+  }
+
+  .racetrack-container {
     position: relative;
-    padding: 1rem 0;
-  }
-
-  /* Subtle lane markers */
-  .f1-track__lines {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 71px,
-      rgba(228, 210, 184, 0.05) 71px,
-      rgba(228, 210, 184, 0.05) 72px
-    );
-    /* depth gradient */
-    mask-image: linear-gradient(to bottom, transparent, white 20%, white 80%, transparent);
-    -webkit-mask-image: linear-gradient(to bottom, transparent, white 20%, white 80%, transparent);
-  }
-
-  /* Individual lane */
-  .f1-lane {
-    position: relative;
-    height: 72px;
-    margin-bottom: 16px;
-    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: repeating-linear-gradient(to bottom, #111, #111 60px, rgba(255,255,255,0.05) 60px, rgba(255,255,255,0.05) 64px);
+    border: 2px solid #333;
+    border-radius: 12px;
     contain: layout;
   }
 
-  .f1-lane:last-child {
-    margin-bottom: 0;
+  .track {
+    position: relative;
+    padding: 20px 0;
+    height: calc(7 * 64px + 40px);
   }
 
-  /* ========== RACING PILL ========== */
-  .f1-item {
+  .track-start-line {
+    position: absolute;
+    left: 10%;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: repeating-linear-gradient(to bottom, #fff 0, #fff 10px, #000 10px, #000 20px);
+    opacity: 0.5;
+    z-index: 1;
+  }
+
+  .track-finish-line {
+    position: absolute;
+    right: 5%;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: repeating-linear-gradient(to bottom, #fff 0, #fff 10px, #000 10px, #000 20px);
+    opacity: 0.5;
+    z-index: 1;
+  }
+
+  .track-lane {
+    position: relative;
+    height: 64px;
+    width: 100%;
+  }
+
+  .car-capsule {
     position: absolute;
     top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0 1.25rem 0 0;
-    height: 56px;
-    min-width: 180px;
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(15, 15, 15, 0.9);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 0 1rem;
+    height: 48px;
+    width: 200px;
     text-decoration: none;
-    color: var(--text, #f3ede1);
+    color: #f3ede1;
+    z-index: 2;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     will-change: transform;
-    cursor: pointer;
-    z-index: 1;
-    transition: transform 0.25s ease, background 0.25s ease, z-index 0s;
   }
 
-  /* Accent bar */
-  .f1-item__accent {
-    width: 5px;
-    height: 100%;
-    border-radius: 50px 0 0 50px;
-    background: var(--accent);
-    flex-shrink: 0;
+  .car-start-even { left: 4%; }
+  .car-start-odd { left: 8%; }
+
+  .car-capsule__badge {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 800;
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-right: 0.5rem;
+    width: 20px;
   }
 
-  .f1-item__icon {
-    font-size: 1.4rem;
-    line-height: 1;
-    margin-left: 0.8rem;
-    flex-shrink: 0;
+  .car-capsule__icon {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
   }
 
-  .f1-item__label {
-    font-family: 'Sora', 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  .car-capsule__name {
+    font-family: 'DM Sans', sans-serif;
     font-weight: 600;
-    font-size: 0.92rem;
-    white-space: nowrap;
+    font-size: 0.9rem;
+    flex-grow: 1;
   }
 
-  /* Speed trail */
-  .f1-item::after {
+  .car-capsule::before {
     content: '';
     position: absolute;
-    top: 0;
-    height: 100%;
-    width: 80px;
-    opacity: 0.2;
-    border-radius: inherit;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 26px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    z-index: -1;
+    opacity: 0.3;
+    transition: opacity 0.3s;
   }
 
-  .f1-item--ltr::after {
+  .car-capsule__speed-trail {
+    position: absolute;
     right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 60px;
     background: linear-gradient(to right, transparent, var(--accent));
-  }
-
-  .f1-item--rtl::after {
-    left: 100%;
-    background: linear-gradient(to left, transparent, var(--accent));
-  }
-
-  /* LTR animation */
-  .f1-item--ltr {
-    transform: translateY(-50%);
-    animation: race-ltr var(--speed) linear infinite;
-    animation-delay: var(--delay);
-  }
-
-  @keyframes race-ltr {
-    0% { left: -280px; }
-    100% { left: calc(100% + 280px); }
-  }
-
-  /* RTL animation */
-  .f1-item--rtl {
-    transform: translateY(-50%);
-    animation: race-rtl var(--speed) linear infinite;
-    animation-delay: var(--delay);
-  }
-
-  @keyframes race-rtl {
-    0% { right: -280px; }
-    100% { right: calc(100% + 280px); }
-  }
-
-  /* Hover: pause + scale + tooltip */
-  .f1-item:hover {
-    animation-play-state: paused;
-    transform: translateY(-50%) scale(1.08);
-    background: rgba(255, 255, 255, 0.12);
-    z-index: 10;
-  }
-
-  .f1-item:hover::after {
     opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
   }
 
-  /* Tooltip */
-  .f1-item::before {
+  @keyframes car-idle {
+    0%, 100% { transform: translate(0, -50%); }
+    50% { transform: translate(3px, -50%); }
+  }
+
+  .car-capsule.is-idle {
+    animation: car-idle 2s ease-in-out infinite;
+  }
+  .car-capsule.is-idle:nth-child(even) { animation-delay: -1s; }
+
+  .car-capsule:hover {
+    transform: translateY(-50%) scale(1.05) !important;
+    z-index: 10;
+    box-shadow: 0 0 15px var(--accent);
+  }
+  .car-capsule:hover::before { opacity: 0.8; }
+  
+  .car-capsule[data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
     bottom: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%);
-    padding: 0.5rem 0.9rem;
-    border-radius: 10px;
-    background: rgba(25, 22, 20, 0.92);
-    border: 1px solid rgba(228, 210, 184, 0.12);
-    color: var(--muted, #b8ad9a);
-    font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
-    font-size: 0.78rem;
-    line-height: 1.35;
+    background: #000;
+    color: #fff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
     white-space: nowrap;
-    pointer-events: none;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    border: 1px solid rgba(255,255,255,0.2);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .car-capsule:hover::after { opacity: 1; }
+
+  .countdown-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .countdown-overlay.show { opacity: 1; }
+
+  .countdown-text {
+    font-family: 'Sora', sans-serif;
+    font-size: 8rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 30px var(--accent, #e11d48);
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  .countdown-text.animate {
+    animation: count-pop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes count-pop {
+    0% { transform: scale(0.5); opacity: 0; }
+    30% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0; }
   }
 
-  .f1-item:hover::before {
+  .results-banner {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .results-banner.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .results-banner h3 {
+    font-family: 'Sora', sans-serif;
+    font-size: 2rem;
+    color: #fff;
+    margin: 0 0 1.5rem;
+  }
+
+  .results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .result-item.p1 {
+    background: rgba(250, 204, 21, 0.15);
+    border: 1px solid rgba(250, 204, 21, 0.5);
+  }
+  .result-item.p1 .result-pos { color: #facc15; font-weight: 800; }
+  .result-name { font-weight: 600; color: #fff; }
+  .result-time { color: #a3a3a3; font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 768px) {
+    .racetrack-container { border-left: none; border-right: none; border-radius: 0; }
+    .car-capsule { width: 140px; }
+    .car-capsule__name { font-size: 0.8rem; }
+    .car-capsule__icon { font-size: 1rem; }
+    .racetrack-title { font-size: 1.5rem; }
+    .track-finish-line { right: 2%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cockpit { animation: none; opacity: 1; transform: none; }
+    .cockpit__profile img { animation: none; }
+    .cockpit__letter { animation: none; opacity: 1; transform: none; }
+    .cockpit__nav-btn { animation: none; opacity: 1; transform: none; }
+    .cockpit__subline { animation: none; opacity: 1; }
+    .car-capsule.is-idle { animation: none; }
+    .racetrack-controls { display: none; }
+    
+    .car-capsule {
+      left: auto !important;
+      right: 5%;
+    }
+  }
+
+  .car-capsule.is-racing {
+    transition: none;
+  }
+  .car-capsule.is-racing .car-capsule__speed-trail {
     opacity: 1;
   }
-
-  /* Focus styles */
-  .f1-item:focus-visible {
-    outline: 2px solid var(--accent, #d39a59);
-    outline-offset: 3px;
-    animation-play-state: paused;
-    transform: translateY(-50%) scale(1.08);
-    z-index: 10;
-  }
-
-  /* ========== MOBILE LINK ========== */
-  .f1-mobile-link {
-    display: none;
-    text-align: center;
-    margin-top: 1.5rem;
-  }
-
-  .f1-mobile-link a {
-    font-family: 'Sora', 'Manrope', ui-sans-serif, system-ui, sans-serif;
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--accent, #d39a59);
-    text-decoration: none;
-    transition: opacity 0.18s ease;
-  }
-
-  .f1-mobile-link a:hover {
-    opacity: 0.75;
-  }
-
-  /* ========== RESPONSIVE ========== */
-
-  /* Tablet */
-  @media (max-width: 1024px) {
-    .f1-lane:nth-child(5) {
-      display: none;
-    }
-  }
-
-  /* Mobile */
-  @media (max-width: 768px) {
-    .f1-lane:nth-child(4),
-    .f1-lane:nth-child(5) {
-      display: none;
-    }
-
-    .f1-item {
-      min-width: 150px;
-      height: 50px;
-      border-radius: 40px;
-    }
-
-    .f1-item__icon {
-      font-size: 1.2rem;
-    }
-
-    .f1-item__label {
-      font-size: 0.82rem;
-    }
-
-    .f1-mobile-link {
-      display: block;
-    }
-
-    /* Hide tooltips on touch */
-    .f1-item::before {
-      display: none;
-    }
-  }
-
-  /* ========== REDUCED MOTION: static grid ========== */
-  @media (prefers-reduced-motion: reduce) {
-    .hero__letter {
-      opacity: 1;
-      transform: none;
-      animation: none;
-    }
-
-    .hero__sub {
-      opacity: 1;
-      animation: none;
-    }
-
-    .f1-track {
-      display: none;
-    }
-
-    .f1-section::after {
-      content: '';
-      display: block;
-    }
-
-    /* Show a static grid instead */
-    .f1-section {
-      padding: 2rem 1.5rem 4rem;
-    }
-  }
 </style>
 
-<!-- Static grid fallback for reduced-motion -->
-<style>
-  @media (prefers-reduced-motion: reduce) {
-    .f1-track {
-      display: flex !important;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      padding: 1rem 1.5rem;
-      overflow: visible;
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const startBtn = document.getElementById('start-race-btn');
+    const raceAgainBtn = document.getElementById('race-again-btn');
+    const countdownOverlay = document.getElementById('countdown-overlay');
+    const countdownText = document.getElementById('countdown-text');
+    const resultsBanner = document.getElementById('results-banner');
+    const resultsList = document.getElementById('results-list');
+    
+    const cars = Array.from(document.querySelectorAll('.car-capsule'));
+    const trackWidth = document.querySelector('.track').getBoundingClientRect().width;
+    
+    // Convert % logic into specific px to prevent resizing issues during run
+    const endX = trackWidth * 0.95 - (window.innerWidth <= 768 ? 140 : 200);
+
+    let isRacing = false;
+    let raceReqId;
+    let carStats = [];
+    let startTimestamp;
+
+    function initCars() {
+      cars.forEach((car, i) => {
+        car.classList.add('is-idle');
+        car.classList.remove('is-racing');
+        const isEven = i % 2 === 0;
+        const initialLeftClass = isEven ? '4%' : '8%';
+        car.style.transform = `translateY(-50%) translateX(0px)`;
+        car.style.left = initialLeftClass;
+        // Reset styles from last winner
+        car.style.boxShadow = '';
+        car.style.borderColor = '';
+      });
+      resultsBanner.classList.remove('show');
     }
 
-    .f1-lane {
-      display: contents !important;
-      height: auto;
-      overflow: visible;
+    initCars();
+
+    startBtn.addEventListener('click', startRaceSequence);
+    raceAgainBtn.addEventListener('click', resetAndRace);
+
+    function resetAndRace() {
+      initCars();
+      setTimeout(startRaceSequence, 300);
     }
 
-    .f1-item,
-    .f1-item--ltr,
-    .f1-item--rtl {
-      position: static !important;
-      transform: none !important;
-      animation: none !important;
+    function startRaceSequence() {
+      if (isRacing) return;
+      isRacing = true;
+      startBtn.disabled = true;
+      startBtn.querySelector('.race-btn__text').textContent = 'RACING...';
+      
+      const currentTrackWidth = document.querySelector('.track').getBoundingClientRect().width;
+      const currentEndX = currentTrackWidth * 0.95 - (window.innerWidth <= 768 ? 140 : 200);
+
+      cars.forEach(car => {
+        car.classList.remove('is-idle');
+        car.classList.add('is-racing');
+        
+        const leftPercent = parseFloat(car.style.left || (car.classList.contains('car-start-even') ? '4' : '8'));
+        const startPx = (leftPercent / 100) * currentTrackWidth;
+        car.setAttribute('data-start-px', startPx);
+        car.setAttribute('data-end-px', currentEndX);
+      });
+
+      countdownOverlay.classList.add('show');
+      
+      const counts = ['3', '2', '1', 'GO!'];
+      let step = 0;
+
+      function nextCount() {
+        if (step >= counts.length) {
+          countdownOverlay.classList.remove('show');
+          beginRace();
+          return;
+        }
+        countdownText.textContent = counts[step];
+        countdownText.classList.remove('animate');
+        void countdownText.offsetWidth;
+        countdownText.classList.add('animate');
+        
+        if (counts[step] === 'GO!') {
+          countdownText.style.color = '#4ade80';
+          countdownText.style.textShadow = '0 0 30px #4ade80';
+        } else {
+          countdownText.style.color = '#fff';
+          countdownText.style.textShadow = '0 0 30px #e11d48';
+        }
+
+        step++;
+        setTimeout(nextCount, 1000);
+      }
+      
+      nextCount();
     }
 
-    .f1-item::after {
-      display: none;
+    function easeInOutCubic(x) {
+      return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
     }
 
-    .f1-item:hover {
-      transform: scale(1.05) !important;
+    function beginRace() {
+      carStats = cars.map(car => {
+        const basePace = 4000 + Math.random() * 3000;
+        const consistency = 0.8 + Math.random() * 0.4;
+        const drsBurst = Math.random() > 0.8 ? 500 : 0;
+        const totalDuration = basePace * consistency - drsBurst;
+        
+        return {
+          element: car,
+          name: car.getAttribute('data-name'),
+          duration: totalDuration,
+          startPx: parseFloat(car.getAttribute('data-start-px')),
+          endPx: parseFloat(car.getAttribute('data-end-px')),
+          finished: false,
+          finishTime: 0
+        };
+      });
+
+      startTimestamp = performance.now();
+      raceReqId = requestAnimationFrame(raceLoop);
     }
-  }
-</style>
+
+    function raceLoop(timestamp) {
+      const elapsed = timestamp - startTimestamp;
+      let allFinished = true;
+
+      carStats.forEach(stat => {
+        if (stat.finished) return;
+
+        let progress = elapsed / stat.duration;
+        if (progress >= 1) {
+          progress = 1;
+          stat.finished = true;
+          stat.finishTime = stat.duration;
+        } else {
+          allFinished = false;
+        }
+
+        const easedProgress = easeInOutCubic(progress);
+        const distanceToTravel = stat.endPx - stat.startPx;
+        const travelX = distanceToTravel * easedProgress;
+        const jitterY = progress < 1 ? (Math.random() * 2 - 1) : 0;
+        
+        stat.element.style.transform = `translateY(calc(-50% + ${jitterY}px)) translateX(${travelX}px)`;
+      });
+
+      if (allFinished) {
+        showResults();
+      } else {
+        raceReqId = requestAnimationFrame(raceLoop);
+      }
+    }
+
+    function showResults() {
+      carStats.sort((a, b) => a.finishTime - b.finishTime);
+      
+      resultsList.innerHTML = '';
+      
+      carStats.forEach((stat, index) => {
+        const isP1 = index === 0;
+        const timeStr = (stat.finishTime / 1000).toFixed(2) + 's';
+        
+        const item = document.createElement('div');
+        item.className = `result-item ${isP1 ? 'p1' : ''}`;
+        item.innerHTML = `
+          <span class="result-pos">P${index + 1}</span>
+          <span class="result-name">${stat.name}</span>
+          <span class="result-time">${timeStr}</span>
+        `;
+        resultsList.appendChild(item);
+        
+        if (isP1) {
+          stat.element.style.boxShadow = '0 0 30px #facc15';
+          stat.element.style.borderColor = '#facc15';
+        }
+      });
+      
+      setTimeout(() => {
+        resultsBanner.classList.add('show');
+        startBtn.querySelector('.race-btn__text').textContent = 'START RACE';
+        startBtn.disabled = false;
+        isRacing = false;
+        
+        cars.forEach(car => {
+          car.classList.remove('is-racing');
+        });
+      }, 500);
+    }
+  });
+</script>
