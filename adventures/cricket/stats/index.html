@@ -110,9 +110,9 @@ This page keeps the deep stats view, but makes the match log live. The public si
         <article class="panel season-card">
           <div class="season-card__top">
             <div>
-              <p class="eyebrow">${season.year || 'Open'} � ${season.format}</p>
+              <p class="eyebrow">${season.year || 'Open'} · ${season.format}</p>
               <h3>${season.seasonLabel}</h3>
-              <p>${season.team} � ${season.competition}</p>
+              <p>${season.team} · ${season.competition}</p>
             </div>
             <span class="tag-chip">Database</span>
           </div>
@@ -121,7 +121,7 @@ This page keeps the deep stats view, but makes the match log live. The public si
             <div><span>Runs</span><strong>${season.runs}</strong></div>
             <div><span>Wickets</span><strong>${season.wickets}</strong></div>
             <div><span>Catches</span><strong>${season.catches}</strong></div>
-            <div><span>High score</span><strong>${season.highScore ?? '�'}</strong></div>
+            <div><span>High score</span><strong>${season.highScore ?? '—'}</strong></div>
             <div><span>Drive miles</span><strong>${formatValue(season.driveMiles, 1)}</strong></div>
           </div>
         </article>
@@ -133,7 +133,7 @@ This page keeps the deep stats view, but makes the match log live. The public si
       teamsRoot.innerHTML = teamRows.map((team) => `
         <div>
           <span>${team.team}</span>
-          <strong>${team.runs} runs � ${team.wickets} wickets � ${formatValue(team.driveMiles, 1)} miles</strong>
+          <strong>${team.runs} runs · ${team.wickets} wickets · ${formatValue(team.driveMiles, 1)} miles</strong>
         </div>
       `).join('');
     };
@@ -219,11 +219,11 @@ This page keeps the deep stats view, but makes the match log live. The public si
                   </td>
                   <td>${game.team}</td>
                   <td>${game.opponent ?? 'TBD'}</td>
-                  <td>${game.runs ?? '�'}</td>
-                  <td>${game.balls ?? '�'}</td>
-                  <td>${game.wickets ?? '�'}</td>
+                  <td>${game.runs ?? '—'}</td>
+                  <td>${game.balls ?? '—'}</td>
+                  <td>${game.wickets ?? '—'}</td>
                   <td>${game.catches ?? 0}</td>
-                  <td>${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : '�'}</td>
+                  <td>${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : '—'}</td>
                   <td>${game.result ?? 'Open'}</td>
                   <td>${game.storySlug ? `<a href="/blog/${game.storySlug}">Open</a>` : '<span class="cricket-log-table__muted">None</span>'}</td>
                 </tr>
@@ -232,9 +232,9 @@ This page keeps the deep stats view, but makes the match log live. The public si
                     <div class="cricket-log-table__detail-grid">
                       <div><span>Format</span><strong>${game.format ?? 'Open'}</strong></div>
                       <div><span>Venue</span><strong>${game.venue ?? 'Open'}</strong></div>
-                      <div><span>Bowling</span><strong>${game.overs ?? '�'} overs � ${game.runsConceded ?? '�'} conceded</strong></div>
-                      <div><span>Strike rate</span><strong>${game.runs !== null && game.balls ? formatValue((game.runs / game.balls) * 100, 2) : '�'}</strong></div>
-                      <div><span>Economy</span><strong>${game.runsConceded !== null && game.overs ? formatValue(game.runsConceded / game.overs, 2) : '�'}</strong></div>
+                      <div><span>Bowling</span><strong>${game.overs ?? '—'} overs · ${game.runsConceded ?? '—'} conceded</strong></div>
+                      <div><span>Strike rate</span><strong>${game.runs !== null && game.balls ? formatValue((game.runs / game.balls) * 100, 2) : '—'}</strong></div>
+                      <div><span>Economy</span><strong>${game.runsConceded !== null && game.overs ? formatValue(game.runsConceded / game.overs, 2) : '—'}</strong></div>
                       <div><span>Scorecard</span><strong>${game.scorecardUrl ? `<a href="${game.scorecardUrl}" target="_blank" rel="noreferrer">Open ?</a>` : 'Pending'}</strong></div>
                     </div>
                     ${game.personalNote ? `<p class="cricket-log-table__note">${game.personalNote}</p>` : ''}
@@ -297,6 +297,7 @@ This page keeps the deep stats view, but makes the match log live. The public si
               <label>Password</label>
               <input type="password" name="password" autocomplete="current-password" required />
             </div>
+            <p class="cricket-admin__hint">Admin account: <strong>${env.adminEmail ?? 'nafi@cmnafi.com'}</strong></p>
             <button class="button button-primary" type="submit">Sign in as admin</button>
             ${state.adminError ? `<p class="cricket-admin__error">${state.adminError}</p>` : ''}
           </form>
@@ -325,7 +326,7 @@ This page keeps the deep stats view, but makes the match log live. The public si
           <div>
             <p class="eyebrow">Signed in</p>
             <h3>Admin entry table</h3>
-            <p>Core score fields are entered in the row below. The detail section covers competition, venue, story link, and the rest of the archive context.</p>
+            <p>Signed in as <strong>${state.session?.user?.email ?? env.adminEmail ?? 'admin'}</strong>. Core score fields are entered in the row below. The detail section covers competition, venue, story link, and the rest of the archive context.</p>
           </div>
           <button class="button button-ghost" type="button" data-admin-signout>Sign out</button>
         </div>
@@ -391,7 +392,7 @@ This page keeps the deep stats view, but makes the match log live. The public si
               <div class="cricket-admin__existing-row${game.isArchived ? ' is-archived' : ''}">
                 <div>
                   <strong>${game.gameDate}</strong>
-                  <span>${game.team} vs ${game.opponent ?? 'TBD'} � ${game.runs ?? '�'} runs � ${game.wickets ?? '�'} wickets � ${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : 'no drive'}</span>
+                  <span>${game.team} vs ${game.opponent ?? 'TBD'} · ${game.runs ?? '—'} runs · ${game.wickets ?? '—'} wickets · ${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : 'no drive'}</span>
                 </div>
                 <div class="cricket-admin__existing-actions">
                   <button type="button" data-admin-edit="${game.id}">Edit</button>

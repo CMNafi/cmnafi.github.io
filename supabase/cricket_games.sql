@@ -72,7 +72,18 @@ for all
 using (auth.email() = 'nafi@cmnafi.com')
 with check (auth.email() = 'nafi@cmnafi.com');
 
-create index if not exists cricket_games_game_date_idx on public.cricket_games (game_date desc);
-create index if not exists cricket_games_team_idx on public.cricket_games (team);
-create index if not exists cricket_games_season_label_idx on public.cricket_games (season_label);
-create index if not exists cricket_games_story_slug_idx on public.cricket_games (story_slug);
+create index if not exists cricket_games_active_game_date_idx
+on public.cricket_games (game_date desc)
+where is_archived = false;
+
+create index if not exists cricket_games_active_team_idx
+on public.cricket_games (team, game_date desc)
+where is_archived = false;
+
+create index if not exists cricket_games_active_season_label_idx
+on public.cricket_games (season_label, game_date desc)
+where is_archived = false;
+
+create index if not exists cricket_games_story_slug_idx
+on public.cricket_games (story_slug)
+where story_slug is not null;
