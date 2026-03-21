@@ -14,7 +14,7 @@ repoUrl: https://github.com/cmnafi/13f-data-finder
 featured: true
 priority: 90
 startedAt: 2026-01-22
-updatedAt: 2026-03-12
+updatedAt: 2026-03-21
 problem: "Holdings data is abundant, but finding patterns across managers and quarters still takes too much manual work."
 solution: "Build a better entry point into 13F research so the questions are easier to ask and the comparisons are easier to see."
 whoItsFor: "Investors, researchers, and diligence teams who want holdings research to feel less stitched together."
@@ -32,8 +32,30 @@ relatedPosts:
   - things-im-building-quietly
 ---
 
-This project starts with a question I kept circling back to: why does 13F research still feel more tedious than thoughtful?
+**13F Data Finder comes from the feeling that holdings data should be easier to explore, compare, and keep track of than it usually is.**
 
-## Direction
+---
 
-The early phase is still content-first. I want the public page to explain the problem well before I pretend the product is more finished than it is.
+## The Frustration: The Noise of 13Fs
+
+This project starts with a question I kept circling back to: *why does 13F research still feel more tedious than thoughtful?* Holdings data is abundant—every quarter, managers managing over $100M publicly disclose their US equity positions. But finding actual signal in that noise is remarkably labor-intensive. 
+
+If you want to track how a manager's conviction in a specific sector has shifted over the last year, you are historically forced to download multiple CSVs, align the CUSIPs, and build custom pivot tables. Finding patterns across managers and quarters still takes far too much manual curation.
+
+## The Solution: Fluid Exploration
+
+I built the **13F Data Finder** to provide a better entry point into quarterly holdings research, ensuring the questions are easier to ask and the comparisons are easier to see.
+
+Rather than presenting an endless wall of raw XML or CSV data, the tool restructures holdings into visual, sortable pipelines. It gives investors, researchers, and diligence teams an interface where holdings research feels less stitched together and more seamlessly integrated.
+
+### Key Workflows
+- **Behavioral Discovery**: Better ways to discover managers not just by name, but by holdings behavior and thematic concentration.
+- **Quarterly Delta Monitoring**: Cleaner monitoring of changes across quarters, instantly highlighting new initiations, complete liquidations, and significant position scaling.
+
+## Architecture
+
+The platform relies on **Astro** and **TypeScript**, leveraging a strictly typed data pipeline that sanitizes the SEC's raw 13F XML drops. By pre-compiling the heavy data joins on a static content layer, the end-user experience remains incredibly fast and entirely avoids the sluggish loading spinners typical of heavy financial database apps. 
+
+## Direction & Next Steps
+
+The early phase of this tool is deliberately content-first. I want the public page to explain the problem well before expanding the engineering scope. The immediate roadmap involves executing on deeper visual representations—adding charts that clearly map out conviction shifts over time, and opening the door for multi-manager overlap analysis.

@@ -3672,3 +3672,49 @@ main { padding-bottom: 4rem; }
   }
 }
 
+/* ── Mobile Viewport Global Optimizations ── */
+
+@media (max-width: 960px) {
+  .hero-shell {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .hero-visual {
+    min-height: auto;
+    aspect-ratio: 1 / 1;
+    margin-top: 2rem;
+  }
+  .hero-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-rail {
+    grid-template-columns: 1fr;
+  }
+  .hero-stats-premium {
+    grid-template-columns: 1fr;
+  }
+  .hero h1 {
+    font-size: clamp(2.8rem, 12vw, 4rem);
+  }
+}
+
+/* Prevent markdown data tables (VC/PE) from breaking viewport */
+.prose table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  width: 100%;
+  margin-bottom: 2rem;
+  border-collapse: collapse;
+}
+
+.prose th,
+.prose td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}

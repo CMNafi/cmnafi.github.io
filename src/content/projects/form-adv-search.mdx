@@ -1,41 +1,60 @@
 ---
-title: Form ADV Search
+title: Form ADV Data Finder
 slug: form-adv-search
-summary: "A live tool for searching Form ADV filings without taking the long route through the SEC interface."
-description: "Form ADV Search is one of the clearest examples of what I like building: a simple tool that saves people from a clumsy default workflow."
+summary: "A source-first ADV research workspace for getting from a firm name or CRD to the official documents, a compare layer, and a usable first-pass memo."
+description: "Form ADV Data Finder V2 is the version I actually wanted to use: faster source access, persistent shortlists, cleaner comparison, and exports that make the first diligence pass less clumsy."
 status: live
 category: data tool
 stack:
-  - Google AI Studio
-  - SEC EDGAR
+  - Astro
+  - TypeScript
+  - IAPD
   - Regulatory data
-liveUrl: https://aistudio.google.com/apps/22413b76-84f4-492f-9424-602e8a68d040
+liveUrl: https://cmnafi.com/projects/apps/form-adv-data-finder
 featured: true
 priority: 90
 startedAt: 2026-01-01
-updatedAt: 2026-03-18
-problem: "Form ADV filings matter, but the default path to them is slow, fragmented, and more frustrating than it needs to be."
-solution: "Give the filing search a cleaner front door so users can find the adviser, pull the key fields, and keep moving."
+updatedAt: 2026-03-21
+problem: "Form ADV filings matter, but the official workflow is still too linear: search, click, open more tabs, and manually stitch together the details you actually care about."
+solution: "Build a source-first finder that keeps the official documents central while adding fast CRD jumps, structured starter coverage, compare, watchlists, and memo/export tools for early diligence."
 whoItsFor: "Analysts, allocators, compliance teams, and anyone who regularly needs to pull investment adviser filings without wasting time."
 keyFeatures:
-  - Fast adviser lookup by name or identifier.
-  - Cleaner access to the fields people usually want first.
-  - Easier movement between related filings and adviser context.
+  - Fast CRD and adviser-summary URL resolution into official IAPD, ADV PDF, and CRS links.
+  - Starter coverage with structured cards for service model, fee language, brochure audience, and registration context.
+  - Side-by-side comparison, sticky workspace state, and memo/export tools instead of forcing a pile of disconnected tabs.
 roadmap:
-  - Add more filters around adviser type, AUM, and disclosure flags.
-  - Improve comparison for users checking more than one firm at a time.
-  - Export the fields that are most useful downstream.
-seoTitle: Form ADV Search
-seoDescription: A live search tool that makes Form ADV filings faster to find and easier to use.
+  - Add live current-data ingestion from official sources so the coverage goes beyond the starter firms.
+  - Track filing deltas over time so material changes show up immediately.
+  - Export the clean fields and source links directly into diligence workflows.
+seoTitle: Form ADV Data Finder
+seoDescription: A source-first Form ADV workflow for getting from a firm name or CRD to the official filings and a cleaner compare view.
 relatedPosts: []
 ---
 
-This tool began with a very ordinary annoyance: I wanted answers from Form ADV faster than the normal workflow would allow.
+**This tool began with a very ordinary annoyance: I wanted answers from Form ADV faster than the normal workflow would allow, and I wanted the first pass to feel like research instead of browser management.**
 
-## Why it exists
+---
 
-The SEC interface is not unusable, but it asks for too much patience. I wanted something that got me to the filing and the useful fields quickly, especially for repeat research.
+## The Frustration: The Slow Path to Simple Answers
 
-## What it does
+Form ADV filings matter, but the default path to them is still too slow, fragmented, and more frustrating than it needs to be. For analysts, allocators, and compliance teams, pulling an investment adviser's filing should not feel like a navigation puzzle. You usually just need to verify a specific detail, check a regulatory flag, confirm the basic registration picture, and decide whether the firm deserves deeper work.
 
-It keeps the job simple: find the adviser, surface the important context, and let the user keep moving instead of re-learning the same navigation every time.
+## The Solution: Source-First Search
+
+**Form ADV Data Finder** is the version I wanted on this site itself: not a vague promise, but an actual working surface. Instead of making you click through endless sub-menus, it keeps the official source links central and improves the workflow around them.
+
+Built around official IAPD, ADV, and CRS documents, the V2 version does a few useful things immediately: it turns any CRD into the right official links, gives starter structured coverage for a small set of firms, lets you compare the details that are usually scattered across multiple documents, and keeps a watchlist plus memo-ready output while you work.
+
+### How It Works
+- **Direct CRD Resolution**: Paste a CRD or adviser summary URL and jump straight into the official source pack.
+- **Targeted Surface**: Service model, fee language, brochure audience, and registration context show up in one readable card.
+- **Compare Workflow**: Put firms next to each other before you commit to the slower document read.
+- **Workspace Layer**: Keep a shortlist, export a memo, and hand off the first-pass findings without rebuilding the context elsewhere.
+
+## The Architecture
+
+The page is statically served with Astro and uses a TypeScript starter dataset plus deterministic official URL patterns. That keeps the tool fast and source-first today, while leaving room for a fuller live-ingestion pipeline later.
+
+## Roadmap
+
+The current live version already fixes a meaningful part of the workflow: fewer dead-end clicks, faster official source access, and cleaner early comparison. The next iterations are about coverage, deltas, and exports so the tool can move from useful front door to full diligence companion.

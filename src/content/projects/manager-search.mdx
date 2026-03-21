@@ -16,7 +16,7 @@ liveUrl: https://cmnafi.com/apps/manager-search
 featured: true
 priority: 95
 startedAt: 2026-03-19
-updatedAt: 2026-03-19
+updatedAt: 2026-03-21
 problem: "Public filings contain the answers, but it still takes too much manual stitching to turn a manager name into a usable diligence snapshot."
 solution: "Build one interface that handles entity resolution, core filing context, holdings data, and a readable summary in the same workflow."
 whoItsFor: "Investors, allocators, analysts, and diligence teams who want a faster path from manager name to useful context."
@@ -34,8 +34,27 @@ seoDescription: A manager research tool for Form ADV, 13F holdings, and faster d
 relatedPosts: []
 ---
 
-Manager Search sits right in the middle of the kind of work I keep wanting to improve: finance research that should feel clearer long before it feels clever.
+**Manager Search grew out of a very specific frustration: too many finance workflows still make you piece together the same manager story from too many separate places.**
 
-## Why it matters
+---
 
-I do not need filings to look fancy. I need them to become usable faster. A name should resolve cleanly, the identifiers should be obvious, and the next question should come into focus without extra cleanup work.
+## The Frustration: Fragmented Context
+
+Public filings contain the answers, but it still takes too much manual stitching to turn a manager name into a usable diligence snapshot. If you want to understand an investment manager, you usually have to run a gauntlet: check IAPD for regulatory background, dig through EDGAR for Form ADV Part 2 brochures to understand their strategy, and parse 13F filings to see what they actually own. 
+
+This workflow isn't just slow; it breaks your train of thought. You open five different browser tabs just to answer the question: *Who is this manager, and what do they do?*
+
+## The Solution: A Unified Research Interface
+
+**Manager Search** sits right in the middle of the kind of work I keep wanting to improve: finance research that should feel clearer long before it feels clever. I don't need filings to look fancy. I need them to become usable faster. 
+
+Built on a modern **Next.js** and **TypeScript** stack, the application serves as a single pane of glass. A name resolves cleanly, the identifiers become obvious, and the next question comes into focus without extra cleanup work.
+
+### Core Architecture & Features
+- **Intelligent Entity Resolution**: Debounced search mechanisms immediately resolve firm names to their underlying CRD and CIK identifiers, preventing frustrating exact-match string failures.
+- **Top Holdings Context**: Directly integrates 13F data pipelines to surface top positional concentrations alongside the regulatory data.
+- **AI-Grounded Summarizations**: Uses **OpenAI** to generate rapid, structured summaries. Crucially, these summaries are strictly grounded in labeled source inputs (the ADV and 13F filings), acting as a synthesis layer rather than a generative one.
+
+## What's Next
+
+The foundation of the platform works securely. The roadmap now points toward longitudinal analysis. Future builds will add a sophisticated comparison mode allowing analysts to track multiple managers side-by-side, while highlighting specific filing changes between reporting periods to instantly spot strategy drifts or regulatory flags.

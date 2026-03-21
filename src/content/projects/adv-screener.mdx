@@ -15,7 +15,7 @@ liveUrl: https://example.com/adv-screener
 featured: true
 priority: 100
 startedAt: 2026-01-10
-updatedAt: 2026-03-10
+updatedAt: 2026-03-21
 problem: "Adviser data is technically public, but reading it well still means too much clicking, too much cleanup, and too little useful comparison."
 solution: "Build a cleaner adviser research layer that helps me move from raw disclosures to the questions I actually care about."
 whoItsFor: "People doing diligence, manager research, allocator work, or any finance workflow that keeps circling back to adviser filings."
@@ -33,8 +33,29 @@ relatedPosts:
   - things-im-building-quietly
 ---
 
-ADV Screener exists because I got tired of the gap between public availability and actual usability. The filings are there. The patience they demand is the problem.
+**ADV Screener exists because I got tired of the gap between public availability and actual usability. The filings are there. The patience they demand is the problem.**
 
-## Why it exists
+---
 
-I kept wanting a calmer first pass through adviser data: something that would let me compare, filter, and notice patterns without feeling like I was wrestling the interface before I had even started thinking.
+## The Frustration: Public Doesn't Mean Usable
+
+Investment adviser data is technically public. But "public" on the SEC website usually means clicking through Byzantine directory trees, wrestling with stripped-out HTML frames, and manually aggregating Form ADV Part 1 and Part 2 brochures just to answer basic questions: *How much AUM do they actually manage? What are their fee structures? Do they have regulatory flags?* 
+
+When you're doing manager research or allocator diligence, you don't want to spend 20 minutes parsing a government interface just to decide if a firm is worth a 20-minute phone call. The friction of the interface gets in the way of actual analysis.
+
+## The Solution: A Frictionless Entry Point
+
+I built **ADV Screener** to act as a cleaner, faster research layer that gets out of your way. It ingests SEC data and restructures it into an interface designed for human scanning rather than bureaucratic storage. It lets you compare, filter, and notice patterns without feeling like you are wrestling the interface before you've even started thinking.
+
+### Key Capabilities
+- **Instant Filtering**: Filter advisers by the details that actually matter during early diligence—AUM brackets, client types, and regulatory disclosures.
+- **Side-by-Side Comparison**: Evaluate multiple firms simultaneously without getting buried in raw documents first.
+- **Contextual Red Flags**: Surface disciplinary changes and disclosure context that are incredibly easy to miss when relying on the default SEC workflow.
+
+## The Architecture
+
+The platform is statically generated using **Astro**, ensuring blazing-fast load times. **TypeScript** acts as the crucial safety net, enforcing rigid data shapes when attempting to map the notoriously messy SEC JSON payloads. Because the adviser corpus doesn't demand real-time, tick-by-tick updates for initial screening, static compilation provides a massive performance edge over heavy single-page applications.
+
+## What's Next
+
+While the current build solves the immediate pain of initial screening, the roadmap involves deepening the analytical value. The next evolution focuses on tighter change-tracking—alerting users when a specific adviser's ADV materially changes year-over-year, saving analysts hours of manual text diffing.

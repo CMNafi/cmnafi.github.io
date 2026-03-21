@@ -1,0 +1,1097 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { starterFormAdvFirms } from '@/data/form-adv/firms';
+
+const differentiators = [
+  {
+    title: 'Source-first',
+    description: 'The official IAPD summary, ADV PDF, and CRS PDF stay one click away instead of getting buried under product chrome.'
+  },
+  {
+    title: 'Real triage help',
+    description: 'Coverage scoring, next-read guidance, and compare mode help you decide which firms deserve a slower read.'
+  },
+  {
+    title: 'Sticky workspace',
+    description: 'Watchlist, compare tray, memo text, and CSV export stay with you while you move through the shortlist.'
+  },
+  {
+    title: 'Built for diligence',
+    description: 'The workflow is designed around the first 10 minutes of manager review, when speed and clean context matter most.'
+  }
+] as const;
+
+const sourceLinks = [
+  {
+    label: 'SEC Form ADV data',
+    href: 'https://www.sec.gov/foia-services/frequently-requested-documents/form-adv-data',
+    note: 'The official SEC page for Form ADV datasets and filing access.'
+  },
+  {
+    label: 'IAPD',
+    href: 'https://adviserinfo.sec.gov/',
+    note: 'The authoritative public search flow for adviser records and reports.'
+  },
+  {
+    label: 'Investor.gov',
+    href: 'https://www.investor.gov/investment-professionals',
+    note: 'A clean public explainer on how to verify investment professionals and firms.'
+  }
+] as const;
+
+const starterStats = [
+  { label: 'Starter firms', value: String(starterFormAdvFirms.length) },
+  { label: 'CRD quick jump', value: 'Any firm' },
+  { label: 'Workspace', value: 'Watchlist + compare' },
+  { label: 'Output', value: 'Memo + CSV' }
+] as const;
+---
+
+<BaseLayout
+  title="Form ADV Data Finder V2"
+  description="A source-first Form ADV research workspace with CRD jumps, compare, watchlists, memo export, and cleaner early diligence."
+>
+  <section class="page-section adv-page">
+    <div class="panel adv-hero">
+      <SectionHeading
+        eyebrow="Research app"
+        title="Form ADV Data Finder V2"
+        description="A better front door for the first pass of adviser diligence: faster source access, cleaner comparison, and a workspace that remembers what you were doing."
+      />
+      <p class="adv-hero__lead">
+        I built this version for the moment when you have a few adviser names, a few open questions, and no patience for the usual tab maze. The official documents still matter most. This just gets you to them faster and helps you hold the important details in one place.
+      </p>
+
+      <div class="adv-hero__stats" aria-label="Form ADV Data Finder stats">
+        {starterStats.map((item) => (
+          <div class="adv-stat">
+            <strong>{item.value}</strong>
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="adv-hero__actions">
+        <a class="button button-primary" href="/projects/apps">Back to apps</a>
+        <a class="button button-ghost" href="/projects">Browse projects</a>
+      </div>
+    </div>
+
+    <div class="adv-grid">
+      <article class="panel adv-panel">
+        <p class="eyebrow">Why this version is better</p>
+        <div class="adv-differentiators">
+          {differentiators.map((item) => (
+            <div class="adv-differentiator">
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article class="panel adv-panel">
+        <p class="eyebrow">Official backbone</p>
+        <ul class="adv-source-list">
+          {sourceLinks.map((item) => (
+            <li>
+              <a href={item.href} target="_blank" rel="noreferrer">{item.label}</a>
+              <p>{item.note}</p>
+            </li>
+          ))}
+        </ul>
+      </article>
+    </div>
+
+    <section class="panel adv-workspace" aria-labelledby="adv-workspace-heading">
+      <div class="adv-workspace__header">
+        <div>
+          <p class="eyebrow">Workspace</p>
+          <h2 id="adv-workspace-heading">Search, shortlist, compare, export.</h2>
+          <p>
+            Paste a CRD, an adviser summary URL, or part of a firm name. If the firm is in the starter coverage, you get structured context. If not, you still get the official source pack immediately.
+          </p>
+        </div>
+      </div>
+
+      <div class="adv-controls">
+        <label class="adv-field">
+          <span>Firm name, CRD, or adviser URL</span>
+          <input
+            id="adv-search-input"
+            type="search"
+            placeholder="Try 300050, Gamma, or an adviserinfo summary URL"
+            autocomplete="off"
+          />
+        </label>
+
+        <label class="adv-field adv-field--compact">
+          <span>Coverage</span>
+          <select id="adv-coverage-filter">
+            <option value="all">All firms</option>
+            <option value="fees">Fee detail</option>
+            <option value="services">Service detail</option>
+            <option value="brochure">Brochure audiences</option>
+            <option value="states">State registrations</option>
+          </select>
+        </label>
+
+        <label class="adv-field adv-field--compact">
+          <span>Sort</span>
+          <select id="adv-sort-filter">
+            <option value="score">Coverage score</option>
+            <option value="name">Firm name</option>
+            <option value="crd">CRD</option>
+          </select>
+        </label>
+
+        <button class="button button-ghost adv-clear-btn" type="button" id="adv-clear-search">Clear</button>
+      </div>
+
+      <div class="adv-bottom-grid">
+        <div class="adv-column">
+          <article class="panel adv-generated" id="adv-generated-panel">
+            <p class="adv-empty">Enter a CRD or firm name to generate the official source pack.</p>
+          </article>
+
+          <article class="panel adv-workspace-panel" id="adv-workspace-panel">
+            <div class="adv-workspace-panel__summary">
+              <div>
+                <strong id="adv-watchlist-count">0</strong>
+                <span>Watchlist</span>
+              </div>
+              <div>
+                <strong id="adv-compare-count">0</strong>
+                <span>Compare</span>
+              </div>
+              <div>
+                <strong id="adv-memo-count">0</strong>
+                <span>Memo rows</span>
+              </div>
+            </div>
+
+            <div class="adv-workspace-panel__actions">
+              <button class="button button-primary" type="button" id="adv-copy-memo">Copy memo</button>
+              <button class="button button-ghost" type="button" id="adv-download-csv">Download CSV</button>
+              <button class="button button-ghost" type="button" id="adv-clear-workspace">Clear workspace</button>
+            </div>
+          </article>
+        </div>
+
+        <div class="adv-column adv-column--wide">
+          <div class="adv-results-head">
+            <div>
+              <p class="eyebrow">Starter coverage</p>
+              <h3 id="adv-results-title">Starter firms ready for triage</h3>
+            </div>
+            <button class="button button-ghost" type="button" id="adv-reset-compare">Reset compare</button>
+          </div>
+
+          <div class="adv-results" id="adv-results"></div>
+        </div>
+      </div>
+
+      <div class="adv-bottom-grid adv-bottom-grid--final">
+        <article class="panel adv-compare" id="adv-compare-panel">
+          <p class="adv-empty">Add up to three firms to compare the key details side by side.</p>
+        </article>
+
+        <article class="panel adv-memo">
+          <div class="adv-memo__head">
+            <div>
+              <p class="eyebrow">Draft memo</p>
+              <h3>Research handoff text</h3>
+            </div>
+            <p>This updates from your watchlist and compare tray so you can move faster into notes or a real diligence doc.</p>
+          </div>
+          <pre id="adv-memo-output">No firms in the workspace yet.</pre>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <script id="adv-firm-data" type="application/json" set:html={JSON.stringify(starterFormAdvFirms)}></script>
+  <script is:inline>
+    const storageKeys = {
+      watchlist: 'adv-data-finder-watchlist-v2',
+      compare: 'adv-data-finder-compare-v2'
+    };
+
+    const firmDataNode = document.getElementById('adv-firm-data');
+    const starterFirms = firmDataNode ? JSON.parse(firmDataNode.textContent || '[]') : [];
+    const searchInput = document.getElementById('adv-search-input');
+    const coverageFilter = document.getElementById('adv-coverage-filter');
+    const sortFilter = document.getElementById('adv-sort-filter');
+    const clearSearchButton = document.getElementById('adv-clear-search');
+    const resultsNode = document.getElementById('adv-results');
+    const generatedPanel = document.getElementById('adv-generated-panel');
+    const comparePanel = document.getElementById('adv-compare-panel');
+    const memoOutput = document.getElementById('adv-memo-output');
+    const watchlistCount = document.getElementById('adv-watchlist-count');
+    const compareCount = document.getElementById('adv-compare-count');
+    const memoCount = document.getElementById('adv-memo-count');
+    const copyMemoButton = document.getElementById('adv-copy-memo');
+    const downloadCsvButton = document.getElementById('adv-download-csv');
+    const clearWorkspaceButton = document.getElementById('adv-clear-workspace');
+    const resetCompareButton = document.getElementById('adv-reset-compare');
+    const resultsTitle = document.getElementById('adv-results-title');
+
+    const loadSet = (key) => {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? new Set(JSON.parse(raw)) : new Set();
+      } catch {
+        return new Set();
+      }
+    };
+
+    const watchlistSet = loadSet(storageKeys.watchlist);
+    const compareSet = loadSet(storageKeys.compare);
+
+    const saveWorkspace = () => {
+      localStorage.setItem(storageKeys.watchlist, JSON.stringify(Array.from(watchlistSet)));
+      localStorage.setItem(storageKeys.compare, JSON.stringify(Array.from(compareSet)));
+    };
+
+    const normalize = (value) => (value || '').toString().toLowerCase().trim();
+
+    const escapeHtml = (value) =>
+      (value || '')
+        .toString()
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+
+    const buildLinks = (crd) => ({
+      summary: `https://adviserinfo.sec.gov/firm/summary/${crd}`,
+      advPdf: `https://reports.adviserinfo.sec.gov/reports/ADV/${crd}/PDF/${crd}.pdf`,
+      crsPdf: `https://reports.adviserinfo.sec.gov/crs/crs_${crd}.pdf`
+    });
+
+    const extractCRD = (input) => {
+      const text = (input || '').trim();
+      if (!text) return '';
+      const summaryMatch = text.match(/firm\/summary\/(\d+)/i);
+      if (summaryMatch) return summaryMatch[1];
+      const pdfMatch = text.match(/\/(\d{4,})\.pdf/i);
+      if (pdfMatch) return pdfMatch[1];
+      const digitMatch = text.match(/\b(\d{4,})\b/);
+      return digitMatch ? digitMatch[1] : '';
+    };
+
+    const scoreFirm = (firm) => {
+      let score = 25;
+      if (firm.serviceSnapshot) score += 18;
+      if (firm.feeSnapshot) score += 18;
+      if (firm.brochureAudiences?.length) score += 12;
+      if (firm.stateRegistrations?.length) score += 10;
+      if (firm.aliases?.length) score += 5;
+      if (firm.headquarters) score += 5;
+      if (firm.phone) score += 5;
+      score += Math.min((firm.sourceCoverage?.length || 0) * 6, 18);
+      return Math.min(score, 100);
+    };
+
+    const getPriorityLabel = (score) => {
+      if (score >= 75) return 'High signal';
+      if (score >= 55) return 'Strong starter';
+      return 'Source pack ready';
+    };
+
+    const getNextRead = (firm) =>
+      firm.nextRead || 'Start with the source pack, verify identity, then move to fees and service language.';
+
+    const matchesCoverage = (firm, coverage) => {
+      if (coverage === 'all') return true;
+      if (coverage === 'fees') return Boolean(firm.feeSnapshot);
+      if (coverage === 'services') return Boolean(firm.serviceSnapshot);
+      if (coverage === 'brochure') return Boolean(firm.brochureAudiences?.length);
+      if (coverage === 'states') return Boolean(firm.stateRegistrations?.length);
+      return true;
+    };
+
+    const sortFirms = (firms, sortValue) => {
+      const sorted = [...firms];
+      sorted.sort((left, right) => {
+        if (sortValue === 'name') return left.name.localeCompare(right.name);
+        if (sortValue === 'crd') return left.crd.localeCompare(right.crd);
+        return scoreFirm(right) - scoreFirm(left);
+      });
+      return sorted;
+    };
+
+    const getWorkspaceFirms = () => {
+      const ids = new Set([...watchlistSet, ...compareSet]);
+      return starterFirms.filter((firm) => ids.has(firm.crd));
+    };
+
+    const buildMemoText = () => {
+      const firms = getWorkspaceFirms();
+      if (!firms.length) return 'No firms in the workspace yet.';
+
+      const lines = ['# Form ADV Research Memo', ''];
+      firms.forEach((firm) => {
+        lines.push(`## ${firm.name} (${firm.crd})`);
+        lines.push(`- Coverage score: ${scoreFirm(firm)} / 100 (${getPriorityLabel(scoreFirm(firm))})`);
+        lines.push(`- Registration: ${firm.registrationSnapshot}`);
+        if (firm.serviceSnapshot) lines.push(`- Services: ${firm.serviceSnapshot}`);
+        if (firm.feeSnapshot) lines.push(`- Fees: ${firm.feeSnapshot}`);
+        if (firm.stateRegistrations?.length) lines.push(`- States: ${firm.stateRegistrations.join(', ')}`);
+        if (firm.brochureAudiences?.length) lines.push(`- Brochure audience: ${firm.brochureAudiences.join(', ')}`);
+        lines.push(`- Next read: ${getNextRead(firm)}`);
+        lines.push(`- Official summary: ${firm.links.summary}`);
+        lines.push(`- ADV PDF: ${firm.links.advPdf}`);
+        lines.push(`- CRS PDF: ${firm.links.crsPdf}`);
+        lines.push('');
+      });
+
+      return lines.join('\n');
+    };
+
+    const renderGeneratedPanel = () => {
+      if (!generatedPanel) return;
+
+      const rawInput = searchInput instanceof HTMLInputElement ? searchInput.value.trim() : '';
+      const crd = extractCRD(rawInput);
+      const normalizedInput = normalize(rawInput);
+      const matchedFirm = starterFirms.find((firm) => {
+        const haystacks = [
+          firm.name,
+          firm.crd,
+          ...(firm.aliases || []),
+          ...(firm.focusTags || [])
+        ].map(normalize);
+        return haystacks.some((item) => item.includes(normalizedInput) || normalizedInput.includes(item));
+      });
+
+      if (!rawInput) {
+        generatedPanel.innerHTML = '<p class="adv-empty">Enter a CRD or firm name to generate the official source pack.</p>';
+        return;
+      }
+
+      const targetCRD = matchedFirm?.crd || crd;
+      if (!targetCRD) {
+        generatedPanel.innerHTML = `
+          <p class="eyebrow">Need a CRD</p>
+          <h3>No direct source pack yet</h3>
+          <p class="adv-generated__copy">I can still search the starter coverage by name, but I need a CRD or adviser summary URL to build the official links.</p>
+        `;
+        return;
+      }
+
+      const links = matchedFirm?.links || buildLinks(targetCRD);
+      const name = matchedFirm?.name || `CRD ${targetCRD}`;
+      const nextRead = matchedFirm ? getNextRead(matchedFirm) : 'Open the summary page first, confirm identity, then move into the ADV PDF.';
+
+      generatedPanel.innerHTML = `
+        <p class="eyebrow">Official source pack</p>
+        <h3>${escapeHtml(name)}</h3>
+        <p class="adv-generated__copy">This is the fastest clean path into the public filing stack.</p>
+        <div class="adv-link-grid">
+          <a class="adv-link-card" href="${links.summary}" target="_blank" rel="noreferrer">
+            <strong>IAPD summary</strong>
+            <span>Firm identity, registration picture, and quick routing.</span>
+          </a>
+          <a class="adv-link-card" href="${links.advPdf}" target="_blank" rel="noreferrer">
+            <strong>ADV PDF</strong>
+            <span>Primary filing detail and operating context.</span>
+          </a>
+          <a class="adv-link-card" href="${links.crsPdf}" target="_blank" rel="noreferrer">
+            <strong>CRS PDF</strong>
+            <span>Retail-facing service and fee summary when available.</span>
+          </a>
+        </div>
+        <p class="adv-next-read"><strong>Suggested first read:</strong> ${escapeHtml(nextRead)}</p>
+      `;
+    };
+
+    const renderWorkspace = () => {
+      const workspaceFirms = getWorkspaceFirms();
+      if (watchlistCount) watchlistCount.textContent = String(watchlistSet.size);
+      if (compareCount) compareCount.textContent = String(compareSet.size);
+      if (memoCount) memoCount.textContent = String(workspaceFirms.length);
+      if (memoOutput) memoOutput.textContent = buildMemoText();
+    };
+
+    const renderCompare = () => {
+      if (!comparePanel) return;
+      const firms = starterFirms.filter((firm) => compareSet.has(firm.crd));
+      if (!firms.length) {
+        comparePanel.innerHTML = '<p class="adv-empty">Add up to three firms to compare the key details side by side.</p>';
+        return;
+      }
+
+      comparePanel.innerHTML = `
+        <div class="adv-compare__head">
+          <div>
+            <p class="eyebrow">Compare</p>
+            <h3>Side-by-side starter view</h3>
+          </div>
+          <p>Keep this to two or three firms so the differences stay obvious.</p>
+        </div>
+        <div class="adv-compare__table-wrap">
+          <table class="adv-compare__table">
+            <thead>
+              <tr>
+                <th>Field</th>
+                ${firms.map((firm) => `<th>${escapeHtml(firm.name)}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CRD</td>
+                ${firms.map((firm) => `<td>${escapeHtml(firm.crd)}</td>`).join('')}
+              </tr>
+              <tr>
+                <td>Coverage score</td>
+                ${firms.map((firm) => `<td>${scoreFirm(firm)} / 100</td>`).join('')}
+              </tr>
+              <tr>
+                <td>Registration snapshot</td>
+                ${firms.map((firm) => `<td>${escapeHtml(firm.registrationSnapshot)}</td>`).join('')}
+              </tr>
+              <tr>
+                <td>Services</td>
+                ${firms.map((firm) => `<td>${escapeHtml(firm.serviceSnapshot || 'Not in starter coverage yet.')}</td>`).join('')}
+              </tr>
+              <tr>
+                <td>Fees</td>
+                ${firms.map((firm) => `<td>${escapeHtml(firm.feeSnapshot || 'Not in starter coverage yet.')}</td>`).join('')}
+              </tr>
+              <tr>
+                <td>States</td>
+                ${firms.map((firm) => `<td>${escapeHtml((firm.stateRegistrations || []).join(', ') || 'Not surfaced yet.')}</td>`).join('')}
+              </tr>
+              <tr>
+                <td>Brochure audience</td>
+                ${firms.map((firm) => `<td>${escapeHtml((firm.brochureAudiences || []).join(', ') || 'Not surfaced yet.')}</td>`).join('')}
+              </tr>
+              <tr>
+                <td>Next read</td>
+                ${firms.map((firm) => `<td>${escapeHtml(getNextRead(firm))}</td>`).join('')}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    };
+
+    const renderResults = () => {
+      if (!resultsNode) return;
+
+      const rawQuery = searchInput instanceof HTMLInputElement ? searchInput.value : '';
+      const query = normalize(rawQuery);
+      const coverage = coverageFilter instanceof HTMLSelectElement ? coverageFilter.value : 'all';
+      const sortValue = sortFilter instanceof HTMLSelectElement ? sortFilter.value : 'score';
+
+      const filtered = starterFirms.filter((firm) => {
+        const haystacks = [
+          firm.name,
+          firm.crd,
+          firm.headquarters || '',
+          firm.registrationSnapshot,
+          firm.serviceSnapshot || '',
+          firm.feeSnapshot || '',
+          ...(firm.aliases || []),
+          ...(firm.focusTags || []),
+          ...(firm.stateRegistrations || [])
+        ].map(normalize);
+
+        const queryMatch = !query || haystacks.some((item) => item.includes(query));
+        return queryMatch && matchesCoverage(firm, coverage);
+      });
+
+      const sorted = sortFirms(filtered, sortValue);
+      if (resultsTitle) {
+        resultsTitle.textContent = rawQuery.trim()
+          ? `${sorted.length} starter firms match this search`
+          : 'Starter firms ready for triage';
+      }
+
+      if (!sorted.length) {
+        resultsNode.innerHTML = '<p class="adv-empty">No starter firms matched this combination yet. Try a broader search or paste a CRD to generate the source pack directly.</p>';
+        return;
+      }
+
+      resultsNode.innerHTML = sorted
+        .map((firm) => {
+          const score = scoreFirm(firm);
+          const isSaved = watchlistSet.has(firm.crd);
+          const isCompared = compareSet.has(firm.crd);
+
+          return `
+            <article class="adv-card">
+              <div class="adv-card__head">
+                <div>
+                  <p class="adv-card__eyebrow">${escapeHtml(getPriorityLabel(score))}</p>
+                  <h3>${escapeHtml(firm.name)}</h3>
+                  <p class="adv-card__meta">CRD ${escapeHtml(firm.crd)}${firm.headquarters ? ` · ${escapeHtml(firm.headquarters)}` : ''}</p>
+                </div>
+                <div class="adv-card__score">
+                  <strong>${score}</strong>
+                  <span>coverage</span>
+                </div>
+              </div>
+
+              <p class="adv-card__summary">${escapeHtml(firm.registrationSnapshot)}</p>
+
+              <div class="adv-tag-row">
+                ${(firm.focusTags || []).map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}
+              </div>
+
+              <dl class="adv-card__details">
+                <div>
+                  <dt>Services</dt>
+                  <dd>${escapeHtml(firm.serviceSnapshot || 'Starter coverage does not surface services here yet.')}</dd>
+                </div>
+                <div>
+                  <dt>Fees</dt>
+                  <dd>${escapeHtml(firm.feeSnapshot || 'Starter coverage does not surface fee language here yet.')}</dd>
+                </div>
+                <div>
+                  <dt>Coverage</dt>
+                  <dd>${escapeHtml((firm.sourceCoverage || []).join(', '))}</dd>
+                </div>
+              </dl>
+
+              <p class="adv-card__next"><strong>Next read:</strong> ${escapeHtml(getNextRead(firm))}</p>
+
+              <div class="adv-card__links">
+                <a href="${firm.links.summary}" target="_blank" rel="noreferrer">Summary</a>
+                <a href="${firm.links.advPdf}" target="_blank" rel="noreferrer">ADV PDF</a>
+                <a href="${firm.links.crsPdf}" target="_blank" rel="noreferrer">CRS PDF</a>
+              </div>
+
+              <div class="adv-card__actions">
+                <button class="adv-action-btn" type="button" data-action="watchlist" data-crd="${firm.crd}">
+                  ${isSaved ? 'Remove from watchlist' : 'Save to watchlist'}
+                </button>
+                <button class="adv-action-btn" type="button" data-action="compare" data-crd="${firm.crd}">
+                  ${isCompared ? 'Remove from compare' : 'Add to compare'}
+                </button>
+                <button class="adv-action-btn" type="button" data-action="copy-pack" data-crd="${firm.crd}">
+                  Copy source pack
+                </button>
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+    };
+
+    const copyText = async (value) => {
+      try {
+        await navigator.clipboard.writeText(value);
+      } catch {
+        const area = document.createElement('textarea');
+        area.value = value;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand('copy');
+        area.remove();
+      }
+    };
+
+    const downloadCsv = () => {
+      const firms = getWorkspaceFirms();
+      if (!firms.length) return;
+
+      const rows = [
+        ['name', 'crd', 'coverage_score', 'registration_snapshot', 'service_snapshot', 'fee_snapshot', 'summary_url', 'adv_pdf', 'crs_pdf'],
+        ...firms.map((firm) => [
+          firm.name,
+          firm.crd,
+          String(scoreFirm(firm)),
+          firm.registrationSnapshot,
+          firm.serviceSnapshot || '',
+          firm.feeSnapshot || '',
+          firm.links.summary,
+          firm.links.advPdf,
+          firm.links.crsPdf
+        ])
+      ];
+
+      const csv = rows
+        .map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(','))
+        .join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'form-adv-workspace.csv';
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    };
+
+    const refresh = () => {
+      saveWorkspace();
+      renderGeneratedPanel();
+      renderResults();
+      renderCompare();
+      renderWorkspace();
+    };
+
+    document.addEventListener('click', async (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      const actionButton = target.closest('[data-action]');
+      if (actionButton instanceof HTMLElement) {
+        const action = actionButton.dataset.action;
+        const crd = actionButton.dataset.crd;
+        if (!crd) return;
+
+        if (action === 'watchlist') {
+          if (watchlistSet.has(crd)) watchlistSet.delete(crd);
+          else watchlistSet.add(crd);
+          refresh();
+          return;
+        }
+
+        if (action === 'compare') {
+          if (compareSet.has(crd)) compareSet.delete(crd);
+          else if (compareSet.size < 3) compareSet.add(crd);
+          refresh();
+          return;
+        }
+
+        if (action === 'copy-pack') {
+          const firm = starterFirms.find((item) => item.crd === crd);
+          if (!firm) return;
+          await copyText(
+            `${firm.name} (${firm.crd})\nSummary: ${firm.links.summary}\nADV PDF: ${firm.links.advPdf}\nCRS PDF: ${firm.links.crsPdf}`
+          );
+        }
+      }
+    });
+
+    searchInput?.addEventListener('input', refresh);
+    coverageFilter?.addEventListener('change', refresh);
+    sortFilter?.addEventListener('change', refresh);
+    clearSearchButton?.addEventListener('click', () => {
+      if (searchInput instanceof HTMLInputElement) searchInput.value = '';
+      refresh();
+      searchInput?.focus();
+    });
+    resetCompareButton?.addEventListener('click', () => {
+      compareSet.clear();
+      refresh();
+    });
+    clearWorkspaceButton?.addEventListener('click', () => {
+      watchlistSet.clear();
+      compareSet.clear();
+      refresh();
+    });
+    copyMemoButton?.addEventListener('click', async () => {
+      if (memoOutput) await copyText(memoOutput.textContent || '');
+    });
+    downloadCsvButton?.addEventListener('click', downloadCsv);
+
+    refresh();
+  </script>
+
+  <style>
+    .adv-page {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .adv-hero,
+    .adv-panel,
+    .adv-workspace,
+    .adv-card,
+    .adv-compare,
+    .adv-memo,
+    .adv-generated,
+    .adv-workspace-panel {
+      background: rgba(8, 12, 20, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: 0 20px 60px rgba(2, 6, 23, 0.28);
+    }
+
+    .adv-hero__lead {
+      max-width: 68ch;
+      margin-top: 1rem;
+      color: rgba(226, 232, 240, 0.82);
+    }
+
+    .adv-hero__stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.85rem;
+      margin: 1.5rem 0;
+    }
+
+    .adv-stat {
+      padding: 0.95rem 1rem;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(15, 23, 42, 0.72);
+    }
+
+    .adv-stat strong,
+    .adv-card__score strong,
+    .adv-workspace-panel__summary strong {
+      display: block;
+      font-size: 1.35rem;
+      color: #f8fafc;
+    }
+
+    .adv-stat span,
+    .adv-card__score span,
+    .adv-workspace-panel__summary span {
+      color: rgba(226, 232, 240, 0.72);
+      font-size: 0.9rem;
+    }
+
+    .adv-hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .adv-grid,
+    .adv-bottom-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .adv-panel,
+    .adv-generated,
+    .adv-workspace-panel,
+    .adv-compare,
+    .adv-memo {
+      padding: 1.25rem;
+      border-radius: 24px;
+    }
+
+    .adv-differentiators {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .adv-differentiator {
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.66);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .adv-differentiator h3,
+    .adv-generated h3,
+    .adv-results-head h3,
+    .adv-memo__head h3,
+    .adv-compare__head h3 {
+      margin-bottom: 0.45rem;
+    }
+
+    .adv-source-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .adv-source-list li {
+      padding: 0.95rem 1rem;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.66);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .adv-source-list a,
+    .adv-card__links a {
+      color: #f8fafc;
+      font-weight: 600;
+    }
+
+    .adv-source-list p,
+    .adv-generated__copy,
+    .adv-card__summary,
+    .adv-card__details dd,
+    .adv-card__next,
+    .adv-next-read,
+    .adv-memo__head p,
+    .adv-compare__head p,
+    .adv-empty,
+    .adv-workspace p {
+      color: rgba(226, 232, 240, 0.78);
+    }
+
+    .adv-workspace {
+      padding: 1.5rem;
+      border-radius: 28px;
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .adv-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(140px, 0.45fr)) auto;
+      gap: 0.85rem;
+      align-items: end;
+    }
+
+    .adv-field {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .adv-field span {
+      font-size: 0.92rem;
+      color: rgba(226, 232, 240, 0.78);
+    }
+
+    .adv-field input,
+    .adv-field select {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      background: rgba(15, 23, 42, 0.8);
+      color: #f8fafc;
+      padding: 0.8rem 0.95rem;
+    }
+
+    .adv-clear-btn {
+      min-height: 48px;
+    }
+
+    .adv-bottom-grid {
+      align-items: start;
+    }
+
+    .adv-bottom-grid--final {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+
+    .adv-column {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .adv-column--wide {
+      min-width: 0;
+    }
+
+    .adv-workspace-panel__summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .adv-workspace-panel__summary div {
+      padding: 0.85rem 0.9rem;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .adv-workspace-panel__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .adv-link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.85rem;
+      margin: 1rem 0;
+    }
+
+    .adv-link-card {
+      display: grid;
+      gap: 0.3rem;
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      text-decoration: none;
+    }
+
+    .adv-link-card strong {
+      color: #f8fafc;
+    }
+
+    .adv-link-card span {
+      color: rgba(226, 232, 240, 0.75);
+      font-size: 0.92rem;
+    }
+
+    .adv-results-head,
+    .adv-memo__head,
+    .adv-compare__head,
+    .adv-card__head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .adv-results {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .adv-card {
+      padding: 1.2rem;
+      border-radius: 24px;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .adv-card__eyebrow,
+    .adv-card__meta {
+      margin: 0;
+    }
+
+    .adv-card__eyebrow {
+      color: #fbbf24;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+    }
+
+    .adv-card__meta {
+      color: rgba(226, 232, 240, 0.65);
+    }
+
+    .adv-card__score {
+      min-width: 86px;
+      padding: 0.75rem 0.8rem;
+      border-radius: 18px;
+      text-align: center;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .adv-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .adv-tag-row span {
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      color: rgba(226, 232, 240, 0.82);
+      font-size: 0.84rem;
+    }
+
+    .adv-card__details {
+      display: grid;
+      gap: 0.75rem;
+      margin: 0;
+    }
+
+    .adv-card__details div {
+      padding: 0.85rem 0.9rem;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.62);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+    }
+
+    .adv-card__details dt {
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: #f8fafc;
+    }
+
+    .adv-card__details dd {
+      margin: 0;
+    }
+
+    .adv-card__links,
+    .adv-card__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .adv-action-btn {
+      min-height: 42px;
+      padding: 0.65rem 0.9rem;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: rgba(15, 23, 42, 0.8);
+      color: #f8fafc;
+      cursor: pointer;
+    }
+
+    .adv-action-btn:hover,
+    .adv-link-card:hover,
+    .adv-card__links a:hover {
+      border-color: rgba(248, 250, 252, 0.28);
+    }
+
+    .adv-compare__table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    .adv-compare__table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .adv-compare__table th,
+    .adv-compare__table td {
+      padding: 0.85rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .adv-compare__table th {
+      color: #f8fafc;
+    }
+
+    .adv-memo pre,
+    #adv-memo-output {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: #dbeafe;
+      background: rgba(15, 23, 42, 0.74);
+      border-radius: 20px;
+      padding: 1rem;
+      border: 1px solid rgba(148, 163, 184, 0.14);
+    }
+
+    .adv-empty {
+      margin: 0;
+    }
+
+    @media (max-width: 980px) {
+      .adv-grid,
+      .adv-bottom-grid,
+      .adv-bottom-grid--final,
+      .adv-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .adv-results-head,
+      .adv-memo__head,
+      .adv-compare__head,
+      .adv-card__head {
+        flex-direction: column;
+      }
+    }
+  </style>
+</BaseLayout>

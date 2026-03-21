@@ -221,8 +221,9 @@ const dashboardNav = [
   }
 
   .circuit-map {
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%; z-index: 1; pointer-events: none;
+    position: absolute; top: 50%; left: 50%;
+    width: 1920px; height: 1080px; z-index: 1; pointer-events: none;
+    transform: translate(-50%, -50%);
   }
 
   .sectors-layer {
@@ -428,6 +429,39 @@ const dashboardNav = [
   }
   .btn-ghost-close:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
+  /* 5. MOBILE TRACK ROTATION & PADDOCK SQUISH */
+  @media (max-width: 900px) {
+    .command-paddock {
+      padding: 1.5rem 1.25rem;
+      border-radius: 35px;
+      width: 94vw;
+    }
+    .paddock-identity {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.8rem;
+    }
+    .paddock-headline {
+      font-size: 1.5rem;
+    }
+    .paddock-editorial {
+      text-align: center;
+      border-left: none;
+      border-top: 2px solid rgba(255,255,255,0.1);
+      padding-left: 0;
+      padding-top: 1rem;
+    }
+    
+    /* Counter-rotate the HUD on mobile so it stays upright against the 90deg rotated track */
+    .node-hud {
+      position: absolute;
+      top: -30px;
+      left: 15px;
+      transform: rotate(-90deg);
+      margin: 0;
+    }
+  }
+
 </style>
 
 <script>
@@ -457,10 +491,20 @@ const dashboardNav = [
     function scaleOverlays() {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      // 'meet' behavior guarantees the track perfectly bounds to the shortest dimension
-      const boundingScale = Math.min(vw / 1920, vh / 1080);
+      const circuitMap = document.querySelector('.circuit-map');
+      const isMobile = vw < 900;
       
-      carsLayer.style.transform = `translate(-50%, -50%) scale(${boundingScale})`;
+      if (isMobile) {
+        // Track rotates 90 degrees. We scale using max (slice) to fit screen edge-to-edge.
+        const boundingScale = Math.max(vw / 1080, vh / 1920) * 1.05;
+        if(circuitMap) circuitMap.style.transform = `translate(-50%, -50%) rotate(90deg) scale(${boundingScale})`;
+        if(carsLayer) carsLayer.style.transform = `translate(-50%, -50%) rotate(90deg) scale(${boundingScale})`;
+      } else {
+        // Desktop default bounding
+        const boundingScale = Math.min(vw / 1920, vh / 1080);
+        if(circuitMap) circuitMap.style.transform = `translate(-50%, -50%) rotate(0deg) scale(${boundingScale})`;
+        if(carsLayer) carsLayer.style.transform = `translate(-50%, -50%) rotate(0deg) scale(${boundingScale})`;
+      }
     }
     
     window.addEventListener('resize', scaleOverlays);
