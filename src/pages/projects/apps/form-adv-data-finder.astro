@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { starterFormAdvFirms } from '@/data/form-adv/firms';
+import { starterFormAdvSnapshots } from '@/data/form-adv/snapshots';
 
 const differentiators = [
   {
@@ -17,8 +18,8 @@ const differentiators = [
     description: 'Watchlist, compare tray, memo text, and CSV export stay with you while you move through the shortlist.'
   },
   {
-    title: 'Built for diligence',
-    description: 'The workflow is designed around the first 10 minutes of manager review, when speed and clean context matter most.'
+    title: 'Live-ready',
+    description: 'V3 can read a Supabase-backed current-firms view, fall back safely to starter coverage, and show snapshot changes when history exists.'
   }
 ] as const;
 
@@ -42,25 +43,30 @@ const sourceLinks = [
 
 const starterStats = [
   { label: 'Starter firms', value: String(starterFormAdvFirms.length) },
-  { label: 'CRD quick jump', value: 'Any firm' },
+  { label: 'Seeded snapshots', value: String(starterFormAdvSnapshots.length) },
   { label: 'Workspace', value: 'Watchlist + compare' },
   { label: 'Output', value: 'Memo + CSV' }
 ] as const;
+
+const supabaseEnv = {
+  supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL ?? '',
+  supabaseAnonKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? ''
+};
 ---
 
 <BaseLayout
-  title="Form ADV Data Finder V2"
-  description="A source-first Form ADV research workspace with CRD jumps, compare, watchlists, memo export, and cleaner early diligence."
+  title="Form ADV Data Finder V3"
+  description="A live-ready Form ADV research workspace with source-pack jumps, live current-firm search, snapshot history, compare, watchlists, and export."
 >
   <section class="page-section adv-page">
     <div class="panel adv-hero">
       <SectionHeading
         eyebrow="Research app"
-        title="Form ADV Data Finder V2"
-        description="A better front door for the first pass of adviser diligence: faster source access, cleaner comparison, and a workspace that remembers what you were doing."
+        title="Form ADV Data Finder V3"
+        description="A live-ready front door for adviser diligence: current-firm search when the data layer is available, seeded fallback when it is not, and a workspace that keeps the research moving."
       />
       <p class="adv-hero__lead">
-        I built this version for the moment when you have a few adviser names, a few open questions, and no patience for the usual tab maze. The official documents still matter most. This just gets you to them faster and helps you hold the important details in one place.
+        I built this version for the moment when you have a few adviser names, a few open questions, and no patience for the usual tab maze. V3 keeps the official documents central, but now it can also support a live current-firms layer, seeded snapshot history, and change-aware triage instead of making every pass start from zero.
       </p>
 
       <div class="adv-hero__stats" aria-label="Form ADV Data Finder stats">
@@ -110,10 +116,14 @@ const starterStats = [
           <p class="eyebrow">Workspace</p>
           <h2 id="adv-workspace-heading">Search, shortlist, compare, export.</h2>
           <p>
-            Paste a CRD, an adviser summary URL, or part of a firm name. If the firm is in the starter coverage, you get structured context. If not, you still get the official source pack immediately.
+            Paste a CRD, an adviser summary URL, or part of a firm name. V3 will use the live current-firms table if it is available, fall back to seeded coverage if it is not, and still give you the official source pack immediately.
           </p>
         </div>
       </div>
+
+      <article class="panel adv-status-panel" id="adv-status-panel">
+        <p class="adv-empty">Checking whether the live Form ADV layer is available.</p>
+      </article>
 
       <div class="adv-controls">
         <label class="adv-field">
@@ -146,13 +156,28 @@ const starterStats = [
           </select>
         </label>
 
-        <button class="button button-ghost adv-clear-btn" type="button" id="adv-clear-search">Clear</button>
+        <label class="adv-field adv-field--compact">
+          <span>Signal</span>
+          <select id="adv-signal-filter">
+            <option value="all">All signals</option>
+            <option value="changed">Changed recently</option>
+            <option value="disclosures">Has disclosures</option>
+            <option value="retail">Retail-facing</option>
+            <option value="institutional">Institutional</option>
+            <option value="multistate">Multi-state</option>
+          </select>
+        </label>
+
+        <div class="adv-control-actions">
+          <button class="button button-ghost adv-clear-btn" type="button" id="adv-clear-search">Clear</button>
+          <button class="button button-ghost adv-clear-btn" type="button" id="adv-refresh-live">Refresh live</button>
+        </div>
       </div>
 
       <div class="adv-bottom-grid">
         <div class="adv-column">
           <article class="panel adv-generated" id="adv-generated-panel">
-            <p class="adv-empty">Enter a CRD or firm name to generate the official source pack.</p>
+            <p class="adv-empty">Enter a CRD or firm name to generate the official source pack and, when available, the latest tracked change summary.</p>
           </article>
 
           <article class="panel adv-workspace-panel" id="adv-workspace-panel">
@@ -212,6 +237,8 @@ const starterStats = [
   </section>
 
   <script id="adv-firm-data" type="application/json" set:html={JSON.stringify(starterFormAdvFirms)}></script>
+  <script id="adv-snapshot-data" type="application/json" set:html={JSON.stringify(starterFormAdvSnapshots)}></script>
+  <script id="adv-supabase-env" type="application/json" set:html={JSON.stringify(supabaseEnv)}></script>
   <script is:inline>
     const storageKeys = {
       watchlist: 'adv-data-finder-watchlist-v2',
