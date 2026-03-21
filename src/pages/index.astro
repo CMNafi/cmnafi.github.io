@@ -472,6 +472,7 @@ const dashboardNav = [
     let isRacing = false;
     let raceReqId = null;
     let raceStartTime = 0;
+    let lastFrameTime = 0;
     const totalLength = path.getTotalLength();
     const raceDistance = totalLength;
 
@@ -512,8 +513,8 @@ const dashboardNav = [
           distanceTraveled: -80, 
           lateralCurrent: lateralOffset,
           drifting: 0,
-          // Slower pacing matching user request, majestic and calm telemetry
-          basePace: 15.0 + Math.random() * 2.0 
+          // Tuned for 7-10 second race (pace ~8 to 12)
+          basePace: 8.5 + Math.random() * 3.5 
         };
       });
       document.getElementById('winner-screen').classList.remove('show');
@@ -604,7 +605,7 @@ const dashboardNav = [
               f.classList.remove('red');
               f.classList.add('green');
             });
-            storyEl.textContent = "THE ROUTE EXPLAINS THE REST.";
+            storyEl.textContent = "WELCOME TO MY WEBSITE";
             storyEl.style.color = "#10B981";
             storyEl.style.textShadow = "0 0 30px rgba(16, 185, 129, 0.8)";
             storyEl.classList.remove('flash');
@@ -615,6 +616,7 @@ const dashboardNav = [
               overlay.classList.remove('show');
               isRacing = true;
               raceStartTime = performance.now();
+              lastFrameTime = performance.now();
               raceReqId = requestAnimationFrame(raceLoop);
               setTimeout(() => { fixtures.forEach(f => f.classList.remove('green')); }, 500);
             }, 600);
@@ -635,8 +637,15 @@ const dashboardNav = [
       startBtn.innerHTML = `<span class="cta-pulse"></span> FOLLOW MY LINE`;
     });
 
-    function raceLoop() {
+    function raceLoop(timestamp) {
       if (!isRacing) return;
+      
+      if (!lastFrameTime) lastFrameTime = timestamp;
+      const dt = timestamp - lastFrameTime;
+      lastFrameTime = timestamp;
+      // Normalizes delta time so 60fps results in a multiplier of 1.0. 
+      // A 120fps monitor will have a multiplier of 0.5, locking pacing completely.
+      const timeScale = Math.min(dt, 50) / 16.666;
       
       let allFinished = true;
 
@@ -644,23 +653,24 @@ const dashboardNav = [
         if (!car.finished) {
            allFinished = false;
 
-           // Dynamic bursts for overtaking
-           if (Math.random() < 0.08) car.basePace += (Math.random() * 3.0 - 1.2);
+           // Dynamic bursts for lots of overtaking
+           if (Math.random() < 0.15) car.basePace += (Math.random() * 6.0 - 2.5);
            
-           // Slipstream boost if behind another car by < 400px
-           const slipstream = cars.some(other => other !== car && other.distanceTraveled > car.distanceTraveled && (other.distanceTraveled - car.distanceTraveled) < 400);
-           if (slipstream) car.basePace += 0.8;
+           // Slipstream boost if behind another car by < 800px
+           const slipstream = cars.some(other => other !== car && other.distanceTraveled > car.distanceTraveled && (other.distanceTraveled - car.distanceTraveled) < 800);
+           if (slipstream) car.basePace += 1.5;
 
-           if (car.basePace < 12.0) car.basePace = 12.0;
-           if (car.basePace > 22.0) car.basePace = 22.0;
+           // Clamped tighter for a strict 7-10s finish length
+           if (car.basePace < 7.5) car.basePace = 7.5;
+           if (car.basePace > 11.5) car.basePace = 11.5;
 
            car.drifting += (Math.random() * 2 - 1) * 0.2;
-           car.lateralCurrent += car.drifting;
+           car.lateralCurrent += car.drifting * timeScale;
            if (car.lateralCurrent < -55) { car.lateralCurrent = -55; car.drifting *= -0.5; }
            if (car.lateralCurrent > 55) { car.lateralCurrent = 55; car.drifting *= -0.5; }
 
-           car.progressRaw += car.basePace;
-           car.distanceTraveled += car.basePace;
+           car.progressRaw += car.basePace * timeScale;
+           car.distanceTraveled += car.basePace * timeScale;
            if (car.progressRaw >= totalLength) car.progressRaw -= totalLength;
 
            if (car.distanceTraveled >= raceDistance) {

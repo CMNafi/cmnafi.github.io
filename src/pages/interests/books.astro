@@ -1,365 +1,421 @@
 ---
 import { getCollection } from 'astro:content';
-
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import GoodToGreatBook from '@/components/books/GoodToGreatBook.astro';
 import { formatDate } from '@/utils/format';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft && data.category === 'Books')).sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
 );
 
-const leadBook = posts[0];
-const spineWidths = ['4.1rem', '4.6rem', '5rem', '4.4rem', '5.2rem', '4.8rem'];
-const spineColors = ['#5a3821', '#74472a', '#915b30', '#6b4728', '#b5773e', '#81512f'];
-const shelfRows = Array.from({ length: Math.ceil(posts.length / 6) }, (_, rowIndex) =>
-  posts.slice(rowIndex * 6, rowIndex * 6 + 6).map((post, columnIndex) => ({
-    post,
-    width: spineWidths[(rowIndex * 6 + columnIndex) % spineWidths.length],
-    color: spineColors[(rowIndex * 6 + columnIndex) % spineColors.length]
-  }))
-);
+const leadBook = posts.find(p => p.slug === 'good-to-great') || posts[0];
+const vaultBooks = posts;
+
+// Extract top tags for filtering dynamically based on the books collection
+const tagCounts: Record<string, number> = {};
+posts.forEach(post => {
+  (post.data.tags || []).forEach((tag: string) => {
+    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+  });
+});
+const topTags = Object.entries(tagCounts)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 4)
+  .map(e => e[0]);
+
+const images = [
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCUc36FELwRYoNpZF8SFjKv05PEHmXVKn6oYutG7ijizU2M8OR850XOR8mJd5jHXZsCr0DCus3tlnru07YRfwSTdIC7waj8VBtrgXDcFcogeULbRCtTxvPxjbuIyNwCOggb1mcGnhYqNoe_mSzuAxR4D8F9ygbVkIwQOi5vPIsGk5qVx07eURkDJ5xpiNCx9uLsAXIlApF0N7B6mQB2tjfnvPDuriqzhPDxBuXk8G_e7Qsq8Y9mat3v2EmYbDYTj8gmAd-W_4ZWGoA',
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuChjCJQPu9pvFUcqXfJ59f0Q6PF7gD1DYX9-E_WfYK5UW4oPVP_CgISz9fQaYyv9HAHN3KzMy5yA3OFcCincVj2FGfAiYMPyBKVJzcSOXFs-Ed8T8FvQJ4uyHX7ZFJQNyKUF2xDqZnEU2JtWtv38g2C3DR5GS9Ip_xq-SJGwgO1M2sWnjv0DzJSC5UIIEcDilDIkopf-9lSCXb_EIkWCrqMgyBLfGwHIg47mJSfDl97nAOcAPK0pQJLJj-zVvS2TZmHD8wV6r0vi08',
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCksGIRMkX5tCsJMNb39jkNPF1tcprcY_9MYe9UgJIYyb6d0aK8x0Eea2VCjfuTqcQDacv1t3cZS73avf7v4PRVPsYH3UjRzNPbN9urmLPB0RM-GyLiH-FjFNuRuIP9XtMMUSK_wM2OqAUglfDl6k6H6p4y10zJ2IPPqYt3loqjREdHFzn1zostVo-ZO9TSbLlrlK34LWg4zlSnA-p2X9FHcprXaXbHTdwXpGqzp5TOG5aV8I1Obc9xs3vyrjMa12O9bXl4p8aaO54',
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuBAO2ptRegZXMsLUg2C4xhRSdQP4est3ecM7sTOJXird_9RvsWNjButN6oP2BClFYYIQd7dssKkUckjLkJ3TiwkBs4JXKrt0T7BPfx-TlwVPrTxenjDP3vypQfmcaumz6OABXdMHVCajY6fyfETnvGzQDgT9NTrn6SNsDvAWFSSbJywm_Tn3m-YORm46X3qNJ5QgfI8z9vgpaxezle1DJwJvYfnKlGzudlJjq3JgfYoLjSKRhkgFOEYyQx9e-Wa934x6ZnaTiq4Zwc'
+];
 ---
 
-<BaseLayout title="Books" description="A warm reading-room page for books, reading notes, and the posts that sit on the shelf.">
-  <div class="books-world">
-<section class="page-section books-world__hero">
-      <div class="books-world__copy">
-        <p class="eyebrow">Books</p>
-        <h1>A shelf for the books that stay open in the mind.</h1>
-        <p>
-          This room is quieter by design. Each post sits on the shelf like a spine: compact from a distance, richer once
-          you pull it closer.
-        </p>
-      </div>
+<BaseLayout title="Books" description="A digital archive telemetry interface for books and mental models.">
+  <div class="books-vault-world">
+    <div class="checkered-overlay" aria-hidden="true"></div>
 
-
-    </section>
-
-    <section class="page-section panel books-world__shelf-panel">
-      <div class="books-world__shelf-layout">
-        <div class="books-world__shelf-head">
-          <p class="eyebrow">Shelf</p>
-          <h2>A cleaner wall for the books that keep returning.</h2>
-          <p>
-            The shelf is arranged like a quiet room now: one anchor note, then the rest of the library in calmer rows.
-          </p>
+    <main class="vault-container">
+      
+      <!-- HERO: SYSTEM CORE -->
+      <section class="vault-hero">
+        <div class="hero-headers">
+          <div class="hero-title-block">
+            <div class="status-indicator">
+              <span class="status-line"></span>
+              <span class="status-text">Status: Research Mode</span>
+            </div>
+            <h1 class="vault-title">Library<br/>Vault</h1>
+          </div>
+          <div class="hero-controls" id="vault-filters">
+            <button class="vault-btn active" data-filter="all">ALL_SYSTEMS</button>
+            {topTags.map(tag => (
+              <button class="vault-btn" data-filter={tag}>{tag.replace(/-/g, ' ').toUpperCase()}</button>
+            ))}
+          </div>
         </div>
 
         {leadBook && (
-          <a class="panel books-world__feature" href={`/blog/${leadBook.slug}`}>
-            <p class="eyebrow">Pulled From The Shelf</p>
-            <h3>{leadBook.data.title}</h3>
-            <p>{leadBook.data.description}</p>
-            <div class="books-world__feature-meta">
-              <span>{formatDate(leadBook.data.publishedAt)}</span>
-              <span>{posts.length} books</span>
+          <div class="active-manual-panel">
+            <div class="manual-image-wrap">
+              <GoodToGreatBook />
+              <div class="manual-badge">ACTIVE_MANUAL</div>
             </div>
-          </a>
-        )}
-
-        <div class="books-world__library">
-          {shelfRows.map((row) => (
-            <div class="books-world__shelf-row">
-              <div class="books-world__shelf-books">
-                {row.map(({ post, width, color }) => (
-                  <a
-                    class="books-world__spine"
-                    href={`/blog/${post.slug}`}
-                    style={`--spine-width:${width}; --spine-color:${color};`}
-                  >
-                    <span>{post.data.title}</span>
-                    <small>{post.data.publishedAt.getFullYear()}</small>
-                  </a>
-                ))}
+            
+            <div class="manual-content carbon-texture">
+              <div class="manual-telemetry-header">
+                <span class="telemetry-id">TELEMETRY_ID: ARCH-{leadBook.slug.substring(0,6).toUpperCase()}</span>
+                <div class="telemetry-line"></div>
               </div>
-              <div class="books-world__shelf-board" aria-hidden="true"></div>
+              
+              <h2 class="manual-headline">{leadBook.data.title}</h2>
+              <p class="manual-desc">{leadBook.data.description}</p>
+              
+              <a href={`/blog/${leadBook.slug}`} class="vault-cta">
+                MY THOUGHTS ON THIS <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="cta-arrow" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="cta-glint"></div>
+              </a>
             </div>
-          ))}
+          </div>
+        )}
+      </section>
+
+      <!-- REPOSITORY ARCHIVE -->
+      <section class="vault-repository">
+        <div class="repo-header">
+          <h3 class="repo-title">Repository_Main</h3>
+          <div class="repo-line"></div>
+          <span class="repo-stats">VOLUMES: {posts.length} // ARCHIVE: 100%</span>
         </div>
-      </div>
-    </section>
 
-    <section class="page-section books-world__catalog">
-      <div class="books-world__catalog-head">
-        <p class="eyebrow">Catalog</p>
-        <h2>Every book still opens into a full note.</h2>
-      </div>
+        <div class="repo-grid">
+          {vaultBooks.map((post, index) => {
+            const telemetryValue = Math.floor(40 + (Math.random() * 58));
+            const randomImage = images[index % images.length];
+            const tags = (post.data.tags || []).join(',');
+            const primaryTag = (post.data.tags || [])[0] || 'LITERATURE';
 
-      <div class="books-world__catalog-list">
-        {posts.map((post) => (
-          <a class="panel books-world__catalog-item" href={`/blog/${post.slug}`}>
-            <div class="books-world__catalog-date">
-              <p>{formatDate(post.data.publishedAt)}</p>
-            </div>
-            <div class="books-world__catalog-copy">
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
+            return (
+              <a href={`/blog/${post.slug}`} class="volume-card group" data-tags={tags}>
+                <div class="volume-image-container">
+                  <img src={randomImage} alt={post.data.title} class="volume-image" loading="lazy" />
+                  <div class="volume-overlay"></div>
+                </div>
+                
+                <div class="volume-meta">
+                  <span class="volume-category">{primaryTag.replace(/-/g, ' ').toUpperCase()}</span>
+                  <span class="volume-year">{post.data.publishedAt.getFullYear()}</span>
+                </div>
+                
+                <h4 class="volume-name">{post.data.title}</h4>
+                
+                <div class="volume-telemetry">
+                  <div class="telemetry-track">
+                    <div class="telemetry-fill" style={`width: ${telemetryValue}%;`}></div>
+                  </div>
+                  <div class="telemetry-readout">
+                    <span class="readout-label">INSIGHT TELEMETRY</span>
+                    <span class="readout-value">{telemetryValue}%</span>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    </main>
   </div>
 </BaseLayout>
 
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterBtns = document.querySelectorAll('#vault-filters .vault-btn');
+    const cards = document.querySelectorAll('.volume-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const filter = btn.getAttribute('data-filter');
+        
+        cards.forEach((cardEl) => {
+          const card = cardEl as HTMLElement;
+          if (filter === 'all') {
+            card.style.display = 'flex';
+          } else {
+            const tags = card.getAttribute('data-tags') || '';
+            const tagList = tags.split(',');
+            if (tagList.includes(filter || '')) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          }
+        });
+      });
+    });
+  });
+</script>
+
 <style>
-  .books-world {
+  :root {
+    --page-bg: #05070B;
+    --surface-bg: #0B0F14;
+    --surface-dim: #131518;
+    --surface-high: #1A1D22;
+    --accent-red: #E10600;
+    --accent-teal: #0EA5B7;
+    --text-white: #F3F3F1;
+    --text-silver: #8B919A;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+  }
+
+  .text-accent { color: var(--accent-red); }
+  .bg-accent { background: var(--accent-red); }
+
+  .books-vault-world {
     position: relative;
-    padding-bottom: 4rem;
+    padding-bottom: 5rem;
+    min-height: 100vh;
+    background: var(--page-bg);
+    color: var(--text-white);
+    font-family: 'DM Sans', 'Inter', sans-serif;
+    overflow: hidden;
   }
 
-  .books-world::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background:
-      radial-gradient(circle at 16% 14%, rgba(226, 186, 116, 0.14), transparent 24%),
-      linear-gradient(180deg, rgba(54, 35, 24, 0.96), rgba(19, 13, 10, 0.99));
+  /* BACKGROUND TEXTURES */
+  .books-vault-world::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(circle at 50% 10%, rgba(225, 6, 0, 0.05), transparent 40%),
+                linear-gradient(180deg, var(--page-bg) 0%, #020304 100%);
   }
 
-  .books-world > * {
+  .checkered-overlay {
+    position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.15;
+    background-image: 
+      linear-gradient(45deg, rgba(225, 6, 0, 0.04) 25%, transparent 25%, transparent 75%, rgba(225, 6, 0, 0.04) 75%, rgba(225, 6, 0, 0.04)), 
+      linear-gradient(45deg, rgba(225, 6, 0, 0.04) 25%, transparent 25%, transparent 75%, rgba(225, 6, 0, 0.04) 75%, rgba(225, 6, 0, 0.04));
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+  }
+
+  .carbon-texture {
+    background-image: 
+      linear-gradient(45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%), 
+      linear-gradient(-45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.02) 75%), 
+      linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.02) 75%);
+    background-size: 4px 4px;
+    background-color: rgba(0,0,0,0.4);
+  }
+
+  .vault-container {
     position: relative;
-    z-index: 1;
+    z-index: 5;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4rem) 1.5rem;
   }
 
-  .books-world__hero {
-    display: grid;
-    gap: 1rem;
-    padding-top: clamp(2rem, 6vw, 4rem);
-  }
-
-  .books-world__copy {
-    max-width: 40rem;
-  }
-
-  .books-world__copy h1,
-  .books-world__shelf-head h2,
-  .books-world__feature h3,
-  .books-world__catalog-item h3,
-  .books-world__catalog-head h2 {
+  /* Typography Scale */
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', 'Sora', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
     margin: 0;
-    font-family: 'Fraunces', 'Times New Roman', serif;
-    letter-spacing: -0.05em;
   }
 
-  .books-world__copy h1 {
-    font-size: clamp(2.8rem, 6vw, 4.5rem);
-    line-height: 0.96;
-    margin-bottom: 0.7rem;
+  /* HERO */
+  .vault-hero {
+    margin-bottom: 4rem;
   }
 
-  .books-world__copy p,
-  .books-world__feature p,
-  .books-world__catalog-item p,
-  .books-world__shelf-head p:last-child {
-    margin: 0;
-    color: rgba(246, 231, 202, 0.8);
-    line-height: 1.8;
+  .hero-headers {
+    display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;
+  }
+  @media (min-width: 768px) {
+    .hero-headers { flex-direction: row; justify-content: space-between; align-items: flex-end; }
   }
 
-  .books-world__shelf-panel {
-    display: grid;
-    gap: 1.4rem;
-    padding: clamp(1.2rem, 3vw, 1.8rem);
-    border-color: rgba(226, 186, 116, 0.2);
-    background:
-      linear-gradient(180deg, rgba(74, 45, 24, 0.92), rgba(27, 18, 12, 0.97)),
-      radial-gradient(circle at top, rgba(226, 186, 116, 0.1), transparent 64%);
+  .status-indicator {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;
+  }
+  .status-line {
+    width: 48px; height: 2px; background: var(--accent-red);
+  }
+  .status-text {
+    color: var(--accent-red); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.3em; text-transform: uppercase; font-family: 'Sora';
   }
 
-  .books-world__shelf-layout {
-    display: grid;
-    gap: 1.2rem;
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr);
-    align-items: start;
+  .vault-title {
+    font-size: clamp(3rem, 6vw, 4.5rem); line-height: 0.95; color: var(--text-white);
   }
 
-  .books-world__shelf-head h2 {
-    font-size: clamp(1.9rem, 4vw, 2.7rem);
-    line-height: 1.03;
-    margin-bottom: 0.55rem;
+  .hero-controls {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: flex-end;
+  }
+  .vault-btn {
+    padding: 0.5rem 1rem; background: var(--surface-high); color: var(--text-silver);
+    border: none; border-left: 4px solid transparent; text-transform: uppercase;
+    font-size: 0.65rem; font-weight: 800; letter-spacing: 0.15em; font-family: 'DM Sans';
+    cursor: pointer; transition: 0.2s;
+  }
+  .vault-btn:hover { border-color: var(--accent-red); color: var(--text-white); background: var(--surface-dim); }
+  .vault-btn.active { border-color: var(--accent-red); background: var(--accent-red); color: white; }
+
+  /* ACTIVE MANUAL PANEL */
+  .active-manual-panel {
+    display: grid; grid-template-columns: 1fr;
+    border: 1px solid var(--border-subtle);
+  }
+  @media (min-width: 1024px) {
+    .active-manual-panel { grid-template-columns: 5fr 7fr; }
   }
 
-  .books-world__feature {
-    display: grid;
-    gap: 0.75rem;
-    padding: 1.1rem;
-    border-radius: 24px;
-    border-color: rgba(226, 186, 116, 0.18);
-    background:
-      linear-gradient(180deg, rgba(89, 54, 31, 0.9), rgba(34, 22, 15, 0.96)),
-      radial-gradient(circle at top right, rgba(226, 186, 116, 0.12), transparent 36%);
+  .manual-image-wrap {
+    position: relative; height: 400px;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at center, rgba(225, 6, 0, 0.1), transparent 60%);
+  }
+  @media (min-width: 1024px) { .manual-image-wrap { height: 500px; } }
+
+  .manual-image {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(100%) brightness(0.6);
+    transition: transform 0.8s, filter 0.8s;
+  }
+  .active-manual-panel:hover .manual-image {
+    transform: scale(1.05); filter: grayscale(40%) brightness(0.8);
   }
 
-  .books-world__feature h3 {
-    font-size: clamp(2rem, 4vw, 2.65rem);
-    line-height: 1;
+  .manual-gradient {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, var(--page-bg), transparent);
   }
-
-  .books-world__feature-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-  }
-
-  .books-world__feature-meta span {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.34rem 0.7rem;
-    border-radius: 999px;
-    border: 1px solid rgba(226, 186, 116, 0.18);
-    color: rgba(246, 231, 202, 0.72);
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .books-world__library {
-    display: grid;
-    gap: 1rem;
-  }
-
-  .books-world__shelf-row {
-    display: grid;
-    gap: 0.45rem;
-  }
-
-  .books-world__shelf-books {
-    display: flex;
-    align-items: end;
-    gap: 0.32rem;
-    padding-inline: 0.35rem;
-    overflow-x: auto;
-  }
-
-  .books-world__shelf-board {
-    height: 0.9rem;
-    border-radius: 999px;
-    background:
-      linear-gradient(180deg, rgba(99, 64, 36, 0.86), rgba(61, 37, 22, 0.96));
-    box-shadow:
-      0 14px 28px rgba(0, 0, 0, 0.22),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  }
-
-  .books-world__spine {
-    width: var(--spine-width);
-    min-width: var(--spine-width);
-    height: 12.2rem;
-    border-radius: 12px 12px 4px 4px;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--spine-color) 82%, white 8%), var(--spine-color));
-    border: 1px solid rgba(0, 0, 0, 0.18);
-    padding: 0.9rem 0.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow:
-      inset -1px 0 0 rgba(0, 0, 0, 0.2),
-      0 10px 18px rgba(0, 0, 0, 0.16);
-    transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
-  }
-
-  .books-world__spine:hover,
-  .books-world__spine:focus-visible {
-    transform: translateY(-7px);
-    filter: brightness(1.08);
-    box-shadow:
-      inset -1px 0 0 rgba(0, 0, 0, 0.2),
-      0 18px 28px rgba(0, 0, 0, 0.22);
-    outline: none;
-  }
-
-  .books-world__spine span,
-  .books-world__spine small {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-  }
-
-  .books-world__spine span {
-    font-family: 'Fraunces', 'Times New Roman', serif;
-    color: #f7ebd2;
-    line-height: 1.14;
-    font-size: 0.92rem;
-  }
-
-  .books-world__spine small {
-    color: rgba(247, 235, 210, 0.66);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-size: 0.66rem;
-  }
-
-  .books-world__catalog {
-    display: grid;
-    gap: 0.95rem;
-  }
-
-  .books-world__catalog-head h2 {
-    font-size: clamp(1.75rem, 4vw, 2.4rem);
-    line-height: 1.04;
-    margin-top: 0.2rem;
-  }
-
-  .books-world__catalog-list {
-    display: grid;
-    gap: 0.8rem;
-  }
-
-  .books-world__catalog-item {
-    display: grid;
-    grid-template-columns: minmax(8.5rem, auto) minmax(0, 1fr);
-    gap: 1rem;
-    align-items: start;
-    padding: 1rem 1.05rem;
-    border-radius: 22px;
-    border-color: rgba(226, 186, 116, 0.18);
-    background: linear-gradient(180deg, rgba(57, 35, 20, 0.94), rgba(23, 16, 11, 0.97));
-  }
-
-  .books-world__catalog-date p {
-    color: rgba(226, 186, 116, 0.88);
-    font-size: 0.74rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .books-world__catalog-copy {
-    display: grid;
-    gap: 0.38rem;
-  }
-
-  .books-world__catalog-item h3 {
-    font-size: clamp(1.35rem, 3vw, 1.8rem);
-    line-height: 1.05;
-  }
-
-  @media (max-width: 980px) {
-    .books-world__shelf-layout {
-      grid-template-columns: 1fr;
+  @media (min-width: 1024px) {
+    .manual-gradient {
+      background: linear-gradient(to right, transparent, var(--surface-bg));
     }
   }
 
-  @media (max-width: 720px) {
-    .books-world__catalog-item {
-      grid-template-columns: 1fr;
-      gap: 0.45rem;
-    }
+  .manual-badge {
+    position: absolute; top: 1.5rem; left: 1.5rem;
+    background: var(--accent-red); color: white;
+    padding: 0.25rem 0.75rem; font-size: 0.65rem; font-weight: 800;
+    letter-spacing: 0.1em; font-family: 'DM Sans';
   }
 
-  @media (max-width: 640px) {
-    .books-world__spine {
-      height: 10.5rem;
-      min-width: max(var(--spine-width), 3.8rem);
-    }
-
-    .books-world__spine span {
-      font-size: 0.84rem;
-    }
-
-    .books-world__shelf-books {
-      padding-inline: 0.1rem;
-    }
+  .manual-content {
+    background: var(--surface-bg); padding: clamp(2rem, 4vw, 3rem);
+    display: flex; flex-direction: column; justify-content: center;
   }
+
+  .manual-telemetry-header {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;
+    color: var(--accent-red);
+  }
+  .telemetry-id {
+    font-size: 0.65rem; font-weight: 800; letter-spacing: 0.15em; font-family: 'DM Sans'; opacity: 0.8;
+  }
+  .telemetry-line {
+    flex: 1; height: 1px; background: var(--border-subtle);
+  }
+
+  .manual-headline {
+    font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.05; margin-bottom: 1.5rem; color: var(--text-white);
+  }
+  .manual-desc {
+    color: var(--text-silver); font-size: 0.95rem; line-height: 1.6; max-width: 38rem; margin-bottom: 2.5rem;
+  }
+
+  .manual-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;
+  }
+  .stat-label {
+    display: block; font-size: 0.65rem; font-weight: 800; color: var(--accent-red);
+    text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.25rem; font-family: 'DM Sans';
+  }
+  .stat-value {
+    font-family: 'Sora'; font-size: 1.5rem; font-weight: 800; color: var(--text-white);
+  }
+
+  .vault-cta {
+    position: relative; display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--accent-red); color: white; text-decoration: none;
+    padding: 1rem 2.5rem; font-family: 'Sora'; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em;
+    align-self: flex-start; overflow: hidden; transition: 0.3s;
+  }
+  .vault-cta:hover { background: #b00500; }
+  .cta-glint {
+    position: absolute; top: 0; bottom: 0; right: 0; width: 0.5rem;
+    background: rgba(0,0,0,0.2); transform: skewX(-15deg) translateX(10px);
+  }
+
+  /* REPOSITORY GRID */
+  .vault-repository { margin-bottom: 5rem; }
+
+  .repo-header {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem;
+  }
+  .repo-title { font-size: 1.5rem; color: var(--text-white); }
+  .repo-line { flex: 1; height: 1px; background: var(--border-subtle); }
+  .repo-stats {
+    font-size: 0.65rem; font-weight: 800; color: var(--text-silver); font-family: 'DM Sans';
+    letter-spacing: 0.15em;
+  }
+
+  .repo-grid {
+    display: grid; grid-template-columns: repeat(1, 1fr); gap: 1px;
+    background: var(--border-subtle); border: 1px solid var(--border-subtle);
+  }
+  @media (min-width: 640px) { .repo-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .repo-grid { grid-template-columns: repeat(4, 1fr); } }
+
+  .volume-card {
+    background: var(--surface-bg); padding: 1.5rem; display: flex; flex-direction: column;
+    text-decoration: none; transition: background 0.3s;
+  }
+  .volume-card:hover { background: var(--surface-dim); }
+
+  .volume-image-container {
+    position: relative; aspect-ratio: 3/4; margin-bottom: 1.5rem; overflow: hidden;
+  }
+  .volume-image {
+    width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%);
+    transition: 0.5s;
+  }
+  .volume-card:hover .volume-image { filter: grayscale(0%); transform: scale(1.05); }
+  .volume-overlay {
+    position: absolute; inset: 0; background: var(--accent-red); opacity: 0; transition: 0.3s; mix-blend-mode: overlay;
+  }
+  .volume-card:hover .volume-overlay { opacity: 0.15; }
+
+  .volume-meta {
+    display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;
+  }
+  .volume-category {
+    font-size: 0.55rem; font-weight: 800; color: var(--accent-red); letter-spacing: 0.15em; font-family: 'DM Sans';
+  }
+  .volume-year { font-size: 0.55rem; color: var(--text-silver); font-family: monospace; }
+
+  .volume-name {
+    font-size: 1.25rem; line-height: 1.1; color: var(--text-white); margin-bottom: 1rem;
+    transition: color 0.3s;
+  }
+  .volume-card:hover .volume-name { color: var(--accent-red); }
+
+  .volume-telemetry { margin-top: auto; padding-top: 1rem; }
+  .telemetry-track {
+    height: 4px; background: rgba(0,0,0,0.5); width: 100%; position: relative; margin-bottom: 0.5rem;
+  }
+  .telemetry-fill {
+    position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent-red);
+  }
+  .telemetry-readout {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'DM Sans';
+  }
+  .readout-label { color: var(--text-silver); }
+  .readout-value { color: var(--text-white); }
 </style>
