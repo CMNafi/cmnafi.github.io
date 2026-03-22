@@ -1,0 +1,61 @@
+---
+title: Form ADV Data Finder
+slug: form-adv-search
+summary: "A live-ready ADV research workspace for getting from a firm name or CRD to the official documents, current rows, snapshot history, and a usable first-pass memo."
+description: "Form ADV Data Finder V3 is the version I actually wanted to use: source-first links, persistent shortlists, seeded change tracking, and a Supabase-backed path to live current-firm search."
+status: live
+category: data tool
+stack:
+  - Astro
+  - TypeScript
+  - IAPD
+  - Regulatory data
+liveUrl: https://cmnafi.com/projects/apps/form-adv-data-finder
+featured: true
+priority: 90
+startedAt: 2026-01-01
+updatedAt: 2026-03-21
+problem: "Form ADV filings matter, but the official workflow is still too linear: search, click, open more tabs, and manually stitch together the details you actually care about."
+solution: "Build a source-first finder that keeps the official documents central while adding fast CRD jumps, structured starter coverage, compare, watchlists, memo/export tools, and a live-ready data layer for early diligence."
+whoItsFor: "Analysts, allocators, compliance teams, and anyone who regularly needs to pull investment adviser filings without wasting time."
+keyFeatures:
+  - Fast CRD and adviser-summary URL resolution into official IAPD, ADV PDF, and CRS links.
+  - Live-ready current-firm search through a Supabase view, with seeded fallback coverage when the live table is unavailable.
+  - Side-by-side comparison, sticky workspace state, snapshot history, and memo/export tools instead of forcing a pile of disconnected tabs.
+roadmap:
+  - Import a larger slice of the SEC adviser universe into the live snapshot table.
+  - Enrich the normalized fields so service mix, fees, and disclosures are fuller across the live row set.
+  - Add alerting or watchlist notifications when tracked firms change materially.
+seoTitle: Form ADV Data Finder
+seoDescription: A source-first Form ADV workflow for getting from a firm name or CRD to the official filings and a cleaner compare view.
+relatedPosts: []
+---
+
+**This tool began with a very ordinary annoyance: I wanted answers from Form ADV faster than the normal workflow would allow, and I wanted the first pass to feel like research instead of browser management.**
+
+---
+
+## The Frustration: The Slow Path to Simple Answers
+
+Form ADV filings matter, but the default path to them is still too slow, fragmented, and more frustrating than it needs to be. For analysts, allocators, and compliance teams, pulling an investment adviser's filing should not feel like a navigation puzzle. You usually just need to verify a specific detail, check a regulatory flag, confirm the basic registration picture, and decide whether the firm deserves deeper work.
+
+## The Solution: Source-First Search
+
+**Form ADV Data Finder** is the version I wanted on this site itself: not a vague promise, but an actual working surface. Instead of making you click through endless sub-menus, it keeps the official source links central and improves the workflow around them.
+
+Built around official IAPD, ADV, and CRS documents, the V3 version does a few useful things immediately: it turns any CRD into the right official links, gives starter structured coverage for a small set of firms, can read from a live current-firms view when the Supabase layer is ready, and keeps a watchlist plus memo-ready output while you work.
+
+### How It Works
+- **Direct CRD Resolution**: Paste a CRD or adviser summary URL and jump straight into the official source pack.
+- **Targeted Surface**: Service model, change notes, disclosures, and registration context show up in one readable card.
+- **Compare Workflow**: Put firms next to each other before you commit to the slower document read.
+- **Workspace Layer**: Keep a shortlist, export a memo, and hand off the first-pass findings without rebuilding the context elsewhere.
+- **Live Ingest Path**: Import official SEC downloads into a snapshot table and let the app use that current-firms surface when it exists.
+
+## The Architecture
+
+The page is statically served with Astro, uses TypeScript starter data and seeded snapshot history, and can switch to a Supabase-backed current-firms view on the client when that table is available. There is also now an SEC import script plus SQL schema in the repo so the live layer is not just a placeholder idea.
+
+## Roadmap
+
+The current live version already fixes a meaningful part of the workflow: fewer dead-end clicks, faster official source access, cleaner early comparison, and a real path toward live updates. The next iterations are about wider coverage, deeper normalization, and alerting so the tool can move from useful front door to full diligence companion.

@@ -12,7 +12,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       <h1>13F Finder</h1>
       <p class="finder__lead">
         Search any institutional investment manager by name. View their latest 13F holdings and
-        compare quarter-over-quarter changes — all powered by the SEC EDGAR public API.
+        compare quarter-over-quarter changes — powered by the SEC EDGAR public API.
       </p>
     </section>
 
@@ -41,7 +41,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
           <div class="finder__manager-meta" id="manager-meta"></div>
         </div>
         <div class="finder__filing-selector">
-          <label for="filing-select">Compare quarters:</label>
+          <label for="filing-select-current">Compare quarters:</label>
           <div class="finder__selects-row">
             <select id="filing-select-current" class="finder__select">
               <option value="">Latest quarter</option>
@@ -60,19 +60,19 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       <div id="portfolio-summary" class="finder__summary-grid" style="display:none;">
         <div class="panel finder__stat-card">
           <p class="eyebrow">Total Value</p>
-          <p class="finder__stat-value" id="stat-total-value">—</p>
+          <p class="finder__stat-value" id="stat-total-value">--</p>
         </div>
         <div class="panel finder__stat-card">
           <p class="eyebrow">Positions</p>
-          <p class="finder__stat-value" id="stat-positions">—</p>
+          <p class="finder__stat-value" id="stat-positions">--</p>
         </div>
         <div class="panel finder__stat-card">
           <p class="eyebrow">Top Holding</p>
-          <p class="finder__stat-value finder__stat-value--sm" id="stat-top-holding">—</p>
+          <p class="finder__stat-value finder__stat-value--sm" id="stat-top-holding">--</p>
         </div>
         <div class="panel finder__stat-card">
           <p class="eyebrow">New Positions</p>
-          <p class="finder__stat-value" id="stat-new-positions">—</p>
+          <p class="finder__stat-value" id="stat-new-positions">--</p>
         </div>
       </div>
 
@@ -106,9 +106,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
                 <th>CUSIP</th>
                 <th class="num">Value ($)</th>
                 <th class="num">Shares</th>
-                <th class="num">% of Portfolio</th>
-                <th class="num">Share Change</th>
-                <th class="num">Change %</th>
+                <th class="num">% Portfolio</th>
+                <th class="num">Share Chg</th>
+                <th class="num">Chg %</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -119,85 +119,93 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     </section>
   </div>
 
-  <script>
-    const SEC_UA = 'cmnafi.com admin@cmnafi.com';
-    const CORS_PROXY = '';
+  <script is:inline>
+    // ---- API Layer ----
+    // data.sec.gov supports CORS (Access-Control-Allow-Origin: *).
+    // efts.sec.gov and www.sec.gov do NOT support CORS.
+    // For non-CORS endpoints, we use corsproxy.io which works from browsers.
 
-    function secFetch(url) {
-      return fetch(url, {
-        headers: { 'User-Agent': SEC_UA, 'Accept': 'application/json, application/xml, text/xml, */*' }
-      });
+    const PROXY = 'https://corsproxy.io/?url=';
+
+    async function fetchDirect(url) {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+      return r;
     }
 
-    function formatValue(val) {
-      if (val >= 1e12) return `$${(val / 1e12).toFixed(2)}T`;
-      if (val >= 1e9) return `$${(val / 1e9).toFixed(2)}B`;
-      if (val >= 1e6) return `$${(val / 1e6).toFixed(1)}M`;
-      if (val >= 1e3) return `$${(val / 1e3).toFixed(0)}K`;
-      return `$${val.toLocaleString()}`;
+    async function fetchProxied(url) {
+      const r = await fetch(PROXY + encodeURIComponent(url));
+      if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+      return r;
     }
 
-    function formatShares(s) {
-      if (s >= 1e9) return `${(s / 1e9).toFixed(2)}B`;
-      if (s >= 1e6) return `${(s / 1e6).toFixed(2)}M`;
-      if (s >= 1e3) return `${(s / 1e3).toFixed(1)}K`;
+    // ---- Formatters ----
+    function fmtVal(v) {
+      if (v >= 1e12) return '$' + (v/1e12).toFixed(2) + 'T';
+      if (v >= 1e9) return '$' + (v/1e9).toFixed(2) + 'B';
+      if (v >= 1e6) return '$' + (v/1e6).toFixed(1) + 'M';
+      if (v >= 1e3) return '$' + (v/1e3).toFixed(0) + 'K';
+      return '$' + v.toLocaleString();
+    }
+
+    function fmtShares(s) {
+      if (s >= 1e9) return (s/1e9).toFixed(2) + 'B';
+      if (s >= 1e6) return (s/1e6).toFixed(2) + 'M';
+      if (s >= 1e3) return (s/1e3).toFixed(1) + 'K';
       return s.toLocaleString();
     }
 
-    function padCik(cik) {
-      return String(cik).replace(/^0+/, '').padStart(10, '0');
-    }
+    function padCik(c) { return String(c).replace(/^0+/,'').padStart(10,'0'); }
 
-    function setStatus(id, msg, isError = false) {
+    function setStatus(id, msg, err) {
       const el = document.getElementById(id);
       el.innerHTML = msg;
-      el.className = `finder__status ${isError ? 'finder__status--error' : ''}`;
+      el.className = 'finder__status' + (err ? ' finder__status--error' : '');
     }
 
-    // --- Search ---
+    // ---- Search ----
     const searchInput = document.getElementById('manager-search');
     const searchBtn = document.getElementById('search-btn');
     const searchResults = document.getElementById('search-results');
 
     searchBtn.addEventListener('click', doSearch);
-    searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
+    searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 
     async function doSearch() {
-      const query = searchInput.value.trim();
-      if (!query) return;
+      const q = searchInput.value.trim();
+      if (!q) return;
 
       setStatus('search-status', '<span class="finder__loading">Searching SEC EDGAR...</span>');
       searchResults.style.display = 'none';
 
       try {
-        const encoded = encodeURIComponent(`"${query}"`);
-        const resp = await secFetch(
-          `https://efts.sec.gov/LATEST/search-index?q=${encoded}&forms=13F-HR&dateRange=custom&startdt=2020-01-01&enddt=2027-12-31`
-        );
-
-        if (!resp.ok) throw new Error(`EDGAR search failed: ${resp.status}`);
+        const url = `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent('"'+q+'"')}&forms=13F-HR&dateRange=custom&startdt=2020-01-01&enddt=2027-12-31`;
+        const resp = await fetchProxied(url);
         const data = await resp.json();
         const hits = data.hits?.hits || [];
 
-        // Deduplicate by CIK
         const managers = new Map();
-        for (const hit of hits) {
-          const src = hit._source || {};
-          const ciks = src.ciks || [];
-          const names = src.display_names || [];
-          const loc = (src.biz_locations || [])[0] || '';
+        for (const h of hits) {
+          const s = h._source || {};
+          const ciks = s.ciks || [];
+          const names = s.display_names || [];
+          const loc = (s.biz_locations || [])[0] || '';
           for (let i = 0; i < ciks.length; i++) {
             const cik = ciks[i];
             if (!managers.has(cik)) {
-              const nameRaw = names[i] || names[0] || 'Unknown';
-              const name = nameRaw.replace(/\s*\(CIK\s+\d+\)\s*$/, '');
-              managers.set(cik, { cik, name, location: loc, lastFiling: src.file_date });
+              const raw = names[i] || names[0] || 'Unknown';
+              managers.set(cik, {
+                cik,
+                name: raw.replace(/\s*\(CIK\s+\d+\)\s*$/, ''),
+                location: loc,
+                lastFiling: s.file_date
+              });
             }
           }
         }
 
-        if (managers.size === 0) {
-          setStatus('search-status', 'No 13F filers found matching that name.', true);
+        if (!managers.size) {
+          setStatus('search-status', 'No 13F filers found. Try a different name.', true);
           return;
         }
 
@@ -205,22 +213,19 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
         searchResults.innerHTML = '';
         searchResults.style.display = 'block';
 
-        for (const [cik, mgr] of managers) {
-          const card = document.createElement('button');
-          card.className = 'finder__result-card';
-          card.innerHTML = `
-            <strong>${mgr.name}</strong>
-            <span class="finder__result-meta">CIK: ${cik} ${mgr.location ? `· ${mgr.location}` : ''} ${mgr.lastFiling ? `· Last filing: ${mgr.lastFiling}` : ''}</span>
-          `;
-          card.addEventListener('click', () => loadManager(cik, mgr.name));
-          searchResults.appendChild(card);
+        for (const [cik, m] of managers) {
+          const btn = document.createElement('button');
+          btn.className = 'finder__result-card';
+          btn.innerHTML = `<strong>${m.name}</strong><span class="finder__result-meta">CIK: ${cik}${m.location ? ' · '+m.location : ''}${m.lastFiling ? ' · Last: '+m.lastFiling : ''}</span>`;
+          btn.addEventListener('click', () => loadManager(cik, m.name));
+          searchResults.appendChild(btn);
         }
-      } catch (err) {
-        setStatus('search-status', `Search error: ${err.message}`, true);
+      } catch (e) {
+        setStatus('search-status', 'Search error: ' + e.message + '. Try again in a moment.', true);
       }
     }
 
-    // --- Load Manager ---
+    // ---- Load Manager ----
     let currentFilings = [];
     let currentCik = '';
 
@@ -231,314 +236,252 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       document.getElementById('manager-name').textContent = name;
-      document.getElementById('manager-cik').textContent = `CIK ${cik}`;
+      document.getElementById('manager-cik').textContent = 'CIK ' + cik;
       document.getElementById('portfolio-summary').style.display = 'none';
       document.getElementById('holdings-table-wrap').style.display = 'none';
 
       setStatus('holdings-status', '<span class="finder__loading">Loading filing history...</span>');
 
       try {
-        const paddedCik = padCik(cik);
-        const resp = await secFetch(`https://data.sec.gov/submissions/CIK${paddedCik}.json`);
-        if (!resp.ok) throw new Error(`Failed to load submissions: ${resp.status}`);
+        // data.sec.gov has CORS * — direct fetch
+        const resp = await fetchDirect(`https://data.sec.gov/submissions/CIK${padCik(cik)}.json`);
         const data = await resp.json();
 
-        // Show manager meta
+        // Manager meta
         const meta = document.getElementById('manager-meta');
-        const metaParts = [];
-        if (data.stateOfIncorporation) metaParts.push(`Inc: ${data.stateOfIncorporationDescription || data.stateOfIncorporation}`);
-        if (data.sicDescription) metaParts.push(data.sicDescription);
-        if (data.tickers?.length) metaParts.push(`Tickers: ${data.tickers.join(', ')}`);
-        if (data.addresses?.business?.city) {
-          const addr = data.addresses.business;
-          metaParts.push(`${addr.city}, ${addr.stateOrCountry}`);
-        }
-        meta.innerHTML = metaParts.map(p => `<span class="finder__meta-tag">${p}</span>`).join('');
+        const parts = [];
+        if (data.stateOfIncorporationDescription) parts.push('Inc: ' + data.stateOfIncorporationDescription);
+        if (data.sicDescription) parts.push(data.sicDescription);
+        if (data.tickers?.length) parts.push('Tickers: ' + data.tickers.join(', '));
+        const biz = data.addresses?.business;
+        if (biz?.city) parts.push(biz.city + ', ' + biz.stateOrCountry);
+        meta.innerHTML = parts.map(p => `<span class="finder__meta-tag">${p}</span>`).join('');
 
         // Extract 13F-HR filings
-        const recent = data.filings?.recent;
-        if (!recent) throw new Error('No filing data found');
+        const r = data.filings?.recent;
+        if (!r) throw new Error('No filing data');
 
-        const filings13f = [];
-        for (let i = 0; i < recent.form.length; i++) {
-          if (recent.form[i] === '13F-HR') {
-            filings13f.push({
-              accession: recent.accessionNumber[i],
-              date: recent.filingDate[i],
-              primaryDoc: recent.primaryDocument[i],
-              reportDate: recent.reportDate?.[i] || recent.filingDate[i]
+        const filings = [];
+        for (let i = 0; i < r.form.length; i++) {
+          if (r.form[i] === '13F-HR') {
+            filings.push({
+              accession: r.accessionNumber[i],
+              date: r.filingDate[i],
+              primaryDoc: r.primaryDocument[i],
+              reportDate: r.reportDate?.[i] || r.filingDate[i]
             });
           }
         }
 
-        if (filings13f.length === 0) {
+        if (!filings.length) {
           setStatus('holdings-status', 'No 13F-HR filings found for this manager.', true);
           return;
         }
 
-        currentFilings = filings13f;
+        currentFilings = filings;
 
-        // Populate dropdowns
-        const currentSelect = document.getElementById('filing-select-current');
-        const previousSelect = document.getElementById('filing-select-previous');
-        currentSelect.innerHTML = '';
-        previousSelect.innerHTML = '<option value="">None (no comparison)</option>';
+        const curSel = document.getElementById('filing-select-current');
+        const prevSel = document.getElementById('filing-select-previous');
+        curSel.innerHTML = '';
+        prevSel.innerHTML = '<option value="">None (no comparison)</option>';
 
-        filings13f.forEach((f, i) => {
-          const label = `${f.reportDate} (filed ${f.date})`;
-          const opt1 = new Option(label, i.toString());
-          const opt2 = new Option(label, i.toString());
-          currentSelect.appendChild(opt1);
-          previousSelect.appendChild(opt2);
+        filings.forEach((f, i) => {
+          const label = f.reportDate + ' (filed ' + f.date + ')';
+          curSel.appendChild(new Option(label, i));
+          prevSel.appendChild(new Option(label, i));
         });
 
-        if (filings13f.length > 1) {
-          previousSelect.value = '1';
-        }
+        if (filings.length > 1) prevSel.value = '1';
 
-        setStatus('holdings-status', `Found ${filings13f.length} 13F-HR filings. Loading latest holdings...`);
-
-        // Auto-load latest + comparison
+        setStatus('holdings-status', `Found ${filings.length} 13F filings. Loading holdings...`);
         await loadHoldings();
-      } catch (err) {
-        setStatus('holdings-status', `Error: ${err.message}`, true);
+      } catch (e) {
+        setStatus('holdings-status', 'Error: ' + e.message, true);
       }
     }
 
-    // --- Load Holdings ---
+    // ---- Load Holdings ----
     document.getElementById('compare-btn').addEventListener('click', loadHoldings);
 
     async function loadHoldings() {
-      const currentIdx = parseInt(document.getElementById('filing-select-current').value);
-      const previousIdx = document.getElementById('filing-select-previous').value;
+      const ci = parseInt(document.getElementById('filing-select-current').value);
+      const pi = document.getElementById('filing-select-previous').value;
+      if (isNaN(ci) || !currentFilings[ci]) return;
 
-      if (isNaN(currentIdx) || !currentFilings[currentIdx]) return;
-
-      setStatus('holdings-status', '<span class="finder__loading">Fetching 13F holdings XML...</span>');
+      setStatus('holdings-status', '<span class="finder__loading">Fetching 13F holdings...</span>');
       document.getElementById('portfolio-summary').style.display = 'none';
       document.getElementById('holdings-table-wrap').style.display = 'none';
 
       try {
-        const currentHoldings = await fetchInfoTable(currentFilings[currentIdx]);
-
-        let previousHoldings = null;
-        if (previousIdx && previousIdx !== '' && currentFilings[parseInt(previousIdx)]) {
-          previousHoldings = await fetchInfoTable(currentFilings[parseInt(previousIdx)]);
+        const cur = await fetchInfoTable(currentFilings[ci]);
+        let prev = null;
+        if (pi && pi !== '' && currentFilings[parseInt(pi)]) {
+          prev = await fetchInfoTable(currentFilings[parseInt(pi)]);
         }
-
-        displayHoldings(currentHoldings, previousHoldings, currentFilings[currentIdx]);
+        displayHoldings(cur, prev, currentFilings[ci]);
         setStatus('holdings-status', '');
-      } catch (err) {
-        setStatus('holdings-status', `Error loading holdings: ${err.message}`, true);
+      } catch (e) {
+        setStatus('holdings-status', 'Error loading holdings: ' + e.message, true);
       }
     }
 
     async function fetchInfoTable(filing) {
       const cikNum = currentCik.replace(/^0+/, '');
-      const accessionNoDash = filing.accession.replace(/-/g, '');
+      const accNoDash = filing.accession.replace(/-/g, '');
 
-      // Get filing index to find the infotable XML
-      const indexResp = await secFetch(
-        `https://www.sec.gov/Archives/edgar/data/${cikNum}/${accessionNoDash}/index.json`
-      );
-      if (!indexResp.ok) throw new Error(`Failed to load filing index: ${indexResp.status}`);
-      const indexData = await indexResp.json();
+      // www.sec.gov needs proxy for CORS
+      const idxUrl = `https://www.sec.gov/Archives/edgar/data/${cikNum}/${accNoDash}/index.json`;
+      const idxResp = await fetchProxied(idxUrl);
+      const idx = await idxResp.json();
 
-      const items = indexData.directory?.item || [];
-      // Find the infotable XML (not primary_doc.xml, not index files)
-      const xmlFile = items.find(item =>
-        item.name.endsWith('.xml') &&
-        !item.name.includes('primary_doc') &&
-        !item.name.includes('index') &&
-        !item.name.includes('R')
+      const items = idx.directory?.item || [];
+      const xmlFile = items.find(i =>
+        i.name.endsWith('.xml') &&
+        !i.name.includes('primary_doc') &&
+        !i.name.includes('index') &&
+        !i.name.startsWith('R')
       );
 
-      if (!xmlFile) throw new Error('Could not find information table XML');
+      if (!xmlFile) throw new Error('Information table XML not found in filing');
 
-      const xmlResp = await secFetch(
-        `https://www.sec.gov/Archives/edgar/data/${cikNum}/${accessionNoDash}/${xmlFile.name}`
-      );
-      if (!xmlResp.ok) throw new Error(`Failed to load infotable XML: ${xmlResp.status}`);
+      const xmlUrl = `https://www.sec.gov/Archives/edgar/data/${cikNum}/${accNoDash}/${xmlFile.name}`;
+      const xmlResp = await fetchProxied(xmlUrl);
       const xmlText = await xmlResp.text();
 
       return parseInfoTable(xmlText);
     }
 
-    function parseInfoTable(xmlText) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(xmlText, 'text/xml');
-
+    function parseInfoTable(xml) {
+      const doc = new DOMParser().parseFromString(xml, 'text/xml');
       const ns = 'http://www.sec.gov/edgar/document/thirteenf/informationtable';
       let entries = doc.getElementsByTagNameNS(ns, 'infoTable');
-      if (entries.length === 0) {
-        entries = doc.getElementsByTagName('infoTable');
-      }
+      if (!entries.length) entries = doc.getElementsByTagName('infoTable');
 
-      const holdings = new Map();
-
-      for (const entry of entries) {
-        const get = (tag) => {
-          let el = entry.getElementsByTagNameNS(ns, tag)[0];
-          if (!el) el = entry.getElementsByTagName(tag)[0];
+      const map = new Map();
+      for (const e of entries) {
+        const g = tag => {
+          let el = e.getElementsByTagNameNS(ns, tag)[0];
+          if (!el) el = e.getElementsByTagName(tag)[0];
           return el?.textContent?.trim() || '';
         };
-
-        const cusip = get('cusip');
-        const issuer = get('nameOfIssuer');
-        const titleClass = get('titleOfClass');
-        const value = parseInt(get('value')) || 0;
-        const shares = parseInt(get('sshPrnamt')) || 0;
-        const shareType = get('sshPrnamtType');
-
+        const cusip = g('cusip');
+        const issuer = g('nameOfIssuer');
+        const titleClass = g('titleOfClass');
+        const value = parseInt(g('value')) || 0;
+        const shares = parseInt(g('sshPrnamt')) || 0;
+        const shareType = g('sshPrnamtType');
         const key = cusip || issuer;
-        if (holdings.has(key)) {
-          const existing = holdings.get(key);
-          existing.value += value;
-          existing.shares += shares;
+
+        if (map.has(key)) {
+          const x = map.get(key);
+          x.value += value;
+          x.shares += shares;
         } else {
-          holdings.set(key, { cusip, issuer, titleClass, value, shares, shareType });
+          map.set(key, { cusip, issuer, titleClass, value, shares, shareType });
         }
       }
-
-      return Array.from(holdings.values());
+      return Array.from(map.values());
     }
 
-    // --- Display ---
-    let allDisplayRows = [];
+    // ---- Display ----
+    let allRows = [];
 
-    function displayHoldings(current, previous, filing) {
-      const totalValue = current.reduce((s, h) => s + h.value, 0);
-
-      // Build previous lookup
+    function displayHoldings(cur, prev, filing) {
+      const totalVal = cur.reduce((s, h) => s + h.value, 0);
       const prevMap = new Map();
-      if (previous) {
-        for (const h of previous) {
-          const key = h.cusip || h.issuer;
-          prevMap.set(key, h);
-        }
-      }
+      if (prev) for (const h of prev) prevMap.set(h.cusip || h.issuer, h);
 
-      // Build display rows
-      const rows = current.map(h => {
+      const rows = cur.map(h => {
         const key = h.cusip || h.issuer;
-        const prev = prevMap.get(key);
-        const pctOfPortfolio = totalValue > 0 ? (h.value / totalValue * 100) : 0;
-        let shareChange = 0;
-        let changePct = 0;
-        let status = '';
+        const p = prevMap.get(key);
+        const pct = totalVal > 0 ? h.value / totalVal * 100 : 0;
+        let chg = 0, chgPct = 0, status = '';
 
-        if (previous) {
-          if (prev) {
-            shareChange = h.shares - prev.shares;
-            changePct = prev.shares > 0 ? ((h.shares - prev.shares) / prev.shares * 100) : 0;
-            if (shareChange > 0) status = 'increased';
-            else if (shareChange < 0) status = 'decreased';
-            else status = 'unchanged';
+        if (prev) {
+          if (p) {
+            chg = h.shares - p.shares;
+            chgPct = p.shares > 0 ? (h.shares - p.shares) / p.shares * 100 : 0;
+            status = chg > 0 ? 'increased' : chg < 0 ? 'decreased' : 'unchanged';
           } else {
-            status = 'new';
-            shareChange = h.shares;
-            changePct = 100;
+            status = 'new'; chg = h.shares; chgPct = 100;
           }
         }
-
-        return { ...h, pctOfPortfolio, shareChange, changePct, status };
+        return { ...h, pct, chg, chgPct, status };
       });
 
       // Add sold positions
-      if (previous) {
-        const currentKeys = new Set(current.map(h => h.cusip || h.issuer));
-        for (const h of previous) {
-          const key = h.cusip || h.issuer;
-          if (!currentKeys.has(key)) {
-            rows.push({
-              ...h,
-              value: 0,
-              shares: 0,
-              pctOfPortfolio: 0,
-              shareChange: -h.shares,
-              changePct: -100,
-              status: 'sold'
-            });
+      if (prev) {
+        const curKeys = new Set(cur.map(h => h.cusip || h.issuer));
+        for (const h of prev) {
+          const k = h.cusip || h.issuer;
+          if (!curKeys.has(k)) {
+            rows.push({ ...h, value:0, shares:0, pct:0, chg:-h.shares, chgPct:-100, status:'sold' });
           }
         }
       }
 
-      allDisplayRows = rows;
+      allRows = rows;
 
-      // Stats
-      document.getElementById('stat-total-value').textContent = formatValue(totalValue);
-      document.getElementById('stat-positions').textContent = current.length.toString();
-      const topHolding = current.reduce((max, h) => h.value > max.value ? h : max, current[0]);
-      document.getElementById('stat-top-holding').textContent = topHolding ? topHolding.issuer : '—';
-      const newCount = rows.filter(r => r.status === 'new').length;
-      document.getElementById('stat-new-positions').textContent = previous ? newCount.toString() : '—';
-
-      document.getElementById('table-period-label').textContent =
-        `Holdings for ${filing.reportDate}`;
-
+      document.getElementById('stat-total-value').textContent = fmtVal(totalVal);
+      document.getElementById('stat-positions').textContent = cur.length.toString();
+      const top = cur.reduce((m, h) => h.value > m.value ? h : m, cur[0]);
+      document.getElementById('stat-top-holding').textContent = top ? top.issuer : '--';
+      document.getElementById('stat-new-positions').textContent = prev ? rows.filter(r => r.status === 'new').length.toString() : '--';
+      document.getElementById('table-period-label').textContent = 'Holdings for ' + filing.reportDate;
       document.getElementById('portfolio-summary').style.display = 'grid';
       document.getElementById('holdings-table-wrap').style.display = 'block';
-
       renderTable();
     }
 
-    // --- Filter & Sort ---
     document.getElementById('holdings-filter').addEventListener('input', renderTable);
     document.getElementById('holdings-sort').addEventListener('change', renderTable);
 
     function renderTable() {
-      const filter = document.getElementById('holdings-filter').value.toLowerCase();
-      const sort = document.getElementById('holdings-sort').value;
+      const f = document.getElementById('holdings-filter').value.toLowerCase();
+      const s = document.getElementById('holdings-sort').value;
       const tbody = document.getElementById('holdings-body');
 
-      let rows = allDisplayRows.filter(r =>
-        !filter ||
-        r.issuer.toLowerCase().includes(filter) ||
-        r.cusip.toLowerCase().includes(filter)
-      );
+      let rows = allRows.filter(r => !f || r.issuer.toLowerCase().includes(f) || r.cusip.toLowerCase().includes(f));
 
-      // Sort
       rows.sort((a, b) => {
-        switch (sort) {
-          case 'value-desc': return b.value - a.value;
+        switch(s) {
           case 'value-asc': return a.value - b.value;
           case 'name-asc': return a.issuer.localeCompare(b.issuer);
           case 'shares-desc': return b.shares - a.shares;
-          case 'change-desc': return b.changePct - a.changePct;
-          case 'change-asc': return a.changePct - b.changePct;
+          case 'change-desc': return b.chgPct - a.chgPct;
+          case 'change-asc': return a.chgPct - b.chgPct;
           default: return b.value - a.value;
         }
       });
 
       tbody.innerHTML = '';
-      rows.forEach((r, i) => {
+      for (let i = 0; i < rows.length; i++) {
+        const r = rows[i];
         const tr = document.createElement('tr');
-        if (r.status) tr.classList.add(`finder__row--${r.status}`);
+        if (r.status) tr.classList.add('finder__row--' + r.status);
 
-        const changeSign = r.shareChange > 0 ? '+' : '';
-        const changePctStr = r.changePct !== 0 ? `${r.changePct > 0 ? '+' : ''}${r.changePct.toFixed(1)}%` : '—';
-
-        let statusBadge = '';
-        if (r.status === 'new') statusBadge = '<span class="finder__badge finder__badge--new">NEW</span>';
-        else if (r.status === 'sold') statusBadge = '<span class="finder__badge finder__badge--sold">SOLD</span>';
-        else if (r.status === 'increased') statusBadge = '<span class="finder__badge finder__badge--up">UP</span>';
-        else if (r.status === 'decreased') statusBadge = '<span class="finder__badge finder__badge--down">DOWN</span>';
-        else if (r.status === 'unchanged') statusBadge = '<span class="finder__badge finder__badge--flat">FLAT</span>';
+        const sign = r.chg > 0 ? '+' : '';
+        const cpStr = r.chgPct !== 0 ? (r.chgPct > 0 ? '+' : '') + r.chgPct.toFixed(1) + '%' : '--';
+        let badge = '';
+        if (r.status === 'new') badge = '<span class="finder__badge finder__badge--new">NEW</span>';
+        else if (r.status === 'sold') badge = '<span class="finder__badge finder__badge--sold">SOLD</span>';
+        else if (r.status === 'increased') badge = '<span class="finder__badge finder__badge--up">UP</span>';
+        else if (r.status === 'decreased') badge = '<span class="finder__badge finder__badge--down">DOWN</span>';
+        else if (r.status === 'unchanged') badge = '<span class="finder__badge finder__badge--flat">FLAT</span>';
 
         tr.innerHTML = `
-          <td>${i + 1}</td>
+          <td>${i+1}</td>
           <td class="finder__issuer">${r.issuer}</td>
           <td>${r.titleClass}</td>
           <td class="finder__cusip">${r.cusip}</td>
-          <td class="num">${formatValue(r.value)}</td>
-          <td class="num">${formatShares(r.shares)}</td>
-          <td class="num">${r.pctOfPortfolio.toFixed(2)}%</td>
-          <td class="num ${r.shareChange > 0 ? 'finder__up' : r.shareChange < 0 ? 'finder__down' : ''}">${r.status ? `${changeSign}${formatShares(Math.abs(r.shareChange))}` : '—'}</td>
-          <td class="num ${r.changePct > 0 ? 'finder__up' : r.changePct < 0 ? 'finder__down' : ''}">${r.status ? changePctStr : '—'}</td>
-          <td>${statusBadge}</td>
-        `;
+          <td class="num">${fmtVal(r.value)}</td>
+          <td class="num">${fmtShares(r.shares)}</td>
+          <td class="num">${r.pct.toFixed(2)}%</td>
+          <td class="num ${r.chg>0?'finder__up':r.chg<0?'finder__down':''}">${r.status ? sign+fmtShares(Math.abs(r.chg)) : '--'}</td>
+          <td class="num ${r.chgPct>0?'finder__up':r.chgPct<0?'finder__down':''}">${r.status ? cpStr : '--'}</td>
+          <td>${badge}</td>`;
         tbody.appendChild(tr);
-      });
+      }
     }
   </script>
 </BaseLayout>
@@ -561,10 +504,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       linear-gradient(180deg, rgba(10, 18, 32, 0.98), rgba(6, 10, 20, 0.99));
   }
 
-  .finder > * {
-    position: relative;
-    z-index: 1;
-  }
+  .finder > * { position: relative; z-index: 1; }
 
   .finder__hero {
     padding-top: clamp(2rem, 6vw, 4rem);
@@ -591,15 +531,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     display: grid;
     gap: 0.8rem;
     padding: clamp(1rem, 2.5vw, 1.4rem);
-    background:
-      linear-gradient(180deg, rgba(12, 22, 40, 0.92), rgba(6, 10, 20, 0.97));
+    background: linear-gradient(180deg, rgba(12, 22, 40, 0.92), rgba(6, 10, 20, 0.97));
     border-color: rgba(74, 237, 196, 0.18);
   }
 
-  .finder__input-row {
-    display: flex;
-    gap: 0.6rem;
-  }
+  .finder__input-row { display: flex; gap: 0.6rem; }
 
   .finder__input {
     flex: 1;
@@ -614,13 +550,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     transition: border-color 180ms ease;
   }
 
-  .finder__input:focus {
-    border-color: rgba(74, 237, 196, 0.5);
-  }
-
-  .finder__input::placeholder {
-    color: rgba(224, 247, 239, 0.38);
-  }
+  .finder__input:focus { border-color: rgba(74, 237, 196, 0.5); }
+  .finder__input::placeholder { color: rgba(224, 247, 239, 0.38); }
 
   .finder__btn {
     padding: 0.75rem 1.4rem;
@@ -641,10 +572,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     transform: translateY(-1px);
   }
 
-  .finder__btn--sm {
-    padding: 0.55rem 1rem;
-    font-size: 0.82rem;
-  }
+  .finder__btn--sm { padding: 0.55rem 1rem; font-size: 0.82rem; }
 
   .finder__results {
     display: grid;
@@ -684,20 +612,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     letter-spacing: 0.05em;
   }
 
-  .finder__status {
-    font-size: 0.88rem;
-    color: rgba(224, 247, 239, 0.7);
-  }
+  .finder__status { font-size: 0.88rem; color: rgba(224, 247, 239, 0.7); }
+  .finder__status--error { color: #ff6b6b; }
 
-  .finder__status--error {
-    color: #ff6b6b;
-  }
-
-  .finder__loading {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
+  .finder__loading { display: inline-flex; align-items: center; gap: 0.4rem; }
 
   .finder__loading::before {
     content: "";
@@ -709,22 +627,16 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     animation: spin 0.8s linear infinite;
   }
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   /* Detail */
-  .finder__detail {
-    display: grid;
-    gap: 1rem;
-  }
+  .finder__detail { display: grid; gap: 1rem; }
 
   .finder__detail-header {
     display: grid;
     gap: 1.2rem;
     padding: clamp(1rem, 2.5vw, 1.4rem);
-    background:
-      linear-gradient(180deg, rgba(12, 22, 40, 0.92), rgba(6, 10, 20, 0.97));
+    background: linear-gradient(180deg, rgba(12, 22, 40, 0.92), rgba(6, 10, 20, 0.97));
     border-color: rgba(74, 237, 196, 0.18);
   }
 
@@ -736,12 +648,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     letter-spacing: -0.04em;
   }
 
-  .finder__manager-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.6rem;
-  }
+  .finder__manager-meta { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
 
   .finder__meta-tag {
     display: inline-flex;
@@ -753,10 +660,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     letter-spacing: 0.06em;
   }
 
-  .finder__filing-selector {
-    display: grid;
-    gap: 0.5rem;
-  }
+  .finder__filing-selector { display: grid; gap: 0.5rem; }
 
   .finder__filing-selector label {
     color: rgba(224, 247, 239, 0.6);
@@ -765,18 +669,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     letter-spacing: 0.1em;
   }
 
-  .finder__selects-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-  }
+  .finder__selects-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 
-  .finder__vs {
-    color: rgba(74, 237, 196, 0.5);
-    font-size: 0.82rem;
-    font-weight: 600;
-  }
+  .finder__vs { color: rgba(74, 237, 196, 0.5); font-size: 0.82rem; font-weight: 600; }
 
   .finder__select {
     padding: 0.55rem 0.8rem;
@@ -790,13 +685,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     min-width: 12rem;
   }
 
-  .finder__select--sm {
-    min-width: 10rem;
-    padding: 0.45rem 0.65rem;
-    font-size: 0.78rem;
-  }
+  .finder__select--sm { min-width: 10rem; padding: 0.45rem 0.65rem; font-size: 0.78rem; }
 
-  /* Summary grid */
+  /* Summary */
   .finder__summary-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -820,9 +711,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: #4aedc4;
   }
 
-  .finder__stat-value--sm {
-    font-size: clamp(0.95rem, 2vw, 1.2rem);
-  }
+  .finder__stat-value--sm { font-size: clamp(0.95rem, 2vw, 1.2rem); }
 
   /* Table */
   .finder__table-wrap {
@@ -840,10 +729,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     margin-bottom: 0.8rem;
   }
 
-  .finder__table-controls {
-    display: flex;
-    gap: 0.5rem;
-  }
+  .finder__table-controls { display: flex; gap: 0.5rem; }
 
   .finder__filter-input {
     padding: 0.45rem 0.7rem;
@@ -857,20 +743,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     min-width: 14rem;
   }
 
-  .finder__filter-input::placeholder {
-    color: rgba(224, 247, 239, 0.35);
-  }
+  .finder__filter-input::placeholder { color: rgba(224, 247, 239, 0.35); }
 
-  .finder__table-scroll {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+  .finder__table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-  .finder__table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.84rem;
-  }
+  .finder__table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
 
   .finder__table th {
     position: sticky;
@@ -887,10 +764,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     white-space: nowrap;
   }
 
-  .finder__table th.num,
-  .finder__table td.num {
-    text-align: right;
-  }
+  .finder__table th.num, .finder__table td.num { text-align: right; }
 
   .finder__table td {
     padding: 0.5rem 0.6rem;
@@ -899,9 +773,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     white-space: nowrap;
   }
 
-  .finder__table tr:hover td {
-    background: rgba(74, 237, 196, 0.04);
-  }
+  .finder__table tr:hover td { background: rgba(74, 237, 196, 0.04); }
 
   .finder__issuer {
     font-weight: 600;
@@ -959,50 +831,23 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .finder__row--sold td {
-    opacity: 0.55;
-  }
+  .finder__row--sold td { opacity: 0.55; }
 
   @media (max-width: 1000px) {
-    .finder__summary-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    .finder__summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
   @media (max-width: 720px) {
-    .finder__input-row {
-      flex-direction: column;
-    }
-
-    .finder__selects-row {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .finder__select {
-      min-width: 0;
-    }
-
-    .finder__table-controls {
-      flex-direction: column;
-    }
-
-    .finder__filter-input {
-      min-width: 0;
-    }
-
-    .finder__summary-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .finder__vs {
-      text-align: center;
-    }
+    .finder__input-row { flex-direction: column; }
+    .finder__selects-row { flex-direction: column; align-items: stretch; }
+    .finder__select { min-width: 0; }
+    .finder__table-controls { flex-direction: column; }
+    .finder__filter-input { min-width: 0; }
+    .finder__summary-grid { grid-template-columns: 1fr 1fr; }
+    .finder__vs { text-align: center; }
   }
 
   @media (max-width: 480px) {
-    .finder__summary-grid {
-      grid-template-columns: 1fr;
-    }
+    .finder__summary-grid { grid-template-columns: 1fr; }
   }
 </style>
