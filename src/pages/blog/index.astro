@@ -4,7 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getInterestSectionByCategory, interestSections } from '@/data/interests';
 import { formatDate } from '@/utils/format';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft && ['Books', 'Cricket'].includes(data.category))).sort(
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
 );
 
@@ -16,15 +16,14 @@ const timelineEntries = posts.map((post) => ({
 const filters = ['All', ...interestSections.map((section) => section.id)];
 ---
 
-<BaseLayout title="Timeline" description="The public archive now stays simple: cricket writing and the books I have kept notes on.">
+<BaseLayout title="Timeline" description="The complete public archive of my writing across all categories.">
   <div class="timeline-page">
 <section class="page-section timeline-page__hero">
       <div class="timeline-page__intro">
         <p class="eyebrow">Timeline</p>
-        <h1>The public archive stays simple now.</h1>
+        <h1>The complete public archive.</h1>
         <p>
-          This page keeps only the writing I still want to stand behind in public: cricket match stories and the book
-          notes that earned a place on the shelf. Anything looser lives under TBD.
+          Every published piece across finance, tech, cricket, books, and essays, arranged chronologically.
         </p>
       </div>
 
