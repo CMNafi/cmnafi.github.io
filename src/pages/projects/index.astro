@@ -4,30 +4,29 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
 
+
 const projects = (await getCollection('projects')).sort((a, b) => b.data.priority - a.data.priority);
 const featuredProjects = projects.filter((project) => project.data.featured);
 const categories = ['All', ...new Set(projects.map((project) => project.data.category))];
 const liveCount = projects.filter((project) => project.data.status === 'live').length;
 ---
 
-<BaseLayout title="Projects" description="The tools I am building because I kept running into the same finance and research frustrations myself.">
+<BaseLayout title="Currently Brewing" description="The tools I am building because I kept running into the same finance and research frustrations myself.">
 <section class="page-section">
     <SectionHeading
-      eyebrow="Projects"
-      title="Projects"
-      description="These projects mostly come from the same place: I ran into a workflow that felt clumsy, repetitive, or harder than it needed to be, and I kept thinking about how I would rather use it."
+      eyebrow="Currently Brewing"
+      title="Currently Brewing"
+      description="These projects mostly come from the same place: I ran into a workflow that felt clumsy, repetitive, or harder than it needed to be, and I kept thinking about how I would rather use it. They are all works in progress."
     />
     <div class="stats-row">
       <div class="panel stat-card"><strong>{projects.length}</strong><span>tracked builds</span></div>
       <div class="panel stat-card"><strong>{featuredProjects.length}</strong><span>featured</span></div>
-      <div class="panel stat-card"><strong>{liveCount}</strong><span>live today</span></div>
+      <div class="panel stat-card"><a href="/projects/wip" style="color:inherit; text-decoration:none;"><strong>View Tools</strong><span>Work in progress →</span></a></div>
     </div>
   </section>
 
   <section class="page-section">
     <SectionHeading eyebrow="Featured" title="The ones I am pushing hardest" description="A few projects that best show the kind of work I want to keep doing." />
-    <div class="project-list" style="display: flex; flex-direction: column; gap: 0;">
-      {featuredProjects.map((project) => <ProjectCard project={project} />)}
     </div>
   </section>
 
