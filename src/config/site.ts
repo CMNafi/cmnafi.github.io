@@ -12,7 +12,7 @@ export const siteConfig = {
     { id: 'connect', label: 'Connect', href: '/connect' }
   ],
   socialLinks: [
-    { label: 'GitHub', href: 'https://github.com/cmnafi' },
+    { label: 'GitHub', href: 'https://github.com/CMNafi' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/cm-nafi/' },
     { label: 'Email', href: 'mailto:nafi@cmnafi.com' }
   ],

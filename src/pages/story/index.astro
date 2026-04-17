@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TelemetryGrid from '@/components/telemetry/TelemetryGrid.astro';
+import SectorBadge from '@/components/telemetry/SectorBadge.astro';
+
+const updated = "2026-04-17";
 ---
 
 <BaseLayout title="My Story">
@@ -11,38 +14,168 @@ import TelemetryGrid from '@/components/telemetry/TelemetryGrid.astro';
 
   <main class="story-viewport">
     <article class="paddock-article">
-      <header class="article-header">
-        <h1>Driver Profile</h1>
-        <p class="summary">The route through Bangladesh, China, and the United States that shaped the systems I build today.</p>
+      
+      <header class="recruiter-strip">
+        <h1 class="driver-name">C M Nafi</h1>
+        <p class="driver-subtitle">Solutions Engineer · Finance & Data Infrastructure</p>
+        
         <div class="t-wrap">
           <TelemetryGrid 
-            updated={new Date().toLocaleDateString()}
-            status="live"
-            stack="Bangladesh, China, USA"
+            updated={updated}
+            status="Open to conversations"
+            stack="3+ years in institutional finance"
             link="#"
-            linkLabel="VERIFIED"
+            linkLabel="US Citizen / Green Card"
           />
+        </div>
+        
+        <div class="filter-chips">
+          <a href="/resume.pdf" target="_blank" class="chip">DOWNLOAD RÉSUMÉ → PDF</a>
+          <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" class="chip">LINKEDIN ↗</a>
+          <a href="mailto:nafi@cmnafi.com" class="chip">EMAIL</a>
+          <a href="#" class="chip">BOOK 20 MIN ↗</a>
         </div>
       </header>
 
       <div class="prose">
-        <h2>Origins</h2>
-        <p>I grew up in Bangladesh and moved to China alone at 16 on a full scholarship to a UWC. Living independently pushed me to understand systems and self-reliance early. I later moved to a small 8,000-person town in Iowa for college, experiencing an entirely different scale of community.</p>
+        <div class="story-section">
+          <div class="section-badge"><SectorBadge variant="p1" label="THE SHORT ANSWER" /></div>
+          <p>I'm a solutions engineer at Dasseti, working at the intersection of institutional capital and the data infrastructure that moves it. I grew up in Bangladesh, left home at sixteen on a full scholarship to a United World College in China, and landed in a town of eight thousand in Iowa for university. I've since worked with BlackRock, Mayo Clinic, and SkyBridge Capital — three very different institutions that share a single truth: the answer is almost always in the data, and the edge is almost always in how quickly you can get to it. I build tools, I ship writing, and I try to keep the feedback loop short.</p>
+        </div>
 
-        <h2>Career</h2>
-        <p>My professional career spans asset management, sovereign wealth advisory, and data engineering. I’ve worked with BlackRock, Mayo Clinic, and SkyBridge Capital, learning how institutional capital flows and where inefficiencies hide.</p>
-        
-        <h2>Current Lap</h2>
-        <p>I am currently living in Tampa, Florida, and working at Dasseti as a Solutions Engineer. Across all my roles, my focus remains the same: building resilient, scalable tools that solve high-leverage problems. The rest of my time is spent reading, writing, and watching F1 or cricket.</p>
+        <div class="story-section">
+          <div class="section-badge"><SectorBadge variant="p2" label="QUALIFYING ROUND" /></div>
+          <h3>Bangladesh → China → Iowa → Tampa</h3>
+          <p>I grew up in <strong>Dinajpur, Bangladesh</strong>, in a household that treated reading as the default answer to boredom. At sixteen I left on a full scholarship to <strong>UWC Changshu (China)</strong>, moving to a country where I didn't speak the language and learning most of what I know about self-reliance in the space of two years.</p>
+          <p>University took me to <strong>Luther College in Decorah, Iowa</strong> — a town of eight thousand people where winter teaches you patience and a small campus teaches you that depth beats breadth if you let it. I majored in <strong>Data Science</strong> and minored in <strong>Computer Science</strong>, and graduated <strong>2022</strong>.</p>
+          <p>I now live in <strong>Tampa, Florida</strong>, which is where the F1, the cricket, and the work all happen to sit.</p>
+          <blockquote><strong>What the route gave me:</strong> the instinct to read a system top-down and bottom-up at the same time, comfort with being the newest person in the room, and a bias for building the tool I wish existed instead of complaining about the one that doesn't.</blockquote>
+        </div>
 
-        <hr />
+        <div class="story-section career-section">
+          <div class="section-badge"><SectorBadge variant="p3" label="THE RACE" /></div>
+          
+          <div class="brew-card stint-card">
+            <div class="brew-meta">
+              <span class="brew-accent badge-project">DASSETI</span>
+              <span class="brew-date">2023 – Present · Remote / Tampa, FL</span>
+            </div>
+            <h3>Solutions Engineer</h3>
+            <p>A data platform used by institutional allocators to run due diligence on asset managers. I sit between product, engineering, and the allocators themselves — turning what a client needs into what the platform does.</p>
+            <ul>
+              <li>Onboard institutional clients onto the DDQ platform and shape the data pipeline that feeds their manager-monitoring workflows.</li>
+              <li>Build integrations against SEC EDGAR, Form ADV, and third-party data providers.</li>
+              <li>Partner with engineering on features that started as client-specific and graduated into the core product.</li>
+            </ul>
+            <p><strong>Why it matters:</strong> Every feature I ship saves an analyst somewhere a week of manual spreadsheet work.</p>
+          </div>
 
-        <h3>Interests</h3>
-        <ul>
-          <li><strong>Cricket:</strong> A lifelong obsession. The strategy and pacing of a test match taught me patience.</li>
-          <li><strong>Books:</strong> Constant studying of finance, biographies, and technical systems.</li>
-          <li><strong>Formula 1:</strong> Engineering pushed to its breaking point. There is an absolute truth to the stopwatch.</li>
-        </ul>
+          <div class="brew-card stint-card">
+            <div class="brew-meta">
+              <span class="brew-accent badge-note">SKYBRIDGE CAPITAL</span>
+              <span class="brew-date">2021 – 2022 · New York, NY</span>
+            </div>
+            <h3>Data Analyst</h3>
+            <p>A multi-strategy alternative investment firm. Exposure to fund-of-funds construction, manager selection, and the operational side of allocating capital at institutional scale.</p>
+            <ul>
+              <li>Supported the manager-selection team with quantitative screening models across 200+ hedge fund profiles.</li>
+              <li>Built internal dashboards tracking exposure by strategy, geography, and liquidity profile.</li>
+              <li>Contributed to investment memos for alternative mandates.</li>
+            </ul>
+          </div>
+
+          <div class="brew-card stint-card">
+            <div class="brew-meta">
+              <span class="brew-accent badge-note">MAYO CLINIC</span>
+              <span class="brew-date">2021 – 2022 · Rochester, MN</span>
+            </div>
+            <h3>Data Engineer</h3>
+            <p>A healthcare institution where the data engineering is operating at a scale most fintechs never see. The lesson was that reliability beats cleverness, and that messy real-world data is the job, not an obstacle to the job.</p>
+            <ul>
+              <li>Engineered ETL pipelines against clinical data sets serving research teams.</li>
+              <li>Owned and automated reporting pipelines handling high-velocity data.</li>
+              <li>Partnered with clinical stakeholders to translate ambiguous questions into measurable outputs.</li>
+            </ul>
+          </div>
+
+          <div class="brew-card stint-card">
+            <div class="brew-meta">
+              <span class="brew-accent badge-note">BLACKROCK</span>
+              <span class="brew-date">2022 – 2023 · NYC</span>
+            </div>
+            <h3>Data Analyst</h3>
+            <p>The world's largest asset manager. The first place I learned that a trillion dollars is a spreadsheet problem, a risk problem, and a storytelling problem all at once.</p>
+            <ul>
+              <li>Analytics team, working on risk reporting and fund performance metrics.</li>
+              <li>Built dashboards mapping capital flow analytics to strategy performance.</li>
+              <li>Presented findings to senior stakeholders at the end of the program.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="story-section">
+          <div class="section-badge"><SectorBadge variant="p1" label="CURRENT LAP" /></div>
+          <p>Day job is Dasseti. Outside that, I'm building a set of <strong>public finance data tools</strong> at <a href="/garage">cmnafi.com/garage</a> — most notably the ADV Screener, a 13F Data Finder, and a manager intelligence dashboard that ties entity resolution, regulatory filings, and narrative summarization together. They're works in progress on purpose.</p>
+          <p>I also write <strong>one or two Field Notes a week</strong> on <a href="/field-notes">cmnafi.com/field-notes</a> covering the corners of institutional finance, venture capital, and market structure that I find most worth explaining. The writing and the tools feed each other — every post surfaces something worth turning into a tool, and every tool surfaces something worth writing about.</p>
+        </div>
+
+        <div class="story-section telemetry-grid-stint">
+          <div class="section-badge"><SectorBadge variant="p2" label="THE SPECS" /></div>
+          <div class="spec-grid">
+            <div class="spec-col">
+              <h4>Languages & frameworks</h4>
+              <p>TypeScript · Python · SQL · Astro · Next.js · React · MDX</p>
+              <h4>Data & infra</h4>
+              <p>PostgreSQL · pgvector · Supabase · Pandas · REST/GraphQL APIs · SEC EDGAR</p>
+            </div>
+            <div class="spec-col">
+              <h4>AI & tooling</h4>
+              <p>OpenAI / Anthropic APIs · Claude Code + gstack · embeddings and hybrid search · agent workflows</p>
+              <h4>Domains</h4>
+              <p>Institutional asset management · hedge funds & alternatives · regulatory data (Form ADV, 13F) · due-diligence workflows · capital markets · sports finance and private equity.</p>
+            </div>
+            <div class="spec-col">
+              <h4>How I work</h4>
+              <p>Bias to ship · one pager before a system · short feedback loops · writing is thinking · small tools over big platforms · tests the moment a bug appears, not before.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-section">
+          <div class="section-badge"><SectorBadge variant="p3" label="EDUCATION" /></div>
+          <ul>
+            <li><strong>Luther College</strong>, Decorah, Iowa · B.A. in Data Science, Computer Science minor, 2022.</li>
+            <li><strong>UWC Changshu, China</strong> · IB Diploma. Full merit scholarship.</li>
+          </ul>
+          <h4 class="cert-title">Key Certifications</h4>
+          <ul>
+            <li>IBM: Introduction to Data Engineering</li>
+            <li>Google: Data Analytics Professional Certificate</li>
+            <li>DeepLearning.AI: Neural Networks and Deep Learning</li>
+            <li>Salesforce: Einstein Analytics</li>
+          </ul>
+        </div>
+
+        <div class="story-section">
+          <div class="section-badge"><SectorBadge variant="sector1" label="THE PADDOCK" /></div>
+          <p>I play <strong>competitive cricket</strong> on the weekends — currently turning out for <strong>Tampa Bengals</strong> in the Tampa league. Five-wicket hauls and narrow chases show up on the blog with surprising regularity.</p>
+          <p>I follow <strong>Formula 1</strong> the way some people follow theology — I can tell you which team's pit wall is worth listening to on radio and which corner at Suzuka decides a season. I read a book a month, mostly non-fiction, and occasionally a novel that makes me feel underprepared.</p>
+          <p>If we ever talk, there's a non-trivial chance it drifts into one of these.</p>
+        </div>
+
+        <div class="story-section">
+          <div class="section-badge"><SectorBadge variant="sector2" label="PIT BOX" /></div>
+          <ul class="contact-list">
+            <li>✉️ <strong>Email</strong> — <a href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a> · replies within two business days.</li>
+            <li>💼 <strong>LinkedIn</strong> — <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank">linkedin.com/in/cm-nafi</a></li>
+            <li>💻 <strong>GitHub</strong> — <a href="https://github.com/CMNafi" target="_blank">github.com/CMNafi</a></li>
+            <li>📅 <strong>20-minute intro call</strong> — <a href="#">Book Meeting</a></li>
+          </ul>
+          <br/>
+          <p><strong>I'm most useful in conversations about:</strong> institutional finance data infrastructure, tools for allocators and due-diligence teams, solutions engineering at finance-adjacent SaaS, and technical writing for finance audiences.</p>
+          <p><strong>I'm probably not your person for:</strong> sell-side equity research roles, pure quant trading seats, or anything that requires me to stop building things to run a long sales cycle.</p>
+        </div>
+
       </div>
     </article>
   </main>
@@ -56,16 +189,123 @@ import TelemetryGrid from '@/components/telemetry/TelemetryGrid.astro';
   .story-viewport { min-height: 100vh; background: var(--paddock-black); }
   .paddock-article { max-width: 800px; margin: 0 auto; padding: 2rem 2rem 6rem; }
   
-  .article-header { border-bottom: 1px solid var(--carbon); padding-bottom: 3rem; margin-bottom: 3rem; }
-  .article-header h1 { font-family: var(--font-display); font-size: clamp(3rem, 5vw, 4rem); margin: 0 0 1rem; color: var(--pitlane-white); line-height: 1.1; }
-  .summary { font-family: var(--font-body); font-size: 1.25rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
-  .t-wrap { max-width: 600px; }
-  
+  .recruiter-strip {
+    border-bottom: 1px solid var(--carbon);
+    padding-bottom: 3rem;
+    margin-bottom: 4rem;
+  }
+  .driver-name {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 5vw, 4rem);
+    margin: 0 0 0.5rem;
+    color: var(--pitlane-white);
+    line-height: 1.1;
+  }
+  .driver-subtitle {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .t-wrap { max-width: 700px; margin-bottom: 2rem; }
+
+  /* CHIPS */
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 2rem;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 11px;
+    border: 1px solid var(--graphite);
+    border-radius: var(--radius-chip);
+    padding: 0.6rem 1rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  .chip:hover {
+    background: var(--pitlane-white);
+    color: var(--paddock-black);
+    border-color: var(--pitlane-white);
+  }
+
+  /* STORY SECTIONS */
   .prose { font-family: var(--font-body); font-size: 1.15rem; line-height: 1.8; color: var(--text); }
-  .prose h2 { font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4rem; margin-bottom: 1.5rem; color: var(--warning-amber); border-bottom: 1px solid var(--graphite); padding-bottom: 0.5rem; }
-  .prose h3 { font-family: var(--font-display); font-size: 1.8rem; margin-top: 3rem; margin-bottom: 1rem; color: var(--pitlane-white); }
-  .prose p { margin-bottom: 1.5rem; }
-  .prose ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
-  .prose li { margin-bottom: 0.5rem; }
-  .prose hr { border: none; border-top: 1px solid var(--graphite); margin: 3rem 0; }
+  .story-section { margin-bottom: 5rem; }
+  .section-badge { margin-bottom: 1.5rem; }
+  
+  .prose h3 { font-family: var(--font-display); font-size: 1.8rem; margin-top: 1rem; margin-bottom: 1rem; color: var(--pitlane-white); }
+  .prose p { margin-bottom: 1.5rem; color: rgba(244, 244, 241, 0.85); }
+  .prose strong { color: var(--pitlane-white); }
+  .prose a { color: var(--telemetry-green); text-decoration: underline; text-decoration-color: rgba(0, 230, 118, 0.4); text-underline-offset: 4px; transition: 0.2s; }
+  .prose a:hover { text-decoration-color: var(--telemetry-green); }
+  .prose blockquote { border-left: 3px solid var(--warning-amber); padding-left: 1.5rem; margin-left: 0; font-style: italic; color: rgba(255, 255, 255, 0.7); }
+  
+  /* STINT CARDS (Garage style) */
+  .brew-card {
+    display: block;
+    background: var(--carbon);
+    padding: 2rem;
+    border: 1px solid var(--graphite);
+    border-radius: var(--radius-card);
+    margin-bottom: 1.5rem;
+  }
+  .brew-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .brew-accent { padding: 0.3rem 0.6rem; border-radius: 2px; }
+  .badge-project { background: rgba(0, 230, 118, 0.1); color: var(--telemetry-green); }
+  .badge-note { background: rgba(139, 145, 154, 0.1); color: var(--muted); }
+  .brew-date { color: var(--muted); }
+
+  .brew-card h3 { font-family: var(--font-display); font-size: 1.8rem; color: var(--pitlane-white); margin: 0 0 1rem 0; }
+  .brew-card p { font-size: 1rem; color: rgba(244, 244, 241, 0.7); margin-bottom: 1rem; }
+  .brew-card ul { margin: 0 0 1.5rem 0; padding-left: 1.2rem; }
+  .brew-card li { font-size: 1rem; color: rgba(244, 244, 241, 0.8); margin-bottom: 0.5rem; }
+
+  /* GRID FOR SPECS */
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .spec-col h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--graphite);
+    padding-bottom: 0.5rem;
+  }
+  .spec-col p { font-size: 1rem; }
+
+  /* LISTS */
+  .prose ul.contact-list { list-style: none; padding: 0; }
+  .prose ul.contact-list li { margin-bottom: 1rem; }
+  .cert-title {
+    font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase;
+    margin-top: 2rem; margin-bottom: 1rem;
+  }
+
+  @media print {
+    .paddock-override-nav, .filter-chips { display: none !important; }
+    .story-viewport { background: #fff; color: #000; }
+    .prose a { color: #000; text-decoration: none; }
+  }
 </style>
