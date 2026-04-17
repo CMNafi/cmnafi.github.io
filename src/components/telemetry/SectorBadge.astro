@@ -1,0 +1,40 @@
+---
+interface Props {
+  variant: 'p1' | 'p2' | 'p3' | 'sector1' | 'sector2' | 'sector3';
+  label?: string;
+}
+const { variant, label } = Astro.props;
+const displayLabel = label || variant.toUpperCase();
+
+const bgMap: Record<string, string> = {
+  p1: 'var(--violet-flag)',
+  p2: 'var(--telemetry-green)',
+  p3: 'var(--warning-amber)',
+  sector1: 'var(--graphite)',
+  sector2: 'var(--graphite)',
+  sector3: 'var(--graphite)'
+};
+
+const bgColor = bgMap[variant] || 'var(--graphite)';
+---
+
+<div class="sector-badge" style={`background-color: ${bgColor}`}>
+  {displayLabel}
+</div>
+
+<style>
+  .sector-badge {
+    font-family: var(--font-mono);
+    color: var(--pitlane-white);
+    padding: 4px 8px;
+    border-radius: var(--radius-chip);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+  }
+</style>

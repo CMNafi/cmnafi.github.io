@@ -1,0 +1,40 @@
+---
+interface Props {
+  time?: string;
+}
+const { time = "00:00.000" } = Astro.props;
+---
+<div class="lap-timer" id="global-lap-timer">
+  <span class="digits">00:00.000</span>
+</div>
+
+<script>
+  // Simple running lap timer script 
+  const timerEl = document.querySelector('#global-lap-timer .digits');
+  if (timerEl) {
+    const startTime = Date.now();
+    setInterval(() => {
+      const ms = Date.now() - startTime;
+      const minutes = Math.floor(ms / 60000).toString().padStart(2, '0');
+      const seconds = Math.floor((ms % 60000) / 1000).toString().padStart(2, '0');
+      const millis = (ms % 1000).toString().padStart(3, '0');
+      timerEl.textContent = `${minutes}:${seconds}.${millis}`;
+    }, 10);
+  }
+</script>
+
+<style>
+  .lap-timer {
+    font-family: var(--font-mono);
+    color: var(--telemetry-green);
+    background: var(--carbon);
+    border: 1px solid var(--graphite);
+    padding: 4px var(--grid-unit);
+    border-radius: var(--radius-chip);
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

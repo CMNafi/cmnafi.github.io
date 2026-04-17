@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/nafic/Desktop/career-ops/**)",
+      "Bash(npx playwright:*)",
+      "Bash(cp config/profile.example.yml config/profile.yml)",
+      "Bash(cp templates/portals.example.yml portals.yml)",
+      "WebFetch(domain:www.linkedin.com)",
+      "WebFetch(domain:cmnafi.com)",
+      "Bash(xargs grep:*)"
+    ]
+  }
+}

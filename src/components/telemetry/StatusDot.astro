@@ -1,0 +1,38 @@
+---
+interface Props {
+  state: 'live' | 'brewing' | 'parked';
+}
+const { state } = Astro.props;
+---
+
+<span class={`status-dot ${state}`}></span>
+
+<style>
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .live {
+    background-color: var(--racing-red);
+    box-shadow: 0 0 6px var(--racing-red);
+    animation: pulse-live 2s infinite var(--ease-launch);
+  }
+
+  .brewing {
+    background-color: var(--warning-amber);
+    box-shadow: 0 0 4px var(--warning-amber);
+  }
+
+  .parked {
+    background-color: var(--muted);
+  }
+
+  @keyframes pulse-live {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+</style>

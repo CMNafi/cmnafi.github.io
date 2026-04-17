@@ -1,0 +1,26 @@
+:root {
+  /* Palette — lock it, never add */
+  --paddock-black:   #0A0B0D;   /* page base */
+  --carbon:          #14161B;   /* surface 1 */
+  --graphite:        #1F232B;   /* surface 2 */
+  --pitlane-white:   #F4F4F1;   /* ink on dark */
+  --telemetry-green: #00E676;   /* success, current lap */
+  --warning-amber:   #FFB300;   /* caution, brewing */
+  --racing-red:      #E10600;   /* live, attention */
+  --violet-flag:     #7F5AF0;   /* personal best */
+
+  /* Typography — two fonts, both distinctive */
+  --font-display: "PP Editorial New", "GT Sectra", Georgia, serif;
+  --font-mono:    "JetBrains Mono", "Berkeley Mono", ui-monospace, monospace;
+  --font-body:    "Söhne", "Fraunces", Georgia, serif;
+
+  /* Grid */
+  --grid-unit: 8px;
+  --radius-chip: 2px;    /* tight, technical */
+  --radius-card: 4px;
+
+  /* Motion — easing modeled on acceleration curves */
+  --ease-launch:   cubic-bezier(.2, .8, .2, 1);      /* out of pitlane */
+  --ease-tire:     cubic-bezier(.6, .04, .98, .335); /* braking */
+  --ease-downforce: cubic-bezier(.4, 0, .2, 1);      /* neutral */
+}

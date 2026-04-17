@@ -1,0 +1,103 @@
+---
+interface Props {
+  updated: string;
+  status: 'live' | 'brewing' | 'parked';
+  stack: string;
+  link?: string;
+  linkLabel?: string;
+}
+const { updated, status, stack, link, linkLabel = "VIEW →" } = Astro.props;
+import StatusDot from './StatusDot.astro';
+---
+
+<div class="telemetry-grid">
+  <div class="t-col">
+    <div class="t-label">UPDATED</div>
+    <div class="t-val">{updated}</div>
+  </div>
+  <div class="t-col">
+    <div class="t-label">STATUS</div>
+    <div class="t-val status-val">
+      <StatusDot state={status} />
+      <span>{status.toUpperCase()}</span>
+    </div>
+  </div>
+  <div class="t-col">
+    <div class="t-label">STACK</div>
+    <div class="t-val">{stack}</div>
+  </div>
+  <div class="t-col">
+    <div class="t-label">LINK</div>
+    <div class="t-val">
+      {link ? (
+        <a href={link} class="t-link" target="_blank" rel="noopener">{linkLabel}</a>
+      ) : (
+        <span class="t-none">--/--</span>
+      )}
+    </div>
+  </div>
+</div>
+
+<style>
+  .telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: calc(var(--grid-unit) * 2);
+    background: var(--carbon);
+    border: 1px solid var(--graphite);
+    padding: calc(var(--grid-unit) * 2);
+    border-radius: var(--radius-card);
+    font-family: var(--font-mono);
+  }
+
+  .t-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-right: 1px dashed var(--graphite);
+    padding-left: 16px;
+  }
+  .t-col:first-child { padding-left: 0; }
+  .t-col:last-child { border-right: none; }
+
+  .t-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .t-val {
+    font-size: 14px;
+    color: var(--pitlane-white);
+  }
+
+  .status-val {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .t-link {
+    color: var(--telemetry-green);
+    text-decoration: none;
+    transition: color 0.2s var(--ease-launch);
+  }
+  .t-link:hover {
+    color: var(--pitlane-white);
+  }
+  
+  .t-none {
+    color: var(--muted);
+  }
+
+  @media (max-width: 768px) {
+    .telemetry-grid {
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 24px;
+    }
+    .t-col {
+      border-right: none;
+      padding-left: 0;
+    }
+  }
+</style>

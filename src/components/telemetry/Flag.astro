@@ -1,0 +1,39 @@
+---
+interface Props {
+  color: 'checkered' | 'yellow' | 'red' | 'green';
+}
+const { color } = Astro.props;
+---
+
+<div class={`flag ${color}`}>
+  {color === 'checkered' && <div class="checker-pattern"></div>}
+</div>
+
+<style>
+  .flag {
+    width: 20px;
+    height: 14px;
+    display: inline-block;
+    border-radius: 1px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .yellow { background-color: var(--warning-amber); }
+  .red { background-color: var(--racing-red); }
+  .green { background-color: var(--telemetry-green); }
+
+  .checkered {
+    background-color: var(--pitlane-white);
+  }
+  .checker-pattern {
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(45deg, var(--paddock-black) 25%, transparent 25%, transparent 75%, var(--paddock-black) 75%),
+      linear-gradient(45deg, var(--paddock-black) 25%, transparent 25%, transparent 75%, var(--paddock-black) 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 4px 4px;
+  }
+</style>
