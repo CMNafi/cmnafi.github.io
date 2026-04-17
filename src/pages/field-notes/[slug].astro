@@ -15,8 +15,8 @@ export async function getStaticPaths() {
 const { note } = Astro.props;
 const { Content } = await note.render();
 ---
-<BaseLayout title={note.data.title}>
-  <div class="note-detail">
+<BaseLayout title={note.data.title} hideHeader={true}>
+  <div class={`note-detail ${note.data.category === 'Cricket' ? 'theme-cricket' : ''}`}>
     <nav class="paddock-override-nav">
       <a href="/field-notes" class="return-wall">← SECURE COMMS</a>
       <div class="nav-title">INCOMING TELEMETRY</div>
@@ -72,4 +72,23 @@ const { Content } = await note.render();
   .prose :global(ul), .prose :global(ol) { margin-bottom: 1.8rem; padding-left: 1.5rem; }
   .prose :global(li) { margin-bottom: 0.8rem; }
   .prose :global(img) { max-width: 100%; height: auto; border-radius: var(--radius-card); margin: 2rem 0; border: 1px solid var(--carbon); }
+
+  /* CRICKET VIBE OVERRIDES */
+  .theme-cricket {
+    background-color: #0d2912 !important; /* Pitch grass green */
+  }
+  .theme-cricket .article-header { border-bottom: 1px solid rgba(255, 255, 255, 0.4); }
+  .theme-cricket .paddock-override-nav { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+  .theme-cricket .prose :global(h2) {
+    color: #fff;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.5); /* Pitch crease line metaphor */
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .theme-cricket .prose :global(blockquote) {
+    border-left: 3px solid #fff;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .theme-cricket .prose :global(a) { color: #fff; text-decoration-color: rgba(255,255,255,0.4); }
+  .theme-cricket .prose :global(a:hover) { text-decoration-color: #fff; }
 </style>

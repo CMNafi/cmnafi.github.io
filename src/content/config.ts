@@ -7,7 +7,8 @@ const fieldNotes = defineCollection({
     description: z.string(),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
-    category: z.enum(['Books', 'Movies', 'Games', 'Cricket', 'Essays', 'Notes', 'Travel', 'Product', 'Finance']),
+    category: z.enum(['Books', 'Finance', 'Cricket', 'Brewing']),
+    subCategory: z.enum(['Venture Capital', 'Private Equity', 'Public Equities', 'Macro', 'General']).optional(),
     tags: z.array(z.string()).default([]),
     coverImage: z.string().optional(),
     excerpt: z.string(),
@@ -20,6 +21,14 @@ const fieldNotes = defineCollection({
     paperColor: z.string().optional(),
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional()
+  }).refine(data => {
+    if (data.category === 'Finance' && !data.subCategory) {
+      return false;
+    }
+    return true;
+  }, {
+    message: "A field note categorized as 'Finance' MUST specify a valid 'subCategory'.",
+    path: ["subCategory"]
   })
 });
 

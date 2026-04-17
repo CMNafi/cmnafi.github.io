@@ -1,0 +1,235 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// Get brewing notes
+const notes = await getCollection('field-notes');
+const brewingNotes = notes.filter(n => n.data.category === 'Brewing');
+
+// Get brewing projects
+const projects = await getCollection('projects');
+const brewingProjects = projects.filter(p => p.data.status === 'brewing' || p.data.status === 'parked');
+
+// Sort
+brewingNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+brewingProjects.sort((a, b) => b.data.updatedAt.valueOf() - a.data.updatedAt.valueOf());
+---
+
+<BaseLayout title="Brewing" hideHeader={true}>
+  <nav class="paddock-override-nav">
+    <a href="/" class="return-wall">← PIT WALL</a>
+    <div class="nav-title">R&D LAB</div>
+  </nav>
+
+  <main class="brewing-viewport">
+    <div class="brewing-container">
+      
+      <header class="brewing-header">
+        <div class="coffee-wrapper">
+          <div class="steam steam-1"></div>
+          <div class="steam steam-2"></div>
+          <div class="steam steam-3"></div>
+          <svg class="coffee-cup" viewBox="0 0 100 100">
+            <path d="M20,35 L80,35 L70,85 C68,95 55,100 50,100 C45,100 32,95 30,85 Z" fill="var(--carbon)" fill-opacity="0.5" stroke="var(--warning-amber)" stroke-width="4" stroke-linecap="round"/>
+            <path d="M80,45 C98,45 98,75 80,75" fill="none" stroke="var(--warning-amber)" stroke-width="4" stroke-linecap="round"/>
+            <path d="M25,45 C40,55 60,35 75,45" fill="none" stroke="var(--graphite)" stroke-width="2" stroke-linecap="round" opacity="0.3" />
+          </svg>
+        </div>
+        <h1>Brewing</h1>
+        <p>Experiments, drafts, orphaned ideas, and projects that haven't hit the track yet.</p>
+      </header>
+
+      <div class="brewing-grid">
+        <section class="brewing-column">
+          <h2>Projects on the lift</h2>
+          <div class="list-wrapper">
+            {brewingProjects.map(project => (
+              <a href={`/garage/${project.slug}`} class="brew-card">
+                <div class="brew-meta">
+                  <span class="brew-accent badge-project">PROJECT</span>
+                  <span class="brew-date">{project.data.updatedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric'})}</span>
+                </div>
+                <h3>{project.data.title}</h3>
+                <p>{project.data.description}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section class="brewing-column">
+          <h2>Notes & Early Drafts</h2>
+          <div class="list-wrapper">
+            {brewingNotes.map(note => (
+              <a href={`/field-notes/${note.slug}`} class="brew-card">
+                <div class="brew-meta">
+                  <span class="brew-accent badge-note">NOTE</span>
+                  <span class="brew-date">{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric'})}</span>
+                </div>
+                <h3>{note.data.title}</h3>
+                <p>{note.data.description || note.data.excerpt}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .paddock-override-nav {
+    display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono);
+  }
+  .return-wall { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
+  .return-wall:hover { color: var(--pitlane-white); }
+  .nav-title { color: var(--pitlane-white); font-size: 11px; letter-spacing: 0.15em; }
+
+  .brewing-viewport {
+    min-height: 100vh;
+    background: var(--paddock-black);
+    padding: 2rem;
+  }
+  .brewing-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .brewing-header {
+    margin-bottom: 5rem;
+    margin-top: 2rem;
+  }
+  .brewing-header h1 {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    color: var(--pitlane-white);
+    margin: 0 0 1rem 0;
+  }
+  .brewing-header p {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    color: var(--muted);
+    max-width: 600px;
+  }
+
+  /* COFFEE ANIMATION */
+  .coffee-wrapper {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 2rem;
+  }
+  .coffee-cup {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: relative;
+    z-index: 2;
+  }
+  .steam {
+    position: absolute;
+    bottom: 55px;
+    width: 3px;
+    height: 15px;
+    background: var(--warning-amber);
+    border-radius: 4px;
+    opacity: 0;
+    filter: blur(2px);
+    animation: rise 3s infinite ease-in;
+  }
+  .steam-1 { left: 20px; animation-delay: 0s; }
+  .steam-2 { left: 30px; height: 20px; animation-delay: 1.5s; background: var(--pitlane-white); }
+  .steam-3 { left: 40px; animation-delay: 0.8s; }
+
+  @keyframes rise {
+    0% { transform: translateY(0) scaleX(1); opacity: 0; }
+    20% { opacity: 0.8; }
+    50% { transform: translateY(-15px) scaleX(1.5); opacity: 0.4; }
+    100% { transform: translateY(-30px) scaleX(2); opacity: 0; }
+  }
+
+  /* GRID */
+  .brewing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+
+  .brewing-column h2 {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--graphite);
+    padding-bottom: 1rem;
+  }
+
+  .list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .brew-card {
+    display: block;
+    background: var(--carbon);
+    padding: 1.5rem;
+    border: 1px solid var(--graphite);
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  .brew-card:hover {
+    border-color: var(--warning-amber);
+    transform: translateY(-2px);
+  }
+
+  .brew-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .brew-accent {
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+  }
+  .badge-project {
+    background: rgba(255, 179, 0, 0.1);
+    color: var(--warning-amber);
+  }
+  .badge-note {
+    background: rgba(127, 90, 240, 0.1);
+    color: var(--violet-flag);
+  }
+  .brew-date {
+    color: var(--muted);
+  }
+
+  .brew-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--pitlane-white);
+    margin: 0 0 0.5rem 0;
+  }
+  .brew-card p {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: rgba(244, 244, 241, 0.6);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (max-width: 768px) {
+    .brewing-grid { grid-template-columns: 1fr; gap: 3rem; }
+  }
+</style>

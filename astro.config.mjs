@@ -12,7 +12,6 @@ export default defineConfig({
   },
   redirects: {
     '/projects': '/garage',
-    '/projects/field-notes': '/field-notes',
-    '/brewing': '/garage'
+    '/projects/field-notes': '/field-notes'
   }
 });

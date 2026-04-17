@@ -4,18 +4,18 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Flag from '@/components/telemetry/Flag.astro';
 import SectorBadge from '@/components/telemetry/SectorBadge.astro';
 
-const allNotes = await getCollection('field-notes');
+const rawNotes = await getCollection('field-notes');
+const allNotes = rawNotes.filter(n => n.data.category !== 'Brewing');
 
-// Aggregate categories and group
 const categoryCounts = allNotes.reduce((acc, note) => {
   acc[note.data.category] = (acc[note.data.category] || 0) + 1;
   return acc;
 }, {} as Record<string, number>);
 
-// Order categories by volume desc
 const sortedCategories = Object.keys(categoryCounts).sort((a, b) => categoryCounts[b] - categoryCounts[a]);
 
-// Group notes by category (chronological per category)
+const subCategories = [...new Set(allNotes.filter(n => n.data.category === 'Finance').map(n => n.data.subCategory).filter(Boolean))];
+
 const notesByCategory = sortedCategories.reduce((acc, cat) => {
   acc[cat] = allNotes
     .filter(n => n.data.category === cat)
@@ -23,7 +23,6 @@ const notesByCategory = sortedCategories.reduce((acc, cat) => {
   return acc;
 }, {} as Record<string, any[]>);
 
-// Flat chronological for the specific category filtered view
 const flatSortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
 const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
@@ -44,16 +43,23 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
         
         <!-- Category Filter Chips -->
         <div class="filter-chips">
-          <a href="/field-notes" class="chip" data-cat="all">ALL</a>
+          <a href="/field-notes" class="chip top-chip" data-cat="all">ALL</a>
           {sortedCategories.map(cat => (
-            <a href={`/field-notes?category=${slugify(cat)}`} class="chip" data-cat={slugify(cat)}>{cat.toUpperCase()}</a>
+            <a href={`/field-notes?category=${slugify(cat)}`} class="chip top-chip" data-cat={slugify(cat)}>{cat.toUpperCase()}</a>
           ))}
+        </div>
+
+        <!-- Sub-Category Filter Chips (Dynamic injection for Finance) -->
+        <div class="filter-chips sub-chips hidden" id="finance-sub-chips">
+           <a href="#" class="chip subchip active" data-subcat="all">ALL FINANCE</a>
+           {subCategories.map(sub => (
+              <a href="#" class="chip subchip" data-subcat={slugify(sub)}>{sub.toUpperCase()}</a>
+           ))}
         </div>
       </header>
 
       <div class="main-feed-container" id="notes-feed">
         
-        <!-- DEFAULT 'ALL' VIEW: Sections -->
         <div id="all-view" class="view-layer">
           {sortedCategories.map(cat => {
             const catNotes = notesByCategory[cat];
@@ -71,7 +77,7 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
                       </div>
                       <a href={`/field-notes/${note.slug}`} class="note-content">
                         <div class="note-meta">
-                          <SectorBadge variant="sector2" label={note.data.category} />
+                          <SectorBadge variant="sector2" label={note.data.subCategory || note.data.category} />
                           <span class="read-time">{note.data.readingTime} READ</span>
                         </div>
                         <h3>{note.data.title}</h3>
@@ -89,21 +95,19 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
           })}
         </div>
 
-        <!-- FILTERED VIEW: Hidden by default -->
         <div id="filtered-view" class="view-layer hidden">
           <div class="timeline-wrapper" id="filtered-timeline">
             {flatSortedNotes.map((note, index) => (
-              <article class="note-row filtered-note" data-cat={slugify(note.data.category)}>
+              <article class="note-row filtered-note" data-cat={slugify(note.data.category)} data-subcat={note.data.subCategory ? slugify(note.data.subCategory) : 'none'}>
                 <div class="note-time">
                   <span>{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</span>
                   <div class="timeline-node">
-                    {/* The client script will inject the correct flag wrapper here */}
                     <div class="timeline-flag-inject"></div>
                   </div>
                 </div>
                 <a href={`/field-notes/${note.slug}`} class="note-content">
                   <div class="note-meta">
-                    <SectorBadge variant="sector2" label={note.data.category} />
+                    <SectorBadge variant="sector2" label={note.data.subCategory || note.data.category} />
                     <span class="read-time">{note.data.readingTime} READ</span>
                   </div>
                   <h3>{note.data.title}</h3>
@@ -120,12 +124,12 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
 </BaseLayout>
 
 <script>
-  function applyFilter() {
+  function applyFilter(overrideCat = null, subCat = 'all') {
     const params = new URLSearchParams(window.location.search);
-    const cat = params.get('category');
+    const cat = overrideCat || params.get('category');
     
-    // Chips state
-    document.querySelectorAll('.filter-chips .chip').forEach(el => {
+    // Top-level Chips state
+    document.querySelectorAll('.filter-chips > .top-chip').forEach(el => {
       el.classList.remove('active');
       if (cat) {
         if (el.getAttribute('data-cat') === cat) el.classList.add('active');
@@ -133,6 +137,19 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
         if (el.getAttribute('data-cat') === 'all') el.classList.add('active');
       }
     });
+
+    const subChipsTray = document.getElementById('finance-sub-chips');
+    if (cat === 'finance') {
+      subChipsTray?.classList.remove('hidden');
+      document.querySelectorAll('.subchip').forEach(el => {
+        el.classList.remove('active');
+        if (el.getAttribute('data-subcat') === subCat) {
+          el.classList.add('active');
+        }
+      });
+    } else {
+      subChipsTray?.classList.add('hidden');
+    }
 
     const allView = document.getElementById('all-view');
     const filteredView = document.getElementById('filtered-view');
@@ -147,12 +164,14 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
       
       let greenFlagAssigned = false;
       filteredNotes.forEach(el => {
-        const matches = el.getAttribute('data-cat') === cat;
-        if (matches) {
-          (el as HTMLElement).style.display = 'grid';
-          const flagInject = el.querySelector('.timeline-flag-inject');
+        const hElement = el as HTMLElement;
+        const matchesCat = hElement.getAttribute('data-cat') === cat;
+        const matchesSub = subCat === 'all' || hElement.getAttribute('data-subcat') === subCat;
+
+        if (matchesCat && matchesSub) {
+          hElement.style.display = 'grid';
+          const flagInject = hElement.querySelector('.timeline-flag-inject');
           if (flagInject) {
-            // Because Flag components map to classes .flag .green vs .flag .checkered and .checker-pattern
             if (!greenFlagAssigned) {
               flagInject.innerHTML = '<div class="flag green" style="width: 20px; height: 14px; background-color: var(--telemetry-green); display: inline-block; border-radius: 1px; box-shadow: 0 1px 2px rgba(0,0,0,0.5);"></div>';
               greenFlagAssigned = true;
@@ -161,30 +180,36 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
             }
           }
         } else {
-          (el as HTMLElement).style.display = 'none';
+          hElement.style.display = 'none';
         }
       });
     }
   }
 
-  // Run on mount
   applyFilter();
   
-  // Intercept chip clicks
-  document.querySelectorAll('.filter-chips .chip').forEach(el => {
+  document.querySelectorAll('.top-chip').forEach(el => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
       const href = el.getAttribute('href');
       if(href) {
         window.history.pushState({}, '', href);
         applyFilter();
-        window.scrollTo(0, 0); // scroll to top cleanly
+        window.scrollTo(0, 0);
       }
     });
   });
 
-  // Handle back button
-  window.addEventListener('popstate', applyFilter);
+  document.querySelectorAll('.subchip').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const sub = el.getAttribute('data-subcat');
+      // Push state optionally or just re-render UI state
+      applyFilter('finance', sub);
+    });
+  });
+
+  window.addEventListener('popstate', () => applyFilter());
 </script>
 
 <style>
@@ -235,6 +260,16 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
     scrollbar-width: none;
     border-bottom: 1px solid var(--graphite);
   }
+  .sub-chips {
+    border-bottom: none;
+    margin-top: 0.5rem;
+  }
+  .sub-chips .chip {
+    font-size: 10px;
+    padding: 0.3rem 0.6rem;
+    border-style: dashed;
+  }
+  
   .filter-chips::-webkit-scrollbar { display: none; }
   .chip {
     font-family: var(--font-mono);
@@ -282,7 +317,7 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
   .view-all-link {
     display: inline-block;
     margin-top: 2rem;
-    margin-left: 180px; /* Aligns with content in grid */
+    margin-left: 180px;
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.15em;
