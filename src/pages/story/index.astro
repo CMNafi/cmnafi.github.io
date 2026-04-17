@@ -1,518 +1,71 @@
 ---
-import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-
-// Pull the journey collection
-const rawChapters = (await getCollection('journey')).sort((a, b) => a.data.order - b.data.order);
-const workSlugs = ['rochester-mayo', 'boston-skybridge', 'blackrock-wilmington', 'dasseti-nyc'];
-
-const chapters = await Promise.all(
-  rawChapters.map(async (entry, index) => {
-    const { Content } = await render(entry);
-    const isWork = workSlugs.includes(entry.slug);
-    return {
-      entry,
-      Content,
-      step: String(index + 1).padStart(2, '0'),
-      index,
-      type: isWork ? 'professional' : 'personal'
-    };
-  })
-);
+import TelemetryGrid from '@/components/telemetry/TelemetryGrid.astro';
 ---
-<BaseLayout title="My Story" description="The route from Dinajpur to Tampa, and the places, schools, and jobs that changed me along the way.">
-  <div class="story-page" data-mode="professional">
-    
-    <!-- FIXED TOP CONTAINER -->
-    <header class="story-header" aria-label="Timeline Controls">
-      <div class="story-header__top">
-        <div class="story-header__content">
-          <h1>My Story</h1>
-          <!-- Professional Desc -->
-          <p class="story-header__desc mode-professional">
-            The route behind the work: schools, cities, finance roles, and the places where the work started feeling real.
-          </p>
-          <!-- Personal Desc -->
-          <p class="story-header__desc mode-personal">
-            The personal reading: leaving home early, widening the world, and figuring out what still feels like mine after all the movement.
-          </p>
-          
-          <div class="story-mode-toggle">
-            <button type="button" class="mode-btn is-active" data-mode-toggle="professional">Professional</button>
-            <button type="button" class="mode-btn" data-mode-toggle="personal">Personal</button>
-          </div>
+
+<BaseLayout title="My Story">
+  <nav class="paddock-override-nav">
+    <a href="/" class="return-wall">← PIT WALL</a>
+    <div class="nav-title">DRIVER BIOGRAPHY</div>
+  </nav>
+
+  <main class="story-viewport">
+    <article class="paddock-article">
+      <header class="article-header">
+        <h1>Driver Profile</h1>
+        <p class="summary">The route through Bangladesh, China, and the United States that shaped the systems I build today.</p>
+        <div class="t-wrap">
+          <TelemetryGrid 
+            updated={new Date().toLocaleDateString()}
+            status="live"
+            stack="Bangladesh, China, USA"
+            link="#"
+            linkLabel="VERIFIED"
+          />
         </div>
+      </header>
+
+      <div class="prose">
+        <h2>Origins</h2>
+        <p>I grew up in Bangladesh and moved to China alone at 16 on a full scholarship to a UWC. Living independently pushed me to understand systems and self-reliance early. I later moved to a small 8,000-person town in Iowa for college, experiencing an entirely different scale of community.</p>
+
+        <h2>Career</h2>
+        <p>My professional career spans asset management, sovereign wealth advisory, and data engineering. I’ve worked with BlackRock, Mayo Clinic, and SkyBridge Capital, learning how institutional capital flows and where inefficiencies hide.</p>
         
-        <div class="story-header__image">
-          <img class="mode-professional" src="/profile.jpg" alt="Professional Portrait" />
-          <img class="mode-personal" src="/journey-personal.jpeg" alt="Personal Portrait" />
-        </div>
+        <h2>Current Lap</h2>
+        <p>I am currently living in Tampa, Florida, and working at Dasseti as a Solutions Engineer. Across all my roles, my focus remains the same: building resilient, scalable tools that solve high-leverage problems. The rest of my time is spent reading, writing, and watching F1 or cricket.</p>
+
+        <hr />
+
+        <h3>Interests</h3>
+        <ul>
+          <li><strong>Cricket:</strong> A lifelong obsession. The strategy and pacing of a test match taught me patience.</li>
+          <li><strong>Books:</strong> Constant studying of finance, biographies, and technical systems.</li>
+          <li><strong>Formula 1:</strong> Engineering pushed to its breaking point. There is an absolute truth to the stopwatch.</li>
+        </ul>
       </div>
-
-      <!-- NEW: INTERACTIVE MINIMAP -->
-      <nav class="story-minimap" id="minimap" aria-label="Journey Progress Tracking">
-        <div class="minimap-track"></div>
-        {chapters.map(({ entry, type }) => (
-          <button class="minimap-dot" data-type={type} data-target={entry.slug} aria-label={`Focus on ${entry.data.place}`}>
-            <span class="dot-core"></span>
-            <span class="dot-label mode-personal">{entry.data.place.split(',')[0]}</span>
-            <span class="dot-label mode-professional">{entry.data.role ?? entry.data.organization}</span>
-          </button>
-        ))}
-      </nav>
-
-      <!-- DYNAMIC CONTEXT SUMMARY -->
-      <div class="story-blurb" id="story-blurb">
-        <p id="blurb-text">Scroll through the timeline to explore each chapter.</p>
-      </div>
-    </header>
-
-    <!-- HORIZONTAL SCROLL TIMELINE -->
-    <div class="story-timeline-wrapper" id="timeline-wrapper">
-      <div class="story-timeline-track" id="timeline-track">
-        
-        {chapters.map(({ entry, Content, step, type }) => (
-          <article class="timeline-card" data-type={type} data-slug={entry.slug} data-blurb={entry.data.blurb ?? entry.data.summary} id={entry.slug}>
-            <div class="card-meta">
-              <span class="card-step">{step}</span>
-              <span class="card-year">{entry.data.period}</span>
-            </div>
-            
-            <div class="card-header">
-              <!-- Personalized structure -->
-              <h2 class="card-place mode-personal">{entry.data.place}</h2>
-              <p class="card-org mode-personal">{entry.data.organization}</p>
-              
-              <!-- Professional structure -->
-              <h2 class="card-place mode-professional">{entry.data.organization}</h2>
-              <p class="card-org mode-professional">{entry.data.role ?? 'Role Details'}</p>
-              
-              <p class="card-theme mode-professional">{entry.data.theme}</p>
-              <p class="card-theme mode-personal">{entry.data.personalTheme ?? entry.data.theme}</p>
-            </div>
-
-            <div class="card-expandable">
-              <div class="card-expandable-inner">
-                <div class="card-summary mode-professional">
-                  <p>{entry.data.professionalSummary ?? entry.data.summary}</p>
-                </div>
-                <div class="card-summary mode-personal">
-                  <p>{entry.data.personalSummary ?? entry.data.summary}</p>
-                </div>
-                <div class="card-content">
-                  <Content />
-                </div>
-              </div>
-            </div>
-          </article>
-        ))}
-
-        <article class="timeline-card timeline-card--end" data-type="both" id="end-node" data-slug="end-node">
-          <div class="card-header">
-            <h2 class="card-place">The Present</h2>
-            <p class="card-org">What's Next</p>
-          </div>
-          
-          <div class="card-expandable">
-             <div class="card-expandable-inner">
-              <div class="card-summary">
-                <p>Once you know the route, the rest of the site stops looking random. The books, the cricket writing, and the way I talk about home all come from the same person.</p>
-              </div>
-              <div class="card-links">
-                <a href="/interests" class="story-next-btn">Open The Interests Shelf &rarr;</a>
-                <a href="/projects" class="story-next-btn">Read Active Project Work &rarr;</a>
-              </div>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </div>
-  </div>
+    </article>
+  </main>
 </BaseLayout>
 
 <style>
-  :root {
-    --bg-dark: #05070B;
-    --surface: #0B0F14;
-    --text-main: #F3F3F1;
-    --text-muted: #8B919A;
-    --accent: #E10600;
-  }
-
-  .story-page {
-    display: flex; flex-direction: column; height: 100vh;
-    background: var(--bg-dark); color: var(--text-main); overflow: hidden;
-  }
-
-  /* --- HEADER (Ultra-Compact) --- */
-  .story-header {
-    flex-shrink: 0; display: flex; flex-direction: column; gap: 0.5rem;
-    padding: 0.8rem 5vw 0.6rem; border-bottom: 2px solid rgba(225,6,0,0.4);
-    background: var(--surface); z-index: 50; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  }
+  .paddock-override-nav { display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono); }
+  .return-wall { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
+  .nav-title { color: var(--pitlane-white); font-size: 11px; letter-spacing: 0.15em; }
   
-  .story-header__top {
-    display: flex; justify-content: space-between; align-items: center;
-  }
-
-  .story-header__content { display: flex; align-items: center; gap: 2rem; }
-
-  .story-header h1 {
-    font-family: 'Sora', 'Fraunces', serif; font-size: 1.6rem;
-    margin: 0; letter-spacing: -0.04em; line-height: 1; font-weight: 800; white-space: nowrap;
-  }
-  .story-header__desc { display: none; }
-
-  /* mode toggling mappings */
-  [data-mode='professional'] .mode-personal { display: none !important; }
-  [data-mode='personal'] .mode-professional { display: none !important; }
-
-  /* Physical routing bifurcation */
-  [data-mode='professional'] .timeline-card[data-type='personal'],
-  [data-mode='professional'] .minimap-dot[data-type='personal'] { display: none !important; }
-
-  [data-mode='personal'] .timeline-card[data-type='professional'],
-  [data-mode='personal'] .minimap-dot[data-type='professional'] { display: none !important; }
-
-  .story-mode-toggle {
-    display: inline-flex; background: #05070B; border-radius: 5px; padding: 0.35rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  .mode-btn {
-    background: transparent; color: var(--text-muted); border: none;
-    padding: 0.45rem 1.2rem; border-radius: 3px; font-family: 'DM Sans', sans-serif;
-    font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.1em;
-  }
-  .mode-btn.is-active, .mode-btn:hover { background: var(--text-main); color: #000; }
-
-  .story-header__image { display: none; }
-
-  /* MINIMAP DYNAMICS */
-  .story-minimap {
-    position: relative; display: flex; justify-content: space-between; align-items: center;
-    width: 100%; max-width: 1000px; margin: 0.5rem auto 0;
-  }
-  .minimap-track {
-    position: absolute; top: 6px; left: 0; right: 0; height: 2px;
-    background: rgba(255,255,255,0.1); z-index: 0;
-  }
-  .minimap-dot {
-    position: relative; background: transparent; border: none; cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-    z-index: 10; padding: 0; outline: none; flex: 1;
-  }
-  .dot-core {
-    width: 14px; height: 14px; border-radius: 50%; background: var(--surface);
-    border: 2px solid var(--text-muted); transition: all 0.3s ease; box-shadow: 0 0 0 rgba(225,6,0,0);
-  }
-  .minimap-dot.is-active .dot-core {
-    background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(225,6,0,0.8);
-  }
-  .minimap-dot:hover .dot-core { border-color: var(--text-main); }
+  .story-viewport { min-height: 100vh; background: var(--paddock-black); }
+  .paddock-article { max-width: 800px; margin: 0 auto; padding: 2rem 2rem 6rem; }
   
-  .dot-label {
-    font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);
-    transition: color 0.3s ease; white-space: nowrap; text-align: center;
-  }
-  .minimap-dot.is-active .dot-label { color: var(--text-main); }
-  .minimap-dot:hover .dot-label { color: var(--text-main); }
-
-  /* DYNAMIC BLURB */
-  .story-blurb {
-    text-align: center; max-width: 700px; margin: 0.4rem auto 0;
-    min-height: 1.5rem; display: flex; align-items: center; justify-content: center;
-  }
-  .story-blurb p {
-    margin: 0; font-family: 'Manrope', sans-serif; font-size: 0.85rem;
-    color: var(--text-muted); font-style: italic; line-height: 1.4;
-    transition: opacity 0.3s ease;
-  }
-
-  /* --- HORIZONTAL TRACK --- */
-  .story-timeline-wrapper {
-    flex-grow: 1; overflow-x: auto; overflow-y: hidden;
-    scroll-behavior: smooth; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
-    background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  /* Sleek scrollbar */
-  .story-timeline-wrapper::-webkit-scrollbar { height: 6px; }
-  .story-timeline-wrapper::-webkit-scrollbar-track { background: var(--surface); }
-  .story-timeline-wrapper::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 0; }
-
-  .story-timeline-track {
-    display: flex; padding: 2rem 5vw; gap: 3rem; min-width: max-content; height: 100%;
-    align-items: stretch; position: relative;
-  }
-
-  /* TELEMETRY RACING LINE */
-  .story-timeline-track::before {
-    content: ''; position: absolute; left: 0; top: 5rem; width: 100%; height: 2px;
-    background: var(--text-muted); opacity: 0.3; z-index: 0; border-top: 1px dashed var(--text-main);
-  }
-
-  /* --- CARDS --- */
-  .timeline-card {
-    min-width: 480px; width: 480px; background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.05);
-    border-top: 3px solid var(--accent); padding: 2rem; display: flex; flex-direction: column;
-    overflow-y: hidden; transition: all 0.5s ease; z-index: 10;
-    opacity: 0.4; transform: scale(0.88); cursor: pointer;
-  }
+  .article-header { border-bottom: 1px solid var(--carbon); padding-bottom: 3rem; margin-bottom: 3rem; }
+  .article-header h1 { font-family: var(--font-display); font-size: clamp(3rem, 5vw, 4rem); margin: 0 0 1rem; color: var(--pitlane-white); line-height: 1.1; }
+  .summary { font-family: var(--font-body); font-size: 1.25rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+  .t-wrap { max-width: 600px; }
   
-  .timeline-card::-webkit-scrollbar { width: 4px; }
-  .timeline-card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
-
-  /* ACTIVE STATE */
-  .timeline-card.is-active {
-    opacity: 1; transform: scale(1.02); overflow-y: auto; cursor: default;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.8); border-color: rgba(255,255,255,0.15);
-  }
-
-  /* EXPANDABLE CONTENT */
-  .card-expandable {
-    max-height: 0; opacity: 0; overflow: hidden;
-    transition: max-height 0.4s ease-out, opacity 0.4s ease-out, margin 0.4s ease-out;
-  }
-  
-  .timeline-card.is-active .card-expandable {
-    max-height: 2500px; opacity: 1; margin-top: 1.5rem; overflow-y: visible;
-  }
-
-  .card-meta {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;
-  }
-
-  /* Glowing Telemetry Node */
-  .card-step {
-    display: flex; align-items: center; justify-content: center; width: 3.2rem; height: 3.2rem;
-    border-radius: 50%; background: var(--surface); color: var(--text-muted); font-family: 'Sora', sans-serif;
-    font-weight: 800; font-size: 1.15rem; border: 2px solid rgba(255,255,255,0.1);
-    transition: all 0.5s ease; position: relative; z-index: 20;
-  }
-  
-  .timeline-card.is-active .card-step {
-    background: var(--accent); color: #fff; border: 4px solid var(--surface);
-    box-shadow: 0 0 20px rgba(225, 6, 0, 0.6);
-  }
-
-  .card-year {
-    font-family: 'DM Sans', sans-serif; color: var(--text-muted); font-size: 1rem;
-    font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
-  }
-
-  .card-header { margin-bottom: 0.5rem; transition: margin 0.5s ease; }
-  .timeline-card.is-active .card-header { margin-bottom: 1.5rem; }
-
-  .card-place {
-    font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 600; margin: 0 0 0.5rem;
-    color: var(--text-main); line-height: 1.1; letter-spacing: -0.02em; transition: font-size 0.5s ease;
-  }
-  .timeline-card.is-active .card-place { font-size: 2.6rem; }
-
-  .card-org {
-    font-family: 'DM Sans', sans-serif; font-size: 1.15rem; font-weight: 700;
-    color: var(--text-muted); margin: 0 0 1.2rem; text-transform: uppercase; letter-spacing: 0.1em;
-  }
-
-  .card-theme {
-    display: inline-block; padding: 0.4rem 1.2rem;  background: rgba(225, 6, 0, 0.1);
-    color: var(--text-main); border-left: 2px solid var(--accent);
-    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.1em; margin: 0;
-  }
-
-  .card-summary {
-    font-family: 'Manrope', sans-serif; font-size: 1.1rem; color: var(--text-main);
-    line-height: 1.6; padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .card-content {
-    font-family: 'Manrope', sans-serif; font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; padding-top: 1.5rem;
-  }
-
-  .card-content :global(p) { margin-bottom: 1.2rem; }
-  .card-content :global(h2), .card-content :global(h3) { 
-    color: var(--text-main); margin: 1.8rem 0 0.8rem; font-family: 'Sora', sans-serif; font-weight: 700;
-  }
-  .card-content :global(ul) { padding-left: 1.5rem; margin-bottom: 1.2rem; list-style-type: none; border-left: 1px solid rgba(255,255,255,0.1); }
-  .card-content :global(li) { margin-bottom: 0.6rem; padding-left: 0.5rem; position: relative; }
-  .card-content :global(li)::before { content: '-'; position: absolute; left: -1rem; color: var(--accent); }
-
-  .timeline-card--end {
-    justify-content: center; border: 1px dashed rgba(255,255,255,0.2); background: transparent; border-top: 1px dashed rgba(255,255,255,0.2);
-    opacity: 0.5; transform: scale(0.9);
-  }
-  .timeline-card--end.is-active { opacity: 1; transform: scale(1.02); }
-  .timeline-card--end .card-step { background: transparent; border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.2); box-shadow: none; }
-
-  .story-next-btn {
-    display: block; padding: 1.2rem 2rem; background: var(--surface); margin-top: 1rem;
-    color: var(--text-main); text-decoration: none; border: 1px solid rgba(255,255,255,0.1);
-    font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.9rem; text-align: center;
-    text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s ease;
-  }
-  .story-next-btn:hover {
-    background: var(--text-main); color: #000; transform: translateX(5px); box-shadow: 0 0 15px rgba(255,255,255,0.3);
-  }
-
-  /* Mobile Adjustments */
-  @media (max-width: 900px) {
-    .story-page { height: auto; overflow: visible; }
-    .story-header { flex-direction: column; gap: 2.5rem; padding: 2rem 1.5rem; }
-    .story-header__top { flex-direction: column-reverse; gap: 2rem; text-align: center; align-items: center; }
-    .story-minimap { overflow-x: auto; padding-bottom: 1rem; }
-    .story-timeline-wrapper { overflow: visible; background-image: none; }
-    .story-timeline-track { flex-direction: column; padding: 2rem 1.5rem; width: 100%; min-width: 0; gap: 2rem; }
-    .story-timeline-track::before { display: none; }
-    .timeline-card { width: 100%; min-width: 0; overflow: visible; padding: 1.5rem; opacity: 1; transform: none; }
-    .card-expandable { max-height: none; opacity: 1; margin-top: 1rem; overflow: visible; }
-  }
+  .prose { font-family: var(--font-body); font-size: 1.15rem; line-height: 1.8; color: var(--text); }
+  .prose h2 { font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4rem; margin-bottom: 1.5rem; color: var(--warning-amber); border-bottom: 1px solid var(--graphite); padding-bottom: 0.5rem; }
+  .prose h3 { font-family: var(--font-display); font-size: 1.8rem; margin-top: 3rem; margin-bottom: 1rem; color: var(--pitlane-white); }
+  .prose p { margin-bottom: 1.5rem; }
+  .prose ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+  .prose li { margin-bottom: 0.5rem; }
+  .prose hr { border: none; border-top: 1px solid var(--graphite); margin: 3rem 0; }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const wrapper = document.querySelector('.story-page');
-    const toggleBtns = document.querySelectorAll('[data-mode-toggle]');
-    const trackWrapper = document.getElementById('timeline-wrapper');
-    const dots = document.querySelectorAll('.minimap-dot');
-    const cards = document.querySelectorAll('.timeline-card');
-
-    const blurbEl = document.getElementById('blurb-text');
-
-    let isScrollingProgrammatically = false;
-    let scrollTimeout;
-
-    // 1. Core Scroll Tracking Physics
-    function evaluateCenterCard() {
-      if (isScrollingProgrammatically || window.innerWidth <= 900) return;
-
-      const actMode = wrapper.getAttribute('data-mode');
-      const activeCards = Array.from(cards).filter(c => c.getAttribute('data-type') === actMode || c.getAttribute('data-type') === 'both');
-      
-      if (activeCards.length === 0) return;
-
-      const trackCenter = trackWrapper.scrollLeft + (trackWrapper.clientWidth / 2);
-      
-      let closestCard = activeCards[0];
-      let minDiff = Infinity;
-
-      activeCards.forEach(card => {
-        const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
-        const diff = Math.abs(cardCenter - trackCenter);
-        if (diff < minDiff) {
-          minDiff = diff;
-          closestCard = card;
-        }
-      });
-
-      if (closestCard && !closestCard.classList.contains('is-active')) {
-        // Strip globals
-        cards.forEach(c => c.classList.remove('is-active'));
-        dots.forEach(d => d.classList.remove('is-active'));
-        
-        // Assert native active
-        closestCard.classList.add('is-active');
-        const slug = closestCard.getAttribute('data-slug');
-        if (slug) {
-          const targetDot = document.querySelector(`.minimap-dot[data-target="${slug}"]`);
-          if (targetDot) targetDot.classList.add('is-active');
-        }
-        // Update blurb text
-        const blurb = closestCard.getAttribute('data-blurb');
-        if (blurb && blurbEl) {
-          blurbEl.style.opacity = '0';
-          setTimeout(() => { blurbEl.textContent = blurb; blurbEl.style.opacity = '1'; }, 150);
-        }
-      }
-    }
-
-    // Debounced loop for performance
-    trackWrapper.addEventListener('scroll', () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(evaluateCenterCard, 30);
-    });
-
-    // 2. Mode Toggles Force Recalculation
-    function centerFirstActiveCard() {
-      const actMode = wrapper.getAttribute('data-mode');
-      const activeCards = Array.from(cards).filter(c => c.getAttribute('data-type') === actMode || c.getAttribute('data-type') === 'both');
-      if(activeCards.length > 0) {
-         scrollToCardCenter(activeCards[0]);
-      }
-    }
-
-    toggleBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        toggleBtns.forEach(b => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        
-        const mode = btn.getAttribute('data-mode-toggle');
-        wrapper.setAttribute('data-mode', mode);
-        
-        centerFirstActiveCard();
-      });
-    });
-
-    // 3. Telemetry Node Clicking -> Centering logic
-    function scrollToCardCenter(card) {
-      if (!card || window.innerWidth <= 900) return;
-      isScrollingProgrammatically = true;
-      const offset = card.offsetLeft - (trackWrapper.clientWidth / 2) + (card.offsetWidth / 2);
-      
-      trackWrapper.scrollTo({ left: offset, behavior: 'smooth' });
-      
-      // Manually set visuals for instant feedback
-      cards.forEach(c => c.classList.remove('is-active'));
-      dots.forEach(d => d.classList.remove('is-active'));
-      card.classList.add('is-active');
-      const slug = card.getAttribute('data-slug');
-      if (slug) {
-        const d = document.querySelector(`.minimap-dot[data-target="${slug}"]`);
-        if (d) d.classList.add('is-active');
-      }
-
-      // Update blurb on click too
-      const blurb = card.getAttribute('data-blurb');
-      if (blurb && blurbEl) {
-        blurbEl.style.opacity = '0';
-        setTimeout(() => { blurbEl.textContent = blurb; blurbEl.style.opacity = '1'; }, 150);
-      }
-
-      // Unlock native scrolling physics after animation completes
-      setTimeout(() => { isScrollingProgrammatically = false; }, 600);
-    }
-
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        const targetId = dot.getAttribute('data-target');
-        const targetCard = document.getElementById(targetId);
-        scrollToCardCenter(targetCard);
-      });
-    });
-
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        if (!card.classList.contains('is-active')) {
-          scrollToCardCenter(card);
-        }
-      });
-    });
-
-    // 4. Desktop Mouse Wheel hijacker
-    if (trackWrapper && window.innerWidth > 900) {
-      trackWrapper.addEventListener('wheel', (evt) => {
-        if (evt.deltaY !== 0 && evt.deltaX === 0) {
-          evt.preventDefault();
-          trackWrapper.scrollLeft += evt.deltaY;
-        }
-      });
-    }
-
-    // Force Init
-    setTimeout(evaluateCenterCard, 50);
-  });
-</script>

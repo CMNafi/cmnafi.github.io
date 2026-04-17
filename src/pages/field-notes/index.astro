@@ -1,0 +1,169 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Flag from '@/components/telemetry/Flag.astro';
+import SectorBadge from '@/components/telemetry/SectorBadge.astro';
+
+const allNotes = await getCollection('field-notes');
+// Sort by publishedAt descending
+const sortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+---
+
+<BaseLayout title="Field Notes" hideHeader={true}>
+  
+  <nav class="paddock-override-nav">
+    <a href="/" class="return-wall">← PIT WALL</a>
+    <div class="nav-title">RADIO LOGS</div>
+  </nav>
+
+  <main class="notes-viewport">
+    <div class="notes-container">
+      <header class="notes-header">
+        <h1>Field Notes</h1>
+        <p>Telemetry readouts from the race. Thoughts on finance, technology, and engineering.</p>
+      </header>
+
+      <div class="timeline-wrapper">
+        {sortedNotes.map((note, index) => (
+          <article class="note-row">
+            <div class="note-time">
+              <span>{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</span>
+              <div class="timeline-node">
+                <Flag color={index === 0 ? "green" : "checkered"} />
+              </div>
+            </div>
+            <a href={`/field-notes/${note.slug}`} class="note-content">
+              <div class="note-meta">
+                <SectorBadge variant="sector2" label={note.data.category} />
+                <span class="read-time">{note.data.readingTime} READ</span>
+              </div>
+              <h2>{note.data.title}</h2>
+              <p>{note.data.description || note.data.excerpt}</p>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .paddock-override-nav {
+    display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono);
+  }
+  .return-wall { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
+  .return-wall:hover { color: var(--pitlane-white); }
+  .nav-title { color: var(--pitlane-white); font-size: 11px; letter-spacing: 0.15em; }
+
+  .notes-viewport {
+    min-height: 100vh;
+    background: var(--paddock-black);
+    padding: 2rem;
+  }
+  .notes-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .notes-header {
+    margin-bottom: 4rem;
+    border-bottom: 2px solid var(--graphite);
+    padding-bottom: 2rem;
+  }
+  .notes-header h1 {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    color: var(--pitlane-white);
+    margin: 0 0 1rem 0;
+  }
+  .notes-header p {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    color: var(--muted);
+    max-width: 600px;
+  }
+
+  .timeline-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .note-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 3rem;
+    position: relative;
+  }
+
+  .note-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+    padding-top: 0.5rem;
+  }
+
+  .timeline-node {
+    margin-top: -2px;
+  }
+
+  /* Connection line */
+  .note-row:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 172px; /* aligns with flag */
+    top: 24px;   /* starts under flag */
+    bottom: -3rem; /* spans gap */
+    width: 1px;
+    background: var(--graphite);
+  }
+
+  .note-content {
+    display: block;
+    background: var(--carbon);
+    padding: 2rem;
+    border: 1px solid var(--graphite);
+    border-radius: var(--radius-card);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .note-content:hover {
+    transform: translateX(10px);
+    border-color: var(--warning-amber);
+  }
+
+  .note-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .read-time {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .note-content h2 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--pitlane-white);
+    margin: 0 0 1rem 0;
+  }
+  .note-content p {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    color: rgba(244, 244, 241, 0.7);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .note-row { grid-template-columns: 1fr; gap: 1rem; }
+    .note-row:not(:last-child)::after { display: none; }
+    .note-time { justify-content: flex-start; gap: 1rem; flex-direction: row-reverse; }
+  }
+</style>

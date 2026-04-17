@@ -1,0 +1,168 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import GarageScene from '@/components/garage/GarageScene.astro';
+import TelemetryGrid from '@/components/telemetry/TelemetryGrid.astro';
+import type { ProjectStatus } from '@/components/garage/GarageScene.astro';
+
+// Fetch brewing projects for lifts
+const allProjects = await getCollection('projects');
+
+const brewingProjects = allProjects.filter(p => p.data.status !== 'live' && p.data.status !== 'archived').slice(0, 3);
+const liveProjects = allProjects.filter(p => p.data.status === 'live');
+
+const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
+  return {
+    id: p.slug,
+    name: p.data.title,
+    status: p.data.status as "brewing" | "beta" | "live" | "archived",
+    parts: {
+      chassis: true,
+      engine: (p.data.stack?.length || 0) > 0,
+      aero: (p.data.keyFeatures?.length || 0) > 0,
+      wheels: !!p.data.liveUrl,
+      livery: p.data.featured
+    }
+  };
+});
+---
+
+<BaseLayout title="The Garage" hideHeader={true}>
+  
+  <nav class="paddock-override-nav">
+    <a href="/" class="return-wall">← PIT WALL</a>
+    <div class="nav-title">GARAGE COMMAND</div>
+  </nav>
+
+  <main class="garage-viewport">
+    
+    <!-- Hero Sequence - SVG Scene -->
+    <div class="garage-hero">
+      <GarageScene projects={mappedProjects} />
+    </div>
+
+    <!-- Data Telemetry Area -->
+    <section class="garage-telemetry">
+      <div class="container">
+        <h2 class="telemetry-title">LIVE DEPLOYMENTS</h2>
+        
+        <div class="live-grid">
+          {liveProjects.map(proj => (
+            <div class="live-card">
+              <h3><a href={`/garage/${proj.slug}`}>{proj.data.title}</a></h3>
+              <p>{proj.data.summary}</p>
+              <TelemetryGrid 
+                updated={(proj.data.updatedAt || proj.data.startedAt)?.toLocaleDateString() || '--'}
+                status={proj.data.status as any}
+                stack={proj.data.stack ? proj.data.stack.slice(0,2).join(', ') : 'N/A'}
+                link={proj.data.liveUrl || `/garage/${proj.slug}`}
+                linkLabel="OPEN PROD →"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>
+
+<style>
+  .paddock-override-nav {
+    position: absolute;
+    top: 0; left: 0; width: 100%;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    font-family: var(--font-mono);
+  }
+  .return-wall {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .return-wall:hover {
+    color: var(--pitlane-white);
+  }
+  .nav-title {
+    color: var(--pitlane-white);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+  }
+
+  .garage-viewport {
+    min-height: 100vh;
+    background: var(--paddock-black);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .garage-hero {
+    height: 65vh;
+    min-height: 480px;
+    border-bottom: 2px solid var(--graphite);
+    background-image: 
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, transparent 1px, transparent 10px, rgba(255,255,255,0.01) 11px);
+  }
+
+  .garage-telemetry {
+    flex: 1;
+    padding: 4rem 2rem;
+  }
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .telemetry-title {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.9rem;
+    letter-spacing: 0.25em;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--carbon);
+    padding-bottom: 1rem;
+  }
+
+  .live-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+  }
+
+  .live-card {
+    background: var(--page-bg);
+    border: 1px solid var(--carbon);
+    border-left: 2px solid var(--telemetry-green);
+    padding: 2.5rem;
+    border-radius: var(--radius-card);
+    transition: transform 0.2s;
+  }
+  .live-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--graphite);
+  }
+
+  .live-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--pitlane-white);
+    margin: 0 0 0.8rem 0;
+  }
+  .live-card h3 a { color: inherit; }
+
+  .live-card p {
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    margin: 0 0 2rem 0;
+    line-height: 1.6;
+  }
+  
+  @media (max-width: 600px) {
+    .live-grid { grid-template-columns: 1fr; }
+    .live-card { padding: 1.5rem; }
+  }
+</style>

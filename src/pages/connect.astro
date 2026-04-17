@@ -1,57 +1,114 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
 ---
 
-<BaseLayout title="Connect" description="How to reach me, what I am interested in, and the kinds of conversations I actually want to have.">
-<section class="page-section">
-    <SectionHeading
-      eyebrow="Connect"
-      title="Connect"
-      description="If you are reaching out, these are the topics and kinds of people I am most naturally excited to talk with right now."
-    />
-    <div class="now-grid">
-      <section class="panel now-panel">
-        <h3>Current interests</h3>
-        <ul>
-          <li>Books that keep changing shape after I finish them.</li>
-          <li>Cricket stories with enough detail to feel like I am back in the match.</li>
-          <li>The experience of growing up in Bangladesh, studying in China, and living in the United States.</li>
-        </ul>
-      </section>
-      <section class="panel now-panel">
-        <h3>Open to talk about</h3>
-        <ul>
-          <li>How books and sport end up shaping the rest of a life.</li>
-          <li>What it means to carry home across countries and still make something personal.</li>
-          <li>How to build a personal website that sounds like a person instead of a polished internet profile.</li>
-        </ul>
-      </section>
-      <section class="panel now-panel">
-        <h3>Working on</h3>
-        <ul>
-          <li>Keeping this site honest enough that it still feels like me when I reread it later.</li>
-          <li>Adding more cricket writing and keeping the book shelf useful.</li>
-          <li>Finding a steadier rhythm for publishing things I actually mean.</li>
-        </ul>
-      </section>
-      <section class="panel now-panel">
-        <h3>Good fit intros</h3>
-        <ul>
-          <li>Readers, writers, and cricket people who care about detail.</li>
-          <li>Anyone building a life across places and trying to make sense of what still feels like home.</li>
-          <li>People who like honest websites more than polished personal branding.</li>
-        </ul>
-      </section>
-    </div>
-    <section class="panel contact-panel">
-      <h3>Contact</h3>
-      <p>If any of that overlaps with what you are building, reading, or thinking about, I would be glad to hear from you.</p>
-      <div class="hero-actions">
-        <a class="button button-primary" href="mailto:nafi@cmnafi.com">Email nafi@cmnafi.com</a>
-        <a class="button button-secondary" href="https://github.com/cmnafi" target="_blank" rel="noreferrer">GitHub</a>
-        <a class="button button-ghost" href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noreferrer">LinkedIn</a>
+<BaseLayout title="Parc Fermé">
+  <nav class="paddock-override-nav">
+    <a href="/" class="return-wall">← PIT WALL</a>
+    <div class="nav-title">PARC FERMÉ</div>
+  </nav>
+
+  <main class="connect-viewport">
+    <div class="comms-panel">
+      <h1>Secure Comms</h1>
+      <p>I read all messages and try to respond if there is a clear strategic overlap or an interesting technical problem being solved.</p>
+      
+      <div class="comms-grid">
+        <a href="mailto:nafic2015@gmail.com" class="comms-link">
+          <span class="c-label">INBOX</span>
+          <span class="c-val">Nafic2015@gmail.com</span>
+        </a>
+        <a href="https://twitter.com/c_m_nafi" target="_blank" rel="noopener" class="comms-link">
+          <span class="c-label">TWITTER / X</span>
+          <span class="c-val">@c_m_nafi</span>
+        </a>
+        <a href="https://www.linkedin.com/in/nafic/" target="_blank" rel="noopener" class="comms-link">
+          <span class="c-label">LINKEDIN</span>
+          <span class="c-val">/in/nafic</span>
+        </a>
+        <a href="https://github.com/CMNafi" target="_blank" rel="noopener" class="comms-link">
+          <span class="c-label">GITHUB</span>
+          <span class="c-val">CMNafi</span>
+        </a>
       </div>
-    </section>
-  </section>
+    </div>
+  </main>
 </BaseLayout>
+
+<style>
+  .paddock-override-nav { display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono); }
+  .return-wall { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
+  .nav-title { color: var(--pitlane-white); font-size: 11px; letter-spacing: 0.15em; }
+  
+  .connect-viewport {
+    min-height: 80vh;
+    background: var(--paddock-black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  .comms-panel {
+    background: var(--carbon);
+    border: 1px solid var(--graphite);
+    padding: 4rem;
+    border-radius: var(--radius-card);
+    border-top: 3px solid var(--telemetry-green);
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .comms-panel h1 {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--pitlane-white);
+    margin: 0 0 1rem;
+  }
+  .comms-panel p {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+
+  .comms-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .comms-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: var(--paddock-black);
+    border: 1px solid var(--graphite);
+    border-radius: var(--radius-chip);
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  .comms-link:hover {
+    border-color: var(--pitlane-white);
+    transform: translateX(5px);
+  }
+
+  .c-label {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+  .c-val {
+    font-family: var(--font-mono);
+    color: var(--pitlane-white);
+    font-weight: 700;
+  }
+
+  @media (max-width: 600px) {
+    .comms-panel { padding: 2rem; }
+    .comms-link { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  }
+</style>

@@ -1,0 +1,193 @@
+---
+export interface ProjectStatus {
+  id: string;
+  name: string;
+  status: 'brewing' | 'beta' | 'live' | 'archived';
+  parts: {
+    chassis: boolean; 
+    engine: boolean; 
+    aero: boolean; 
+    wheels: boolean; 
+    livery: boolean; 
+  };
+}
+
+interface Props {
+  projects: ProjectStatus[];
+}
+
+const { projects = [] } = Astro.props;
+const displayProjects = [projects[0], projects[1], projects[2]]; // Exactly 3 lifts
+---
+<div class="garage-scene">
+  <svg class="garage-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <!-- Floor Grid -->
+      <pattern id="garage-floor" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--graphite)" stroke-width="1" opacity="0.4"/>
+      </pattern>
+      <!-- Lift Base Shadow -->
+      <filter id="lift-shadow">
+        <feDropShadow dx="0" dy="20" stdDeviation="15" flood-color="#000" flood-opacity="0.9"/>
+      </filter>
+      <!-- Ambient light flicker for idle loop -->
+      <filter id="flicker-glow">
+        <feGaussianBlur stdDeviation="12" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Background Pattern -->
+    <rect width="1200" height="800" fill="var(--paddock-black)"/>
+    <rect width="1200" height="800" fill="url(#garage-floor)"/>
+
+    <!-- Top Apron / Pit Lane (live glowing area) -->
+    <rect x="0" y="0" width="1200" height="80" fill="var(--carbon)"/>
+    <line x1="0" y1="80" x2="1200" y2="80" stroke="var(--racing-red)" stroke-width="4"/>
+
+    <!-- Garage Lights -->
+    <circle cx="200" cy="150" r="50" fill="var(--pitlane-white)" opacity="0.05" filter="url(#flicker-glow)" class="ambient-light"/>
+    <circle cx="600" cy="150" r="50" fill="var(--pitlane-white)" opacity="0.05" filter="url(#flicker-glow)" class="ambient-light" style="animation-delay: -2s;"/>
+    <circle cx="1000" cy="150" r="50" fill="var(--pitlane-white)" opacity="0.05" filter="url(#flicker-glow)" class="ambient-light" style="animation-delay: -5s;"/>
+
+    <!-- 3 Lifts -->
+    {displayProjects.map((proj, i) => {
+      const ox = 200 + i * 400; // x-center of each lift
+      const oy = 400; // y-center of lift
+      
+      return (
+        <g class="lift-station" transform={`translate(${ox}, ${oy})`}>
+          <!-- Mechanic Area Range -->
+          <circle cx="0" cy="0" r="160" fill="var(--carbon)" opacity="0.2" />
+          <circle cx="0" cy="0" r="160" fill="none" stroke="var(--graphite)" stroke-width="2" stroke-dasharray="10 10" />
+          
+          <!-- Hydraulic Lift Structure -->
+          <rect x="-80" y="-120" width="160" height="240" fill="#0A0B0D" rx="8" filter="url(#lift-shadow)"/>
+          <path d="M-60 -100 L 60 -100 L 60 100 L -60 100 Z" fill="none" stroke="var(--graphite)" stroke-width="4"/>
+          
+          {proj && (
+            <a href={`/garage/${proj.id}`} class="project-link">
+              <!-- Car Wrapper (hovers on mouse) -->
+              <g class="car-wrapper">
+                <!-- Chassis (Always there) -->
+                <path d="M-20 -80 Q 0 -90 20 -80 L 40 80 Q 0 90 -40 80 Z" fill="var(--carbon)" stroke="var(--graphite)" stroke-width="2"/>
+                
+                <!-- Engine Block -->
+                {proj.parts.engine && (
+                  <rect x="-15" y="-50" width="30" height="40" fill="var(--graphite)" stroke="var(--warning-amber)" stroke-width="1.5" />
+                )}
+                
+                <!-- Aero Kit (UI) -->
+                {proj.parts.aero && (
+                  <path d="M-35 -70 L 35 -70 L 45 -20 L -45 -20 L -35 -20 Z" fill="rgba(20,22,27,0.8)" stroke="var(--pitlane-white)" stroke-width="1.5"/>
+                )}
+                
+                <!-- Wheels (Deployed) -->
+                {proj.parts.wheels && (
+                  <g class="wheels">
+                    <rect x="-55" y="-60" width="15" height="30" rx="4" fill="#000"/>
+                    <rect x="40" y="-60" width="15" height="30" rx="4" fill="#000"/>
+                    <rect x="-55" y="40" width="15" height="30" rx="4" fill="#000"/>
+                    <rect x="40" y="40" width="15" height="30" rx="4" fill="#000"/>
+                  </g>
+                )}
+                
+                <!-- Livery (Polish) -->
+                {proj.parts.livery ? (
+                  <path d="M-3 80 L 3 80 L 3 -70 L -3 -70 Z" fill="var(--racing-red)"/>
+                ) : (
+                  <path d="M-3 80 L 3 80 L 3 -70 L -3 -70 Z" fill="var(--carbon)"/>
+                )}
+              </g>
+
+              <!-- Labeling -->
+              <rect x="-70" y="145" width="140" height="25" fill="var(--carbon)" rx="4"/>
+              <text x="0" y="162" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text)" letter-spacing="0.1em">
+                {proj.name.substring(0, 15).toUpperCase()}{proj.name.length > 15 ? '...' : ''}
+              </text>
+            </a>
+          )}
+          
+          <!-- Idle Mechanic & Sparks -->
+          <g class="mechanic" style={`animation-delay: -${i * 3}s;`}>
+            <circle cx="-100" cy="0" r="12" fill="var(--carbon)" stroke="var(--graphite)" stroke-width="2"/>
+          </g>
+          <g class="sparks" transform="translate(-40, -40)" style={`animation-delay: -${i * 2}s;`}>
+            <circle cx="0" cy="0" r="2" fill="var(--warning-amber)" opacity="0"/>
+          </g>
+        </g>
+      )
+    })}
+  </svg>
+</div>
+
+<style>
+  .garage-scene {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: var(--paddock-black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .garage-svg {
+    max-width: 100%;
+    height: 100%;
+    width: 1200px;
+    pointer-events: auto;
+  }
+
+  /* --- Motion Vocabulary --- */
+  
+  .lift-station {
+    transition: opacity 0.4s var(--ease-launch);
+  }
+  .garage-scene:hover .lift-station:not(:hover) {
+    opacity: 0.3;
+  }
+  
+  .project-link { cursor: pointer; }
+
+  .car-wrapper {
+    transition: transform 0.4s var(--ease-launch);
+  }
+  .project-link:hover .car-wrapper {
+    transform: translateY(-16px);
+  }
+
+  /* Ambient light flicker */
+  .ambient-light {
+    animation: flicker 6s infinite alternate ease-in-out;
+  }
+  @keyframes flicker {
+    0% { opacity: 0.05; }
+    50% { opacity: 0.12; }
+    100% { opacity: 0.03; }
+  }
+
+  /* Mechanic moving */
+  .mechanic {
+    animation: mechanicMove 12s infinite ease-in-out;
+  }
+  @keyframes mechanicMove {
+    0% { transform: translateY(-40px); }
+    50% { transform: translateY(40px); }
+    100% { transform: translateY(-40px); }
+  }
+
+  /* Periodic Sparking */
+  .sparks circle {
+    animation: sparkEmitter 4s infinite;
+  }
+  @keyframes sparkEmitter {
+    0%, 95% { opacity: 0; transform: scale(0.5); }
+    96% { opacity: 1; transform: scale(2) translate(10px, -10px); }
+    98% { opacity: 0.8; transform: scale(1) translate(15px, -15px); }
+    100% { opacity: 0; transform: scale(0); }
+  }
+</style>
