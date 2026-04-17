@@ -10,9 +10,14 @@ const projects = await getCollection('projects');
 const notes = await getCollection('field-notes');
 
 // Current Lap - Most recently updated active project
-const currentLap = projects
-  .filter(p => p.data.status === 'live' || p.data.status === 'beta' || p.data.status === 'brewing')
-  .sort((a, b) => (b.data.updatedAt?.valueOf() || 0) - (a.data.updatedAt?.valueOf() || 0))[0] || projects[0];
+const liveProjects = projects
+  .filter(p => p.data.status === 'live')
+  .sort((a, b) => {
+    const timeA = a.data.updatedAt?.valueOf() || a.data.startedAt?.valueOf() || 0;
+    const timeB = b.data.updatedAt?.valueOf() || b.data.startedAt?.valueOf() || 0;
+    return timeB - timeA;
+  });
+const currentLap = liveProjects[0];
 
 // Latest Field Note
 const latestNote = notes.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())[0];
@@ -46,23 +51,30 @@ const sectors = [
 
       <!-- CURRENT LAP: Featured Project -->
       <section class="current-lap panel">
-        <header class="panel-header">
-          <span class="label">CURRENT LAP</span>
-          <StatusDot state={currentLap?.data.status as any} />
-        </header>
-        <div class="lap-data">
-          <h3><a href={`/garage/${currentLap?.slug}`}>{currentLap?.data.title}</a></h3>
-          <p>{currentLap?.data.summary}</p>
-          {currentLap && (
-            <TelemetryGrid 
-              updated={(currentLap.data.updatedAt || currentLap.data.startedAt)?.toLocaleDateString()}
-              status={currentLap.data.status as any}
-              stack={currentLap.data.stack?.slice(0, 2).join(', ') || 'N/A'}
-              link={`/garage/${currentLap.slug}`}
-              linkLabel="VIEW →"
-            />
-          )}
-        </div>
+        {currentLap ? (
+          <>
+            <header class="panel-header">
+              <span class="label">CURRENT LAP</span>
+              <StatusDot state={currentLap.data.status as any} />
+            </header>
+            <div class="lap-data">
+              <h3><a href={`/garage/${currentLap.slug}`}>{currentLap.data.title}</a></h3>
+              <p>{currentLap.data.summary}</p>
+              <TelemetryGrid 
+                updated={(currentLap.data.updatedAt || currentLap.data.startedAt)?.toLocaleDateString()}
+                status={currentLap.data.status as any}
+                stack={currentLap.data.stack?.slice(0, 2).join(', ') || 'N/A'}
+                link={`/garage/${currentLap.slug}`}
+                linkLabel="VIEW →"
+              />
+            </div>
+          </>
+        ) : (
+          <div class="lap-data no-live">
+            <p class="placeholder-msg">NO CAR ON TRACK</p>
+            <a href="/garage" class="sys-btn" style="margin-top: 1rem;">SEE THE GARAGE →</a>
+          </div>
+        )}
       </section>
 
       <!-- SECTORS: Navigation -->

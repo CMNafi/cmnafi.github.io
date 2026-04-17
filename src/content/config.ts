@@ -29,7 +29,7 @@ const projects = defineCollection({
     title: z.string(),
     summary: z.string(),
     description: z.string(),
-    status: z.enum(['brewing', 'live', 'beta', 'archived']),
+    status: z.enum(['live', 'brewing', 'parked']),
     category: z.enum(['data tool', 'web app', 'research', 'automation', 'writing']),
     stack: z.array(z.string()).default([]),
     repoUrl: z.string().url().optional(),
@@ -47,6 +47,14 @@ const projects = defineCollection({
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
     relatedPosts: z.array(z.string()).default([])
+  }).refine(data => {
+    if (data.featured && data.status !== 'live') {
+      return false;
+    }
+    return true;
+  }, {
+    message: "A project marked 'featured: true' must have 'status: live'. Brewing/parked projects cannot be featured.",
+    path: ["featured"]
   })
 });
 
