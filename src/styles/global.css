@@ -3718,3 +3718,23 @@ main { padding-bottom: 4rem; }
   text-align: left;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
+
+
+/* Capital Lens auto-links — subtle, not distracting */
+.cl-autolink {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+.cl-autolink:hover {
+  color: #c0392b;
+  text-decoration-color: #c0392b;
+}
+/* In dark sections (Analyst Deep Dive), links stay readable */
+.cl-section-dark .cl-autolink:hover {
+  color: #b8ff6e;
+  text-decoration-color: #b8ff6e;
+}

@@ -15,6 +15,9 @@ const blog = defineCollection({
     draft: z.boolean().default(false),
     series: z.string().optional(),
     readingTime: z.string(),
+    layout: z.string().optional(),
+    accentColor: z.string().optional(),
+    paperColor: z.string().optional(),
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional()
   })
