@@ -5,10 +5,10 @@ export const siteConfig = {
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',
   nav: [
-    { id: 'story', label: 'My Story', href: '/story' },
-    { id: 'interests', label: 'Interests', href: '/interests' },
-    { id: 'projects', label: 'Projects', href: '/projects' },
-    { id: 'field-notes', label: 'Field Notes', href: '/projects/field-notes' },
+    { id: 'pit-wall', label: 'Pit Wall', href: '/' },
+    { id: 'garage', label: 'Garage', href: '/garage' },
+    { id: 'field-notes', label: 'Field Notes', href: '/field-notes' },
+    { id: 'story', label: 'Story', href: '/story' },
     { id: 'connect', label: 'Connect', href: '/connect' }
   ],
   socialLinks: [
@@ -17,10 +17,10 @@ export const siteConfig = {
     { label: 'Email', href: 'mailto:nafi@cmnafi.com' }
   ],
   footerLinks: [
-    { label: 'My Story', href: '/story' },
-    { label: 'Interests', href: '/interests' },
-    { label: 'Projects', href: '/projects' },
-    { label: 'Field Notes', href: '/projects/field-notes' },
+    { label: 'Pit Wall', href: '/' },
+    { label: 'Garage', href: '/garage' },
+    { label: 'Field Notes', href: '/field-notes' },
+    { label: 'Story', href: '/story' },
     { label: 'Connect', href: '/connect' }
   ]
 } as const;

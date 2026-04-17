@@ -9,5 +9,10 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: 'shiki',
     remarkPlugins: [remarkAutoLink]
+  },
+  redirects: {
+    '/projects': '/garage',
+    '/projects/field-notes': '/field-notes',
+    '/brewing': '/garage'
   }
 });
