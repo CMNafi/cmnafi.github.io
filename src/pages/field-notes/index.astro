@@ -5,8 +5,28 @@ import Flag from '@/components/telemetry/Flag.astro';
 import SectorBadge from '@/components/telemetry/SectorBadge.astro';
 
 const allNotes = await getCollection('field-notes');
-// Sort by publishedAt descending
-const sortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+// Aggregate categories and group
+const categoryCounts = allNotes.reduce((acc, note) => {
+  acc[note.data.category] = (acc[note.data.category] || 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
+// Order categories by volume desc
+const sortedCategories = Object.keys(categoryCounts).sort((a, b) => categoryCounts[b] - categoryCounts[a]);
+
+// Group notes by category (chronological per category)
+const notesByCategory = sortedCategories.reduce((acc, cat) => {
+  acc[cat] = allNotes
+    .filter(n => n.data.category === cat)
+    .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+  return acc;
+}, {} as Record<string, any[]>);
+
+// Flat chronological for the specific category filtered view
+const flatSortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
 ---
 
 <BaseLayout title="Field Notes" hideHeader={true}>
@@ -21,33 +41,155 @@ const sortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.dat
       <header class="notes-header">
         <h1>Field Notes</h1>
         <p>Telemetry readouts from the race. Thoughts on finance, technology, and engineering.</p>
+        
+        <!-- Category Filter Chips -->
+        <div class="filter-chips">
+          <a href="/field-notes" class="chip" data-cat="all">ALL</a>
+          {sortedCategories.map(cat => (
+            <a href={`/field-notes?category=${slugify(cat)}`} class="chip" data-cat={slugify(cat)}>{cat.toUpperCase()}</a>
+          ))}
+        </div>
       </header>
 
-      <div class="timeline-wrapper">
-        {sortedNotes.map((note, index) => (
-          <article class="note-row">
-            <div class="note-time">
-              <span>{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</span>
-              <div class="timeline-node">
-                <Flag color={index === 0 ? "green" : "checkered"} />
-              </div>
-            </div>
-            <a href={`/field-notes/${note.slug}`} class="note-content">
-              <div class="note-meta">
-                <SectorBadge variant="sector2" label={note.data.category} />
-                <span class="read-time">{note.data.readingTime} READ</span>
-              </div>
-              <h2>{note.data.title}</h2>
-              <p>{note.data.description || note.data.excerpt}</p>
-            </a>
-          </article>
-        ))}
+      <div class="main-feed-container" id="notes-feed">
+        
+        <!-- DEFAULT 'ALL' VIEW: Sections -->
+        <div id="all-view" class="view-layer">
+          {sortedCategories.map(cat => {
+            const catNotes = notesByCategory[cat];
+            const top4 = catNotes.slice(0, 4);
+            return (
+              <section class="category-section">
+                <h2 class="section-header">{cat.toUpperCase()}</h2>
+                
+                <div class="timeline-wrapper">
+                  {top4.map((note, index) => (
+                    <article class="note-row">
+                      <div class="note-time">
+                        <span>{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</span>
+                        <div class="timeline-node"><Flag color={index === 0 ? "green" : "checkered"} /></div>
+                      </div>
+                      <a href={`/field-notes/${note.slug}`} class="note-content">
+                        <div class="note-meta">
+                          <SectorBadge variant="sector2" label={note.data.category} />
+                          <span class="read-time">{note.data.readingTime} READ</span>
+                        </div>
+                        <h3>{note.data.title}</h3>
+                        <p>{note.data.description || note.data.excerpt}</p>
+                      </a>
+                    </article>
+                  ))}
+                </div>
+
+                <div class="cat-link-wrap">
+                  <a href={`/field-notes/category/${slugify(cat)}`} class="view-all-link">VIEW ALL {catNotes.length} POSTS IN {cat.toUpperCase()} →</a>
+                </div>
+              </section>
+            );
+          })}
+        </div>
+
+        <!-- FILTERED VIEW: Hidden by default -->
+        <div id="filtered-view" class="view-layer hidden">
+          <div class="timeline-wrapper" id="filtered-timeline">
+            {flatSortedNotes.map((note, index) => (
+              <article class="note-row filtered-note" data-cat={slugify(note.data.category)}>
+                <div class="note-time">
+                  <span>{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</span>
+                  <div class="timeline-node">
+                    {/* The client script will inject the correct flag wrapper here */}
+                    <div class="timeline-flag-inject"></div>
+                  </div>
+                </div>
+                <a href={`/field-notes/${note.slug}`} class="note-content">
+                  <div class="note-meta">
+                    <SectorBadge variant="sector2" label={note.data.category} />
+                    <span class="read-time">{note.data.readingTime} READ</span>
+                  </div>
+                  <h3>{note.data.title}</h3>
+                  <p>{note.data.description || note.data.excerpt}</p>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
 </BaseLayout>
 
+<script>
+  function applyFilter() {
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('category');
+    
+    // Chips state
+    document.querySelectorAll('.filter-chips .chip').forEach(el => {
+      el.classList.remove('active');
+      if (cat) {
+        if (el.getAttribute('data-cat') === cat) el.classList.add('active');
+      } else {
+        if (el.getAttribute('data-cat') === 'all') el.classList.add('active');
+      }
+    });
+
+    const allView = document.getElementById('all-view');
+    const filteredView = document.getElementById('filtered-view');
+    const filteredNotes = document.querySelectorAll('.filtered-note');
+
+    if (!cat || cat === 'all') {
+      allView?.classList.remove('hidden');
+      filteredView?.classList.add('hidden');
+    } else {
+      allView?.classList.add('hidden');
+      filteredView?.classList.remove('hidden');
+      
+      let greenFlagAssigned = false;
+      filteredNotes.forEach(el => {
+        const matches = el.getAttribute('data-cat') === cat;
+        if (matches) {
+          (el as HTMLElement).style.display = 'grid';
+          const flagInject = el.querySelector('.timeline-flag-inject');
+          if (flagInject) {
+            // Because Flag components map to classes .flag .green vs .flag .checkered and .checker-pattern
+            if (!greenFlagAssigned) {
+              flagInject.innerHTML = '<div class="flag green" style="width: 20px; height: 14px; background-color: var(--telemetry-green); display: inline-block; border-radius: 1px; box-shadow: 0 1px 2px rgba(0,0,0,0.5);"></div>';
+              greenFlagAssigned = true;
+            } else {
+              flagInject.innerHTML = '<div class="flag checkered" style="width: 20px; height: 14px; background-color: var(--pitlane-white); display: inline-block; border-radius: 1px;"><div class="checker-pattern" style="width: 100%; height: 100%; background-image: linear-gradient(45deg, var(--paddock-black) 25%, transparent 25%, transparent 75%, var(--paddock-black) 75%), linear-gradient(45deg, var(--paddock-black) 25%, transparent 25%, transparent 75%, var(--paddock-black) 75%); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div></div>';
+            }
+          }
+        } else {
+          (el as HTMLElement).style.display = 'none';
+        }
+      });
+    }
+  }
+
+  // Run on mount
+  applyFilter();
+  
+  // Intercept chip clicks
+  document.querySelectorAll('.filter-chips .chip').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = el.getAttribute('href');
+      if(href) {
+        window.history.pushState({}, '', href);
+        applyFilter();
+        window.scrollTo(0, 0); // scroll to top cleanly
+      }
+    });
+  });
+
+  // Handle back button
+  window.addEventListener('popstate', applyFilter);
+</script>
+
 <style>
+  .hidden { display: none !important; }
+
   .paddock-override-nav {
     display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono);
   }
@@ -67,8 +209,6 @@ const sortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.dat
 
   .notes-header {
     margin-bottom: 4rem;
-    border-bottom: 2px solid var(--graphite);
-    padding-bottom: 2rem;
   }
   .notes-header h1 {
     font-family: var(--font-display);
@@ -83,6 +223,78 @@ const sortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.dat
     max-width: 600px;
   }
 
+  /* CHIPS */
+  .filter-chips {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 0.8rem;
+    margin-top: 2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--graphite);
+  }
+  .filter-chips::-webkit-scrollbar { display: none; }
+  .chip {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 11px;
+    border: 1px solid var(--graphite);
+    border-radius: var(--radius-chip);
+    padding: 0.4rem 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.2s;
+  }
+  .chip.active, .chip:hover {
+    background: var(--warning-amber);
+    color: var(--paddock-black);
+    border-color: var(--warning-amber);
+    font-weight: 700;
+  }
+
+  /* SECTION */
+  .category-section {
+    margin-bottom: 5rem;
+  }
+  .section-header {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-variant: small-caps;
+    color: var(--pitlane-white);
+    margin: 0 0 2rem 0;
+    text-align: left;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  .section-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 24px;
+    height: 2px;
+    background: var(--warning-amber);
+  }
+
+  .view-all-link {
+    display: inline-block;
+    margin-top: 2rem;
+    margin-left: 180px; /* Aligns with content in grid */
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--telemetry-green);
+    text-decoration: none;
+    transition: 0.2s;
+  }
+  .view-all-link:hover {
+    color: var(--pitlane-white);
+  }
+
+  /* ROWS */
   .timeline-wrapper {
     display: flex;
     flex-direction: column;
@@ -110,13 +322,12 @@ const sortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.dat
     margin-top: -2px;
   }
 
-  /* Connection line */
-  .note-row:not(:last-child)::after {
+  .timeline-wrapper .note-row:not(:last-child)::after {
     content: '';
     position: absolute;
     left: 172px; /* aligns with flag */
-    top: 24px;   /* starts under flag */
-    bottom: -3rem; /* spans gap */
+    top: 24px;   
+    bottom: -3rem; 
     width: 1px;
     background: var(--graphite);
   }
@@ -147,7 +358,7 @@ const sortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.dat
     color: var(--muted);
   }
 
-  .note-content h2 {
+  .note-content h3 {
     font-family: var(--font-display);
     font-size: 2rem;
     color: var(--pitlane-white);
@@ -165,5 +376,6 @@ const sortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.dat
     .note-row { grid-template-columns: 1fr; gap: 1rem; }
     .note-row:not(:last-child)::after { display: none; }
     .note-time { justify-content: flex-start; gap: 1rem; flex-direction: row-reverse; }
+    .view-all-link { margin-left: 0; }
   }
 </style>
