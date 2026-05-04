@@ -1,0 +1,64 @@
+---
+---
+<svg viewBox="0 0 880 580" class="sankey-svg" xmlns="http://www.w3.org/2000/svg">
+        <!-- Source labels -->
+        <text x="0" y="60" class="node-label">Race promotion fees</text>
+        <text x="0" y="76" class="node-value">~$1.0B · hosting rights</text>
+        <text x="0" y="160" class="node-label">Media rights</text>
+        <text x="0" y="176" class="node-value">~$1.1B · global TV/streaming</text>
+        <text x="0" y="248" class="node-label">Sponsorship (F1 series)</text>
+        <text x="0" y="264" class="node-value">~$800M · LVMH 10-yr deal</text>
+        <text x="0" y="340" class="node-label">Hospitality / Paddock Club</text>
+        <text x="0" y="356" class="node-value">~$500M · Las Vegas etc.</text>
+        <text x="0" y="420" class="node-label">Other (licensing, F1 TV)</text>
+        <text x="0" y="436" class="node-value">~$470M</text>
+
+        <!-- Source rects -->
+        <rect x="200" y="40" width="14" height="80" fill="#e10600"/>
+        <rect x="200" y="135" width="14" height="85" fill="#ff3f3f"/>
+        <rect x="200" y="225" width="14" height="65" fill="#ff7878"/>
+        <rect x="200" y="310" width="14" height="50" fill="#ffa3a3"/>
+        <rect x="200" y="395" width="14" height="40" fill="#ffc8c8"/>
+
+        <!-- Pool: Liberty Media F1 -->
+        <rect x="380" y="100" width="44" height="340" class="pool-rect" stroke="#e10600"/>
+        <text x="402" y="80" text-anchor="middle" class="center-label">Liberty Media F1</text>
+        <text x="402" y="460" text-anchor="middle" class="node-value" style="fill:var(--f1-soft)">$3.87B revenue</text>
+
+        <!-- Flows in -->
+        <path d="M 214 80 C 290 80, 340 220, 380 220" stroke="#e10600" stroke-width="80" fill="none" opacity="0.28"/>
+        <path d="M 214 178 C 290 178, 340 240, 380 250" stroke="#ff3f3f" stroke-width="85" fill="none" opacity="0.28"/>
+        <path d="M 214 258 C 290 258, 340 270, 380 280" stroke="#ff7878" stroke-width="65" fill="none" opacity="0.28"/>
+        <path d="M 214 335 C 290 335, 340 305, 380 310" stroke="#ffa3a3" stroke-width="50" fill="none" opacity="0.28"/>
+        <path d="M 214 415 C 290 415, 340 340, 380 340" stroke="#ffc8c8" stroke-width="40" fill="none" opacity="0.28"/>
+
+        <!-- Flows out: split into teams + retained -->
+        <path d="M 424 180 C 500 180, 580 60, 660 60" stroke="#d4af37" stroke-width="42" fill="none" opacity="0.4"/>
+        <path d="M 424 220 C 500 220, 580 130, 660 130" stroke="#d4af37" stroke-width="35" fill="none" opacity="0.4"/>
+        <path d="M 424 260 C 500 260, 580 200, 660 200" stroke="#d4af37" stroke-width="31" fill="none" opacity="0.4"/>
+        <path d="M 424 300 C 500 300, 580 270, 660 270" stroke="#d4af37" stroke-width="25" fill="none" opacity="0.4"/>
+        <path d="M 424 340 C 500 340, 580 340, 660 340" stroke="#d4af37" stroke-width="55" fill="none" opacity="0.32"/>
+        <path d="M 424 400 C 500 400, 580 470, 660 470" stroke="#95a0b6" stroke-width="80" fill="none" opacity="0.28"/>
+
+        <!-- Team destination rects -->
+        <rect x="660" y="40" width="14" height="42" fill="#d4af37"/>
+        <rect x="660" y="110" width="14" height="35" fill="#d4af37"/>
+        <rect x="660" y="180" width="14" height="31" fill="#d4af37"/>
+        <rect x="660" y="252" width="14" height="25" fill="#d4af37"/>
+        <rect x="660" y="312" width="14" height="55" fill="#f0c84a"/>
+        <rect x="660" y="430" width="14" height="80" fill="#95a0b6"/>
+
+        <!-- Destination labels -->
+        <text x="685" y="58" class="node-label">Ferrari (LST + perf.)</text>
+        <text x="685" y="74" class="node-value">$277.7M</text>
+        <text x="685" y="128" class="node-label">Mercedes</text>
+        <text x="685" y="144" class="node-value">$230.8M ($112M legacy)</text>
+        <text x="685" y="198" class="node-label">Red Bull</text>
+        <text x="685" y="214" class="node-value">$202.9M ($74.7M historical)</text>
+        <text x="685" y="270" class="node-label">McLaren (champion)</text>
+        <text x="685" y="286" class="node-value">$165.8M · 14% base pool</text>
+        <text x="685" y="338" class="node-label">Mid-field (5 teams)</text>
+        <text x="685" y="354" class="node-value">~$420M combined</text>
+        <text x="685" y="450" class="node-label">Alpine (P10) + retained</text>
+        <text x="685" y="466" class="node-value">$75M + $2.42B Liberty ops</text>
+      </svg>

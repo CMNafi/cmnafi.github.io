@@ -1,0 +1,60 @@
+---
+---
+<svg viewBox="0 0 880 480" class="sankey-svg" xmlns="http://www.w3.org/2000/svg">
+        <!-- Source labels (left) -->
+        <text x="0" y="60" class="node-label">Media rights</text>
+        <text x="0" y="76" class="node-value">$731M · 38.5%</text>
+        <text x="0" y="160" class="node-label">Sponsorship</text>
+        <text x="0" y="176" class="node-value">$422M · 22.2%</text>
+        <text x="0" y="244" class="node-label">Royalties &amp; licensing</text>
+        <text x="0" y="260" class="node-value">$302M · 15.9%</text>
+        <text x="0" y="320" class="node-label">Tournament fees</text>
+        <text x="0" y="336" class="node-value">$245M · 12.9%</text>
+        <text x="0" y="392" class="node-label">SSG / Other</text>
+        <text x="0" y="408" class="node-value">$200M · 10.5%</text>
+
+        <!-- Source rects -->
+        <rect x="180" y="40" width="14" height="80" fill="#2d8659"/>
+        <rect x="180" y="135" width="14" height="55" fill="#3fbb7e"/>
+        <rect x="180" y="220" width="14" height="40" fill="#4dd690"/>
+        <rect x="180" y="290" width="14" height="32" fill="#1ec97c"/>
+        <rect x="180" y="362" width="14" height="28" fill="#65e89e"/>
+
+        <!-- Center pool -->
+        <rect x="420" y="120" width="40" height="240" class="pool-rect"/>
+        <text x="440" y="100" text-anchor="middle" class="center-label">PGA Tour, Inc.</text>
+        <text x="440" y="380" text-anchor="middle" class="node-value" style="fill:var(--gold-bright)">~$1.9B revenue</text>
+
+        <!-- Flow paths: sources → pool -->
+        <path d="M 194 80 C 300 80, 360 200, 420 200" stroke="#2d8659" stroke-width="80" fill="none" opacity="0.32"/>
+        <path d="M 194 162 C 300 162, 360 220, 420 240" stroke="#3fbb7e" stroke-width="55" fill="none" opacity="0.32"/>
+        <path d="M 194 240 C 300 240, 360 260, 420 280" stroke="#4dd690" stroke-width="40" fill="none" opacity="0.32"/>
+        <path d="M 194 306 C 300 306, 360 290, 420 310" stroke="#1ec97c" stroke-width="32" fill="none" opacity="0.32"/>
+        <path d="M 194 376 C 300 376, 360 320, 420 340" stroke="#65e89e" stroke-width="28" fill="none" opacity="0.32"/>
+
+        <!-- Flow paths: pool → destinations -->
+        <path d="M 460 170 C 540 170, 600 80, 686 80" stroke="#d4af37" stroke-width="58" fill="none" opacity="0.36"/>
+        <path d="M 460 200 C 540 200, 600 160, 686 160" stroke="#f0c84a" stroke-width="20" fill="none" opacity="0.36"/>
+        <path d="M 460 230 C 540 230, 600 230, 686 230" stroke="#ff9f43" stroke-width="28" fill="none" opacity="0.36"/>
+        <path d="M 460 280 C 540 280, 600 310, 686 310" stroke="#95a0b6" stroke-width="55" fill="none" opacity="0.32"/>
+        <path d="M 460 320 C 540 320, 600 380, 686 380" stroke="#3b82f6" stroke-width="22" fill="none" opacity="0.32"/>
+
+        <!-- Destination rects -->
+        <rect x="686" y="50" width="14" height="60" fill="#d4af37"/>
+        <rect x="686" y="148" width="14" height="24" fill="#f0c84a"/>
+        <rect x="686" y="216" width="14" height="28" fill="#ff9f43"/>
+        <rect x="686" y="282" width="14" height="56" fill="#95a0b6"/>
+        <rect x="686" y="368" width="14" height="24" fill="#3b82f6"/>
+
+        <!-- Destination labels (right) -->
+        <text x="710" y="70" class="node-label">Player purses</text>
+        <text x="710" y="86" class="node-value">$550M · regular events</text>
+        <text x="710" y="160" class="node-label">FedEx / PIP bonuses</text>
+        <text x="710" y="176" class="node-value">$100M+</text>
+        <text x="710" y="228" class="node-label">Player equity (vesting)</text>
+        <text x="710" y="244" class="node-value">$200M (year-1)</text>
+        <text x="710" y="298" class="node-label">Tour operations</text>
+        <text x="710" y="314" class="node-value">$700M</text>
+        <text x="710" y="378" class="node-label">Charity &amp; reinvestment</text>
+        <text x="710" y="394" class="node-value">$350M+</text>
+      </svg>

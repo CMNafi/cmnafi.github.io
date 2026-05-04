@@ -17,6 +17,13 @@ seoTitle: "Q1 2026 Big Tech Earnings: Cloud Beats, Capex Soars — Capital Lens"
 seoDescription: "An analysis of Q1 2026 earnings for Microsoft, Alphabet, Meta, and Amazon, focusing on cloud growth and capex."
 ---
 
+import CapitalLens17SankeyMSFT from '../../components/capital-lens/CapitalLens17SankeyMSFT.astro';
+import CapitalLens17SankeyGOOGL from '../../components/capital-lens/CapitalLens17SankeyGOOGL.astro';
+import CapitalLens17SankeyMETA from '../../components/capital-lens/CapitalLens17SankeyMETA.astro';
+import CapitalLens17SankeyAMZN from '../../components/capital-lens/CapitalLens17SankeyAMZN.astro';
+import CapitalLens17CapexChart from '../../components/capital-lens/CapitalLens17CapexChart.astro';
+
+
 CAPITAL LENS/ ISSUE 016
 
 APRIL 30, 2026 · EARNINGS
@@ -162,6 +169,8 @@ Three Things
 *   Cloud gross margin at **66%**, down YoY but stabilizing as scale absorbs depreciation.
 *   FY26 capex now guided to **$190B** — $25B of the raise attributed to memory pricing alone.
 
+<CapitalLens17SankeyMSFT />
+
 **Read:** Productivity & Business Processes ($35.0B) and Intelligent Cloud ($34.7B) are now near-equal contributors to the top line, with More Personal Computing ($13.2B) the smallest segment and the only one in YoY decline. Of every revenue dollar, ~46¢ converts to operating income — Microsoft's structural margin advantage over the cohort.
 
 GOOGL Q1 2026 · 22% revenue growth · 36.1% op margin
@@ -175,6 +184,8 @@ Three Things
 *   Cloud operating margin tripled YoY to **32.9%**, up from 17.8%.
 *   Capex raised to **$180–190B**; CFO said 2027 will rise **"significantly"**.
 *   $36.9B equity gain on stake in unidentified investee added **$2.35** to EPS.
+
+<CapitalLens17SankeyGOOGL />
 
 **Read:** Of the $109.9B top line, **$77.3B (70%)** is still advertising — Search dominant, YouTube and Network secondary. Cloud at $20.0B is the fastest-growing line and the highest-incremental-margin business. The diagram excludes the $36.9B equity-securities gain that flows below operating income; including it, GAAP net income reaches $62.6B.
 
@@ -190,6 +201,8 @@ Three Things
 *   2026 capex guidance now nearly **2× FY2025's $72.2B** total.
 *   Headcount reduction (~10%) announced for May; Zuckerberg cited memory pricing.
 
+<CapitalLens17SankeyMETA />
+
 **Read:** Meta is the most concentrated business in the cohort — **97.7% of revenue** comes from one line item (Family of Apps Ads). Operating margin at 40.6% is the highest reported by any of the four. GAAP net income of $26.8B includes an $8.0B income-tax benefit; the Sankey uses the operating-derived figure (~$18.7B) for cohort comparability.
 
 AMZN Q1 2026 · 17% revenue growth · 13.1% op margin
@@ -203,6 +216,8 @@ Three Things
 *   AWS operating margin at **37.7%**, holding even as workloads scale.
 *   Trainium revenue run-rate now over **$20B**, growing triple-digits.
 *   AWS backlog at **$364B**, plus a separate $100B Anthropic commitment.
+
+<CapitalLens17SankeyAMZN />
 
 **Read:** Amazon's revenue mix is structurally different — North America retail at $104.1B is still the dominant line, but AWS at $37.6B contributes the majority of operating income (AWS OI of $14.2B vs. consolidated OI of $23.9B). GAAP net income of $30.3B includes a $16.8B pre-tax gain on Anthropic; the operating-derived figure of ~$18.2B is shown here.
 
@@ -223,6 +238,8 @@ Capital Expenditure · Quarterly · Calendar Quarters
 Five quarters of _relentless escalation_
 
 MSFT GOOGL META AMZN
+
+<CapitalLens17CapexChart />
 
 Combined 2026 Capex (Mid)
 
