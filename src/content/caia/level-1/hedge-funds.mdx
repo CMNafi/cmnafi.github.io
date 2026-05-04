@@ -1,0 +1,126 @@
+---
+title: "Hedge Funds"
+description: "Strategy classifications, fee structures, and the mechanics of alpha generation."
+publishedAt: 2026-05-04
+level: "I"
+topicNumber: 6
+examWeight: "10-20%"
+timeToMastery: "35 hours"
+tags: ["level-1", "hedge-funds", "fees"]
+---
+
+import ConceptCard from '../../../components/caia/ConceptCard.astro';
+import FormulaBlock from '../../../components/caia/FormulaBlock.astro';
+import WorkedExample from '../../../components/caia/WorkedExample.astro';
+import PracticeQuestion from '../../../components/caia/PracticeQuestion.astro';
+import PitfallCard from '../../../components/caia/PitfallCard.astro';
+import CheatSheetGrid from '../../../components/caia/CheatSheetGrid.astro';
+import CrossReference from '../../../components/caia/CrossReference.astro';
+import FreeResourceList from '../../../components/caia/FreeResourceList.astro';
+
+## Why this matters
+
+Hedge funds are lightly regulated pools of capital that can utilize short selling, leverage, and derivatives to generate returns. The CAIA curriculum requires you to understand the specific risk profiles of different hedge fund strategies (e.g., why Merger Arbitrage has negative skewness) and the heavy mathematics behind their fee structures.
+
+Fee calculations, particularly those involving High Water Marks (HWM) and Hurdle Rates, are almost guaranteed to appear on the exam.
+
+## Learning Objectives
+
+- Classify the four main hedge fund strategies: Equity, Event-Driven, Relative Value, and Macro.
+- Calculate management and incentive fees using High Water Marks and Hard/Soft Hurdle Rates.
+- Understand the concepts of Alpha, Beta, and the separation of the two.
+
+## Core Concepts
+
+### Hedge Fund Strategies
+
+Hedge funds are generally grouped into four overarching categories:
+
+1. **Equity (Long/Short):** Holding long positions in undervalued stocks and short positions in overvalued ones. The goal is to isolate stock-picking skill (Alpha) while hedging out broader market risk (Beta).
+2. **Event-Driven:** Exploiting pricing inefficiencies that may occur before or after a corporate event (mergers, bankruptcies, spin-offs). Includes Merger Arbitrage and Distressed Securities.
+3. **Relative Value:** Exploiting price discrepancies between closely related securities (e.g., Convertible Arbitrage, Fixed Income Arbitrage).
+4. **Macro:** Top-down strategies utilizing derivatives to bet on global macroeconomic trends in currencies, interest rates, and commodities.
+
+<ConceptCard title="Merger Arbitrage Risk Profile" definition="Buying the target company and shorting the acquiring company.">
+  This strategy earns a small, steady spread if the deal closes successfully. However, if the deal breaks (regulatory block, financing failure), the target stock plummets. Therefore, merger arbitrage exhibits **negative skewness** and **high kurtosis** (small steady gains, rare but massive losses).
+</ConceptCard>
+
+### Fee Structures
+
+The traditional hedge fund fee model is "2 and 20": a 2% management fee on Assets Under Management (AUM) and a 20% incentive (performance) fee on profits.
+
+<FormulaBlock equation="Total\\ Fee = Management\\ Fee + Incentive\\ Fee">
+  <ul>
+    <li><strong>Management Fee:</strong> Typically assessed on beginning-of-period AUM or average AUM.</li>
+    <li><strong>Incentive Fee:</strong> Calculated on profits, usually subject to a High Water Mark and/or a Hurdle Rate.</li>
+  </ul>
+</FormulaBlock>
+
+#### High Water Mark (HWM)
+The highest peak in value that an investment fund has reached. The GP cannot charge an incentive fee on profits until they have recovered any past losses and exceeded the HWM.
+
+#### Hurdle Rates
+A minimum return the fund must achieve before the GP can charge an incentive fee.
+- **Hard Hurdle:** The GP only charges the incentive fee on profits *above* the hurdle rate.
+- **Soft Hurdle:** Once the hurdle rate is cleared, the GP charges the incentive fee on *all* profits from zero.
+
+<WorkedExample title="Fee Calculation with HWM and Hard Hurdle">
+  <div slot="problem">
+    A fund starts the year with $100M AUM (which is also its HWM). The fee structure is 2% management fee (on beginning AUM) and 20% incentive fee, subject to a 5% hard hurdle rate. Management fees are calculated independently of incentive fees. At year-end, gross AUM is $115M. Calculate the total fees to the GP.
+  </div>
+  <div slot="solution">
+    1. **Management Fee:**<br/>
+       $100M * 2% = $2M
+       
+    2. **Calculate Profits:**<br/>
+       Gross AUM ($115M) - Management Fee ($2M) - Beginning AUM ($100M) = $13M net profit before incentive fee.
+       
+    3. **Apply Hurdle Rate:**<br/>
+       The 5% hurdle is based on beginning AUM: $100M * 5% = $5M.
+       Because it is a *hard* hurdle, the GP only earns a fee on profits *above* $5M.
+       Eligible Profit = $13M - $5M = $8M.
+       
+    4. **Incentive Fee:**<br/>
+       $8M * 20% = $1.6M
+       
+    5. **Total Fees:**<br/>
+       $2M + $1.6M = $3.6M
+  </div>
+  <div slot="why">
+    Always read carefully to see if the management fee is deducted *before* or *after* calculating the incentive fee, and whether the hurdle is hard or soft.
+  </div>
+</WorkedExample>
+
+## Practice Questions
+
+<PracticeQuestion id="hf-1" difficulty="Medium">
+  <div slot="question">
+    A hedge fund strategy isolates the idiosyncratic risk of two highly correlated energy stocks by going long the undervalued stock and shorting the overvalued stock. This strategy is best classified as:
+  </div>
+  <ul slot="choices">
+    <li>A. Global Macro</li>
+    <li>B. Equity Market Neutral (Relative Value)</li>
+    <li>C. Event-Driven</li>
+  </ul>
+  <div slot="explanation">
+    **Correct Answer: B.** 
+    
+    This is a classic Equity Market Neutral or pairs trading strategy (falling under Relative Value). By going long and short in equal dollar amounts on highly correlated stocks, the manager hedges out the broad market risk (Beta = 0) and relies entirely on the relative price convergence of the two specific assets (Alpha).
+  </div>
+</PracticeQuestion>
+
+<CheatSheetGrid>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">Fee Nuances</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li><strong>Hard Hurdle:</strong> Fee applied to [Profit - Hurdle].</li>
+      <li><strong>Soft Hurdle:</strong> Fee applied to Total Profit (if Hurdle met).</li>
+      <li><strong>HWM:</strong> Protects LPs from paying for the same performance twice.</li>
+    </ul>
+  </div>
+</CheatSheetGrid>
+
+<FreeResourceList resources={[
+  { title: "Investopedia: 2 and 20 Fee Structure", url: "https://www.investopedia.com/terms/t/two_and_twenty.asp", type: "Article", description: "Explains standard management and incentive fees." },
+  { title: "AQR Capital Management: Whitepapers", url: "https://www.aqr.com/Insights/Research", type: "Article", description: "Excellent deep-dives into Alpha vs Beta and risk-parity strategies." }
+]} />

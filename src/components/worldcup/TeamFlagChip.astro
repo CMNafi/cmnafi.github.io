@@ -1,0 +1,28 @@
+---
+interface Props {
+  teamCode: string;
+  teamName: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { teamCode, teamName, size = 'md' } = Astro.props;
+
+const sizeStyles = {
+  sm: 'height: 14px; font-size: 0.75rem;',
+  md: 'height: 20px; font-size: 0.9rem;',
+  lg: 'height: 32px; font-size: 1.2rem;'
+};
+
+const iconSizes = {
+  sm: '14px',
+  md: '20px',
+  lg: '32px'
+}
+---
+<div class="wc-flag-chip" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+  <div style={`width: ${iconSizes[size]}; height: ${iconSizes[size]}; background: var(--wc-border); border-radius: 2px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: var(--wc-muted);`}>
+    <!-- SVG Flag placeholder -->
+    {teamCode}
+  </div>
+  <span style={`font-weight: 600; ${sizeStyles[size]}`}>{teamName}</span>
+</div>

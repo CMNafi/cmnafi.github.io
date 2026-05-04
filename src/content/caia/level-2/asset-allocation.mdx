@@ -1,0 +1,87 @@
+---
+title: "Asset Allocation & Institutional Investors"
+description: "The core portfolio models: Endowment, Risk Parity, and Norway."
+publishedAt: 2026-05-04
+level: "II"
+topicNumber: 2
+examWeight: "20%"
+timeToMastery: "40 hours"
+tags: ["level-2", "asset-allocation", "endowment-model"]
+---
+
+import ConceptCard from '../../../components/caia/ConceptCard.astro';
+import PracticeQuestion from '../../../components/caia/PracticeQuestion.astro';
+import CheatSheetGrid from '../../../components/caia/CheatSheetGrid.astro';
+import FreeResourceList from '../../../components/caia/FreeResourceList.astro';
+
+## Why this matters
+
+This is arguably the most important section of Level II. Understanding how individual alternative investments function is useless unless you know how to combine them into a resilient institutional portfolio. 
+
+You must be able to contrast the major institutional models (Endowment, Norway, Risk Parity) and understand the concept of "liquidity budgeting"—ensuring that a fund with heavy private market allocations has enough cash on hand to meet capital calls, pay distributions, or survive a market shock.
+
+## Learning Objectives
+
+- Contrast the Endowment Model, the Norway Model, and the Risk Parity approach.
+- Explain the role of liquidity management and the "denominator effect" in institutional portfolios.
+- Understand the concept of factor-based asset allocation vs. traditional asset class allocation.
+
+## Core Concepts
+
+### The Three Major Models
+
+Institutions generally fall into one of three dominant asset allocation paradigms:
+
+<ConceptCard title="The Endowment Model" definition="High allocation to illiquid alternative investments (PE, VC, Hedge Funds, Real Assets) relying on active management to generate alpha.">
+  Pioneered by David Swensen at Yale, this model assumes that institutions have long time horizons and can therefore harvest the "illiquidity premium." It requires a massive internal team to source top-tier managers, as manager dispersion in private markets is vast.
+</ConceptCard>
+
+<ConceptCard title="The Norway Model" definition="Heavy reliance on public equities, passive management, and minimal exposure to illiquid alternatives.">
+  Used by the massive Norwegian sovereign wealth fund, this model assumes markets are largely efficient. It focuses on keeping costs extremely low, harvesting broad market beta, and utilizing its massive scale to engage in corporate governance (activism) rather than trying to pick the best venture capital funds.
+</ConceptCard>
+
+<ConceptCard title="Risk Parity" definition="Allocating capital so that each asset class contributes an equal amount of volatility (risk) to the overall portfolio.">
+  In a traditional 60/40 portfolio, equities might represent 60% of the capital but 90% of the *risk*. Risk parity solves this by levering up low-volatility assets (like bonds) so their risk contribution equals that of equities. This creates a portfolio more resilient to growth and inflation shocks, but heavily reliant on the availability of cheap leverage.
+</ConceptCard>
+
+### The Denominator Effect
+
+Institutions typically set target allocation weights (e.g., 20% to Private Equity). 
+
+When public equity markets crash (like in 2008 or 2020), the value of the public stock portfolio drops instantly. However, private equity valuations are sticky and reported on a lag. Suddenly, the *total* portfolio value (the denominator) shrinks, causing the private equity allocation percentage to spike above its target limit.
+
+This forces the institution to either halt new PE commitments or sell existing PE stakes on the secondary market at a steep discount to rebalance the portfolio.
+
+## Practice Questions
+
+<PracticeQuestion id="aa-1" difficulty="Easy">
+  <div slot="question">
+    Which of the following institutional asset allocation models relies most heavily on the assumption that capital markets are largely efficient and active management struggles to add value after fees?
+  </div>
+  <ul slot="choices">
+    <li>A. The Endowment Model</li>
+    <li>B. Risk Parity</li>
+    <li>C. The Norway Model</li>
+  </ul>
+  <div slot="explanation">
+    **Correct Answer: C.** 
+    
+    The Norway Model is characterized by its high allocation to publicly traded equities and fixed income, primarily managed passively to minimize costs. It eschews the heavy allocation to illiquid, actively managed private funds that define the Endowment Model.
+  </div>
+</PracticeQuestion>
+
+<CheatSheetGrid>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">Model Comparison</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li><strong>Endowment:</strong> High active risk, high illiquidity, manager selection is paramount.</li>
+      <li><strong>Norway:</strong> High equity beta, high liquidity, low cost, passive.</li>
+      <li><strong>Risk Parity:</strong> Equal risk contribution, requires leverage, focuses on economic environments.</li>
+    </ul>
+  </div>
+</CheatSheetGrid>
+
+<FreeResourceList resources={[
+  { title: "Yale Endowment Annual Reports", url: "https://investments.yale.edu/", type: "PDF", description: "Read the actual reports from the pioneers of the Endowment Model." },
+  { title: "Bridgewater: All Weather Story", url: "https://www.bridgewater.com/research-and-insights/the-all-weather-story", type: "Article", description: "Ray Dalio's firm explains the origins and logic of Risk Parity." }
+]} />

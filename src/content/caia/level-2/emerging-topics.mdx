@@ -1,0 +1,83 @@
+---
+title: "Emerging Topics"
+description: "A rotating selection of current academic and industry readings on the frontier of alternative investments."
+publishedAt: 2026-05-04
+level: "II"
+topicNumber: 1
+examWeight: "10%"
+timeToMastery: "15 hours"
+tags: ["level-2", "emerging-topics", "defi", "esg"]
+---
+
+import ConceptCard from '../../../components/caia/ConceptCard.astro';
+import PracticeQuestion from '../../../components/caia/PracticeQuestion.astro';
+import PitfallCard from '../../../components/caia/PitfallCard.astro';
+import CheatSheetGrid from '../../../components/caia/CheatSheetGrid.astro';
+import FreeResourceList from '../../../components/caia/FreeResourceList.astro';
+
+## Why this matters
+
+The alternative investment landscape evolves rapidly. To ensure the curriculum remains relevant, the CAIA Association dedicates a section of Level II to "Emerging Topics." These are typically a collection of whitepapers, academic articles, and industry reports published within the last 1-3 years.
+
+While the specific readings change frequently, they generally cluster around a few persistent themes: Decentralized Finance (DeFi), ESG integration, the democratization of private markets (retail access), and the impact of artificial intelligence on quantitative strategies.
+
+## Learning Objectives
+
+- Understand the mechanisms and risks of Decentralized Finance (DeFi) protocols.
+- Analyze the challenges of integrating Environmental, Social, and Governance (ESG) factors into private market valuations.
+- Evaluate the structures used to democratize access to alternative investments (e.g., ELTIFs, interval funds).
+
+## Core Concepts
+
+### Decentralized Finance (DeFi)
+
+DeFi refers to financial applications built on blockchain networks (primarily Ethereum) that operate without centralized intermediaries like banks or brokerages.
+
+<ConceptCard title="Automated Market Makers (AMMs)" definition="Smart contracts that create liquidity pools of tokens, allowing users to trade without a traditional order book.">
+  In traditional finance, market makers provide liquidity by holding inventory and earning the bid-ask spread. In DeFi, anyone can deposit their crypto assets into a liquidity pool and earn a share of the trading fees. Prices are determined algorithmically based on the ratio of assets in the pool.
+</ConceptCard>
+
+<PitfallCard title="Impermanent Loss">
+  A key risk for liquidity providers in AMMs. If the price of the deposited assets changes significantly relative to each other, the liquidity provider may end up with less total value than if they had simply held the assets outside the pool. It is "impermanent" because the loss is only realized if the assets are withdrawn at that price ratio.
+</PitfallCard>
+
+### The Democratization of Private Markets
+
+Historically, private equity and hedge funds were restricted to institutional investors and ultra-high-net-worth individuals due to high minimum investments and strict accreditation rules. Asset managers are now designing structures to access the massive pool of retail capital.
+
+- **Interval Funds:** Closed-end funds that do not trade on an exchange. They offer limited liquidity by periodically (e.g., quarterly) offering to repurchase a stated percentage of their outstanding shares at NAV.
+- **ELTIFs (European Long-Term Investment Funds):** A European regulatory framework designed to channel retail and institutional capital into long-term infrastructure and private businesses.
+
+## Practice Questions
+
+<PracticeQuestion id="et-1" difficulty="Medium">
+  <div slot="question">
+    An investor provides liquidity to an Automated Market Maker (AMM) pool containing Token A and Token B. Over the next month, the price of Token A skyrockets while Token B remains stable. Which of the following is the most likely outcome for the investor?
+  </div>
+  <ul slot="choices">
+    <li>A. The investor will experience impermanent loss and their pool position will contain more of Token B and less of Token A.</li>
+    <li>B. The investor will capture the full upside of Token A's price movement.</li>
+    <li>C. The smart contract will automatically pause trading to protect the investor from loss.</li>
+  </ul>
+  <div slot="explanation">
+    **Correct Answer: A.** 
+    
+    As the price of Token A rises, arbitrageurs will buy Token A from the pool (because it is cheaper than on external exchanges) and deposit Token B. This changes the ratio in the pool. The liquidity provider will end up with less of the appreciating asset (Token A) and more of the stable asset (Token B), resulting in impermanent loss compared to simply holding the assets.
+  </div>
+</PracticeQuestion>
+
+<CheatSheetGrid>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">DeFi Risks</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li><strong>Smart Contract Risk:</strong> Bugs in the code can be exploited by hackers.</li>
+      <li><strong>Oracle Risk:</strong> Reliance on external data feeds (oracles) for pricing; if the oracle is manipulated, the protocol fails.</li>
+      <li><strong>Impermanent Loss:</strong> Opportunity cost of providing liquidity to AMMs.</li>
+    </ul>
+  </div>
+</CheatSheetGrid>
+
+<FreeResourceList resources={[
+  { title: "Finematics: Automated Market Makers Explained", url: "https://finematics.com/automated-market-makers-explained/", type: "Article", description: "A clear, visual explanation of how AMMs and liquidity pools function." },
+  { title: "SEC: Interval Funds Primer", url: "https://www.sec.gov/files/interval-funds-investor-bulletin.pdf", type: "PDF", description: "Regulatory overview of how interval funds operate to provide limited liquidity." }
+]} />

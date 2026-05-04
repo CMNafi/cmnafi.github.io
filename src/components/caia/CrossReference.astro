@@ -1,0 +1,10 @@
+---
+interface Props {
+  href: string;
+  preview?: string;
+}
+const { href, preview } = Astro.props;
+---
+<a href={href} class="caia-cross-ref" title={preview} style="text-decoration: none; border-bottom: 1px dotted var(--caia-accent); color: var(--caia-accent);">
+  <slot /> ↗
+</a>

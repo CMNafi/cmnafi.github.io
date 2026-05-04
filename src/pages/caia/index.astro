@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import CaiaLayout from '../../layouts/CaiaLayout.astro';
+
+const allCaia = await getCollection('caia');
+
+// Group by level
+const level1Topics = allCaia.filter(e => e.data.level === 'I').sort((a, b) => a.data.topicNumber - b.data.topicNumber);
+const level2Topics = allCaia.filter(e => e.data.level === 'II').sort((a, b) => a.data.topicNumber - b.data.topicNumber);
+---
+<CaiaLayout title="CAIA Corner" description="A structured, exam-aligned study tool and public knowledge resource for CAIA Levels I and II.">
+  <header style="margin-bottom: 3rem;">
+    <h1>CAIA Corner</h1>
+    <p style="font-size: 1.2em; color: var(--caia-highlight);">A structured study tool and public knowledge hub for the Chartered Alternative Investment Analyst (CAIA) curriculum.</p>
+  </header>
+
+  <section style="margin-bottom: 3rem;">
+    <h2>Curriculum Overview</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+      <div class="level-card" style="background: var(--caia-card); padding: 2rem; border-top: 4px solid var(--caia-accent); border-radius: 4px;">
+        <h3><a href="/caia/level-1" style="color: var(--caia-ink); text-decoration: none;">Level I</a></h3>
+        <p style="font-size: 0.9em; margin-bottom: 1.5rem;">Fundamentals of alternative investments, including private equity, private debt, real assets, hedge funds, and digital assets.</p>
+        <ul style="list-style: none; padding: 0; font-size: 0.95em;">
+          {level1Topics.map(topic => (
+            <li style="margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--caia-border);">
+              <a href={`/caia/${topic.slug}`} style="text-decoration: none; color: var(--caia-ink); display: flex; justify-content: space-between;">
+                <span>{topic.data.topicNumber === 0 ? 'Overview' : `Topic ${topic.data.topicNumber}: ${topic.data.title}`}</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75em; color: var(--caia-highlight);">{topic.data.examWeight}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+      <div class="level-card" style="background: var(--caia-card); padding: 2rem; border-top: 4px solid var(--caia-border); border-radius: 4px;">
+        <h3><a href="/caia/level-2" style="color: var(--caia-ink); text-decoration: none;">Level II</a></h3>
+        <p style="font-size: 0.9em;">Advanced topics including asset allocation, institutional investors, complex strategies, and emerging topics.</p>
+        <ul style="list-style: none; padding: 0; font-size: 0.95em;">
+          {level2Topics.length > 0 ? level2Topics.map(topic => (
+            <li style="margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--caia-border);">
+              <a href={`/caia/${topic.slug}`} style="text-decoration: none; color: var(--caia-ink); display: flex; justify-content: space-between;">
+                <span>{topic.data.topicNumber === 0 ? 'Overview' : `Topic ${topic.data.topicNumber}: ${topic.data.title}`}</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75em; color: var(--caia-highlight);">{topic.data.examWeight}</span>
+              </a>
+            </li>
+          )) : (
+            <li style="font-style: italic; opacity: 0.6; font-size: 0.85em;">No modules published yet.</li>
+          )}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Reference</h2>
+    <ul>
+      <li><a href="/caia/glossary">Glossary</a> — A-Z searchable terms</li>
+      <li><a href="/caia/formulas">Master Formula Sheet</a> — Keyed by topic</li>
+    </ul>
+  </section>
+</CaiaLayout>

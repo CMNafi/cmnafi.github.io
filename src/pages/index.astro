@@ -26,7 +26,8 @@ const sectors = [
   { id: 'S1', name: 'GARAGE', href: '/garage', label: 'Projects & Apps' },
   { id: 'S2', name: 'FIELD NOTES', href: '/field-notes', label: 'Telemetry Log' },
   { id: 'S3', name: 'DRIVER', href: '/story', label: 'Biography' },
-  { id: 'S4', name: 'PARC FERMÉ', href: '/connect', label: 'Comms' }
+  { id: 'S4', name: 'PARC FERMÉ', href: '/connect', label: 'Comms' },
+  { id: 'S5', name: 'CAIA CORNER', href: '/caia', label: 'Study Hub' }
 ];
 ---
 
@@ -58,14 +59,14 @@ const sectors = [
               <StatusDot state={currentLap.data.status as any} />
             </header>
             <div class="lap-data">
-              <h3><a href={`/garage/${currentLap.slug}`}>{currentLap.data.title}</a></h3>
+              <h3><a href={currentLap.data.liveUrl || `/garage/${currentLap.slug}`}>{currentLap.data.title}</a></h3>
               <p>{currentLap.data.summary}</p>
               <TelemetryGrid 
                 updated={(currentLap.data.updatedAt || currentLap.data.startedAt)?.toLocaleDateString()}
                 status={currentLap.data.status as any}
                 stack={currentLap.data.stack?.slice(0, 2).join(', ') || 'N/A'}
-                link={`/garage/${currentLap.slug}`}
-                linkLabel="VIEW →"
+                link={currentLap.data.liveUrl || `/garage/${currentLap.slug}`}
+                linkLabel={currentLap.data.liveUrl ? "LAUNCH APP →" : "VIEW →"}
               />
             </div>
           </>

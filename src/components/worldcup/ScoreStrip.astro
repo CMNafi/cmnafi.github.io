@@ -1,0 +1,41 @@
+---
+import TeamFlagChip from './TeamFlagChip.astro';
+
+interface Props {
+  matchId: string;
+  homeTeam: string;
+  homeCode: string;
+  awayTeam: string;
+  awayCode: string;
+  homeScore?: number;
+  awayScore?: number;
+  status: 'preview' | 'live' | 'FT';
+  timeInfo: string; // e.g., '15:00 UTC', '73:00', 'June 11'
+}
+
+const { homeTeam, homeCode, awayTeam, awayCode, homeScore, awayScore, status, timeInfo } = Astro.props;
+---
+<div class="wc-score-strip wc-card" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; margin-bottom: 0.5rem;">
+  
+  <div style="flex: 1; display: flex; justify-content: flex-end; padding-right: 1.5rem;">
+    <TeamFlagChip teamName={homeTeam} teamCode={homeCode} size="md" />
+  </div>
+
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+    {status === 'preview' ? (
+      <div class="wc-mono" style="font-size: 0.9em; color: var(--wc-muted);">{timeInfo}</div>
+    ) : (
+      <div class="wc-mono" style="font-size: 1.5rem; font-weight: 700; color: var(--wc-ink); letter-spacing: 0.1em;">
+        {homeScore} - {awayScore}
+      </div>
+    )}
+    
+    {status === 'live' && <div style="color: var(--wc-accent); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-top: 4px;" class="live-pulse">{timeInfo}</div>}
+    {status === 'FT' && <div style="color: var(--wc-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-top: 4px;">FT</div>}
+  </div>
+
+  <div style="flex: 1; display: flex; justify-content: flex-start; padding-left: 1.5rem;">
+    <TeamFlagChip teamName={awayTeam} teamCode={awayCode} size="md" />
+  </div>
+
+</div>

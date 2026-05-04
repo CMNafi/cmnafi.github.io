@@ -1,0 +1,11 @@
+---
+interface Props {
+  hook: string;
+}
+const { hook } = Astro.props;
+---
+<div class="caia-mnemonic" style="border: 1px dashed var(--caia-border); padding: 1.25rem; margin: 1.5rem 0; text-align: center;">
+  <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75em; color: var(--caia-highlight); margin-bottom: 0.5rem; letter-spacing: 0.1em;">MEMORY HOOK</div>
+  <div style="font-family: 'Playfair Display', serif; font-size: 1.5em; font-style: italic; color: var(--caia-accent); margin-bottom: 0.75rem;">{hook}</div>
+  <div style="font-size: 0.9em; text-align: left;"><slot /></div>
+</div>

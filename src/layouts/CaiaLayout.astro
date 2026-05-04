@@ -1,0 +1,213 @@
+---
+import '../styles/global.css'; // Just in case, though we will override via scoped styles
+import { siteConfig } from '@/config/site';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  title?: string;
+  description?: string;
+  frontmatter?: any;
+}
+
+const { title, description, frontmatter } = Astro.props;
+const pageTitle = title || frontmatter?.title || 'CAIA Corner';
+const pageDescription = description || frontmatter?.description || 'A comprehensive study resource and knowledge hub for alternative investments.';
+
+const allCaia = await getCollection('caia');
+const level1Topics = allCaia.filter(e => e.data.level === 'I').sort((a, b) => a.data.topicNumber - b.data.topicNumber);
+const level2Topics = allCaia.filter(e => e.data.level === 'II').sort((a, b) => a.data.topicNumber - b.data.topicNumber);
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <!-- KaTeX CSS and Scripts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71bZMzRX4q" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+Gq10vKqghoEypkZ1dE2b1S+I9z4hE/mJvH9AStS1B11iZ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbOxyj0O1bT0c1H0R1Yd2i7d/z" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    
+    <title>{pageTitle} - CAIA Corner</title>
+    <meta name="description" content={pageDescription} />
+
+    <style is:global>
+      :root[data-theme="light"] {
+        --caia-bg: #F4F1EA;
+        --caia-ink: #1A1A1A;
+        --caia-accent: #2D5F4E;
+        --caia-highlight: #C9A961;
+        --caia-border: #D9D2C2;
+        --caia-card: #EFEBE0;
+        --caia-error: #7A2E2E;
+      }
+      
+      :root[data-theme="dark"] {
+        --caia-bg: #0F1620;
+        --caia-ink: #E8E1D0;
+        --caia-accent: #7AAE99;
+        --caia-highlight: #D4A857;
+        --caia-border: #2A3441;
+        --caia-card: #16202D;
+        --caia-error: #D96A6A;
+      }
+
+      body.caia-mode {
+        background-color: var(--caia-bg);
+        color: var(--caia-ink);
+        font-family: 'IBM Plex Serif', serif;
+        line-height: 1.65;
+        font-size: 17px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin: 0;
+        padding: 0;
+      }
+
+      .caia-mode h1, .caia-mode h2, .caia-mode h3, .caia-mode h4, .caia-mode h5 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 500;
+        color: var(--caia-ink);
+      }
+
+      .caia-mode code, .caia-mode pre {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85em;
+      }
+
+      .caia-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        border-bottom: 1px solid var(--caia-border);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .caia-nav a {
+        color: var(--caia-ink);
+        text-decoration: none;
+      }
+
+      .caia-nav a:hover {
+        color: var(--caia-accent);
+      }
+
+      .caia-layout {
+        display: flex;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        gap: 4rem;
+      }
+
+      .caia-sidebar {
+        width: 240px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 2rem;
+        height: max-content;
+      }
+
+      .caia-main {
+        flex-grow: 1;
+        max-width: 780px; /* Prose width target */
+      }
+
+      .theme-toggle {
+        background: none;
+        border: 1px solid var(--caia-border);
+        color: var(--caia-ink);
+        padding: 4px 8px;
+        cursor: pointer;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+      }
+
+      @media (max-width: 768px) {
+        .caia-layout {
+          flex-direction: column;
+          padding: 1rem;
+        }
+        .caia-sidebar {
+          position: static;
+          width: 100%;
+        }
+      }
+      
+      /* Base Styles for MDX content */
+      .caia-main p { margin-bottom: 1.5rem; font-weight: 300; }
+      .caia-main a { color: var(--caia-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+      .caia-main ul, .caia-main ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+      .caia-main li { margin-bottom: 0.5rem; font-weight: 300; }
+    </style>
+  </head>
+  <body class="caia-mode">
+    <nav class="caia-nav">
+      <div class="brand">
+        <a href="/caia">CAIA Corner</a> <span style="color: var(--caia-border)">/</span>
+        <a href="/" style="font-size:11px; color: var(--caia-accent)">← Pit Wall</a>
+      </div>
+      <div class="actions">
+        <button id="caia-theme-toggle" class="theme-toggle">TOGGLE THEME</button>
+      </div>
+    </nav>
+    
+    <div class="caia-layout">
+      <aside class="caia-sidebar">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em; margin-bottom: 1rem;">NAVIGATION</div>
+        <ul style="list-style: none; padding: 0; font-family: 'IBM Plex Serif'; font-size: 15px; display: flex; flex-direction: column; gap: 0.5rem;">
+          <li><a href="/caia" style="color: var(--caia-ink); text-decoration: none; font-weight: 600;">Home Overview</a></li>
+          
+          <li style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em;">LEVEL I</li>
+          {level1Topics.map(topic => (
+            <li>
+              <a href={`/caia/${topic.slug}`} style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85; transition: opacity 0.2s, color 0.2s;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">
+                {topic.data.topicNumber === 0 ? 'Overview' : `${topic.data.topicNumber}. ${topic.data.title}`}
+              </a>
+            </li>
+          ))}
+
+          <li style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em;">LEVEL II</li>
+          {level2Topics.map(topic => (
+            <li>
+              <a href={`/caia/${topic.slug}`} style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85; transition: opacity 0.2s, color 0.2s;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">
+                {topic.data.topicNumber === 0 ? 'Overview' : `${topic.data.topicNumber}. ${topic.data.title}`}
+              </a>
+            </li>
+          ))}
+
+          <li style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em;">REFERENCE</li>
+          <li><a href="/caia/glossary" style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">Glossary</a></li>
+          <li><a href="/caia/formulas" style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">Master Formulas</a></li>
+        </ul>
+      </aside>
+
+      <main class="caia-main">
+        <slot />
+      </main>
+    </div>
+
+    <script is:inline>
+      // Theme toggling logic
+      const toggle = document.getElementById('caia-theme-toggle');
+      const html = document.documentElement;
+
+      // Load preference from localStorage
+      const savedTheme = localStorage.getItem('caia-theme') || 'light';
+      html.setAttribute('data-theme', savedTheme);
+
+      toggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('caia-theme', newTheme);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+---
+import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
+import ScoreStrip from '../../../components/worldcup/ScoreStrip.astro';
+import matchesData from '../../../data/wc-matches.json';
+
+// Group matches by round
+const matchesByRound = matchesData.reduce((acc, match) => {
+  if (!acc[match.round]) {
+    acc[match.round] = [];
+  }
+  acc[match.round].push(match);
+  return acc;
+}, {} as Record<string, typeof matchesData>);
+
+// Sort rounds so Group Stage is first, then knockouts in order
+const roundOrder = ['Group Stage', 'Round of 32', 'Round of 16', 'Quarter-finals', 'Semi-finals', 'Third Place', 'Final'];
+const sortedRounds = Object.keys(matchesByRound).sort((a, b) => roundOrder.indexOf(a) - roundOrder.indexOf(b));
+
+function formatTimeLocal(isoString: string) {
+  const d = new Date(isoString);
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short'
+  }).format(d);
+}
+---
+<WorldCupLayout title="Matches | World Cup 2026 Corner">
+  <header style="margin-bottom: 2rem;">
+    <a href="/world-cup-2026" style="color: var(--wc-muted); text-decoration: none; font-size: 0.9em; margin-bottom: 1rem; display: inline-block;">← Back to Hub</a>
+    <h1>Match Schedule</h1>
+    <p style="color: var(--wc-muted);">All 104 matches of the tournament. Times listed in Local Florida Time (ET).</p>
+  </header>
+
+  <section>
+    {sortedRounds.map(round => (
+      <div style="margin-bottom: 3rem;">
+        <h2 style="font-size: 1.2rem; color: var(--wc-highlight); text-transform: uppercase; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; border-bottom: 1px solid var(--wc-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+          {round}
+        </h2>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          {matchesByRound[round].map((m: any) => (
+            <ScoreStrip 
+              matchId={`m${m.id}`} 
+              homeTeam={m.homeTeam} 
+              homeCode={m.homeCode} 
+              awayTeam={m.awayTeam} 
+              awayCode={m.awayCode} 
+              status="preview" 
+              timeInfo={`${formatTimeLocal(m.date)} · ${m.venue}`} 
+            />
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+</WorldCupLayout>

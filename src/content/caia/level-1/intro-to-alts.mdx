@@ -1,0 +1,90 @@
+---
+title: "Introduction to Alternative Investments"
+description: "The quantitative and theoretical foundation for evaluating non-traditional assets, covering risk, return, and financial economics."
+publishedAt: 2026-05-04
+level: "I"
+topicNumber: 2
+examWeight: "20-25%"
+timeToMastery: "35 hours"
+tags: ["level-1", "quantitative", "risk", "return"]
+---
+
+import ConceptCard from '../../../components/caia/ConceptCard.astro';
+import FormulaBlock from '../../../components/caia/FormulaBlock.astro';
+import PracticeQuestion from '../../../components/caia/PracticeQuestion.astro';
+import CheatSheetGrid from '../../../components/caia/CheatSheetGrid.astro';
+import FreeResourceList from '../../../components/caia/FreeResourceList.astro';
+
+## Why this matters
+
+Before analyzing a buyout deal or a timberland asset, you must understand the math used to measure its performance. This topic provides the quantitative vocabulary used throughout the CAIA program. It is heavy on formulas, distribution shapes, and performance metrics (Sharpe, Sortino, Treynor).
+
+## Learning Objectives
+
+- Distinguish between normal and non-normal distributions (skewness, kurtosis).
+- Calculate and interpret performance measures (Sharpe, Sortino, Treynor, Information Ratio).
+- Understand the basics of financial economics, including the CAPM and arbitrage pricing theory.
+
+## Core Concepts
+
+### Distribution Shapes and Moments
+
+While traditional finance often relies on the assumption of normally distributed returns, alternative investments frequently exhibit significant skewness and excess kurtosis ("fat tails").
+
+<ConceptCard title="The Four Moments of a Distribution" definition="Mean (1st), Variance (2nd), Skewness (3rd), and Kurtosis (4th).">
+  Many alternative strategies, like selling options or distressed debt, resemble "picking up pennies in front of a steamroller." They generate steady small positive returns (negative skew) punctuated by infrequent, massive drawdowns (high kurtosis).
+</ConceptCard>
+
+### Performance Metrics
+
+<FormulaBlock equation="Sharpe Ratio = \\frac{E[R_p] - R_f}{\\sigma_p}" range="0.5 to 2.0+ for top-quartile funds">
+  <ul>
+    <li><strong>E[R_p]</strong>: Expected return of the portfolio</li>
+    <li><strong>R_f</strong>: Risk-free rate</li>
+    <li><strong>\\sigma_p</strong>: Standard deviation of portfolio returns</li>
+  </ul>
+</FormulaBlock>
+
+The Sharpe ratio penalizes both upside and downside volatility equally. For alternative strategies with asymmetric returns, the Sortino ratio (which only penalizes downside deviation) is often a better fit.
+
+<FormulaBlock equation="Sortino Ratio = \\frac{E[R_p] - MAR}{TDD}" range="Often higher than Sharpe for trend-following strategies">
+  <ul>
+    <li><strong>MAR</strong>: Minimum Acceptable Return (often the risk-free rate)</li>
+    <li><strong>TDD</strong>: Target Downside Deviation</li>
+  </ul>
+</FormulaBlock>
+
+## Practice Questions
+
+<PracticeQuestion id="intro-1" difficulty="Easy">
+  <div slot="question">
+    A hedge fund exhibits a return distribution with a skewness of -1.5 and a kurtosis of 6.0. Compared to a normal distribution, this fund's returns have:
+  </div>
+  <ul slot="choices">
+    <li>A. A longer right tail and thinner tails overall.</li>
+    <li>A. A longer right tail and fatter tails overall.</li>
+    <li>C. A longer left tail and fatter tails overall.</li>
+  </ul>
+  <div slot="explanation">
+    **Correct Answer: C.** 
+    
+    Negative skewness indicates a longer left tail (more frequent or larger negative returns than positive ones). A kurtosis of 6.0 indicates excess kurtosis (since a normal distribution has a kurtosis of 3.0), meaning the distribution has "fatter" tails, indicating a higher probability of extreme outcomes.
+  </div>
+</PracticeQuestion>
+
+<CheatSheetGrid>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">Key Ratios</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li><strong>Sharpe:</strong> Excess return / Total Risk ($\\sigma$)</li>
+      <li><strong>Sortino:</strong> Excess return over MAR / Downside Deviation</li>
+      <li><strong>Treynor:</strong> Excess return / Systematic Risk ($\\beta$)</li>
+      <li><strong>Info Ratio:</strong> Active Return / Tracking Error</li>
+    </ul>
+  </div>
+</CheatSheetGrid>
+
+<FreeResourceList resources={[
+  { title: "Khan Academy: Statistical Distributions", url: "https://www.khanacademy.org/math/statistics-probability", type: "Video", description: "Excellent primer on moments of distribution, normal vs non-normal curves, skewness, and kurtosis." },
+  { title: "CFI: Sharpe vs Sortino Ratios", url: "https://corporatefinanceinstitute.com/resources/wealth-management/sortino-ratio/", type: "Article", description: "A detailed breakdown of when to use downside deviation." }
+]} />

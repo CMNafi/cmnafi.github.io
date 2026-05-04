@@ -1,0 +1,42 @@
+---
+import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
+import { getCollection } from 'astro:content';
+import TeamFlagChip from '../../../components/worldcup/TeamFlagChip.astro';
+
+const teams = await getCollection('wc-teams');
+
+// Group teams by Group (A-L)
+const teamsByGroup = teams.reduce((acc, team) => {
+  const g = team.data.group;
+  if (!acc[g]) acc[g] = [];
+  acc[g].push(team);
+  return acc;
+}, {} as Record<string, typeof teams>);
+
+const groups = Object.keys(teamsByGroup).sort();
+---
+<WorldCupLayout title="Teams | World Cup 2026 Corner">
+  <header style="margin-bottom: 2rem;">
+    <a href="/world-cup-2026" style="color: var(--wc-muted); text-decoration: none; font-size: 0.9em; margin-bottom: 1rem; display: inline-block;">← Back to Hub</a>
+    <h1>The 48 Teams</h1>
+    <p style="color: var(--wc-muted);">Select a team for deep tactical previews, full squads, and key player profiles.</p>
+  </header>
+
+  <section>
+    {groups.map(group => (
+      <div style="margin-bottom: 3rem;">
+        <h2 style="font-size: 1.2rem; color: var(--wc-highlight); text-transform: uppercase; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; border-bottom: 1px solid var(--wc-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+          Group {group}
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;">
+          {teamsByGroup[group].map(team => (
+            <a href={`/world-cup-2026/teams/${team.slug}`} class="wc-card" style="text-decoration: none; transition: border-color 0.2s, background 0.2s; display: flex; align-items: center; justify-content: space-between;">
+              <TeamFlagChip teamName={team.data.name} teamCode={team.data.code} size="md" />
+              <span style="color: var(--wc-muted); font-size: 0.8rem;">&rarr;</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+</WorldCupLayout>

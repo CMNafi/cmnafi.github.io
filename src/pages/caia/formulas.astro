@@ -1,0 +1,69 @@
+---
+import CaiaLayout from '../../layouts/CaiaLayout.astro';
+import FormulaBlock from '../../components/caia/FormulaBlock.astro';
+---
+<CaiaLayout title="Master Formula Sheet" description="Master formula sheet for the CAIA curriculum.">
+  <header style="margin-bottom: 3rem;">
+    <h1>Master Formula Sheet</h1>
+    <p style="font-size: 1.2em; color: var(--caia-highlight);">Exam-relevant equations keyed by topic, with variable definitions, units, and typical ranges.</p>
+  </header>
+
+  <section>
+    <h2>Quantitative Analysis</h2>
+    <div style="margin-bottom: 3rem;">
+      <FormulaBlock equation="Sharpe Ratio = \\frac{E[R_p] - R_f}{\\sigma_p}" range="0.5 to 2.0+ for top-quartile funds">
+        <ul>
+          <li><strong>E[R_p]</strong>: Expected return of the portfolio</li>
+          <li><strong>R_f</strong>: Risk-free rate</li>
+          <li><strong>\\sigma_p</strong>: Standard deviation of portfolio returns</li>
+        </ul>
+      </FormulaBlock>
+
+      <FormulaBlock equation="Sortino Ratio = \\frac{E[R_p] - MAR}{TDD}" range="Often higher than Sharpe for trend-following strategies">
+        <ul>
+          <li><strong>MAR</strong>: Minimum Acceptable Return (often the risk-free rate)</li>
+          <li><strong>TDD</strong>: Target Downside Deviation</li>
+        </ul>
+      </FormulaBlock>
+    </div>
+
+    <h2>Real Estate</h2>
+    <div style="margin-bottom: 3rem;">
+      <FormulaBlock equation="Value = \\frac{NOI}{Cap\\ Rate}" range="4% to 8% depending on property type and environment">
+        <ul>
+          <li><strong>NOI</strong>: Net Operating Income (Gross Potential Income - Vacancy - Operating Expenses)</li>
+          <li><strong>Cap Rate</strong>: Capitalization Rate</li>
+        </ul>
+      </FormulaBlock>
+
+      <FormulaBlock equation="DSCR = \\frac{NOI}{Annual\\ Debt\\ Service}" range="Lenders typically require > 1.20x">
+        <ul>
+          <li><strong>NOI</strong>: Net Operating Income</li>
+          <li><strong>Annual Debt Service</strong>: Principal + Interest payments for the year</li>
+        </ul>
+      </FormulaBlock>
+    </div>
+
+    <h2>Private Equity</h2>
+    <div style="margin-bottom: 3rem;">
+      <FormulaBlock equation="MOIC = \\frac{Realized\\ Value + Unrealized\\ Value}{Total\\ Invested\\ Capital}">
+        <ul>
+          <li><strong>Realized Value</strong>: Cash already distributed to LPs</li>
+          <li><strong>Unrealized Value</strong>: The estimated NAV of remaining assets</li>
+          <li><strong>Invested Capital</strong>: Capital drawn down from LPs</li>
+        </ul>
+      </FormulaBlock>
+    </div>
+
+    <h2>Hedge Funds</h2>
+    <div style="margin-bottom: 3rem;">
+      <FormulaBlock equation="Total\\ Fee = Management\\ Fee + Incentive\\ Fee">
+        <ul>
+          <li><strong>Management Fee</strong>: Typically 1-2% of AUM</li>
+          <li><strong>Incentive Fee</strong>: Typically 15-20% of Profits (subject to HWM and Hurdle Rate)</li>
+        </ul>
+      </FormulaBlock>
+    </div>
+
+  </section>
+</CaiaLayout>

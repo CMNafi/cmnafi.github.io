@@ -42,7 +42,7 @@ const projects = defineCollection({
     category: z.enum(['data tool', 'web app', 'research', 'automation', 'writing']),
     stack: z.array(z.string()).default([]),
     repoUrl: z.string().url().optional(),
-    liveUrl: z.string().url().optional(),
+    liveUrl: z.string().optional(),
     image: z.string().optional(),
     featured: z.boolean().default(false),
     priority: z.number().default(0),
@@ -110,4 +110,73 @@ const journey = defineCollection({
   })
 });
 
-export const collections = { 'field-notes': fieldNotes, projects, now, journey };
+const caia = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    publishedAt: z.coerce.date(),
+    updatedAt: z.coerce.date().optional(),
+    level: z.enum(['I', 'II']),
+    topicNumber: z.number(),
+    examWeight: z.string(),
+    timeToMastery: z.string(),
+    lastReviewed: z.coerce.date().optional(),
+    tags: z.array(z.string()).default([]),
+    excerpt: z.string().optional(),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional()
+  })
+});
+
+const wcTeams = defineCollection({
+  type: 'content',
+  schema: z.object({
+    name: z.string(),
+    code: z.string().length(3),
+    fifaRanking: z.number().optional(),
+    group: z.enum(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']),
+    coach: z.string().optional(),
+    captain: z.string().optional(),
+    baseCamp: z.string().optional(),
+    status: z.enum(['qualified', 'active', 'eliminated', 'champion']).default('qualified'),
+  })
+});
+
+const wcStadiums = defineCollection({
+  type: 'content',
+  schema: z.object({
+    name: z.string(),
+    city: z.string(),
+    country: z.enum(['USA', 'Canada', 'Mexico']),
+    capacity: z.number(),
+    opened: z.number(),
+    surface: z.string(),
+    roof: z.boolean().default(false),
+    climate: z.string().optional(),
+    transit: z.string().optional()
+  })
+});
+
+const wcEditorial = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    publishedAt: z.coerce.date(),
+    author: z.string().default('Nafi'),
+    tags: z.array(z.string()).default([]),
+    relatedTeams: z.array(z.string()).default([]),
+  })
+});
+
+export const collections = {
+  'field-notes': fieldNotes,
+  projects,
+  now,
+  journey,
+  caia,
+  'wc-teams': wcTeams,
+  'wc-stadiums': wcStadiums,
+  'wc-editorial': wcEditorial
+};

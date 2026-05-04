@@ -1,0 +1,95 @@
+---
+title: "Private Debt"
+description: "Direct lending, mezzanine debt, distressed securities, and the structure of the corporate capital stack."
+publishedAt: 2026-05-04
+level: "I"
+topicNumber: 5
+examWeight: "10-20%"
+timeToMastery: "20 hours"
+tags: ["level-1", "private-debt", "credit"]
+---
+
+import ConceptCard from '../../../components/caia/ConceptCard.astro';
+import FormulaBlock from '../../../components/caia/FormulaBlock.astro';
+import PracticeQuestion from '../../../components/caia/PracticeQuestion.astro';
+import PitfallCard from '../../../components/caia/PitfallCard.astro';
+import CheatSheetGrid from '../../../components/caia/CheatSheetGrid.astro';
+import CrossReference from '../../../components/caia/CrossReference.astro';
+import FreeResourceList from '../../../components/caia/FreeResourceList.astro';
+
+## Why this matters
+
+Following the 2008 Global Financial Crisis, regulatory changes (like Dodd-Frank and Basel III) forced traditional banks to retreat from middle-market corporate lending. Private debt funds stepped into this void. Today, private credit is a massive asset class offering floating-rate yields that sit higher in the capital structure than private equity.
+
+The CAIA exam tests your understanding of where a specific debt instrument sits in the capital stack, how covenants protect lenders, and the mechanics of distressed investing.
+
+## Learning Objectives
+
+- Identify the hierarchy of the corporate capital stack and the concept of absolute priority.
+- Differentiate between direct lending, mezzanine debt, and distressed debt strategies.
+- Understand the role of financial covenants and call protection.
+
+## Core Concepts
+
+### The Capital Stack & Absolute Priority
+
+The capital stack represents the hierarchy of claims on a company's assets and cash flows. The Rule of Absolute Priority dictates that in the event of bankruptcy or liquidation, senior claims must be paid in full before junior claims receive anything.
+
+1. **Senior Secured Debt:** First lien on specific assets. Lowest risk, lowest yield.
+2. **Senior Unsecured Debt:** No specific collateral, but ranks above subordinated debt.
+3. **Subordinated / Mezzanine Debt:** Junior to senior debt, often includes equity warrants.
+4. **Preferred Equity:** Hybrid instrument, ranks below all debt but above common stock.
+5. **Common Equity:** Residual claim. Highest risk, highest potential return.
+
+### Types of Private Debt Strategies
+
+<ConceptCard title="Direct Lending" definition="Senior loans made directly to mid-market companies, usually without a bank intermediary.">
+  These are typically floating-rate loans (e.g., SOFR + 500 bps), which provides a natural hedge against rising interest rates. The loans are usually illiquid and held to maturity.
+</ConceptCard>
+
+<ConceptCard title="Mezzanine Debt" definition="Subordinated debt that bridges the gap between senior debt and equity.">
+  Mezzanine financing is more expensive for the borrower. To achieve target returns (often high teens), lenders require a mix of cash interest, PIK (Payment-in-Kind) interest, and an "equity kicker" (warrants) to participate in the upside.
+</ConceptCard>
+
+### Distressed Debt and the Fulcrum Security
+
+Distressed debt investing involves buying the debt of a company that is in or near bankruptcy at a steep discount to par value.
+
+<PitfallCard title="Distressed Debt is Not a Yield Play">
+  Distressed investors are not buying the bonds to clip the coupon (the company is likely defaulting anyway). They buy the debt to gain leverage in the restructuring process, often converting their debt into a controlling equity stake in the reorganized company.
+</PitfallCard>
+
+The **Fulcrum Security** is the class of debt in the capital stack that is most likely to be converted into the new equity of the reorganized company. Any debt senior to the fulcrum gets paid out (or reinstated), and any debt/equity junior to the fulcrum is wiped out.
+
+## Practice Questions
+
+<PracticeQuestion id="pd-1" difficulty="Medium">
+  <div slot="question">
+    A private debt fund originates a mezzanine loan with the following terms: 8% cash interest, 4% PIK interest, and warrants. What is the primary purpose of the PIK interest component?
+  </div>
+  <ul slot="choices">
+    <li>A. To provide the lender with immediate liquidity.</li>
+    <li>B. To reduce the borrower's near-term cash flow burden while maintaining the lender's required yield.</li>
+    <li>C. To give the lender voting rights on the Board of Directors.</li>
+  </ul>
+  <div slot="explanation">
+    **Correct Answer: B.** 
+    
+    PIK (Payment-in-Kind) interest is not paid in cash during the period. Instead, it is added to the principal balance of the loan, compounding over time, and paid at maturity. This allows the borrower to preserve cash flow in the near term (often needed to service senior debt) while still compensating the mezzanine lender for the higher risk.
+  </div>
+</PracticeQuestion>
+
+<CheatSheetGrid>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">Covenants</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li><strong>Maintenance:</strong> Checked regularly (e.g., Max Debt/EBITDA must be < 4.0x at end of every quarter).</li>
+      <li><strong>Incurrence:</strong> Checked only when the borrower takes an action (e.g., cannot issue a dividend unless DSCR > 1.5x).</li>
+    </ul>
+  </div>
+</CheatSheetGrid>
+
+<FreeResourceList resources={[
+  { title: "Oaktree Capital: Distressed Debt Memo", url: "https://www.oaktreecapital.com/insights/memos", type: "Article", description: "Howard Marks' memos are required reading for distressed debt theory." },
+  { title: "CFI: The Capital Stack", url: "https://corporatefinanceinstitute.com/resources/commercial-lending/capital-stack/", type: "Article", description: "Detailed look at seniority and the rule of absolute priority." }
+]} />

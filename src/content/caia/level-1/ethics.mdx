@@ -1,0 +1,96 @@
+---
+title: "Professional Standards & Ethics"
+description: "A comprehensive review of the CFA Institute Standards of Professional Conduct as applied to alternative investments."
+publishedAt: 2026-05-04
+level: "I"
+topicNumber: 1
+examWeight: "15-25%"
+timeToMastery: "15 hours"
+tags: ["level-1", "ethics", "standards"]
+---
+
+import ConceptCard from '../../../components/caia/ConceptCard.astro';
+import PitfallCard from '../../../components/caia/PitfallCard.astro';
+import PracticeQuestion from '../../../components/caia/PracticeQuestion.astro';
+import CheatSheetGrid from '../../../components/caia/CheatSheetGrid.astro';
+import FreeResourceList from '../../../components/caia/FreeResourceList.astro';
+
+## Why this matters
+
+Ethics is consistently one of the highest-weighted topics on the Level I exam. The CAIA Association adopts the CFA Institute Standards of Professional Conduct wholesale. While the standards themselves are identical to those tested in the CFA program, the application questions in CAIA often focus on scenarios unique to alternative investments—such as side letters, valuation of illiquid assets, and complex fee structures.
+
+Mastery here unlocks a significant portion of your exam score and establishes the ethical baseline expected of a senior analyst.
+
+## Learning Objectives
+
+- Demonstrate a thorough understanding of the Code of Ethics and Standards of Professional Conduct.
+- Apply the Standards to situations involving alternative investments.
+- Identify violations and recommend corrective procedures.
+
+## Core Concepts
+
+### Standard I: Professionalism
+
+This standard mandates knowledge of the law, independence and objectivity, avoidance of misrepresentation, and strict rules against misconduct.
+
+<ConceptCard title="Independence and Objectivity" definition="Members must use reasonable care to maintain independence and objectivity.">
+  In the alts context, this often appears in manager selection or due diligence scenarios. Accepting gifts, lavish travel, or special allocations in a hot co-invest from a GP can compromise a LP analyst's objectivity. Small token gifts (e.g., a branded Yeti mug) are generally acceptable, but flights and hotel stays are not.
+</ConceptCard>
+
+### Standard II: Integrity of Capital Markets
+
+This covers Material Nonpublic Information (MNPI) and Market Manipulation.
+
+<PitfallCard title="Mosaic Theory vs. MNPI">
+  Candidates frequently confuse the Mosaic Theory with trading on MNPI. Under the Mosaic Theory, an analyst *may* trade on material conclusions derived from a combination of public information and non-material nonpublic information. If the nonpublic information used is material on its own, trading is a violation.
+</PitfallCard>
+
+### Standard III: Duties to Clients
+
+This includes Loyalty, Prudence, and Care; Fair Dealing; Suitability; Performance Presentation; and Confidentiality.
+
+<ConceptCard title="Fair Dealing" definition="Members must deal fairly and objectively with all clients when providing investment analysis, making investment recommendations, taking investment action, or engaging in other professional activities.">
+  "Fair" does not mean "equal." In private wealth or institutional contexts, it is acceptable to offer different service tiers (e.g., a VIP tier that receives faster trade execution), provided these tiers are disclosed to all clients and available to anyone who meets the criteria.
+</ConceptCard>
+
+## Common Pitfalls
+
+- **Confusing Firm Policy with the Standards:** If a firm's policy is less strict than the Standards, the Standards apply. If the firm's policy is stricter, the firm's policy applies. Always follow the strictest applicable rule.
+- **Resignation and Client Information:** When leaving a firm, you may not take client lists or model code. You may only rely on knowledge remaining in your head (e.g., the names of clients you can remember), provided you don't violate any non-compete agreements.
+
+## Practice Questions
+
+<PracticeQuestion id="ethics-1" difficulty="Medium">
+  <div slot="question">
+    An analyst covering real estate investment trusts (REITs) is invited by a GP to tour a new flagship development in another state. The GP offers to cover the cost of a private charter flight and a weekend stay at a luxury resort adjacent to the property. What is the most appropriate action for the analyst to take under the Standards?
+  </div>
+  <ul slot="choices">
+    <li>A. Accept the offer, provided it is disclosed in the final research report.</li>
+    <li>B. Accept the tour, but insist the analyst's firm pays for commercial travel and standard accommodations.</li>
+    <li>C. Decline the tour entirely as it creates an unavoidable conflict of interest.</li>
+  </ul>
+  <div slot="explanation">
+    **Correct Answer: B.** 
+    
+    Under Standard I(B) Independence and Objectivity, members must not accept gifts or compensation that could reasonably be expected to compromise their independence. While touring the facility is a legitimate analytical activity, accepting private travel and luxury accommodations from the issuer violates the Standard. The analyst should conduct the tour but pay their own way to maintain objectivity.
+  </div>
+</PracticeQuestion>
+
+<CheatSheetGrid>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">Code & Standards Map</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li><strong>I. Professionalism:</strong> Law, Objectivity, Misrepresentation, Misconduct.</li>
+      <li><strong>II. Capital Markets:</strong> MNPI, Market Manipulation.</li>
+      <li><strong>III. Duties to Clients:</strong> Loyalty, Fair Dealing, Suitability, Performance, Confidentiality.</li>
+      <li><strong>IV. Duties to Employers:</strong> Loyalty, Additional Comp, Supervisors.</li>
+      <li><strong>V. Inv. Analysis:</strong> Diligence, Communication, Records.</li>
+      <li><strong>VI. Conflicts:</strong> Disclosure, Priority of Trans, Referral Fees.</li>
+    </ul>
+  </div>
+</CheatSheetGrid>
+
+<FreeResourceList resources={[
+  { title: "CFA Institute Code of Ethics and Standards of Professional Conduct", url: "https://www.cfainstitute.org/en/ethics-standards/ethics/code-of-ethics-standards-of-conduct-guidance", type: "Article", description: "The definitive source. The CAIA directly adopts this exact code." },
+  { title: "Mark Meldrum: Ethics Overview", url: "https://www.youtube.com/watch?v=F07N1429_zI", type: "Video", description: "While targeted at CFA candidates, the principles apply exactly to the CAIA exam." }
+]} />

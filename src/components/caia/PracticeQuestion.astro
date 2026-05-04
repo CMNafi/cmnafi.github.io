@@ -1,0 +1,25 @@
+---
+interface Props {
+  id: string;
+  difficulty?: 'Easy' | 'Medium' | 'Hard';
+}
+const { id, difficulty = 'Medium' } = Astro.props;
+---
+<div class="caia-pq" id={`pq-${id}`} style="border: 1px solid var(--caia-border); margin: 2rem 0; border-radius: 4px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; background: var(--caia-card); padding: 0.5rem 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8em; border-bottom: 1px solid var(--caia-border);">
+    <span>PRACTICE QUESTION</span>
+    <span style="color: var(--caia-highlight);">{difficulty}</span>
+  </div>
+  <div style="padding: 1.5rem;">
+    <div style="margin-bottom: 1.5rem;">
+      <slot name="question" />
+    </div>
+    <div class="choices" style="margin-bottom: 1.5rem;">
+      <slot name="choices" />
+    </div>
+    <button class="reveal-btn" onclick={`document.getElementById('ans-${id}').style.display='block'; this.style.display='none';`} style="background: none; border: 1px solid var(--caia-accent); color: var(--caia-accent); padding: 0.5rem 1rem; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; width: 100%;">REVEAL ANSWER & EXPLANATION</button>
+    <div id={`ans-${id}`} class="explanation" style="display: none; padding-top: 1.5rem; border-top: 1px solid var(--caia-border); margin-top: 1rem;">
+      <slot name="explanation" />
+    </div>
+  </div>
+</div>

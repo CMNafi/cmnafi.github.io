@@ -1,0 +1,121 @@
+---
+title: "Real Assets"
+description: "Valuation, risk, and return drivers for real estate, timberland, farmland, infrastructure, and intellectual property."
+publishedAt: 2026-05-04
+level: "I"
+topicNumber: 3
+examWeight: "10-20%"
+timeToMastery: "25 hours"
+tags: ["level-1", "real-assets", "real-estate"]
+---
+
+import ConceptCard from '../../../components/caia/ConceptCard.astro';
+import FormulaBlock from '../../../components/caia/FormulaBlock.astro';
+import WorkedExample from '../../../components/caia/WorkedExample.astro';
+import PracticeQuestion from '../../../components/caia/PracticeQuestion.astro';
+import CheatSheetGrid from '../../../components/caia/CheatSheetGrid.astro';
+import CrossReference from '../../../components/caia/CrossReference.astro';
+import FreeResourceList from '../../../components/caia/FreeResourceList.astro';
+
+## Why this matters
+
+Real assets are the original alternative investments. They provide a tangible hedge against inflation and historically exhibit low correlation with traditional equities and fixed income. The CAIA curriculum focuses heavily on commercial real estate valuation, but timberland, farmland, and infrastructure are increasingly prominent in institutional portfolios.
+
+Mastering this topic requires fluency in appraisal-based valuation methods and an understanding of the smoothing effect these appraisals have on reported volatility.
+
+## Learning Objectives
+
+- Calculate and interpret the Capitalization Rate (Cap Rate) and Net Operating Income (NOI).
+- Evaluate real estate debt ratios: Loan-to-Value (LTV) and Debt-Service Coverage Ratio (DSCR).
+- Identify the characteristics and return drivers of timberland, farmland, and infrastructure.
+
+## Core Concepts
+
+### Real Estate Valuation
+
+Commercial real estate is typically valued using the direct capitalization approach. This method converts a single year's expected income into an estimate of the property's market value.
+
+<FormulaBlock equation="Value = \\frac{NOI}{Cap\\ Rate}" range="4% to 8% depending on property type and interest rate environment">
+  <ul>
+    <li><strong>NOI</strong>: Net Operating Income (Gross Potential Income - Vacancy - Operating Expenses)</li>
+    <li><strong>Cap Rate</strong>: Capitalization Rate (The required rate of return minus the expected growth rate of NOI)</li>
+  </ul>
+</FormulaBlock>
+
+<WorkedExample title="Direct Capitalization Walkthrough">
+  <div slot="problem">
+    An office building generates $1,200,000 in Gross Potential Rent. Vacancy and credit losses are estimated at 5%. Operating expenses, including property taxes and insurance, are $340,000. If comparable properties are trading at a 6% cap rate, what is the estimated value of the property?
+  </div>
+  <div slot="solution">
+    1. Calculate Effective Gross Income (EGI):<br/>
+       $1,200,000 * (1 - 0.05) = $1,140,000<br/>
+    2. Calculate Net Operating Income (NOI):<br/>
+       $1,140,000 - $340,000 = $800,000<br/>
+    3. Calculate Value:<br/>
+       $800,000 / 0.06 = $13,333,333
+  </div>
+  <div slot="why">
+    NOI is calculated *before* debt service and income taxes. This ensures the valuation reflects the property's underlying operational cash flow, independent of how the current owner chose to finance it.
+  </div>
+</WorkedExample>
+
+### Real Estate Debt Metrics
+
+Lenders use specific ratios to assess the risk of commercial mortgages.
+
+<ConceptCard title="Debt-Service Coverage Ratio (DSCR)" definition="The ratio of a property's Net Operating Income to its annual debt service (principal and interest).">
+  A DSCR of 1.0x means the property generates exactly enough cash to pay the mortgage. Lenders typically require a minimum DSCR of 1.20x to 1.25x to provide a cushion against vacancy or expense spikes.
+</ConceptCard>
+
+### Timberland and Farmland
+
+Unlike gold or vacant land, timberland and farmland are productive assets that generate yield while also appreciating (or depreciating) in underlying value.
+
+- **Timberland:** Offers the unique "store on the stump" option. If timber prices are low, owners can simply delay harvesting. The trees continue to grow (biological growth), increasing total volume and often transitioning to a more valuable product class (e.g., from pulpwood to sawtimber).
+- **Farmland:** Return is driven by cash yields from crops (or lease payments from farmers) and the underlying appreciation of the land.
+
+## Practice Questions
+
+<PracticeQuestion id="real-assets-1" difficulty="Medium">
+  <div slot="question">
+    A property was recently appraised at $10,000,000. It generates an NOI of $650,000 and has annual debt service of $450,000. The loan amount is $6,500,000. What is the Debt-Service Coverage Ratio (DSCR)?
+  </div>
+  <ul slot="choices">
+    <li>A. 1.44x</li>
+    <li>B. 1.00x</li>
+    <li>C. 0.65x</li>
+  </ul>
+  <div slot="explanation">
+    **Correct Answer: A.** 
+    
+    DSCR = NOI / Debt Service. 
+    DSCR = $650,000 / $450,000 = 1.44x. 
+    The property value and loan amount are used to calculate the Loan-to-Value (LTV) ratio ($6,500,000 / $10,000,000 = 65%), not the DSCR.
+  </div>
+</PracticeQuestion>
+
+<CheatSheetGrid>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">Real Estate Formulas</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li><strong>Value</strong> = NOI / Cap Rate</li>
+      <li><strong>NOI</strong> = EGI - Operating Expenses</li>
+      <li><strong>DSCR</strong> = NOI / Debt Service</li>
+      <li><strong>LTV</strong> = Loan Amount / Property Value</li>
+    </ul>
+  </div>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">Timberland Return Drivers</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li>Biological growth (volume)</li>
+      <li>Product class progression (e.g., pulpwood to sawtimber)</li>
+      <li>Changes in timber prices</li>
+      <li>Changes in underlying land value</li>
+    </ul>
+  </div>
+</CheatSheetGrid>
+
+<FreeResourceList resources={[
+  { title: "A.CRE: Direct Capitalization Primer", url: "https://www.adventuresincre.com/direct-capitalization-method/", type: "Article", description: "In-depth explanation of how commercial real estate professionals use NOI and Cap Rates." },
+  { title: "Investopedia: Debt-Service Coverage Ratio", url: "https://www.investopedia.com/terms/d/dscr.asp", type: "Article", description: "Calculating DSCR from the lender's perspective." }
+]} />

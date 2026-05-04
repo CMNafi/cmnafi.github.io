@@ -1,0 +1,29 @@
+---
+interface Props {
+  sectionId: string;
+}
+const { sectionId } = Astro.props;
+---
+<div class="caia-progress-indicator" id={`prog-${sectionId}`} style="float: right; margin-left: 1rem; margin-bottom: 1rem;">
+  <select class="mastery-select" style="background: var(--caia-card); border: 1px solid var(--caia-border); color: var(--caia-ink); font-family: 'JetBrains Mono', monospace; font-size: 0.75em; padding: 4px; cursor: pointer;">
+    <option value="unseen">Unseen</option>
+    <option value="shaky">Shaky</option>
+    <option value="solid">Solid</option>
+    <option value="mastered">Mastered</option>
+  </select>
+</div>
+<script is:inline define:vars={{ sectionId }}>
+  (function() {
+    const container = document.getElementById('prog-' + sectionId);
+    if (!container) return;
+    const select = container.querySelector('.mastery-select');
+    
+    const key = 'caia-prog-' + sectionId;
+    const saved = localStorage.getItem(key);
+    if (saved) select.value = saved;
+    
+    select.addEventListener('change', (e) => {
+      localStorage.setItem(key, e.target.value);
+    });
+  })();
+</script>

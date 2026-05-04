@@ -1,0 +1,49 @@
+---
+import WorldCupLayout from '../../layouts/WorldCupLayout.astro';
+import LifecycleBanner from '../../components/worldcup/LifecycleBanner.astro';
+import ScoreStrip from '../../components/worldcup/ScoreStrip.astro';
+
+// We mock the tournament state for Phase 0 scaffolding.
+const tournamentState = 'pre-tournament'; // Can be 'pre-tournament', 'group-stage', etc.
+---
+<WorldCupLayout title="World Cup 2026 Corner" description="The smart fan’s home for World Cup 2026.">
+  <LifecycleBanner 
+    message={tournamentState === 'pre-tournament' ? 'Tournament begins June 11, 2026' : 'Live Matchday'} 
+    type={tournamentState === 'pre-tournament' ? 'info' : 'live'} 
+  />
+
+  <header style="margin-bottom: 3rem;">
+    <h1>World Cup 2026</h1>
+    <p style="font-size: 1.2rem; color: var(--wc-muted); max-width: 600px;">
+      A standalone companion for the smart fan. Verified data, sharp editorial takes, and transparent prediction models.
+    </p>
+  </header>
+
+  <section style="margin-bottom: 3rem;">
+    <h2 style="font-size: 1.2rem; color: var(--wc-highlight); text-transform: uppercase; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; border-bottom: 1px solid var(--wc-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+      Featured Matches
+    </h2>
+    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <ScoreStrip matchId="m1" homeTeam="Mexico" homeCode="MEX" awayTeam="South Africa" awayCode="RSA" status="preview" timeInfo="June 11 · 12:00 CST" />
+      <ScoreStrip matchId="m2" homeTeam="USA" homeCode="USA" awayTeam="Paraguay" awayCode="PAR" status="preview" timeInfo="June 12 · 14:00 PST" />
+      <ScoreStrip matchId="m3" homeTeam="Canada" homeCode="CAN" awayTeam="Switzerland" awayCode="SUI" status="preview" timeInfo="June 12 · 17:00 EST" />
+    </div>
+  </section>
+
+  <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+    <a href="/world-cup-2026/teams" class="wc-card" style="text-decoration: none; display: block; transition: border-color 0.2s;">
+      <h3>The 48 Teams</h3>
+      <p style="color: var(--wc-muted); font-size: 0.9em; margin-bottom: 0;">Squads, key players, and tactical previews for every nation.</p>
+    </a>
+    
+    <a href="/world-cup-2026/groups" class="wc-card" style="text-decoration: none; display: block; transition: border-color 0.2s;">
+      <h3>The 12 Groups</h3>
+      <p style="color: var(--wc-muted); font-size: 0.9em; margin-bottom: 0;">Live standings, fixtures, and qualification scenarios.</p>
+    </a>
+
+    <a href="/world-cup-2026/predictions" class="wc-card" style="text-decoration: none; display: block; transition: border-color 0.2s;">
+      <h3>Predictions Model</h3>
+      <p style="color: var(--wc-muted); font-size: 0.9em; margin-bottom: 0;">Transparent Monte Carlo simulations and accuracy tracking.</p>
+    </a>
+  </section>
+</WorldCupLayout>

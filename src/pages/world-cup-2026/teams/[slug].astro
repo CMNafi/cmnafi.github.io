@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
+import TeamFlagChip from '../../../components/worldcup/TeamFlagChip.astro';
+
+export async function getStaticPaths() {
+  const teams = await getCollection('wc-teams');
+  return teams.map(team => ({
+    params: { slug: team.slug },
+    props: { team },
+  }));
+}
+
+const { team } = Astro.props;
+const { Content } = await team.render();
+
+// Group squad by position
+const squad = team.data.squad || [];
+const groupedSquad = {
+  GK: squad.filter(p => p.position === 'GK'),
+  DEF: squad.filter(p => p.position === 'DEF'),
+  MID: squad.filter(p => p.position === 'MID'),
+  FWD: squad.filter(p => p.position === 'FWD'),
+};
+
+const positionNames = {
+  GK: 'Goalkeepers',
+  DEF: 'Defenders',
+  MID: 'Midfielders',
+  FWD: 'Forwards'
+};
+---
+<WorldCupLayout title={`${team.data.name} | World Cup 2026 Corner`}>
+  <header style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--wc-border);">
+    <a href="/world-cup-2026/teams" style="color: var(--wc-muted); text-decoration: none; font-size: 0.9em; margin-bottom: 1rem; display: inline-block;">← Back to Teams</a>
+    
+    <div style="display: flex; align-items: center; gap: 1.5rem; margin-top: 1rem;">
+      <div style="font-size: 4rem; line-height: 1;">
+        <TeamFlagChip teamName={team.data.name} teamCode={team.data.code} size="lg" hideCode={true} />
+      </div>
+      <div>
+        <h1 style="margin: 0; font-size: 2.5rem;">{team.data.name}</h1>
+        <div style="display: flex; gap: 1rem; color: var(--wc-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; margin-top: 0.5rem; flex-wrap: wrap;">
+          <span>GROUP {team.data.group}</span>
+          <span>•</span>
+          <span>FIFA RANK: #{team.data.fifaRanking || 'N/A'}</span>
+          <span>•</span>
+          <span>COACH: {team.data.coach || 'TBD'}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: 1fr 300px; gap: 3rem; align-items: start;">
+    
+    <!-- Left Column: Tactical Preview -->
+    <article class="tactical-preview" style="font-size: 1.1rem; line-height: 1.6; color: var(--wc-ink);">
+      <h2 style="font-size: 1.2rem; color: var(--wc-highlight); text-transform: uppercase; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; border-bottom: 1px solid var(--wc-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+        Tactical Preview
+      </h2>
+      <Content />
+    </article>
+
+    <!-- Right Column: Squad List -->
+    <aside class="squad-list">
+      <h2 style="font-size: 1.2rem; color: var(--wc-highlight); text-transform: uppercase; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; border-bottom: 1px solid var(--wc-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+        The 26-Man Squad
+      </h2>
+      
+      {squad.length === 0 ? (
+        <div style="background: var(--wc-surface); border: 1px solid var(--wc-border); padding: 1.5rem; border-radius: 4px; text-align: center; color: var(--wc-muted);">
+          Squad data for {team.data.name} is currently brewing and will be published closer to the tournament.
+        </div>
+      ) : (
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          {['GK', 'DEF', 'MID', 'FWD'].map(pos => (
+            groupedSquad[pos].length > 0 ? (
+              <div>
+                <h3 style="font-size: 0.85rem; color: var(--wc-muted); margin-bottom: 0.5rem; border-bottom: 1px dashed var(--wc-border); padding-bottom: 0.25rem;">
+                  {positionNames[pos]}
+                </h3>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.25rem;">
+                  {groupedSquad[pos].map(player => (
+                    <li style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; padding: 0.25rem 0;">
+                      <span style={player.isKeyPlayer ? 'color: var(--wc-accent); font-weight: bold;' : 'color: var(--wc-ink);'}>
+                        {player.name} {player.isKeyPlayer ? '★' : ''}
+                      </span>
+                      <span style="color: var(--wc-muted); font-size: 0.8rem; text-align: right;">
+                        {player.club}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null
+          ))}
+        </div>
+      )}
+    </aside>
+  </div>
+
+  <style>
+    @media (max-width: 900px) {
+      div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+    .tactical-preview p {
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</WorldCupLayout>

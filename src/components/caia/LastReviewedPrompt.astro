@@ -1,0 +1,32 @@
+---
+interface Props {
+  topicId: string;
+}
+const { topicId } = Astro.props;
+---
+<div class="caia-last-reviewed" id={`lr-${topicId}`} style="font-family: 'JetBrains Mono', monospace; font-size: 0.8em; color: var(--caia-highlight); margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--caia-border); display: flex; justify-content: space-between; align-items: center;">
+  <span>Last reviewed: <span class="lr-date">Never</span></span>
+  <button class="mark-reviewed-btn" style="background: var(--caia-card); border: 1px solid var(--caia-border); color: var(--caia-ink); padding: 4px 8px; cursor: pointer; font-family: inherit;">MARK REVIEWED TODAY</button>
+</div>
+<script is:inline define:vars={{ topicId }}>
+  (function() {
+    const container = document.getElementById('lr-' + topicId);
+    if (!container) return;
+    const dateSpan = container.querySelector('.lr-date');
+    const btn = container.querySelector('.mark-reviewed-btn');
+    
+    const key = 'caia-lr-' + topicId;
+    const saved = localStorage.getItem(key);
+    if (saved) {
+      dateSpan.textContent = new Date(parseInt(saved)).toLocaleDateString();
+    }
+    
+    btn.addEventListener('click', () => {
+      const now = Date.now();
+      localStorage.setItem(key, now.toString());
+      dateSpan.textContent = new Date(now).toLocaleDateString();
+      btn.textContent = 'SAVED';
+      setTimeout(() => btn.textContent = 'MARK REVIEWED TODAY', 2000);
+    });
+  })();
+</script>

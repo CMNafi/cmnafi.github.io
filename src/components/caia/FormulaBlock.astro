@@ -1,0 +1,23 @@
+---
+interface Props {
+  equation: string;
+  units?: string;
+  range?: string;
+}
+const { equation, units, range } = Astro.props;
+---
+<div class="caia-formula-block" style="background: var(--caia-card); border-left: 4px solid var(--caia-highlight); padding: 1.5rem; margin: 2rem 0;">
+  <div style="font-size: 1.2em; text-align: center; margin-bottom: 1rem; overflow-x: auto;">
+    $$ {equation} $$
+  </div>
+  <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.85em; border-top: 1px solid var(--caia-border); padding-top: 1rem;">
+    <div style="margin-bottom: 0.5rem; font-weight: 600;">VARIABLES</div>
+    <slot />
+    {(units || range) && (
+      <div style="margin-top: 1rem; color: var(--caia-highlight);">
+        {units && <span><strong>Units:</strong> {units} </span>}
+        {range && <span style="margin-left: 1rem;"><strong>Typical Range:</strong> {range}</span>}
+      </div>
+    )}
+  </div>
+</div>

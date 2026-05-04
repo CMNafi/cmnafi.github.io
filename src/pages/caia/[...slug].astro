@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import CaiaLayout from '../../layouts/CaiaLayout.astro';
+import LastReviewedPrompt from '../../components/caia/LastReviewedPrompt.astro';
+import ProgressIndicator from '../../components/caia/ProgressIndicator.astro';
+
+export async function getStaticPaths() {
+  const caiaEntries = await getCollection('caia');
+  return caiaEntries.map(entry => ({
+    params: { slug: entry.slug }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const fm = entry.data;
+
+// Compute Sequential Navigation
+const allCaia = await getCollection('caia');
+const sameLevel = allCaia.filter(e => e.data.level === fm.level).sort((a, b) => a.data.topicNumber - b.data.topicNumber);
+const currentIndex = sameLevel.findIndex(e => e.slug === entry.slug);
+const prevTopic = currentIndex > 0 ? sameLevel[currentIndex - 1] : null;
+const nextTopic = currentIndex < sameLevel.length - 1 ? sameLevel[currentIndex + 1] : null;
+---
+
+<CaiaLayout title={fm.title} description={fm.description} frontmatter={fm}>
+  <article class="caia-article">
+    <header style="margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--caia-ink);">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--caia-highlight); margin-bottom: 1rem; letter-spacing: 0.05em; text-transform: uppercase;">
+        Level {fm.level} · Topic {fm.topicNumber} · {fm.examWeight} Weight · {fm.timeToMastery} to Master
+      </div>
+      <h1 style="font-size: 2.5em; margin-bottom: 1rem; line-height: 1.1;">{fm.title}</h1>
+      <p style="font-size: 1.25em; color: var(--caia-ink); opacity: 0.85; margin-bottom: 2rem;">{fm.description}</p>
+      
+      <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div style="flex-grow: 1;">
+          <LastReviewedPrompt topicId={entry.slug} />
+        </div>
+        <ProgressIndicator sectionId={entry.slug} />
+      </div>
+    </header>
+
+    <div class="caia-content">
+      <Content />
+    </div>
+
+    <nav class="caia-seq-nav" style="display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 2px solid var(--caia-border);">
+      <div>
+        {prevTopic && (
+          <a href={`/caia/${prevTopic.slug}`} style="text-decoration: none; color: var(--caia-ink);">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.8em; color: var(--caia-highlight); margin-bottom: 0.25rem;">← PREVIOUS TOPIC</div>
+            <div style="font-weight: 600;">{prevTopic.data.title}</div>
+          </a>
+        )}
+      </div>
+      <div style="text-align: right;">
+        {nextTopic && (
+          <a href={`/caia/${nextTopic.slug}`} style="text-decoration: none; color: var(--caia-ink);">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.8em; color: var(--caia-highlight); margin-bottom: 0.25rem;">NEXT TOPIC →</div>
+            <div style="font-weight: 600;">{nextTopic.data.title}</div>
+          </a>
+        )}
+      </div>
+    </nav>
+  </article>
+</CaiaLayout>
+
+<style is:global>
+  .caia-content h2 { margin-top: 3rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--caia-border); font-size: 1.8em; }
+  .caia-content h3 { margin-top: 2rem; margin-bottom: 1rem; font-size: 1.4em; color: var(--caia-accent); }
+  .caia-content .math-display { overflow-x: auto; margin: 1.5rem 0; padding: 1rem 0; }
+</style>

@@ -1,0 +1,63 @@
+---
+interface TeamRow {
+  name: string;
+  code: string;
+  played: number;
+  w: number;
+  d: number;
+  l: number;
+  gf: number;
+  ga: number;
+  pts: number;
+}
+
+interface Props {
+  groupLetter: string;
+  teams: TeamRow[];
+}
+
+const { groupLetter, teams } = Astro.props;
+
+// Sort logic: Pts -> GD -> GF
+const sortedTeams = [...teams].sort((a, b) => {
+  if (b.pts !== a.pts) return b.pts - a.pts;
+  const gdA = a.gf - a.ga;
+  const gdB = b.gf - b.ga;
+  if (gdB !== gdA) return gdB - gdA;
+  return b.gf - a.gf;
+});
+---
+<div class="wc-group-table wc-card" style="padding: 0; overflow: hidden;">
+  <div style="background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-bottom: 1px solid var(--wc-border);">
+    <h3 style="margin: 0; font-size: 1rem;">Group {groupLetter}</h3>
+  </div>
+  <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+    <thead>
+      <tr style="border-bottom: 1px solid var(--wc-border); color: var(--wc-muted); text-align: right; font-size: 0.8em;">
+        <th style="text-align: left; padding: 0.5rem 1rem;">Team</th>
+        <th style="padding: 0.5rem; width: 30px;">MP</th>
+        <th style="padding: 0.5rem; width: 30px;">W</th>
+        <th style="padding: 0.5rem; width: 30px;">D</th>
+        <th style="padding: 0.5rem; width: 30px;">L</th>
+        <th style="padding: 0.5rem; width: 40px;">GD</th>
+        <th style="padding: 0.5rem 1rem 0.5rem 0.5rem; width: 40px;">Pts</th>
+      </tr>
+    </thead>
+    <tbody class="wc-mono">
+      {sortedTeams.map((team, index) => (
+        <tr style={`border-bottom: 1px solid var(--wc-border); ${index < 2 ? 'border-left: 3px solid var(--wc-accent);' : 'border-left: 3px solid transparent;'}`}>
+          <td style="text-align: left; padding: 0.75rem 1rem; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500;">
+            <span style="color: var(--wc-muted); margin-right: 0.5rem; font-size: 0.85em;">{index + 1}</span>
+            {team.name}
+          </td>
+          <td style="text-align: right; padding: 0.75rem 0.5rem;">{team.played}</td>
+          <td style="text-align: right; padding: 0.75rem 0.5rem;">{team.w}</td>
+          <td style="text-align: right; padding: 0.75rem 0.5rem;">{team.d}</td>
+          <td style="text-align: right; padding: 0.75rem 0.5rem;">{team.l}</td>
+          <td style="text-align: right; padding: 0.75rem 0.5rem;">{team.gf > team.ga ? '+' : ''}{team.gf - team.ga}</td>
+          <td style="text-align: right; padding: 0.75rem 1rem 0.75rem 0.5rem; font-weight: 700; color: var(--wc-highlight);">{team.pts}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

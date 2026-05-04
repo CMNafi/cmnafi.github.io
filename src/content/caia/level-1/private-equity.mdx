@@ -1,0 +1,119 @@
+---
+title: "Private Equity"
+description: "Buyouts, venture capital, fund mechanics, and the mathematics of LBOs and performance measurement."
+publishedAt: 2026-05-04
+level: "I"
+topicNumber: 4
+examWeight: "10-20%"
+timeToMastery: "30 hours"
+tags: ["level-1", "private-equity", "lbo", "vc"]
+---
+
+import ConceptCard from '../../../components/caia/ConceptCard.astro';
+import FormulaBlock from '../../../components/caia/FormulaBlock.astro';
+import WorkedExample from '../../../components/caia/WorkedExample.astro';
+import PracticeQuestion from '../../../components/caia/PracticeQuestion.astro';
+import PitfallCard from '../../../components/caia/PitfallCard.astro';
+import CheatSheetGrid from '../../../components/caia/CheatSheetGrid.astro';
+import CrossReference from '../../../components/caia/CrossReference.astro';
+import FreeResourceList from '../../../components/caia/FreeResourceList.astro';
+
+## Why this matters
+
+Private Equity (PE) represents the largest allocation within most institutional alternative portfolios. The CAIA curriculum dissects PE from two angles: the deal level (how LBOs and VC investments generate returns) and the fund level (how GPs structure funds, call capital, and extract fees).
+
+Fluency in PE mechanics—specifically the difference between MOIC and IRR, and the operation of the distribution waterfall—is a non-negotiable requirement for passing Level I.
+
+## Learning Objectives
+
+- Differentiate between Multiple on Invested Capital (MOIC) and Internal Rate of Return (IRR).
+- Analyze the three primary return drivers of a Leveraged Buyout (LBO).
+- Understand the mechanics of European vs. American distribution waterfalls.
+
+## Core Concepts
+
+### Performance Measurement: MOIC vs. IRR
+
+Private equity performance is primarily evaluated using two metrics:
+
+<FormulaBlock equation="MOIC = \\frac{Realized\\ Value + Unrealized\\ Value}{Total\\ Invested\\ Capital}">
+  <ul>
+    <li><strong>Realized Value</strong>: Cash already distributed to LPs</li>
+    <li><strong>Unrealized Value</strong>: The estimated NAV of remaining assets</li>
+  </ul>
+</FormulaBlock>
+
+<ConceptCard title="The Time-Value Distinction" definition="MOIC ignores the time value of money; IRR incorporates it.">
+  A 2.0x MOIC achieved in 3 years generates a ~26% IRR. That same 2.0x MOIC achieved over 7 years generates a ~10% IRR. GPs often manage to IRR by aggressively utilizing capital call facilities (subscription lines of credit) to delay calling LP capital, which shortens the investment holding period and artificially boosts the IRR without changing the MOIC.
+</ConceptCard>
+
+### Leveraged Buyouts (LBOs)
+
+An LBO uses a significant amount of borrowed money to meet the cost of acquisition. The returns in an LBO are driven by three distinct factors:
+
+1. **EBITDA Growth:** Improving operations, raising prices, or cutting costs.
+2. **Multiple Expansion:** Selling the business at a higher EV/EBITDA multiple than it was purchased for.
+3. **Debt Paydown (Deleveraging):** Using the company's free cash flow to pay down the debt used in the acquisition, which shifts enterprise value from debt holders to equity holders.
+
+<PitfallCard title="Leverage Does Not Create Value">
+  Leverage acts as an amplifier, not a fundamental value driver. It magnifies both gains and losses for the equity holders, but it does not intrinsically increase the Enterprise Value of the firm.
+</PitfallCard>
+
+### The Distribution Waterfall
+
+The waterfall dictates how cash flows are distributed between the LPs and the GP.
+
+- **European (Fund-as-a-whole):** LPs must receive back 100% of all drawn capital (for all deals, plus fees and expenses) plus their preferred return (hurdle rate) before the GP receives any carried interest. This is highly favorable to LPs.
+- **American (Deal-by-deal):** Carried interest is calculated and distributed on a deal-by-deal basis. If the first deal is a home run, the GP gets paid carry immediately, even if subsequent deals lose money. This often requires a "clawback" provision to ensure the GP doesn't keep more than their aggregate share at the end of the fund's life.
+
+## Practice Questions
+
+<PracticeQuestion id="pe-1" difficulty="Hard">
+  <div slot="question">
+    A PE fund acquired a company for $100 million (4.0x debt/equity ratio). Over 5 years, EBITDA grew from $10 million to $15 million, the exit multiple remained unchanged from entry, and the fund paid down $20 million in debt. Assuming no other cash flows, what is the primary driver of equity value creation?
+  </div>
+  <ul slot="choices">
+    <li>A. EBITDA Growth</li>
+    <li>B. Multiple Expansion</li>
+    <li>C. Debt Paydown</li>
+  </ul>
+  <div slot="explanation">
+    **Correct Answer: A.** 
+    
+    1. Entry EV: $100M. EBITDA: $10M. Entry Multiple: 10x.
+    2. Capital Structure: 4.0x D/E means $80M Debt, $20M Equity.
+    3. Exit EV: $15M EBITDA * 10x = $150M.
+    4. Exit Debt: $80M - $20M = $60M.
+    5. Exit Equity: $150M EV - $60M Debt = $90M.
+    
+    Value creation analysis:
+    - Debt Paydown contributed $20M to equity.
+    - EBITDA Growth contributed ($15M - $10M) * 10x = $50M to equity.
+    - Multiple Expansion contributed $0.
+    
+    Therefore, EBITDA growth ($50M) was the primary driver, followed by debt paydown ($20M).
+  </div>
+</PracticeQuestion>
+
+<CheatSheetGrid>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">LBO Value Drivers</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li>$\Delta$ EBITDA $\times$ Exit Multiple</li>
+      <li>$\Delta$ Multiple $\times$ Entry EBITDA</li>
+      <li>$\Delta$ Net Debt</li>
+    </ul>
+  </div>
+  <div style="background: var(--caia-card); padding: 1rem; border: 1px solid var(--caia-border);">
+    <h4 style="margin-top: 0;">Waterfalls</h4>
+    <ul style="font-size: 0.9em; padding-left: 1.2rem;">
+      <li><strong>European:</strong> LP whole fund return first $\rightarrow$ GP carry later.</li>
+      <li><strong>American:</strong> Deal-by-deal carry $\rightarrow$ requires clawbacks.</li>
+    </ul>
+  </div>
+</CheatSheetGrid>
+
+<FreeResourceList resources={[
+  { title: "Multiple Expansion: LBO Math Example", url: "https://www.multipleexpansion.com", type: "Article", description: "A great breakdown of how private equity firms calculate paper returns before the exit." },
+  { title: "Investopedia: Distribution Waterfalls", url: "https://www.investopedia.com/terms/d/distribution-waterfall.asp", type: "Article", description: "Explaining the sequence of payments to LPs and GPs in private equity funds." }
+]} />

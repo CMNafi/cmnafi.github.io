@@ -1,0 +1,12 @@
+---
+interface Props {
+  title: string;
+  definition: string;
+}
+const { title, definition } = Astro.props;
+---
+<div class="caia-concept-card" style="background: var(--caia-card); border: 1px solid var(--caia-border); padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 4px;">
+  <h3 style="margin-top: 0; margin-bottom: 0.5rem; color: var(--caia-accent);">{title}</h3>
+  <div style="font-weight: 500; margin-bottom: 0.75rem; font-size: 1.05em;">{definition}</div>
+  <div style="font-weight: 300; font-size: 0.95em;"><slot /></div>
+</div>

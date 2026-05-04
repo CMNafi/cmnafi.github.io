@@ -1,0 +1,258 @@
+---
+import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
+---
+<WorldCupLayout title="Bracket Simulator | World Cup 2026 Corner">
+  <header style="margin-bottom: 2rem;">
+    <a href="/world-cup-2026" style="color: var(--wc-muted); text-decoration: none; font-size: 0.9em; margin-bottom: 1rem; display: inline-block;">← Back to Hub</a>
+    <h1>Interactive Bracket</h1>
+    <p style="color: var(--wc-muted);">Select exactly 32 teams from the Group Stage (top two from each group + 8 best 3rd-placed teams). Then generate your bracket to simulate the knockouts.</p>
+  </header>
+
+  <section class="bracket-container" style="overflow-x: auto; padding-bottom: 2rem;">
+    <div class="bracket" style="display: flex; gap: 2rem; min-width: 1200px;">
+      
+      <!-- Group Stage -->
+      <div class="round groups" style="display: flex; flex-direction: column; justify-content: space-around; gap: 1rem; width: 180px;">
+        <h3 style="font-size: 0.9rem; color: var(--wc-highlight); text-align: center;">Group Stage</h3>
+      </div>
+
+      <!-- Round of 32 -->
+      <div class="round r32" style="display: flex; flex-direction: column; justify-content: space-around; gap: 1rem; width: 180px;">
+        <h3 style="font-size: 0.9rem; color: var(--wc-highlight); text-align: center;">Round of 32</h3>
+        <!-- We will generate 16 match blocks via JS -->
+      </div>
+
+      <!-- Round of 16 -->
+      <div class="round r16" style="display: flex; flex-direction: column; justify-content: space-around; gap: 1rem; width: 180px;">
+        <h3 style="font-size: 0.9rem; color: var(--wc-highlight); text-align: center;">Round of 16</h3>
+      </div>
+
+      <!-- Quarter-finals -->
+      <div class="round qf" style="display: flex; flex-direction: column; justify-content: space-around; gap: 1rem; width: 180px;">
+        <h3 style="font-size: 0.9rem; color: var(--wc-highlight); text-align: center;">Quarter-finals</h3>
+      </div>
+
+      <!-- Semi-finals -->
+      <div class="round sf" style="display: flex; flex-direction: column; justify-content: space-around; gap: 1rem; width: 180px;">
+        <h3 style="font-size: 0.9rem; color: var(--wc-highlight); text-align: center;">Semi-finals</h3>
+      </div>
+
+      <!-- Final -->
+      <div class="round final" style="display: flex; flex-direction: column; justify-content: space-around; gap: 1rem; width: 220px;">
+        <h3 style="font-size: 0.9rem; color: var(--wc-accent); text-align: center;">The Final</h3>
+      </div>
+
+    </div>
+  </section>
+
+  <div style="text-align: center; margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
+    <button id="generate-bracket" style="background: var(--wc-accent); border: 1px solid var(--wc-accent); color: var(--wc-bg); padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-weight: 700;">Generate Bracket (0/32)</button>
+    <button id="reset-bracket" style="background: transparent; border: 1px solid var(--wc-border); color: var(--wc-muted); padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-family: 'JetBrains Mono', monospace;">Reset All</button>
+  </div>
+
+  <script>
+    const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+    const mockGroupsData = {
+      A: ['Mexico', 'South Africa', 'Jordan', 'Serbia'],
+      B: ['Canada', 'Bosnia', 'Qatar', 'Switzerland'],
+      C: ['Argentina', 'Senegal', 'Japan', 'Sweden'],
+      D: ['USA', 'Paraguay', 'Australia', 'Türkiye'],
+      E: ['France', 'Ecuador', 'Saudi Arabia', 'Ivory Coast'],
+      F: ['England', 'Morocco', 'Panama', 'Uzbekistan'],
+      G: ['Brazil', 'Egypt', 'Korea Rep', 'Norway'],
+      H: ['Spain', 'Uruguay', 'Algeria', 'Haiti'],
+      I: ['Portugal', 'Colombia', 'Ghana', 'IR Iran'],
+      J: ['Germany', 'DR Congo', 'New Zealand', 'Curaçao'],
+      K: ['Belgium', 'Chile', 'Tunisia', 'Iraq'],
+      L: ['Netherlands', 'Croatia', 'Mali', 'Costa Rica']
+    };
+
+    const rounds = {
+      r32: { count: 16, next: 'r16' },
+      r16: { count: 8, next: 'qf' },
+      qf: { count: 4, next: 'sf' },
+      sf: { count: 2, next: 'final' },
+      final: { count: 1, next: null }
+    };
+
+    let selectedTeams = new Set();
+    let bracketGenerated = false;
+
+    function createMatchNode(id, roundName) {
+      const matchDiv = document.createElement('div');
+      matchDiv.className = 'bracket-match';
+      matchDiv.id = `match-${id}`;
+      matchDiv.dataset.round = roundName;
+      matchDiv.style.background = 'var(--wc-surface)';
+      matchDiv.style.border = '1px solid var(--wc-border)';
+      matchDiv.style.borderRadius = '4px';
+      matchDiv.style.overflow = 'hidden';
+
+      const t1 = document.createElement('div');
+      t1.className = 'team t1';
+      t1.style.padding = '0.5rem';
+      t1.style.borderBottom = '1px solid var(--wc-border)';
+      t1.style.cursor = 'pointer';
+      t1.style.fontSize = '0.85rem';
+      t1.innerText = 'TBD';
+      t1.onclick = () => advanceTeam(t1.innerText, matchDiv, 1);
+
+      const t2 = document.createElement('div');
+      t2.className = 'team t2';
+      t2.style.padding = '0.5rem';
+      t2.style.cursor = 'pointer';
+      t2.style.fontSize = '0.85rem';
+      t2.innerText = 'TBD';
+      t2.onclick = () => advanceTeam(t2.innerText, matchDiv, 2);
+
+      matchDiv.appendChild(t1);
+      matchDiv.appendChild(t2);
+      return matchDiv;
+    }
+
+    function updateGenerateBtn() {
+      const btn = document.getElementById('generate-bracket');
+      btn.innerText = `Generate Bracket (${selectedTeams.size}/32)`;
+      if (selectedTeams.size === 32) {
+        btn.style.background = 'var(--wc-highlight)';
+        btn.style.borderColor = 'var(--wc-highlight)';
+      } else {
+        btn.style.background = 'var(--wc-accent)';
+        btn.style.borderColor = 'var(--wc-accent)';
+      }
+    }
+
+    function toggleTeamSelection(tDiv, teamName) {
+      if (bracketGenerated) return; // Lock selections once generated
+
+      if (selectedTeams.has(teamName)) {
+        selectedTeams.delete(teamName);
+        tDiv.style.background = 'transparent';
+        tDiv.style.color = 'var(--wc-ink)';
+      } else {
+        if (selectedTeams.size >= 32) {
+          alert('You have already selected 32 teams. Generate the bracket or deselect a team.');
+          return;
+        }
+        selectedTeams.add(teamName);
+        tDiv.style.background = 'rgba(232, 163, 61, 0.2)'; // highlight color
+        tDiv.style.color = 'var(--wc-highlight)';
+      }
+      updateGenerateBtn();
+    }
+
+    function initGroups() {
+      const groupsContainer = document.querySelector('.groups');
+      groupLetters.forEach(letter => {
+        const gDiv = document.createElement('div');
+        gDiv.style.background = 'var(--wc-surface)';
+        gDiv.style.border = '1px solid var(--wc-border)';
+        gDiv.style.borderRadius = '4px';
+        gDiv.style.overflow = 'hidden';
+        gDiv.style.marginBottom = '0.5rem';
+
+        const header = document.createElement('div');
+        header.innerText = `Group ${letter}`;
+        header.style.background = 'rgba(255,255,255,0.05)';
+        header.style.padding = '0.25rem 0.5rem';
+        header.style.fontSize = '0.75rem';
+        header.style.color = 'var(--wc-muted)';
+        gDiv.appendChild(header);
+
+        mockGroupsData[letter].forEach(team => {
+          const tDiv = document.createElement('div');
+          tDiv.innerText = team;
+          tDiv.style.padding = '0.25rem 0.5rem';
+          tDiv.style.fontSize = '0.8rem';
+          tDiv.style.borderTop = '1px solid var(--wc-border)';
+          tDiv.style.cursor = 'pointer';
+          tDiv.onclick = () => toggleTeamSelection(tDiv, team);
+          gDiv.appendChild(tDiv);
+        });
+        groupsContainer.appendChild(gDiv);
+      });
+    }
+
+    function initEmptyBracket() {
+      let globalMatchId = 1;
+      Object.keys(rounds).forEach(roundKey => {
+        const container = document.querySelector(`.${roundKey}`);
+        for (let i = 0; i < rounds[roundKey].count; i++) {
+          const m = createMatchNode(globalMatchId++, roundKey);
+          container.appendChild(m);
+        }
+      });
+    }
+
+    function advanceTeam(teamName, currentMatchDiv, slotIndex) {
+      if (teamName === 'TBD' || !bracketGenerated) return;
+
+      // Highlight winner
+      currentMatchDiv.querySelector('.t1').style.color = slotIndex === 1 ? 'var(--wc-accent)' : 'var(--wc-muted)';
+      currentMatchDiv.querySelector('.t2').style.color = slotIndex === 2 ? 'var(--wc-accent)' : 'var(--wc-muted)';
+
+      const currentRound = currentMatchDiv.dataset.round;
+      const nextRound = rounds[currentRound].next;
+      if (!nextRound) {
+        alert(`🏆 ${teamName} wins the World Cup!`);
+        return;
+      }
+
+      const currentMatchesInRound = Array.from(document.querySelectorAll(`.${currentRound} .bracket-match`));
+      const matchIndex = currentMatchesInRound.indexOf(currentMatchDiv);
+      
+      const nextMatchIndex = Math.floor(matchIndex / 2);
+      const isTopSlot = matchIndex % 2 === 0;
+
+      const nextMatchesInRound = Array.from(document.querySelectorAll(`.${nextRound} .bracket-match`));
+      const targetMatch = nextMatchesInRound[nextMatchIndex];
+
+      if (isTopSlot) {
+        targetMatch.querySelector('.t1').innerText = teamName;
+        targetMatch.querySelector('.t1').style.color = 'var(--wc-ink)';
+      } else {
+        targetMatch.querySelector('.t2').innerText = teamName;
+        targetMatch.querySelector('.t2').style.color = 'var(--wc-ink)';
+      }
+    }
+
+    document.getElementById('generate-bracket').addEventListener('click', () => {
+      if (selectedTeams.size !== 32) {
+        alert(`Please select exactly 32 teams. You have selected ${selectedTeams.size}.`);
+        return;
+      }
+      
+      bracketGenerated = true;
+      const teamsArr = Array.from(selectedTeams);
+      // Shuffle slightly or place sequentially into R32
+      // For a simple simulator, we just drop them into the 32 slots sequentially.
+      const r32Matches = document.querySelectorAll('.r32 .bracket-match');
+      r32Matches.forEach((m, index) => {
+        m.querySelector('.t1').innerText = teamsArr[index * 2];
+        m.querySelector('.t2').innerText = teamsArr[index * 2 + 1];
+      });
+
+      document.getElementById('generate-bracket').innerText = 'Bracket Locked';
+      document.getElementById('generate-bracket').style.opacity = '0.5';
+      document.getElementById('generate-bracket').style.cursor = 'not-allowed';
+    });
+
+    document.getElementById('reset-bracket').addEventListener('click', () => {
+      document.querySelectorAll('.bracket-match').forEach(m => m.remove());
+      const groupsDivs = document.querySelectorAll('.groups > div:not(h3)');
+      groupsDivs.forEach(g => g.remove());
+      
+      selectedTeams.clear();
+      bracketGenerated = false;
+      document.getElementById('generate-bracket').style.opacity = '1';
+      document.getElementById('generate-bracket').style.cursor = 'pointer';
+      updateGenerateBtn();
+      
+      initGroups();
+      initEmptyBracket();
+    });
+
+    initGroups();
+    initEmptyBracket();
+  </script>
+</WorldCupLayout>

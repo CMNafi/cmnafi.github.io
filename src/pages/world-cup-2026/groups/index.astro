@@ -1,0 +1,92 @@
+---
+import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
+import GroupTable from '../../../components/worldcup/GroupTable.astro';
+import { getCollection } from 'astro:content';
+
+const teamsData = await getCollection('wc-teams');
+
+// Structure data for GroupTable component
+const groupsList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+const groupsData = groupsList.reduce((acc, letter) => {
+  acc[letter] = teamsData
+    .filter(t => t.data.group === letter)
+    .map(t => ({
+      name: t.data.name,
+      code: t.data.code,
+      played: 0,
+      w: 0,
+      d: 0,
+      l: 0,
+      gf: 0,
+      ga: 0,
+      pts: 0
+    }));
+  return acc;
+}, {} as Record<string, any[]>);
+
+---
+<WorldCupLayout title="Groups | World Cup 2026 Corner">
+  <header style="margin-bottom: 2rem;">
+    <a href="/world-cup-2026" style="color: var(--wc-muted); text-decoration: none; font-size: 0.9em; margin-bottom: 1rem; display: inline-block;">← Back to Hub</a>
+    <h1>Group Standings</h1>
+    <p style="color: var(--wc-muted);">Live standings across all 12 groups.</p>
+  </header>
+
+  <section>
+    <!-- Tab Navigation -->
+    <div class="group-tabs" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--wc-border);">
+      {groupsList.map((letter, index) => (
+        <button 
+          class={`tab-btn ${index === 0 ? 'active' : ''}`} 
+          data-group={letter}
+          style="background: transparent; border: 1px solid var(--wc-border); color: var(--wc-ink); padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-weight: 600; flex-shrink: 0;"
+        >
+          Group {letter}
+        </button>
+      ))}
+    </div>
+
+    <!-- Tab Content -->
+    <div class="group-content-container">
+      {groupsList.map((letter, index) => (
+        <div class={`group-pane ${index === 0 ? 'active' : ''}`} id={`pane-${letter}`} style={index === 0 ? 'display: block;' : 'display: none;'}>
+          <GroupTable groupLetter={letter} teams={groupsData[letter]} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <script>
+    // Client-side tab logic
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.group-pane');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          (t as HTMLElement).style.background = 'transparent';
+          (t as HTMLElement).style.borderColor = 'var(--wc-border)';
+        });
+        panes.forEach(p => (p as HTMLElement).style.display = 'none');
+
+        // Add active to clicked
+        tab.classList.add('active');
+        (tab as HTMLElement).style.background = 'rgba(237, 231, 217, 0.1)';
+        (tab as HTMLElement).style.borderColor = 'var(--wc-ink)';
+        
+        const targetGroup = tab.getAttribute('data-group');
+        const targetPane = document.getElementById(`pane-${targetGroup}`);
+        if (targetPane) targetPane.style.display = 'block';
+      });
+    });
+
+    // Initialize first tab styles
+    const firstTab = document.querySelector('.tab-btn.active') as HTMLElement;
+    if (firstTab) {
+      firstTab.style.background = 'rgba(237, 231, 217, 0.1)';
+      firstTab.style.borderColor = 'var(--wc-ink)';
+    }
+  </script>
+</WorldCupLayout>

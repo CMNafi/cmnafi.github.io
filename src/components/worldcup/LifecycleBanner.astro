@@ -1,0 +1,26 @@
+---
+interface Props {
+  message: string;
+  type?: 'info' | 'live' | 'alert';
+}
+
+const { message, type = 'info' } = Astro.props;
+
+const bgColors = {
+  info: 'rgba(237, 231, 217, 0.05)',
+  live: 'rgba(61, 161, 91, 0.15)',
+  alert: 'rgba(232, 163, 61, 0.15)'
+};
+
+const textColors = {
+  info: 'var(--wc-ink)',
+  live: 'var(--wc-accent)',
+  alert: 'var(--wc-highlight)'
+};
+---
+<div class="wc-lifecycle-banner" style={`background: ${bgColors[type]}; color: ${textColors[type]}; padding: 1rem; text-align: center; border-radius: 4px; margin-bottom: 2rem; border: 1px solid ${bgColors[type].replace('0.05', '0.2').replace('0.15', '0.3')};`}>
+  <p style="margin: 0; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.9em; letter-spacing: 0.05em; text-transform: uppercase;">
+    {type === 'live' && <span class="live-pulse" style="margin-right: 8px;"></span>}
+    {message}
+  </p>
+</div>

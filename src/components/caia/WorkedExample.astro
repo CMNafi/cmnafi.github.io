@@ -1,0 +1,23 @@
+---
+interface Props {
+  title?: string;
+}
+const { title = "Worked Example" } = Astro.props;
+---
+<div class="caia-worked-example" style="border: 1px solid var(--caia-border); margin: 2rem 0; border-radius: 4px; overflow: hidden;">
+  <div style="background: var(--caia-border); color: var(--caia-ink); padding: 0.5rem 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; font-weight: 600; letter-spacing: 0.05em;">
+    {title}
+  </div>
+  <div style="padding: 1.5rem;">
+    <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed var(--caia-border);">
+      <slot name="problem" />
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.8em; color: var(--caia-accent); margin-bottom: 0.5rem;">STEP-BY-STEP SOLUTION</div>
+      <slot name="solution" />
+    </div>
+    <div style="background: var(--caia-card); padding: 1rem; border-left: 3px solid var(--caia-accent); font-size: 0.9em;">
+      <slot name="why" />
+    </div>
+  </div>
+</div>
