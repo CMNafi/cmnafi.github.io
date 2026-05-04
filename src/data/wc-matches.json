@@ -7,8 +7,8 @@
     "homeCode": "MEX",
     "awayTeam": "South Africa",
     "awayCode": "RSA",
-    "date": "2026-06-11T15:00:00-06:00",
-    "venue": "SoFi Stadium"
+    "date": "2026-06-11T19:00:00.000Z",
+    "venue": "Estadio Azteca"
   },
   {
     "id": 2,
@@ -18,8 +18,8 @@
     "homeCode": "JOR",
     "awayTeam": "Serbia",
     "awayCode": "SRB",
-    "date": "2026-06-11T20:00:00.000Z",
-    "venue": "BMO Field"
+    "date": "2026-06-12T02:00:00.000Z",
+    "venue": "Estadio Akron"
   },
   {
     "id": 3,
@@ -29,7 +29,7 @@
     "homeCode": "MEX",
     "awayTeam": "Jordan",
     "awayCode": "JOR",
-    "date": "2026-06-11T22:00:00.000Z",
+    "date": "2026-06-18T16:00:00.000Z",
     "venue": "Mercedes-Benz Stadium"
   },
   {
@@ -40,8 +40,8 @@
     "homeCode": "SRB",
     "awayTeam": "South Africa",
     "awayCode": "RSA",
-    "date": "2026-06-12T01:00:00.000Z",
-    "venue": "AT&T Stadium"
+    "date": "2026-06-19T01:00:00.000Z",
+    "venue": "Estadio Akron"
   },
   {
     "id": 5,
@@ -51,8 +51,8 @@
     "homeCode": "SRB",
     "awayTeam": "Mexico",
     "awayCode": "MEX",
-    "date": "2026-06-12T17:00:00.000Z",
-    "venue": "Gillette Stadium"
+    "date": "2026-06-25T01:00:00.000Z",
+    "venue": "Estadio Azteca"
   },
   {
     "id": 6,
@@ -62,8 +62,8 @@
     "homeCode": "RSA",
     "awayTeam": "Jordan",
     "awayCode": "JOR",
-    "date": "2026-06-12T20:00:00.000Z",
-    "venue": "NRG Stadium"
+    "date": "2026-06-25T01:00:00.000Z",
+    "venue": "Estadio BBVA"
   },
   {
     "id": 7,
@@ -73,8 +73,8 @@
     "homeCode": "CAN",
     "awayTeam": "Bosnia and Herzegovina",
     "awayCode": "BIH",
-    "date": "2026-06-12T22:00:00.000Z",
-    "venue": "Arrowhead Stadium"
+    "date": "2026-06-12T19:00:00.000Z",
+    "venue": "BMO Field"
   },
   {
     "id": 8,
@@ -84,8 +84,8 @@
     "homeCode": "QAT",
     "awayTeam": "Switzerland",
     "awayCode": "SUI",
-    "date": "2026-06-13T01:00:00.000Z",
-    "venue": "Hard Rock Stadium"
+    "date": "2026-06-13T19:00:00.000Z",
+    "venue": "Levi's Stadium"
   },
   {
     "id": 9,
@@ -95,8 +95,8 @@
     "homeCode": "CAN",
     "awayTeam": "Qatar",
     "awayCode": "QAT",
-    "date": "2026-06-13T17:00:00.000Z",
-    "venue": "Lincoln Financial Field"
+    "date": "2026-06-18T19:00:00.000Z",
+    "venue": "SoFi Stadium"
   },
   {
     "id": 10,
@@ -106,8 +106,8 @@
     "homeCode": "SUI",
     "awayTeam": "Bosnia and Herzegovina",
     "awayCode": "BIH",
-    "date": "2026-06-13T22:00:00.000Z",
-    "venue": "Levi's Stadium"
+    "date": "2026-06-18T22:00:00.000Z",
+    "venue": "BC Place"
   },
   {
     "id": 11,
@@ -117,8 +117,8 @@
     "homeCode": "SUI",
     "awayTeam": "Canada",
     "awayCode": "CAN",
-    "date": "2026-06-14T02:00:00.000Z",
-    "venue": "Lumen Field"
+    "date": "2026-06-24T19:00:00.000Z",
+    "venue": "BC Place"
   },
   {
     "id": 12,
@@ -128,8 +128,8 @@
     "homeCode": "BIH",
     "awayTeam": "Qatar",
     "awayCode": "QAT",
-    "date": "2026-06-14T05:00:00.000Z",
-    "venue": "BC Place"
+    "date": "2026-06-24T19:00:00.000Z",
+    "venue": "Lumen Field"
   },
   {
     "id": 13,
@@ -139,8 +139,8 @@
     "homeCode": "ARG",
     "awayTeam": "Senegal",
     "awayCode": "SEN",
-    "date": "2026-06-14T17:00:00.000Z",
-    "venue": "Estadio Akron"
+    "date": "2026-06-13T22:00:00.000Z",
+    "venue": "MetLife Stadium"
   },
   {
     "id": 14,
@@ -150,8 +150,8 @@
     "homeCode": "JPN",
     "awayTeam": "Sweden",
     "awayCode": "SWE",
-    "date": "2026-06-14T20:00:00.000Z",
-    "venue": "Estadio BBVA"
+    "date": "2026-06-14T01:00:00.000Z",
+    "venue": "Gillette Stadium"
   },
   {
     "id": 15,
@@ -161,8 +161,8 @@
     "homeCode": "ARG",
     "awayTeam": "Japan",
     "awayCode": "JPN",
-    "date": "2026-06-14T22:00:00.000Z",
-    "venue": "Estadio Azteca"
+    "date": "2026-06-19T22:00:00.000Z",
+    "venue": "Gillette Stadium"
   },
   {
     "id": 16,
@@ -172,8 +172,8 @@
     "homeCode": "SWE",
     "awayTeam": "Senegal",
     "awayCode": "SEN",
-    "date": "2026-06-15T01:00:00.000Z",
-    "venue": "MetLife Stadium"
+    "date": "2026-06-20T00:30:00.000Z",
+    "venue": "Lincoln Financial Field"
   },
   {
     "id": 17,
@@ -183,8 +183,8 @@
     "homeCode": "SWE",
     "awayTeam": "Argentina",
     "awayCode": "ARG",
-    "date": "2026-06-15T19:00:00.000Z",
-    "venue": "SoFi Stadium"
+    "date": "2026-06-24T22:00:00.000Z",
+    "venue": "Hard Rock Stadium"
   },
   {
     "id": 18,
@@ -194,8 +194,8 @@
     "homeCode": "SEN",
     "awayTeam": "Japan",
     "awayCode": "JPN",
-    "date": "2026-06-15T20:00:00.000Z",
-    "venue": "BMO Field"
+    "date": "2026-06-24T22:00:00.000Z",
+    "venue": "Mercedes-Benz Stadium"
   },
   {
     "id": 19,
@@ -205,8 +205,8 @@
     "homeCode": "USA",
     "awayTeam": "Paraguay",
     "awayCode": "PAR",
-    "date": "2026-06-15T22:00:00.000Z",
-    "venue": "Mercedes-Benz Stadium"
+    "date": "2026-06-13T01:00:00.000Z",
+    "venue": "SoFi Stadium"
   },
   {
     "id": 20,
@@ -216,8 +216,8 @@
     "homeCode": "AUS",
     "awayTeam": "Türkiye",
     "awayCode": "TUR",
-    "date": "2026-06-16T01:00:00.000Z",
-    "venue": "AT&T Stadium"
+    "date": "2026-06-14T04:00:00.000Z",
+    "venue": "BC Place"
   },
   {
     "id": 21,
@@ -227,8 +227,8 @@
     "homeCode": "USA",
     "awayTeam": "Australia",
     "awayCode": "AUS",
-    "date": "2026-06-16T17:00:00.000Z",
-    "venue": "Gillette Stadium"
+    "date": "2026-06-19T19:00:00.000Z",
+    "venue": "Lumen Field"
   },
   {
     "id": 22,
@@ -238,8 +238,8 @@
     "homeCode": "TUR",
     "awayTeam": "Paraguay",
     "awayCode": "PAR",
-    "date": "2026-06-16T20:00:00.000Z",
-    "venue": "NRG Stadium"
+    "date": "2026-06-20T03:00:00.000Z",
+    "venue": "Levi's Stadium"
   },
   {
     "id": 23,
@@ -249,8 +249,8 @@
     "homeCode": "TUR",
     "awayTeam": "USA",
     "awayCode": "USA",
-    "date": "2026-06-16T22:00:00.000Z",
-    "venue": "Arrowhead Stadium"
+    "date": "2026-06-26T02:00:00.000Z",
+    "venue": "SoFi Stadium"
   },
   {
     "id": 24,
@@ -260,8 +260,8 @@
     "homeCode": "PAR",
     "awayTeam": "Australia",
     "awayCode": "AUS",
-    "date": "2026-06-17T01:00:00.000Z",
-    "venue": "Hard Rock Stadium"
+    "date": "2026-06-26T02:00:00.000Z",
+    "venue": "Levi's Stadium"
   },
   {
     "id": 25,
@@ -271,8 +271,8 @@
     "homeCode": "FRA",
     "awayTeam": "Ecuador",
     "awayCode": "ECU",
-    "date": "2026-06-17T17:00:00.000Z",
-    "venue": "Lincoln Financial Field"
+    "date": "2026-06-14T17:00:00.000Z",
+    "venue": "NRG Stadium"
   },
   {
     "id": 26,
@@ -282,8 +282,8 @@
     "homeCode": "KSA",
     "awayTeam": "Côte d'Ivoire",
     "awayCode": "CIV",
-    "date": "2026-06-17T22:00:00.000Z",
-    "venue": "Levi's Stadium"
+    "date": "2026-06-14T23:00:00.000Z",
+    "venue": "Lincoln Financial Field"
   },
   {
     "id": 27,
@@ -293,8 +293,8 @@
     "homeCode": "FRA",
     "awayTeam": "Saudi Arabia",
     "awayCode": "KSA",
-    "date": "2026-06-18T02:00:00.000Z",
-    "venue": "Lumen Field"
+    "date": "2026-06-20T20:00:00.000Z",
+    "venue": "BMO Field"
   },
   {
     "id": 28,
@@ -304,8 +304,8 @@
     "homeCode": "CIV",
     "awayTeam": "Ecuador",
     "awayCode": "ECU",
-    "date": "2026-06-18T05:00:00.000Z",
-    "venue": "BC Place"
+    "date": "2026-06-21T00:00:00.000Z",
+    "venue": "Arrowhead Stadium"
   },
   {
     "id": 29,
@@ -315,8 +315,8 @@
     "homeCode": "CIV",
     "awayTeam": "France",
     "awayCode": "FRA",
-    "date": "2026-06-18T17:00:00.000Z",
-    "venue": "Estadio Akron"
+    "date": "2026-06-25T20:00:00.000Z",
+    "venue": "Lincoln Financial Field"
   },
   {
     "id": 30,
@@ -326,8 +326,8 @@
     "homeCode": "ECU",
     "awayTeam": "Saudi Arabia",
     "awayCode": "KSA",
-    "date": "2026-06-18T20:00:00.000Z",
-    "venue": "Estadio BBVA"
+    "date": "2026-06-25T20:00:00.000Z",
+    "venue": "MetLife Stadium"
   },
   {
     "id": 31,
@@ -337,8 +337,8 @@
     "homeCode": "ENG",
     "awayTeam": "Morocco",
     "awayCode": "MAR",
-    "date": "2026-06-18T22:00:00.000Z",
-    "venue": "Estadio Azteca"
+    "date": "2026-06-14T20:00:00.000Z",
+    "venue": "AT&T Stadium"
   },
   {
     "id": 32,
@@ -348,8 +348,8 @@
     "homeCode": "PAN",
     "awayTeam": "Uzbekistan",
     "awayCode": "UZB",
-    "date": "2026-06-19T01:00:00.000Z",
-    "venue": "MetLife Stadium"
+    "date": "2026-06-15T02:00:00.000Z",
+    "venue": "Estadio BBVA"
   },
   {
     "id": 33,
@@ -359,8 +359,8 @@
     "homeCode": "ENG",
     "awayTeam": "Panama",
     "awayCode": "PAN",
-    "date": "2026-06-19T19:00:00.000Z",
-    "venue": "SoFi Stadium"
+    "date": "2026-06-20T17:00:00.000Z",
+    "venue": "NRG Stadium"
   },
   {
     "id": 34,
@@ -370,8 +370,8 @@
     "homeCode": "UZB",
     "awayTeam": "Morocco",
     "awayCode": "MAR",
-    "date": "2026-06-19T20:00:00.000Z",
-    "venue": "BMO Field"
+    "date": "2026-06-21T04:00:00.000Z",
+    "venue": "Estadio BBVA"
   },
   {
     "id": 35,
@@ -381,8 +381,8 @@
     "homeCode": "UZB",
     "awayTeam": "England",
     "awayCode": "ENG",
-    "date": "2026-06-19T22:00:00.000Z",
-    "venue": "Mercedes-Benz Stadium"
+    "date": "2026-06-25T23:00:00.000Z",
+    "venue": "AT&T Stadium"
   },
   {
     "id": 36,
@@ -392,8 +392,8 @@
     "homeCode": "MAR",
     "awayTeam": "Panama",
     "awayCode": "PAN",
-    "date": "2026-06-20T01:00:00.000Z",
-    "venue": "AT&T Stadium"
+    "date": "2026-06-25T23:00:00.000Z",
+    "venue": "Arrowhead Stadium"
   },
   {
     "id": 37,
@@ -403,8 +403,8 @@
     "homeCode": "BRA",
     "awayTeam": "Egypt",
     "awayCode": "EGY",
-    "date": "2026-06-20T17:00:00.000Z",
-    "venue": "Gillette Stadium"
+    "date": "2026-06-15T19:00:00.000Z",
+    "venue": "Lumen Field"
   },
   {
     "id": 38,
@@ -414,8 +414,8 @@
     "homeCode": "KOR",
     "awayTeam": "Norway",
     "awayCode": "NOR",
-    "date": "2026-06-20T20:00:00.000Z",
-    "venue": "NRG Stadium"
+    "date": "2026-06-16T01:00:00.000Z",
+    "venue": "SoFi Stadium"
   },
   {
     "id": 39,
@@ -425,8 +425,8 @@
     "homeCode": "BRA",
     "awayTeam": "Korea Republic",
     "awayCode": "KOR",
-    "date": "2026-06-20T22:00:00.000Z",
-    "venue": "Arrowhead Stadium"
+    "date": "2026-06-21T19:00:00.000Z",
+    "venue": "SoFi Stadium"
   },
   {
     "id": 40,
@@ -436,8 +436,8 @@
     "homeCode": "NOR",
     "awayTeam": "Egypt",
     "awayCode": "EGY",
-    "date": "2026-06-21T01:00:00.000Z",
-    "venue": "Hard Rock Stadium"
+    "date": "2026-06-22T01:00:00.000Z",
+    "venue": "BC Place"
   },
   {
     "id": 41,
@@ -447,8 +447,8 @@
     "homeCode": "NOR",
     "awayTeam": "Brazil",
     "awayCode": "BRA",
-    "date": "2026-06-21T17:00:00.000Z",
-    "venue": "Lincoln Financial Field"
+    "date": "2026-06-27T03:00:00.000Z",
+    "venue": "Lumen Field"
   },
   {
     "id": 42,
@@ -458,8 +458,8 @@
     "homeCode": "EGY",
     "awayTeam": "Korea Republic",
     "awayCode": "KOR",
-    "date": "2026-06-21T22:00:00.000Z",
-    "venue": "Levi's Stadium"
+    "date": "2026-06-27T03:00:00.000Z",
+    "venue": "BC Place"
   },
   {
     "id": 43,
@@ -469,8 +469,8 @@
     "homeCode": "ESP",
     "awayTeam": "Uruguay",
     "awayCode": "URU",
-    "date": "2026-06-22T02:00:00.000Z",
-    "venue": "Lumen Field"
+    "date": "2026-06-15T16:00:00.000Z",
+    "venue": "Mercedes-Benz Stadium"
   },
   {
     "id": 44,
@@ -480,8 +480,8 @@
     "homeCode": "ALG",
     "awayTeam": "Haiti",
     "awayCode": "HAI",
-    "date": "2026-06-22T05:00:00.000Z",
-    "venue": "BC Place"
+    "date": "2026-06-15T22:00:00.000Z",
+    "venue": "Hard Rock Stadium"
   },
   {
     "id": 45,
@@ -491,8 +491,8 @@
     "homeCode": "ESP",
     "awayTeam": "Algeria",
     "awayCode": "ALG",
-    "date": "2026-06-22T17:00:00.000Z",
-    "venue": "Estadio Akron"
+    "date": "2026-06-21T16:00:00.000Z",
+    "venue": "Mercedes-Benz Stadium"
   },
   {
     "id": 46,
@@ -502,8 +502,8 @@
     "homeCode": "HAI",
     "awayTeam": "Uruguay",
     "awayCode": "URU",
-    "date": "2026-06-22T20:00:00.000Z",
-    "venue": "Estadio BBVA"
+    "date": "2026-06-21T22:00:00.000Z",
+    "venue": "Hard Rock Stadium"
   },
   {
     "id": 47,
@@ -513,8 +513,8 @@
     "homeCode": "HAI",
     "awayTeam": "Spain",
     "awayCode": "ESP",
-    "date": "2026-06-22T22:00:00.000Z",
-    "venue": "Estadio Azteca"
+    "date": "2026-06-27T00:00:00.000Z",
+    "venue": "NRG Stadium"
   },
   {
     "id": 48,
@@ -524,8 +524,8 @@
     "homeCode": "URU",
     "awayTeam": "Algeria",
     "awayCode": "ALG",
-    "date": "2026-06-23T01:00:00.000Z",
-    "venue": "MetLife Stadium"
+    "date": "2026-06-27T00:00:00.000Z",
+    "venue": "Estadio Akron"
   },
   {
     "id": 49,
@@ -535,8 +535,8 @@
     "homeCode": "POR",
     "awayTeam": "Colombia",
     "awayCode": "COL",
-    "date": "2026-06-23T19:00:00.000Z",
-    "venue": "SoFi Stadium"
+    "date": "2026-06-16T19:00:00.000Z",
+    "venue": "MetLife Stadium"
   },
   {
     "id": 50,
@@ -546,8 +546,8 @@
     "homeCode": "GHA",
     "awayTeam": "IR Iran",
     "awayCode": "IRN",
-    "date": "2026-06-23T20:00:00.000Z",
-    "venue": "BMO Field"
+    "date": "2026-06-16T22:00:00.000Z",
+    "venue": "Gillette Stadium"
   },
   {
     "id": 51,
@@ -557,8 +557,8 @@
     "homeCode": "POR",
     "awayTeam": "Ghana",
     "awayCode": "GHA",
-    "date": "2026-06-23T22:00:00.000Z",
-    "venue": "Mercedes-Benz Stadium"
+    "date": "2026-06-22T21:00:00.000Z",
+    "venue": "Lincoln Financial Field"
   },
   {
     "id": 52,
@@ -568,8 +568,8 @@
     "homeCode": "IRN",
     "awayTeam": "Colombia",
     "awayCode": "COL",
-    "date": "2026-06-24T01:00:00.000Z",
-    "venue": "AT&T Stadium"
+    "date": "2026-06-23T00:00:00.000Z",
+    "venue": "MetLife Stadium"
   },
   {
     "id": 53,
@@ -579,7 +579,7 @@
     "homeCode": "IRN",
     "awayTeam": "Portugal",
     "awayCode": "POR",
-    "date": "2026-06-24T17:00:00.000Z",
+    "date": "2026-06-26T19:00:00.000Z",
     "venue": "Gillette Stadium"
   },
   {
@@ -590,8 +590,8 @@
     "homeCode": "COL",
     "awayTeam": "Ghana",
     "awayCode": "GHA",
-    "date": "2026-06-24T20:00:00.000Z",
-    "venue": "NRG Stadium"
+    "date": "2026-06-26T19:00:00.000Z",
+    "venue": "BMO Field"
   },
   {
     "id": 55,
@@ -601,7 +601,7 @@
     "homeCode": "GER",
     "awayTeam": "DR Congo",
     "awayCode": "COD",
-    "date": "2026-06-24T22:00:00.000Z",
+    "date": "2026-06-17T01:00:00.000Z",
     "venue": "Arrowhead Stadium"
   },
   {
@@ -612,8 +612,8 @@
     "homeCode": "NZL",
     "awayTeam": "Curaçao",
     "awayCode": "CUW",
-    "date": "2026-06-25T01:00:00.000Z",
-    "venue": "Hard Rock Stadium"
+    "date": "2026-06-17T04:00:00.000Z",
+    "venue": "Levi's Stadium"
   },
   {
     "id": 57,
@@ -623,8 +623,8 @@
     "homeCode": "GER",
     "awayTeam": "New Zealand",
     "awayCode": "NZL",
-    "date": "2026-06-25T17:00:00.000Z",
-    "venue": "Lincoln Financial Field"
+    "date": "2026-06-22T17:00:00.000Z",
+    "venue": "AT&T Stadium"
   },
   {
     "id": 58,
@@ -634,7 +634,7 @@
     "homeCode": "CUW",
     "awayTeam": "DR Congo",
     "awayCode": "COD",
-    "date": "2026-06-25T22:00:00.000Z",
+    "date": "2026-06-23T03:00:00.000Z",
     "venue": "Levi's Stadium"
   },
   {
@@ -645,8 +645,8 @@
     "homeCode": "CUW",
     "awayTeam": "Germany",
     "awayCode": "GER",
-    "date": "2026-06-26T02:00:00.000Z",
-    "venue": "Lumen Field"
+    "date": "2026-06-28T02:00:00.000Z",
+    "venue": "Arrowhead Stadium"
   },
   {
     "id": 60,
@@ -656,8 +656,8 @@
     "homeCode": "COD",
     "awayTeam": "New Zealand",
     "awayCode": "NZL",
-    "date": "2026-06-26T05:00:00.000Z",
-    "venue": "BC Place"
+    "date": "2026-06-28T02:00:00.000Z",
+    "venue": "AT&T Stadium"
   },
   {
     "id": 61,
@@ -667,8 +667,8 @@
     "homeCode": "BEL",
     "awayTeam": "Chile",
     "awayCode": "CHI",
-    "date": "2026-06-26T17:00:00.000Z",
-    "venue": "Estadio Akron"
+    "date": "2026-06-17T17:00:00.000Z",
+    "venue": "NRG Stadium"
   },
   {
     "id": 62,
@@ -678,8 +678,8 @@
     "homeCode": "TUN",
     "awayTeam": "Iraq",
     "awayCode": "IRQ",
-    "date": "2026-06-26T20:00:00.000Z",
-    "venue": "Estadio BBVA"
+    "date": "2026-06-18T02:00:00.000Z",
+    "venue": "Estadio Azteca"
   },
   {
     "id": 63,
@@ -689,8 +689,8 @@
     "homeCode": "BEL",
     "awayTeam": "Tunisia",
     "awayCode": "TUN",
-    "date": "2026-06-26T22:00:00.000Z",
-    "venue": "Estadio Azteca"
+    "date": "2026-06-23T17:00:00.000Z",
+    "venue": "NRG Stadium"
   },
   {
     "id": 64,
@@ -700,8 +700,8 @@
     "homeCode": "IRQ",
     "awayTeam": "Chile",
     "awayCode": "CHI",
-    "date": "2026-06-27T01:00:00.000Z",
-    "venue": "MetLife Stadium"
+    "date": "2026-06-24T02:00:00.000Z",
+    "venue": "Estadio Akron"
   },
   {
     "id": 65,
@@ -711,8 +711,8 @@
     "homeCode": "IRQ",
     "awayTeam": "Belgium",
     "awayCode": "BEL",
-    "date": "2026-06-27T19:00:00.000Z",
-    "venue": "SoFi Stadium"
+    "date": "2026-06-27T23:30:00.000Z",
+    "venue": "Hard Rock Stadium"
   },
   {
     "id": 66,
@@ -722,8 +722,8 @@
     "homeCode": "CHI",
     "awayTeam": "Tunisia",
     "awayCode": "TUN",
-    "date": "2026-06-27T20:00:00.000Z",
-    "venue": "BMO Field"
+    "date": "2026-06-27T23:30:00.000Z",
+    "venue": "Mercedes-Benz Stadium"
   },
   {
     "id": 67,
@@ -733,8 +733,8 @@
     "homeCode": "NED",
     "awayTeam": "Croatia",
     "awayCode": "CRO",
-    "date": "2026-06-27T22:00:00.000Z",
-    "venue": "Mercedes-Benz Stadium"
+    "date": "2026-06-17T20:00:00.000Z",
+    "venue": "AT&T Stadium"
   },
   {
     "id": 68,
@@ -744,8 +744,8 @@
     "homeCode": "MLI",
     "awayTeam": "Costa Rica",
     "awayCode": "CRC",
-    "date": "2026-06-28T01:00:00.000Z",
-    "venue": "AT&T Stadium"
+    "date": "2026-06-17T23:00:00.000Z",
+    "venue": "BMO Field"
   },
   {
     "id": 69,
@@ -755,7 +755,7 @@
     "homeCode": "NED",
     "awayTeam": "Mali",
     "awayCode": "MLI",
-    "date": "2026-06-28T17:00:00.000Z",
+    "date": "2026-06-23T20:00:00.000Z",
     "venue": "Gillette Stadium"
   },
   {
@@ -766,8 +766,8 @@
     "homeCode": "CRC",
     "awayTeam": "Croatia",
     "awayCode": "CRO",
-    "date": "2026-06-28T20:00:00.000Z",
-    "venue": "NRG Stadium"
+    "date": "2026-06-23T23:00:00.000Z",
+    "venue": "BMO Field"
   },
   {
     "id": 71,
@@ -777,8 +777,8 @@
     "homeCode": "CRC",
     "awayTeam": "Netherlands",
     "awayCode": "NED",
-    "date": "2026-06-28T22:00:00.000Z",
-    "venue": "Arrowhead Stadium"
+    "date": "2026-06-27T21:00:00.000Z",
+    "venue": "MetLife Stadium"
   },
   {
     "id": 72,
@@ -788,8 +788,8 @@
     "homeCode": "CRO",
     "awayTeam": "Mali",
     "awayCode": "MLI",
-    "date": "2026-06-29T01:00:00.000Z",
-    "venue": "Hard Rock Stadium"
+    "date": "2026-06-27T21:00:00.000Z",
+    "venue": "Lincoln Financial Field"
   },
   {
     "id": 73,
@@ -798,8 +798,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-06-29T17:00:00.000Z",
-    "venue": "Lincoln Financial Field"
+    "date": "2026-06-28T19:00:00.000Z",
+    "venue": "SoFi Stadium"
   },
   {
     "id": 74,
@@ -808,8 +808,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-06-29T22:00:00.000Z",
-    "venue": "Levi's Stadium"
+    "date": "2026-06-29T20:30:00.000Z",
+    "venue": "Gillette Stadium"
   },
   {
     "id": 75,
@@ -818,8 +818,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-06-30T02:00:00.000Z",
-    "venue": "Lumen Field"
+    "date": "2026-06-30T01:00:00.000Z",
+    "venue": "Estadio BBVA"
   },
   {
     "id": 76,
@@ -828,8 +828,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-06-30T05:00:00.000Z",
-    "venue": "BC Place"
+    "date": "2026-06-29T17:00:00.000Z",
+    "venue": "NRG Stadium"
   },
   {
     "id": 77,
@@ -838,8 +838,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-06-30T17:00:00.000Z",
-    "venue": "Estadio Akron"
+    "date": "2026-06-30T21:00:00.000Z",
+    "venue": "MetLife Stadium"
   },
   {
     "id": 78,
@@ -848,8 +848,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-06-30T20:00:00.000Z",
-    "venue": "Estadio BBVA"
+    "date": "2026-06-30T17:00:00.000Z",
+    "venue": "AT&T Stadium"
   },
   {
     "id": 79,
@@ -858,7 +858,7 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-06-30T22:00:00.000Z",
+    "date": "2026-07-01T01:00:00.000Z",
     "venue": "Estadio Azteca"
   },
   {
@@ -868,8 +868,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-01T01:00:00.000Z",
-    "venue": "MetLife Stadium"
+    "date": "2026-07-01T16:00:00.000Z",
+    "venue": "Mercedes-Benz Stadium"
   },
   {
     "id": 81,
@@ -878,8 +878,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-01T19:00:00.000Z",
-    "venue": "SoFi Stadium"
+    "date": "2026-07-02T00:00:00.000Z",
+    "venue": "Levi's Stadium"
   },
   {
     "id": 82,
@@ -889,7 +889,7 @@
     "awayTeam": "TBD",
     "awayCode": "TBD",
     "date": "2026-07-01T20:00:00.000Z",
-    "venue": "BMO Field"
+    "venue": "Lumen Field"
   },
   {
     "id": 83,
@@ -898,8 +898,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-01T22:00:00.000Z",
-    "venue": "Mercedes-Benz Stadium"
+    "date": "2026-07-02T23:00:00.000Z",
+    "venue": "BMO Field"
   },
   {
     "id": 84,
@@ -908,8 +908,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-02T01:00:00.000Z",
-    "venue": "AT&T Stadium"
+    "date": "2026-07-02T19:00:00.000Z",
+    "venue": "SoFi Stadium"
   },
   {
     "id": 85,
@@ -918,8 +918,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-02T17:00:00.000Z",
-    "venue": "Gillette Stadium"
+    "date": "2026-07-03T03:00:00.000Z",
+    "venue": "BC Place"
   },
   {
     "id": 86,
@@ -928,8 +928,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-02T20:00:00.000Z",
-    "venue": "NRG Stadium"
+    "date": "2026-07-03T22:00:00.000Z",
+    "venue": "Hard Rock Stadium"
   },
   {
     "id": 87,
@@ -938,7 +938,7 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-02T22:00:00.000Z",
+    "date": "2026-07-04T01:30:00.000Z",
     "venue": "Arrowhead Stadium"
   },
   {
@@ -948,8 +948,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-03T01:00:00.000Z",
-    "venue": "Hard Rock Stadium"
+    "date": "2026-07-03T18:00:00.000Z",
+    "venue": "AT&T Stadium"
   },
   {
     "id": 89,
@@ -958,7 +958,7 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-03T17:00:00.000Z",
+    "date": "2026-07-04T21:00:00.000Z",
     "venue": "Lincoln Financial Field"
   },
   {
@@ -968,8 +968,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-03T22:00:00.000Z",
-    "venue": "Levi's Stadium"
+    "date": "2026-07-04T17:00:00.000Z",
+    "venue": "NRG Stadium"
   },
   {
     "id": 91,
@@ -978,8 +978,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-04T02:00:00.000Z",
-    "venue": "Lumen Field"
+    "date": "2026-07-05T20:00:00.000Z",
+    "venue": "MetLife Stadium"
   },
   {
     "id": 92,
@@ -988,8 +988,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-04T05:00:00.000Z",
-    "venue": "BC Place"
+    "date": "2026-07-06T00:00:00.000Z",
+    "venue": "Estadio Azteca"
   },
   {
     "id": 93,
@@ -998,8 +998,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-04T17:00:00.000Z",
-    "venue": "Estadio Akron"
+    "date": "2026-07-06T19:00:00.000Z",
+    "venue": "AT&T Stadium"
   },
   {
     "id": 94,
@@ -1008,8 +1008,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-04T20:00:00.000Z",
-    "venue": "Estadio BBVA"
+    "date": "2026-07-07T00:00:00.000Z",
+    "venue": "Lumen Field"
   },
   {
     "id": 95,
@@ -1018,8 +1018,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-04T22:00:00.000Z",
-    "venue": "Estadio Azteca"
+    "date": "2026-07-07T16:00:00.000Z",
+    "venue": "Mercedes-Benz Stadium"
   },
   {
     "id": 96,
@@ -1028,8 +1028,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-05T01:00:00.000Z",
-    "venue": "MetLife Stadium"
+    "date": "2026-07-07T20:00:00.000Z",
+    "venue": "BC Place"
   },
   {
     "id": 97,
@@ -1038,8 +1038,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-05T19:00:00.000Z",
-    "venue": "SoFi Stadium"
+    "date": "2026-07-09T20:00:00.000Z",
+    "venue": "Gillette Stadium"
   },
   {
     "id": 98,
@@ -1048,8 +1048,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-05T20:00:00.000Z",
-    "venue": "BMO Field"
+    "date": "2026-07-10T19:00:00.000Z",
+    "venue": "SoFi Stadium"
   },
   {
     "id": 99,
@@ -1058,8 +1058,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-05T22:00:00.000Z",
-    "venue": "Mercedes-Benz Stadium"
+    "date": "2026-07-11T21:00:00.000Z",
+    "venue": "Hard Rock Stadium"
   },
   {
     "id": 100,
@@ -1068,8 +1068,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-06T01:00:00.000Z",
-    "venue": "AT&T Stadium"
+    "date": "2026-07-12T01:00:00.000Z",
+    "venue": "Arrowhead Stadium"
   },
   {
     "id": 101,
@@ -1078,8 +1078,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-06T17:00:00.000Z",
-    "venue": "Gillette Stadium"
+    "date": "2026-07-14T19:00:00.000Z",
+    "venue": "AT&T Stadium"
   },
   {
     "id": 102,
@@ -1088,8 +1088,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-06T20:00:00.000Z",
-    "venue": "NRG Stadium"
+    "date": "2026-07-15T19:00:00.000Z",
+    "venue": "Mercedes-Benz Stadium"
   },
   {
     "id": 103,
@@ -1098,8 +1098,8 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-06T22:00:00.000Z",
-    "venue": "Arrowhead Stadium"
+    "date": "2026-07-18T21:00:00.000Z",
+    "venue": "Hard Rock Stadium"
   },
   {
     "id": 104,
@@ -1108,7 +1108,7 @@
     "homeCode": "TBD",
     "awayTeam": "TBD",
     "awayCode": "TBD",
-    "date": "2026-07-19T15:00:00-04:00",
+    "date": "2026-07-19T19:00:00.000Z",
     "venue": "MetLife Stadium"
   }
 ]

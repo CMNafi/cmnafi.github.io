@@ -16,23 +16,55 @@ const matchesByRound = matchesData.reduce((acc, match) => {
 const roundOrder = ['Group Stage', 'Round of 32', 'Round of 16', 'Quarter-finals', 'Semi-finals', 'Third Place', 'Final'];
 const sortedRounds = Object.keys(matchesByRound).sort((a, b) => roundOrder.indexOf(a) - roundOrder.indexOf(b));
 
-function formatTimeLocal(isoString: string) {
+const venueTimezones: Record<string, string> = {
+  'Estadio Azteca': 'America/Mexico_City',
+  'Estadio Akron': 'America/Mexico_City',
+  'Estadio BBVA': 'America/Monterrey',
+  'AT&T Stadium': 'America/Chicago',
+  'NRG Stadium': 'America/Chicago',
+  'Arrowhead Stadium': 'America/Chicago',
+  'MetLife Stadium': 'America/New_York',
+  'Gillette Stadium': 'America/New_York',
+  'Hard Rock Stadium': 'America/New_York',
+  'Lincoln Financial Field': 'America/New_York',
+  'BMO Field': 'America/Toronto',
+  'Mercedes-Benz Stadium': 'America/New_York',
+  'SoFi Stadium': 'America/Los_Angeles',
+  "Levi's Stadium": 'America/Los_Angeles',
+  'Lumen Field': 'America/Los_Angeles',
+  'BC Place': 'America/Vancouver'
+};
+
+function formatDualTime(isoString: string, venue: string) {
   const d = new Date(isoString);
-  return new Intl.DateTimeFormat('en-US', {
+  const floridaTime = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/New_York',
-    month: 'short',
-    day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
     timeZoneName: 'short'
   }).format(d);
+
+  const venueTz = venueTimezones[venue] || 'America/New_York';
+  const localTime = new Intl.DateTimeFormat('en-US', {
+    timeZone: venueTz,
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  }).format(d);
+
+  if (venueTz === 'America/New_York' || venueTz === 'America/Toronto') {
+    return `${localTime} EDT`; // Local is Florida time
+  }
+  
+  return `${localTime} Local / ${floridaTime}`;
 }
 ---
 <WorldCupLayout title="Matches | World Cup 2026 Corner">
   <header style="margin-bottom: 2rem;">
     <a href="/world-cup-2026" style="color: var(--wc-muted); text-decoration: none; font-size: 0.9em; margin-bottom: 1rem; display: inline-block;">← Back to Hub</a>
     <h1>Match Schedule</h1>
-    <p style="color: var(--wc-muted);">All 104 matches of the tournament. Times listed in Local Florida Time (ET).</p>
+    <p style="color: var(--wc-muted);">All 104 matches precisely mapped to the official FIFA schedule. Displaying Local Venue Time / Florida Time (EDT).</p>
   </header>
 
   <section>
@@ -50,7 +82,7 @@ function formatTimeLocal(isoString: string) {
               awayTeam={m.awayTeam} 
               awayCode={m.awayCode} 
               status="preview" 
-              timeInfo={`${formatTimeLocal(m.date)} · ${m.venue}`} 
+              timeInfo={`${formatDualTime(m.date, m.venue)} · ${m.venue}`} 
             />
           ))}
         </div>
