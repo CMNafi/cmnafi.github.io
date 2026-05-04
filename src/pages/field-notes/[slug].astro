@@ -6,10 +6,12 @@ import LapTimer from '@/components/telemetry/LapTimer.astro';
 
 export async function getStaticPaths() {
   const notes = await getCollection('field-notes');
-  return notes.map(note => ({
-    params: { slug: note.slug },
-    props: { note },
-  }));
+  return notes
+    .filter(note => note.slug !== 'capital-lens-16' && note.slug !== 'capital-lens-17')
+    .map(note => ({
+      params: { slug: note.slug },
+      props: { note },
+    }));
 }
 
 const { note } = Astro.props;
