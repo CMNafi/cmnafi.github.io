@@ -1,628 +1,383 @@
 ---
 import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
 ---
-<WorldCupLayout title="Bracket Simulator | World Cup 2026 Corner">
-  <header style="margin-bottom: 2rem;">
-    <a href="/world-cup-2026" class="back-link">← Back to Hub</a>
-    <h1 class="neon-title">Interactive Bracket</h1>
-    <p class="neon-subtitle">Drag and drop teams within their groups to assign seeds 1-4. Select exactly 8 third-place teams (highlighted in yellow) to complete the 32-team field. Then generate your simulated neon bracket.</p>
+<WorldCupLayout title="World Cup 2026 · Bracket Predictor">
+  <header class="hdr">
+    <h1 class="neon-title">⚽ FIFA WORLD CUP 2026</h1>
+    <p class="neon-subtitle">BRACKET PREDICTOR · USA · CANADA · MEXICO · JUN 11 – JUL 19</p>
   </header>
 
-  <section class="bracket-container">
-    <div class="bracket" id="bracket-board">
-      
-      <!-- Group Stage -->
-      <div class="round groups" id="groups-container">
-        <h3 class="round-title">Group Stage</h3>
-      </div>
-
-      <!-- Round of 32 -->
-      <div class="round r32" id="r32-container">
-        <h3 class="round-title">Round of 32</h3>
-      </div>
-
-      <!-- Round of 16 -->
-      <div class="round r16" id="r16-container">
-        <h3 class="round-title">Round of 16</h3>
-      </div>
-
-      <!-- Quarter-finals -->
-      <div class="round qf" id="qf-container">
-        <h3 class="round-title">Quarter-finals</h3>
-      </div>
-
-      <!-- Semi-finals -->
-      <div class="round sf" id="sf-container">
-        <h3 class="round-title">Semi-finals</h3>
-      </div>
-
-      <!-- Final -->
-      <div class="round final" id="final-container">
-        <h3 class="round-title">The Final</h3>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="controls">
-    <button id="generate-bracket" class="neon-btn neon-btn-primary" disabled>Generate Bracket (0/32)</button>
-    <button id="reset-bracket" class="neon-btn neon-btn-secondary">Reset All</button>
+  <div class="tabs">
+    <button class="tab on" id="tg-btn">🏟 GROUP STAGE</button>
+    <button class="tab" id="tk-btn">🏆 KNOCKOUT</button>
   </div>
 
-  <style>
+  <div class="view on" id="groups-view"></div>
+  <div class="view" id="ko-view"></div>
+
+  <style is:global>
     :root {
       --neon-cyan: #0ff;
       --neon-pink: #f0f;
       --neon-green: #39ff14;
-      --neon-yellow: #ffea00;
-      --neon-red: #ff073a;
-      --bg-dark: #050505;
-      --surface-dark: #111;
-      --glass-bg: rgba(17, 17, 17, 0.7);
+      --neon-yellow: #fe0;
+      --neon-red: #ff3131;
+      --bg: #050508;
+      --card: #101018;
+      --border: #1e1e2c;
+      --accent: var(--neon-cyan);
+      --text: #dde;
+      --sub: #666;
+      --r: 8px;
     }
 
-    .back-link {
-      color: var(--neon-cyan);
-      text-decoration: none;
-      font-size: 0.9em;
-      margin-bottom: 1rem;
-      display: inline-block;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-shadow: 0 0 5px var(--neon-cyan);
-      transition: text-shadow 0.3s ease;
-    }
-    .back-link:hover {
-      text-shadow: 0 0 15px var(--neon-cyan);
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', system-ui, sans-serif;
     }
 
+    .hdr {
+      padding: 2rem 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
     .neon-title {
-      font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase;
-      color: #fff;
-      text-shadow: 0 0 5px var(--neon-cyan), 0 0 20px var(--neon-cyan);
-      letter-spacing: 2px;
-      margin-bottom: 0.5rem;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--neon-cyan);
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 10px var(--neon-cyan);
+      margin: 0;
     }
-
     .neon-subtitle {
-      color: #aaa;
-      max-width: 800px;
-    }
-
-    .bracket-container {
-      overflow-x: auto;
-      padding-bottom: 2rem;
-      background: linear-gradient(180deg, var(--bg-dark) 0%, #0a0a0a 100%);
-      border: 1px solid rgba(0, 255, 255, 0.1);
-      border-radius: 12px;
-      box-shadow: inset 0 0 50px rgba(0,255,255,0.05);
-      padding: 2rem;
-    }
-
-    .bracket {
-      display: flex;
-      gap: 3rem;
-      min-width: 1400px;
-    }
-
-    .round {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      gap: 1.5rem;
-    }
-    
-    .round-title {
-      font-size: 0.9rem;
-      color: var(--neon-cyan);
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 0 5px rgba(0,255,255,0.5);
-      margin-bottom: 1rem;
-    }
-
-    .groups { width: 220px; }
-    .r32, .r16, .qf, .sf { width: 200px; }
-    .final { width: 240px; }
-
-    /* Group styling */
-    .group-card {
-      background: var(--glass-bg);
-      border: 1px solid rgba(0,255,255,0.2);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      transition: border-color 0.3s;
-    }
-
-    .group-header {
-      background: rgba(0,255,255,0.1);
-      padding: 0.5rem;
       font-size: 0.8rem;
-      color: var(--neon-cyan);
-      font-weight: bold;
-      text-align: center;
-      letter-spacing: 1px;
-      border-bottom: 1px solid rgba(0,255,255,0.2);
+      color: var(--sub);
+      margin-top: 0.5rem;
+      letter-spacing: 0.06em;
     }
 
-    .group-team {
-      padding: 0.5rem;
-      font-size: 0.85rem;
-      cursor: grab;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+    .tabs {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--sub);
+      padding: 8px 24px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      transition: 0.2s;
+    }
+    .tab.on {
+      background: var(--neon-cyan);
+      color: #000;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px var(--neon-cyan);
+    }
+
+    .view { display: none; padding: 2rem; }
+    .view.on { display: block; }
+
+    /* Groups Grid */
+    .gg {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .gc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .gh {
+      background: rgba(0, 255, 255, 0.1);
+      color: var(--neon-cyan);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .tr {
       display: flex;
       align-items: center;
-      background: transparent;
-      transition: all 0.2s;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
     }
-    .group-team:last-child {
-      border-bottom: none;
-    }
-    .group-team:active {
-      cursor: grabbing;
-    }
-    .group-team.dragging {
-      opacity: 0.5;
-      background: rgba(255,255,255,0.1);
-    }
-
-    .team-seed {
-      width: 20px;
-      font-weight: bold;
-      margin-right: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      text-align: center;
-    }
-
-    .seed-1 .team-seed { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
-    .seed-2 .team-seed { color: var(--neon-cyan); text-shadow: 0 0 5px var(--neon-cyan); }
-    .seed-3 .team-seed { color: var(--neon-yellow); }
-    .seed-4 .team-seed { color: var(--neon-red); opacity: 0.6; }
-
-    .seed-1 { border-left: 3px solid var(--neon-green); }
-    .seed-2 { border-left: 3px solid var(--neon-cyan); }
-    .seed-3 { border-left: 3px solid var(--neon-yellow); cursor: pointer !important; }
-    .seed-4 { border-left: 3px solid var(--neon-red); opacity: 0.5; }
-
-    .seed-3:hover {
-      background: rgba(255, 234, 0, 0.1);
-    }
-    .seed-3.selected-third {
-      background: rgba(255, 234, 0, 0.2);
-      box-shadow: inset 0 0 10px rgba(255,234,0,0.3);
-      text-shadow: 0 0 5px var(--neon-yellow);
-    }
-
-    /* Match Styling */
-    .bracket-match {
-      background: var(--glass-bg);
-      border: 1px solid rgba(0,255,255,0.2);
-      border-radius: 6px;
-      overflow: hidden;
-      position: relative;
-      transition: all 0.3s ease;
-    }
-    .bracket-match:hover {
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 15px rgba(0,255,255,0.2);
-    }
+    .tr:last-child { border-bottom: none; }
     
-    .match-team {
-      padding: 0.6rem;
-      font-size: 0.85rem;
-      cursor: pointer;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      transition: all 0.2s;
-      display: flex;
-      justify-content: space-between;
-    }
-    .match-team:last-child { border-bottom: none; }
-    .match-team:hover { background: rgba(0,255,255,0.1); }
+    .rk { font-size: 0.7rem; font-weight: 700; color: var(--sub); width: 28px; }
+    .rk.g { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
+    .rk.s { color: var(--neon-yellow); }
     
-    .match-team.winner {
-      color: var(--neon-green);
-      text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
-      font-weight: bold;
-    }
-    .match-team.loser {
-      color: #555;
-      text-decoration: line-through;
-    }
+    .fl { font-size: 1.2rem; line-height: 1; }
+    .nm { flex: 1; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     
-    .match-seed {
-      font-size: 0.7rem;
-      color: var(--neon-cyan);
-      opacity: 0.7;
-    }
-
-    .controls {
-      text-align: center;
-      margin-top: 3rem;
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-    }
-
-    .neon-btn {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: bold;
-      text-transform: uppercase;
-      padding: 0.8rem 1.5rem;
+    .arr {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--sub);
+      width: 22px;
+      height: 22px;
       border-radius: 4px;
       cursor: pointer;
-      transition: all 0.3s;
-      letter-spacing: 1px;
+      font-size: 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.15s;
     }
+    .arr:hover:not(:disabled) { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+    .arr:disabled { opacity: 0.1; cursor: default; }
 
-    .neon-btn-primary {
-      background: transparent;
-      color: var(--neon-pink);
-      border: 2px solid var(--neon-pink);
-      box-shadow: 0 0 10px rgba(255,0,255,0.3), inset 0 0 10px rgba(255,0,255,0.3);
+    /* Thirds Panel */
+    .tp {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto 2rem;
     }
-    .neon-btn-primary:hover:not(:disabled) {
-      background: var(--neon-pink);
-      color: #000;
-      box-shadow: 0 0 20px var(--neon-pink), inset 0 0 10px var(--neon-pink);
+    .tph { font-size: 1rem; font-weight: 700; color: var(--neon-cyan); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .tps { font-size: 0.8rem; color: var(--sub); margin-bottom: 1rem; }
+    .tgrid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tc {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: 0.15s;
     }
-    .neon-btn-primary:disabled {
-      border-color: #555;
-      color: #555;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
+    .tc.sel { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.1); color: var(--neon-green); box-shadow: 0 0 10px rgba(57,255,20,0.2); }
+    .tc.dis { opacity: 0.2; pointer-events: none; }
 
-    .neon-btn-primary.ready {
-      border-color: var(--neon-green);
-      color: var(--neon-green);
-      box-shadow: 0 0 15px rgba(57,255,20,0.5), inset 0 0 10px rgba(57,255,20,0.5);
-      animation: neon-pulse 1.5s infinite alternate;
-    }
-    .neon-btn-primary.ready:hover {
-      background: var(--neon-green);
-      color: #000;
-    }
+    /* Bracket Styling */
+    .bwrap { overflow-x: auto; padding: 1rem 0; cursor: grab; }
+    .bwrap:active { cursor: grabbing; }
+    .bracket { display: flex; min-width: max-content; align-items: stretch; gap: 0; }
+    .bcol { display: flex; flex-direction: column; min-width: 200px; border-right: 1px solid var(--border); }
+    .bcol:last-child { border-right: none; }
+    .blbl { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; color: var(--neon-cyan); text-align: center; padding: 12px 8px; border-bottom: 1px solid var(--border); background: rgba(0,255,255,0.02); }
+    .bms { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; padding: 12px; gap: 8px; }
+    .bm { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+    .bt { display: flex; align-items: center; gap: 8px; padding: 8px 12px; cursor: pointer; min-height: 38px; transition: 0.15s; font-size: 0.9rem; }
+    .bt:hover:not(.e):not(.w) { background: rgba(0,255,255,0.05); }
+    .bt.w { background: rgba(57, 255, 20, 0.1); color: var(--neon-green); font-weight: 700; text-shadow: 0 0 8px var(--neon-green); border-left: 3px solid var(--neon-green); }
+    .bt.e { color: #333; font-style: italic; cursor: default; }
+    .bd { height: 1px; background: var(--border); }
+    .bf { font-size: 1.2rem; }
 
-    .neon-btn-secondary {
-      background: transparent;
-      color: var(--neon-cyan);
-      border: 1px solid var(--neon-cyan);
-    }
-    .neon-btn-secondary:hover {
-      background: rgba(0,255,255,0.1);
-      box-shadow: 0 0 10px rgba(0,255,255,0.4);
-    }
+    /* Champion */
+    .cc { display: flex; flex-direction: column; min-width: 240px; border-left: 2px solid var(--neon-pink); }
+    .cbox { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .cin { background: var(--card); border: 2px solid var(--neon-pink); border-radius: 12px; padding: 2.5rem 1.5rem; text-align: center; box-shadow: 0 0 30px rgba(255,0,255,0.1); }
+    .ctr { font-size: 4rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(255,255,0,0.3)); }
+    .cflag { font-size: 3rem; margin-bottom: 0.5rem; }
+    .cname { font-size: 1.2rem; font-weight: 800; color: var(--neon-pink); text-shadow: 0 0 10px var(--neon-pink); }
+    .ctbd { font-size: 0.9rem; color: var(--sub); line-height: 1.6; }
 
-    @keyframes neon-pulse {
-      from { box-shadow: 0 0 10px rgba(57,255,20,0.5), inset 0 0 5px rgba(57,255,20,0.5); }
-      to { box-shadow: 0 0 20px rgba(57,255,20,0.8), inset 0 0 10px rgba(57,255,20,0.8); }
+    .rbtn {
+      display: block;
+      margin: 2rem auto 0;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--sub);
+      padding: 10px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      transition: 0.2s;
     }
+    .rbtn:hover { border-color: var(--neon-red); color: var(--neon-red); box-shadow: 0 0 10px rgba(255,49,49,0.2); }
   </style>
 
-  <script>
-    const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-    const mockGroupsData = {
-      A: ['Mexico', 'South Africa', 'Jordan', 'Serbia'],
-      B: ['Canada', 'Bosnia', 'Qatar', 'Switzerland'],
-      C: ['Argentina', 'Senegal', 'Japan', 'Sweden'],
-      D: ['USA', 'Paraguay', 'Australia', 'Türkiye'],
-      E: ['France', 'Ecuador', 'Saudi Arabia', 'Ivory Coast'],
-      F: ['England', 'Morocco', 'Panama', 'Uzbekistan'],
-      G: ['Brazil', 'Egypt', 'Korea Rep', 'Norway'],
-      H: ['Spain', 'Uruguay', 'Algeria', 'Haiti'],
-      I: ['Portugal', 'Colombia', 'Ghana', 'IR Iran'],
-      J: ['Germany', 'DR Congo', 'New Zealand', 'Curaçao'],
-      K: ['Belgium', 'Chile', 'Tunisia', 'Iraq'],
-      L: ['Netherlands', 'Croatia', 'Mali', 'Costa Rica']
+  <script is:inline>
+    const G = {
+      A:[['Mexico','🇲🇽'],['South Africa','🇿🇦'],['South Korea','🇰🇷'],['Czechia','🇨🇿']],
+      B:[['Canada','🇨🇦'],['Switzerland','🇨🇭'],['Qatar','🇶🇦'],['Bosnia','🇧🇦']],
+      C:[['Brazil','🇧🇷'],['Morocco','🇲🇦'],['Haiti','🇭🇹'],['Scotland','🏴󠁧󠁢󠁳󠁤󠁴󠁿']],
+      D:[['USA','🇺🇸'],['Paraguay','🇵🇾'],['Australia','🇦🇺'],['Türkiye','🇹🇷']],
+      E:[['Germany','🇩🇪'],['Curaçao','🇨🇼'],['Ivory Coast','🇨🇮'],['Ecuador','🇪🇨']],
+      F:[['Netherlands','🇳🇱'],['Japan','🇯🇵'],['Sweden','🇸🇪'],['Tunisia','🇹🇳']],
+      G:[['Belgium','🇧🇪'],['Egypt','🇪🇬'],['Iran','🇮🇷'],['New Zealand','🇳🇿']],
+      H:[['Spain','🇪🇸'],['Cape Verde','🇨🇻'],['Saudi Arabia','🇸🇦'],['Uruguay','🇺🇾']],
+      I:[['France','🇫🇷'],['Senegal','🇸🇳'],['Norway','🇳🇴'],['Iraq','🇮🇶']],
+      J:[['Argentina','🇦🇷'],['Algeria','🇩🇿'],['Austria','🇦🇹'],['Jordan','🇯🇴']],
+      K:[['Portugal','🇵🇹'],['DR Congo','🇨🇩'],['Uzbekistan','🇺🇿'],['Colombia','🇨🇴']],
+      L:[['England','🏴󠁧󠁢󠁥󠁮󠁧󠁿'],['Croatia','🇭🇷'],['Ghana','🇬🇭'],['Panama','🇵🇦']],
     };
-
-    let groupState = {};
-    let selectedThirds = new Set();
-    let bracketGenerated = false;
-
-    // Fixed realistic R32 template mapping based on common configurations for 12 groups
-    const r32Mappings = [
-      { t1: '1A', t2: '3C/D/E' },
-      { t1: '2B', t2: '2F' },
-      { t1: '1C', t2: '3A/B/F' },
-      { t1: '2E', t2: '2I' },
-      { t1: '1E', t2: '3A/B/C/D/F' },
-      { t1: '1I', t2: '3C/D/E/F' },
-      { t1: '2A', t2: '2H' },
-      { t1: '1G', t2: '3A/E/H/I' },
-      { t1: '1K', t2: '3H/J/L' },
-      { t1: '2D', t2: '2J' },
-      { t1: '1D', t2: '3B/E/F/I/J' },
-      { t1: '1H', t2: '3J/K/L' },
-      { t1: '2C', t2: '2K' },
-      { t1: '1B', t2: '3E/F/G/I' },
-      { t1: '1F', t2: '2L' },
-      { t1: '1J', t2: '2G' }
+    const GK = Object.keys(G);
+    const RDS = ['R32','R16','QF','SF','Final'];
+    const R32S = [
+      [['w','A'],['r','B']],[['w','C'],['r','D']],
+      [['w','E'],['r','F']],[['w','G'],['r','H']],
+      [['w','I'],['r','J']],[['w','K'],['r','L']],
+      [['w','B'],['r','A']],[['w','D'],['r','C']],
+      [['w','F'],['r','E']],[['w','H'],['r','G']],
+      [['w','J'],['r','I']],[['w','L'],['r','K']],
+      [['t',0],['t',1]],[['t',2],['t',3]],
+      [['t',4],['t',5]],[['t',6],['t',7]],
     ];
 
-    const rounds = {
-      r32: { count: 16, next: 'r16' },
-      r16: { count: 8, next: 'qf' },
-      qf: { count: 4, next: 'sf' },
-      sf: { count: 2, next: 'final' },
-      final: { count: 1, next: null }
-    };
+    let S = { rank: Object.fromEntries(GK.map(g => [g, [0,1,2,3]])), third: [], ko: {} };
+    
+    const sv = () => { try { localStorage.setItem('wc26_state', JSON.stringify(S)) } catch(e) {} };
+    const load = () => { try { const d = JSON.parse(localStorage.getItem('wc26_state')); if(d && d.rank) S = d; } catch(e) {} };
+    const gt = (g, p) => G[g][S.rank[g][p]];
 
-    function initGroupsState() {
-      groupLetters.forEach(letter => {
-        groupState[letter] = [...mockGroupsData[letter]];
-      });
-      selectedThirds.clear();
-      bracketGenerated = false;
+    function r32t(mi, si) {
+      const [type, ref] = R32S[mi][si];
+      if(type==='w') return gt(ref, 0);
+      if(type==='r') return gt(ref, 1);
+      if(type==='t') { const g2 = S.third[ref]; return g2 ? gt(g2, 2) : null; }
+      return null;
+    }
+    
+    function mteams(round, mi) {
+      if(round === 'R32') return [r32t(mi, 0), r32t(mi, 1)];
+      const prev = RDS[RDS.indexOf(round) - 1];
+      return [S.ko[`${prev}_${mi*2}`] || null, S.ko[`${prev}_${mi*2+1}`] || null];
+    }
+    
+    function advance(round, mi, team) {
+      S.ko[`${round}_${mi}`] = team;
+      let m = mi;
+      RDS.slice(RDS.indexOf(round) + 1).forEach(r => { m = Math.floor(m / 2); delete S.ko[`${r}_${m}`]; });
+      sv(); renderKO();
+    }
+    
+    function mvt(g, idx, dir) {
+      const r = S.rank[g], ni = idx + dir;
+      if(ni < 0 || ni > 3) return;
+      [r[idx], r[ni]] = [r[ni], r[idx]];
+      S.ko = {}; sv(); renderGroups();
+    }
+    
+    function tog3(g) {
+      if(S.third.includes(g)) S.third = S.third.filter(x => x !== g);
+      else { if(S.third.length >= 8) return; S.third.push(g); }
+      S.ko = {}; sv(); renderKO();
+    }
+
+    function sw(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+      document.getElementById(`${viewId}-view`).classList.add('on');
+      document.getElementById(viewId === 'groups' ? 'tg-btn' : 'tk-btn').classList.add('on');
+      if(viewId === 'ko') renderKO();
+    }
+
+    function resetAll() {
+      if(!confirm('Reset all predictions?')) return;
+      S = { rank: Object.fromEntries(GK.map(g => [g, [0,1,2,3]])), third: [], ko: {} };
+      sv(); renderGroups();
+      if(document.getElementById('ko-view').classList.contains('on')) renderKO();
     }
 
     function renderGroups() {
-      const container = document.getElementById('groups-container');
-      // keep the header
-      container.innerHTML = '<h3 class="round-title">Group Stage</h3>';
-
-      groupLetters.forEach(letter => {
-        const gDiv = document.createElement('div');
-        gDiv.className = 'group-card';
-        
-        const header = document.createElement('div');
-        header.className = 'group-header';
-        header.innerText = `Group ${letter}`;
-        gDiv.appendChild(header);
-
-        groupState[letter].forEach((team, index) => {
-          const seed = index + 1;
-          const tDiv = document.createElement('div');
-          tDiv.className = `group-team seed-${seed}`;
-          tDiv.draggable = !bracketGenerated;
-          tDiv.dataset.group = letter;
-          tDiv.dataset.team = team;
-          
-          if (seed === 3 && selectedThirds.has(team)) {
-            tDiv.classList.add('selected-third');
-          }
-
-          tDiv.innerHTML = `
-            <span class="team-seed">${seed}</span>
-            <span class="team-name">${team}</span>
-          `;
-
-          // Drag events
-          tDiv.addEventListener('dragstart', (e) => {
-            if (bracketGenerated) return;
-            e.dataTransfer.setData('text/plain', JSON.stringify({ group: letter, team: team, index: index }));
-            tDiv.classList.add('dragging');
-          });
-          
-          tDiv.addEventListener('dragend', () => {
-            tDiv.classList.remove('dragging');
-          });
-
-          // Drop events
-          tDiv.addEventListener('dragover', (e) => {
-            e.preventDefault();
-          });
-
-          tDiv.addEventListener('drop', (e) => {
-            e.preventDefault();
-            if (bracketGenerated) return;
-            
-            const dataStr = e.dataTransfer.getData('text/plain');
-            if (!dataStr) return;
-            
-            const data = JSON.parse(dataStr);
-            if (data.group === letter) {
-              const draggedIndex = data.index;
-              const targetIndex = index;
-              
-              // Swap in state
-              const arr = groupState[letter];
-              const temp = arr[draggedIndex];
-              arr[draggedIndex] = arr[targetIndex];
-              arr[targetIndex] = temp;
-              
-              // Remove third-place selections if they moved out of 3rd
-              if (draggedIndex === 2 && targetIndex !== 2) selectedThirds.delete(arr[targetIndex]);
-              if (targetIndex === 2 && draggedIndex !== 2) selectedThirds.delete(arr[draggedIndex]);
-
-              renderGroups();
-              updateGenerateBtn();
-            }
-          });
-
-          // Click for third place selection
-          if (seed === 3) {
-            tDiv.addEventListener('click', () => {
-              if (bracketGenerated) return;
-              if (selectedThirds.has(team)) {
-                selectedThirds.delete(team);
-              } else {
-                if (selectedThirds.size >= 8) {
-                  alert('You have already selected 8 third-place teams.');
-                  return;
-                }
-                selectedThirds.add(team);
-              }
-              renderGroups();
-              updateGenerateBtn();
-            });
-          }
-
-          gDiv.appendChild(tDiv);
-        });
-        
-        container.appendChild(gDiv);
-      });
+      const rl = ['1ST','2ND','3RD','4TH'], rc = ['g','s','',''];
+      document.getElementById('groups-view').innerHTML = `
+        <div class="gg">${GK.map(g => `
+          <div class="gc">
+            <div class="gh">GROUP ${g}</div>
+            ${S.rank[g].map((ti, pos) => {
+              const [nm, fl] = G[g][ti];
+              return `<div class="tr">
+                <span class="rk ${rc[pos]}">${rl[pos]}</span>
+                <span class="fl">${fl}</span>
+                <span class="nm">${nm}</span>
+                <button class="arr" onclick="mvt('${g}',${pos},-1)"${pos===0?' disabled':''}>▲</button>
+                <button class="arr" onclick="mvt('${g}',${pos},1)"${pos===3?' disabled':''}>▼</button>
+              </div>`;
+            }).join('')}
+          </div>`).join('')}
+        </div>
+        <button class="rbtn" onclick="resetAll()">↺ Reset All Predictions</button>`;
     }
 
-    function updateGenerateBtn() {
-      const btn = document.getElementById('generate-bracket');
-      const totalSelected = 24 + selectedThirds.size; // 24 = top 2 from 12 groups
-      btn.innerText = `Generate Bracket (${totalSelected}/32)`;
-      
-      if (selectedThirds.size === 8) {
-        btn.classList.add('ready');
-        btn.disabled = false;
-        btn.innerText = 'Launch Bracket';
-      } else {
-        btn.classList.remove('ready');
-        btn.disabled = true;
-      }
-    }
+    function renderKO() {
+      const thirds = GK.map(g => ({ g, t: gt(g, 2) }));
+      const tpanel = `<div class="tp">
+        <div class="tph">THIRD-PLACE QUALIFIERS</div>
+        <div class="tps">Select the 8 third-place teams that advance to the Round of 32 · ${S.third.length}/8 selected</div>
+        <div class="tgrid">${thirds.map(({ g, t }) => {
+          const sel = S.third.includes(g), dis = !sel && S.third.length >= 8;
+          return `<div class="tc${sel ? ' sel' : ''}${dis ? ' dis' : ''}" onclick="tog3('${g}')">
+            ${t[1]} Grp ${g} · ${t[0]}</div>`;
+        }).join('')}</div></div>`;
 
-    function createMatchNode(id, roundName) {
-      const matchDiv = document.createElement('div');
-      matchDiv.className = 'bracket-match';
-      matchDiv.id = `match-${id}`;
-      matchDiv.dataset.round = roundName;
+      const rcounts = [16, 8, 4, 2, 1];
+      const rlbls = ['ROUND OF 32','ROUND OF 16','QTR-FINALS','SEMI-FINALS','FINAL'];
 
-      const t1 = document.createElement('div');
-      t1.className = 'match-team t1';
-      t1.innerHTML = `<span class="name">TBD</span><span class="match-seed"></span>`;
-      t1.onclick = () => advanceTeam(matchDiv, 1);
-
-      const t2 = document.createElement('div');
-      t2.className = 'match-team t2';
-      t2.innerHTML = `<span class="name">TBD</span><span class="match-seed"></span>`;
-      t2.onclick = () => advanceTeam(matchDiv, 2);
-
-      matchDiv.appendChild(t1);
-      matchDiv.appendChild(t2);
-      return matchDiv;
-    }
-
-    function initEmptyBracket() {
-      let globalMatchId = 1;
-      Object.keys(rounds).forEach(roundKey => {
-        const container = document.getElementById(`${roundKey}-container`);
-        // clear existing
-        container.innerHTML = `<h3 class="round-title">${container.querySelector('.round-title').innerText}</h3>`;
-        for (let i = 0; i < rounds[roundKey].count; i++) {
-          const m = createMatchNode(globalMatchId++, roundKey);
-          container.appendChild(m);
-        }
-      });
-    }
-
-    function advanceTeam(currentMatchDiv, slotIndex) {
-      if (!bracketGenerated) return;
-
-      const t1Div = currentMatchDiv.querySelector('.t1');
-      const t2Div = currentMatchDiv.querySelector('.t2');
-      const team1Name = t1Div.querySelector('.name').innerText;
-      const team2Name = t2Div.querySelector('.name').innerText;
-      
-      if (team1Name === 'TBD' || team2Name === 'TBD') return;
-
-      const winnerName = slotIndex === 1 ? team1Name : team2Name;
-      const winnerSeed = slotIndex === 1 ? t1Div.querySelector('.match-seed').innerText : t2Div.querySelector('.match-seed').innerText;
-
-      // Update styling
-      t1Div.className = 'match-team t1 ' + (slotIndex === 1 ? 'winner' : 'loser');
-      t2Div.className = 'match-team t2 ' + (slotIndex === 2 ? 'winner' : 'loser');
-
-      const currentRound = currentMatchDiv.dataset.round;
-      const nextRound = rounds[currentRound].next;
-      
-      if (!nextRound) {
-        // Final
-        setTimeout(() => alert(`🏆 ${winnerName} wins the World Cup!`), 100);
-        return;
+      function trow(t, side, round, mi) {
+        if(!t) return `<div class="bt e">TBD</div>`;
+        const win = S.ko[`${round}_${mi}`];
+        const isW = win && win[0] === t[0] && win[1] === t[1];
+        return `<div class="bt${isW ? ' w' : ''}" data-r="${round}" data-mi="${mi}" data-s="${side}">
+          <span class="bf">${t[1]}</span><span>${t[0]}</span></div>`;
       }
 
-      const currentMatchesInRound = Array.from(document.querySelectorAll(`.${currentRound} .bracket-match`));
-      const matchIndex = currentMatchesInRound.indexOf(currentMatchDiv);
-      
-      const nextMatchIndex = Math.floor(matchIndex / 2);
-      const isTopSlot = matchIndex % 2 === 0;
+      const cols = RDS.map((round, ri) => {
+        const count = rcounts[ri];
+        const ms = Array.from({ length: count }, (_, mi) => {
+          const [ta, tb] = mteams(round, mi);
+          return `<div class="bm">${trow(ta, 'a', round, mi)}<div class="bd"></div>${trow(tb, 'b', round, mi)}</div>`;
+        }).join('');
+        return `<div class="bcol"><div class="blbl">${rlbls[ri]}</div><div class="bms">${ms}</div></div>`;
+      }).join('');
 
-      const nextMatchesInRound = Array.from(document.querySelectorAll(`.${nextRound} .bracket-match`));
-      const targetMatch = nextMatchesInRound[nextMatchIndex];
-      const targetSlot = isTopSlot ? targetMatch.querySelector('.t1') : targetMatch.querySelector('.t2');
+      const fw = S.ko['Final_0'];
+      const champ = `<div class="cc">
+        <div class="blbl">CHAMPION</div>
+        <div class="cbox"><div class="cin">
+          <div class="ctr">🏆</div>
+          ${fw ? `<div class="cflag">${fw[1]}</div><div class="cname">${fw[0]}</div>`
+            : `<div class="ctbd">Predict your<br>winner</div>`}
+        </div></div></div>`;
 
-      targetSlot.querySelector('.name').innerText = winnerName;
-      targetSlot.querySelector('.match-seed').innerText = winnerSeed;
-      targetSlot.className = `match-team ${isTopSlot ? 't1' : 't2'}`; // reset win/loss state
+      document.getElementById('ko-view').innerHTML = tpanel + `
+        <div class="bwrap"><div class="bracket">${cols}${champ}</div></div>
+        <button class="rbtn" onclick="resetAll()">↺ Reset All Predictions</button>`;
     }
 
-    document.getElementById('generate-bracket').addEventListener('click', () => {
-      if (selectedThirds.size !== 8) return;
-      
-      bracketGenerated = true;
-      renderGroups(); // re-render to disable drag and drop and clicks
-
-      // Extract qualified teams
-      const firsts = {};
-      const seconds = {};
-      const thirdsArr = [];
-      
-      groupLetters.forEach(letter => {
-        firsts[letter] = groupState[letter][0];
-        seconds[letter] = groupState[letter][1];
-        const third = groupState[letter][2];
-        if (selectedThirds.has(third)) {
-          thirdsArr.push({ team: third, letter: letter });
-        }
-      });
-
-      // Simple deterministic distribution for 3rd place teams
-      // Sort alphabetically by group
-      thirdsArr.sort((a,b) => a.letter.localeCompare(b.letter));
-      
-      const r32Matches = document.querySelectorAll('#r32-container .bracket-match');
-      
-      let thirdIndex = 0;
-      
-      r32Mappings.forEach((mapping, i) => {
-        const matchNode = r32Matches[i];
-        
-        // Resolve T1
-        let t1Name = 'TBD';
-        if (mapping.t1.startsWith('1')) t1Name = firsts[mapping.t1[1]];
-        else if (mapping.t1.startsWith('2')) t1Name = seconds[mapping.t1[1]];
-        
-        // Resolve T2
-        let t2Name = 'TBD';
-        let t2SeedDisplay = mapping.t2;
-        if (mapping.t2.startsWith('2')) {
-          t2Name = seconds[mapping.t2[1]];
-        } else if (mapping.t2.startsWith('3')) {
-          if (thirdIndex < thirdsArr.length) {
-            t2Name = thirdsArr[thirdIndex].team;
-            t2SeedDisplay = `3${thirdsArr[thirdIndex].letter}`;
-            thirdIndex++;
-          }
-        }
-
-        matchNode.querySelector('.t1 .name').innerText = t1Name;
-        matchNode.querySelector('.t1 .match-seed').innerText = mapping.t1;
-        matchNode.querySelector('.t2 .name').innerText = t2Name;
-        matchNode.querySelector('.t2 .match-seed').innerText = t2SeedDisplay;
-      });
-
-      const btn = document.getElementById('generate-bracket');
-      btn.innerText = 'Bracket Locked';
-      btn.classList.remove('ready');
-      btn.disabled = true;
-      
-      // Scroll bracket into view
-      document.getElementById('bracket-board').scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    // Event Delegation for advance
+    document.addEventListener('click', e => {
+      const bt = e.target.closest('.bt');
+      if(!bt || bt.classList.contains('e')) return;
+      const { r, mi, s } = bt.dataset;
+      if(!r) return;
+      const [ta, tb] = mteams(r, parseInt(mi));
+      const team = s === 'a' ? ta : tb;
+      if(team) advance(r, parseInt(mi), team);
     });
 
-    document.getElementById('reset-bracket').addEventListener('click', () => {
-      initGroupsState();
-      renderGroups();
-      initEmptyBracket();
-      updateGenerateBtn();
-    });
+    // Tab Listeners
+    document.getElementById('tg-btn').onclick = () => sw('groups');
+    document.getElementById('tk-btn').onclick = () => sw('ko');
 
-    // Boot
-    initGroupsState();
+    // Init
+    load();
     renderGroups();
-    initEmptyBracket();
-    updateGenerateBtn();
   </script>
 </WorldCupLayout>
