@@ -52,6 +52,15 @@ const currentPath = Astro.url.pathname;
     <meta name="twitter:image" content={imageUrl} />
     <meta name="theme-color" content="#120f0d" />
     <slot name="head" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W7QGKS85CP"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-W7QGKS85CP');
+    </script>
   </head>
   <body>
     <div class="page-shell">
