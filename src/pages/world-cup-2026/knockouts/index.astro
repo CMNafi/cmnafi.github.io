@@ -210,6 +210,28 @@ import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
       transition: 0.2s;
     }
     .rbtn:hover { border-color: var(--neon-red); color: var(--neon-red); box-shadow: 0 0 10px rgba(255,49,49,0.2); }
+
+    /* New Button Styles */
+    .neon-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 1px;
+    }
+    .neon-btn-primary {
+      background: var(--neon-cyan);
+      color: #000;
+      border: none;
+      box-shadow: 0 0 15px var(--neon-cyan);
+    }
+    .neon-btn-primary:hover {
+      box-shadow: 0 0 25px var(--neon-cyan);
+      transform: translateY(-2px);
+    }
   </style>
 
   <script is:inline>
@@ -230,14 +252,14 @@ import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
     const GK = Object.keys(G);
     const RDS = ['R32','R16','QF','SF','Final'];
     const R32S = [
-      [['w','A'],['r','B']],[['w','C'],['r','D']],
-      [['w','E'],['r','F']],[['w','G'],['r','H']],
-      [['w','I'],['r','J']],[['w','K'],['r','L']],
-      [['w','B'],['r','A']],[['w','D'],['r','C']],
-      [['w','F'],['r','E']],[['w','H'],['r','G']],
-      [['w','J'],['r','I']],[['w','L'],['r','K']],
-      [['t',0],['t',1]],[['t',2],['t',3]],
-      [['t',4],['t',5]],[['t',6],['t',7]],
+      [['w','A'],['t',0]], [['r','A'],['r','H']],
+      [['w','B'],['t',1]], [['r','B'],['r','F']],
+      [['w','C'],['t',2]], [['r','C'],['r','K']],
+      [['w','D'],['t',3]], [['r','D'],['r','J']],
+      [['w','E'],['t',4]], [['r','E'],['r','I']],
+      [['w','F'],['r','L']], [['w','G'],['t',5]],
+      [['w','H'],['t',6]], [['w','I'],['t',7]],
+      [['w','J'],['r','G']], [['w','K'],['w','L']]
     ];
 
     let S = { rank: Object.fromEntries(GK.map(g => [g, [0,1,2,3]])), third: [], ko: {} };
@@ -295,6 +317,13 @@ import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
       if(document.getElementById('ko-view').classList.contains('on')) renderKO();
     }
 
+    function saveAndContinue() {
+      sv();
+      sw('ko');
+      // Scroll to top of knockout view
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function renderGroups() {
       const rl = ['1ST','2ND','3RD','4TH'], rc = ['g','s','',''];
       document.getElementById('groups-view').innerHTML = `
@@ -313,7 +342,10 @@ import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
             }).join('')}
           </div>`).join('')}
         </div>
-        <button class="rbtn" onclick="resetAll()">↺ Reset All Predictions</button>`;
+        <div class="controls-footer" style="text-align: center; margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
+          <button class="neon-btn neon-btn-primary" onclick="saveAndContinue()">Save & Continue to Knockouts →</button>
+          <button class="rbtn" onclick="resetAll()" style="margin: 0;">↺ Reset All</button>
+        </div>`;
     }
 
     function renderKO() {
