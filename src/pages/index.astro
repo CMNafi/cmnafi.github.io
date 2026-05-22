@@ -190,6 +190,64 @@ try {
 
     <!-- Sector Divider -->
     <div class="sector-divider">
+      <span class="sector-divider-label">[ SECTOR 2B // CAIA.TELEMETRY ]</span>
+      <span class="sector-divider-dash"></span>
+    </div>
+
+    <!-- Promoted Specimen: CAIA Corner -->
+    <section class="caia-corner-section">
+      <div class="section-label-row">
+        <span class="section-label">ALTERNATIVE PORTFOLIO DEPLOYMENT</span>
+        <div class="spec-status">
+          <span class="status-indicator brewing pulsing-indicator" style="background-color: var(--caia-accent-main); box-shadow: 0 0 8px var(--caia-accent-main);"></span>
+          <span class="status-text monospace" style="color: var(--caia-accent-main);">[ ANALYSIS ACTIVE ]</span>
+        </div>
+      </div>
+      
+      <div class="material-card caia-promoted">
+        <div class="pedestal-content">
+          <div class="pedestal-left">
+            <span class="pedestal-category monospace" style="color: var(--caia-highlight-main);">FINANCIAL ALTERNATIVES</span>
+            <h2 class="pedestal-title scramble-header" data-text="CAIA Corner Portal">
+              <a href="/caia">
+                CAIA Corner Portal
+              </a>
+            </h2>
+            <p class="pedestal-summary">
+              A structured, exam-aligned study tool and public knowledge hub for alternative investments. Deconstructing hedge funds, private equity, private debt, real assets, and portfolio allocation models.
+            </p>
+            <div class="pedestal-actions" style="margin-top: 1.5rem;">
+              <a href="/caia" class="milled-btn milled-btn-caia">
+                EXPLORE CAIA KNOWLEDGE <span class="arrow">→</span>
+              </a>
+            </div>
+          </div>
+          
+          <div class="pedestal-right caia-visualizer-column">
+            <!-- Dynamic Alternative Frontier Visualizer -->
+            <div class="frontier-visualizer-container">
+              <span class="spec-label">ALTERNATIVE FRONTIER MATRIX</span>
+              <div class="frontier-canvas-wrapper">
+                <canvas id="frontier-canvas"></canvas>
+              </div>
+              <div class="frontier-telemetry monospace">
+                <div class="telemetry-stat">
+                  <span class="lbl">DIVERSIFICATION COEFF</span>
+                  <span class="val" id="caia-telemetry-coef">ρ = 0.28</span>
+                </div>
+                <div class="telemetry-stat">
+                  <span class="lbl">SHARPE RATIO</span>
+                  <span class="val" id="caia-telemetry-sharpe">SR = 1.42</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sector Divider -->
+    <div class="sector-divider">
       <span class="sector-divider-label">[ SECTOR 3 // CHAMBERS ]</span>
       <span class="sector-divider-dash"></span>
     </div>
@@ -290,6 +348,10 @@ try {
 
 <style>
   /* --- PREMIUM JONY IVE STYLING --- */
+  :root {
+    --caia-accent-main: #7AAE99;
+    --caia-highlight-main: #D4A857;
+  }
 
   /* Monogram & Breath Dot */
   .m-breath-dot {
@@ -1244,6 +1306,73 @@ try {
     background-color: transparent;
     border: 1px solid var(--accent);
   }
+
+  /* Promoted CAIA Corner Card */
+  .caia-corner-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    position: relative;
+    z-index: 5;
+  }
+  .caia-promoted {
+    padding: 3rem;
+    min-height: 320px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .caia-promoted:hover {
+    border-color: var(--caia-accent-main) !important;
+    box-shadow: 0 0 30px rgba(122, 174, 153, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.02) !important;
+  }
+  .caia-visualizer-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid rgba(255, 255, 255, 0.04);
+    padding-left: 3rem;
+  }
+  .frontier-visualizer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 100%;
+  }
+  .frontier-canvas-wrapper {
+    width: 100%;
+    height: 160px;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .frontier-canvas-wrapper canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .frontier-telemetry {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.3);
+    border-top: 1px dashed rgba(255, 255, 255, 0.04);
+    padding-top: 0.8rem;
+    margin-top: 0.2rem;
+  }
+  .frontier-telemetry .telemetry-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .frontier-telemetry .val {
+    color: var(--caia-highlight-main);
+    font-weight: 500;
+  }
+  .milled-btn-caia:hover {
+    border-color: var(--caia-accent-main) !important;
+    color: var(--caia-accent-main) !important;
+  }
 </style>
 
 <script>
@@ -1522,6 +1651,7 @@ try {
       { selector: '.intro-section', coord: '25.6279° N' },
       { selector: '.pedestal-section', coord: '31.6536° N' },
       { selector: '.world-cup-section', coord: '31.6536° N' },
+      { selector: '.caia-corner-section', coord: '38.9072° N' },
       { selector: '.showroom-grid-section', coord: '43.3036° N' },
       { selector: '.latest-log-section', coord: '27.9506° N' },
       { selector: '.showroom-footer', coord: '00.0000° N' }
@@ -1589,6 +1719,205 @@ try {
       window.removeEventListener('scroll', updateScroll);
       clearTimeout(flashTimeout);
     }, { once: true });
+  }
+
+  // CAIA Portfolio Frontier canvas visualization (finance & elegance)
+  function initCaiaFrontierCanvas() {
+    const canvas = document.getElementById('frontier-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let animationId = 0;
+
+    function resize() {
+      dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx!.scale(dpr, dpr);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Alternate asset classes
+    const assets = [
+      { name: 'PD', x: 0.15, y: 0.70, label: 'Private Debt', color: '#D4A857' },
+      { name: 'HF', x: 0.35, y: 0.52, label: 'Hedge Funds', color: '#7AAE99' },
+      { name: 'RA', x: 0.50, y: 0.60, label: 'Real Assets', color: '#7AAE99' },
+      { name: 'PE', x: 0.75, y: 0.28, label: 'Private Equity', color: '#D4A857' }
+    ];
+
+    let t = 0;
+
+    function draw() {
+      if (!ctx || !canvas) return;
+      ctx.clearRect(0, 0, width, height);
+      t += 0.008;
+
+      const paddingLeft = 35;
+      const paddingBottom = 25;
+      const paddingTop = 15;
+      const paddingRight = 15;
+
+      const graphWidth = width - paddingLeft - paddingRight;
+      const graphHeight = height - paddingTop - paddingBottom;
+
+      // Draw Grid Lines (Dashed, low contrast)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+
+      // Vertical lines
+      for (let i = 1; i <= 4; i++) {
+        const x = paddingLeft + (graphWidth * i) / 5;
+        ctx.beginPath();
+        ctx.moveTo(x, paddingTop);
+        ctx.lineTo(x, height - paddingBottom);
+        ctx.stroke();
+      }
+
+      // Horizontal lines
+      for (let i = 1; i <= 3; i++) {
+        const y = paddingTop + (graphHeight * i) / 4;
+        ctx.beginPath();
+        ctx.moveTo(paddingLeft, y);
+        ctx.lineTo(width - paddingRight, y);
+        ctx.stroke();
+      }
+
+      // Solid Axes
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(paddingLeft, paddingTop - 5);
+      ctx.lineTo(paddingLeft, height - paddingBottom);
+      ctx.lineTo(width - paddingRight + 5, height - paddingBottom);
+      ctx.stroke();
+
+      // Axis Labels
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.font = '7px var(--font-mono), monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText('RISK (σ)', width - paddingRight, height - paddingBottom + 12);
+      ctx.textAlign = 'left';
+      ctx.fillText('RETURN (E[r])', paddingLeft + 4, paddingTop - 4);
+
+      // 1. Efficient Frontier curve (glowing gold)
+      const startX = paddingLeft + graphWidth * 0.10;
+      const startY = paddingTop + graphHeight * 0.88;
+      
+      const cp1x = paddingLeft + graphWidth * 0.22;
+      const cp1y = paddingTop + graphHeight * 0.26;
+      
+      const cp2x = paddingLeft + graphWidth * 0.58;
+      const cp2y = paddingTop + graphHeight * 0.14;
+      
+      const endX = width - paddingRight - graphWidth * 0.05;
+      const endY = paddingTop + graphHeight * 0.08;
+
+      ctx.strokeStyle = 'rgba(212, 168, 87, 0.35)'; // caia-highlight-main
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+      ctx.stroke();
+
+      // 2. Capital Market Line (CML) - Tangency to Frontier (elegant green)
+      const rfY = paddingTop + graphHeight * 0.85; // risk free rate
+      const tangentX = paddingLeft + graphWidth * 0.40;
+      const tangentY = paddingTop + graphHeight * 0.28;
+      
+      ctx.strokeStyle = 'rgba(122, 174, 153, 0.2)'; // caia-accent-main
+      ctx.lineWidth = 0.85;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(paddingLeft, rfY);
+      
+      // Calculate tangency extension
+      const slope = (tangentY - rfY) / (tangentX - paddingLeft);
+      const endCmlX = paddingLeft + graphWidth * 0.85;
+      const endCmlY = rfY + slope * (graphWidth * 0.85);
+      ctx.lineTo(endCmlX, endCmlY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // risk free rate text
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.font = '6px var(--font-mono), monospace';
+      ctx.fillText('Rf (5%)', paddingLeft - 30, rfY + 2);
+
+      // 3. Asset Dots
+      assets.forEach((asset, idx) => {
+        // slow orbital wobble for alternative assets simulation
+        const angle = t * 1.2 + idx * (Math.PI / 2);
+        const offsetX = Math.cos(angle) * 2;
+        const offsetY = Math.sin(angle) * 2;
+
+        const px = paddingLeft + graphWidth * asset.x + offsetX;
+        const py = paddingTop + graphHeight * asset.y + offsetY;
+
+        // dot border glow
+        ctx.fillStyle = `${asset.color}18`;
+        ctx.beginPath();
+        ctx.arc(px, py, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // solid dot
+        ctx.fillStyle = asset.color;
+        ctx.beginPath();
+        ctx.arc(px, py, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label text
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+        ctx.font = '7px var(--font-mono), monospace';
+        ctx.fillText(asset.name, px + 5, py + 2.5);
+      });
+
+      // 4. Tangency Optimal Portfolio Dot M*
+      const pulseRadius = 3.5 + Math.sin(t * 4) * 0.8;
+      ctx.strokeStyle = '#7AAE99';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(tangentX, tangentY, pulseRadius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#7AAE99';
+      ctx.beginPath();
+      ctx.arc(tangentX, tangentY, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.font = '6.5px var(--font-mono), monospace';
+      ctx.fillText('PORTFOLIO M*', tangentX + 7, tangentY - 3);
+
+      // Fluctuate display values slightly
+      const coefEl = document.getElementById('caia-telemetry-coef');
+      const sharpeEl = document.getElementById('caia-telemetry-sharpe');
+      if (coefEl && sharpeEl && Math.random() < 0.03) {
+        const coefVal = (0.28 + Math.sin(t) * 0.008).toFixed(2);
+        const sharpeVal = (1.42 + Math.cos(t) * 0.009).toFixed(2);
+        coefEl.textContent = `ρ = ${coefVal}`;
+        sharpeEl.textContent = `SR = ${sharpeVal}`;
+      }
+
+      animationId = requestAnimationFrame(draw);
+    }
+
+    animationId = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resize);
+    };
   }
 
   // Subliminal ambient flow canvas
@@ -1690,12 +2019,14 @@ try {
     initStatsRollup();
     initWorldCupCountdown();
     const cleanupCanvas = initTelemetryFlowCanvas();
+    const cleanupCaia = initCaiaFrontierCanvas();
     
     const container = document.querySelector('.showroom-container');
     if (container) container.classList.add('loaded');
     
     document.addEventListener('astro:before-swap', () => {
       if (cleanupCanvas) cleanupCanvas();
+      if (cleanupCaia) cleanupCaia();
     }, { once: true });
   }
 
