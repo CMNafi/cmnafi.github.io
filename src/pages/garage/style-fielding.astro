@@ -1,0 +1,1307 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Fielding Style Playbook" hideHeader={true}>
+  <div class="captains-detail-viewport">
+    
+    <!-- Header Navigation -->
+    <nav class="paddock-override-nav">
+      <a href="/garage" class="return-wall">← GARAGE COMMAND</a>
+      <div class="nav-title">GARAGE LABS // FIELDING STYLE EXPLORER</div>
+      <div class="telemetry-pill">
+        <span class="pulse-dot"></span>
+        <span class="pill-label">PLAYBOOK SCAN ACTIVE</span>
+      </div>
+    </nav>
+
+    <!-- Page Title & Overview Intro -->
+    <header class="playbook-intro-header">
+      <h1 class="playbook-main-title">CRICKET FIELDING VARIATIONS & STYLES</h1>
+      <p class="playbook-subtitle">
+        Explore how elite captains manipulate the 11-man field across match variations. Move the toggle slider at the bottom to transition seamlessly between standard strategies.
+      </p>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="playbook-grid-container">
+      
+      <!-- Left Column: Interactive Fielding Turf Simulator -->
+      <section class="fielding-radar-sandbox">
+        <div class="field-outer-wrapper">
+          
+          <div class="field-aspect-container">
+            <div id="playbook-field-bounds" class="cricket-turf-field">
+              
+              <!-- SVG Background: Cricket Marking System -->
+              <svg viewBox="0 0 100 100" class="svg-field-markings" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <filter id="rope-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="0" dy="0.6" stdDeviation="0.4" flood-color="#000" flood-opacity="0.6" />
+                  </filter>
+                  <radialGradient id="turf-shading" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#2a5c2d" />
+                    <stop offset="70%" stop-color="#1e4321" />
+                    <stop offset="100%" stop-color="#142c16" />
+                  </radialGradient>
+                </defs>
+
+                <!-- Concentric Mowed Grass Rings -->
+                <circle cx="50" cy="50" r="48" fill="url(#turf-shading)" />
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                <circle cx="50" cy="50" r="34" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                <circle cx="50" cy="50" r="26" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                <circle cx="50" cy="50" r="18" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                <circle cx="50" cy="50" r="10" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                
+                <!-- White Boundary Rope -->
+                <circle cx="50" cy="50" r="46" fill="none" stroke="#ffffff" stroke-width="0.8" filter="url(#rope-shadow)" opacity="0.9" />
+                
+                <!-- White 30-Yard Circle (Dashed) -->
+                <circle cx="50" cy="50" r="28" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="0.5" stroke-dasharray="1.5 1" />
+                
+                <!-- Center Clay Wicket Pitch -->
+                <rect x="46.8" y="38" width="6.4" height="24" rx="0.3" fill="#dfc399" stroke="#b29b7a" stroke-width="0.25" />
+                
+                <!-- Crease Markings -->
+                <!-- Top Crease -->
+                <line x1="47.5" y1="41" x2="52.5" y2="41" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="45" y1="43" x2="55" y2="43" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="47.5" y1="41" x2="47.5" y2="39.5" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="52.5" y1="41" x2="52.5" y2="39.5" stroke="#ffffff" stroke-width="0.2" />
+                
+                <!-- Bottom Crease -->
+                <line x1="47.5" y1="59" x2="52.5" y2="59" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="45" y1="57" x2="55" y2="57" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="47.5" y1="59" x2="47.5" y2="60.5" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="52.5" y1="59" x2="52.5" y2="60.5" stroke="#ffffff" stroke-width="0.2" />
+                
+                <!-- Stumps Wickets -->
+                <circle cx="49.2" cy="41" r="0.25" fill="#583c18" />
+                <circle cx="50.0" cy="41" r="0.25" fill="#583c18" />
+                <circle cx="50.8" cy="41" r="0.25" fill="#583c18" />
+
+                <circle cx="49.2" cy="59" r="0.25" fill="#583c18" />
+                <circle cx="50.0" cy="59" r="0.25" fill="#583c18" />
+                <circle cx="50.8" cy="59" r="0.25" fill="#583c18" />
+
+                <!-- Pitch Center Mark -->
+                <circle cx="50" cy="50" r="0.3" fill="rgba(255,255,255,0.4)" />
+              </svg>
+
+              <!-- Background All-Positions Faint Grid (Overlay Map) -->
+              <div id="all-positions-grid-overlay" class="grid-overlay-container hidden-grid">
+                <!-- 41 Faint dots injected dynamically -->
+              </div>
+
+              <!-- Animated Player Tokens Active Layer -->
+              <div id="playbook-tokens-container" class="tokens-layer-container">
+                <!-- 11 Positioned tokens styled and animated in JS -->
+              </div>
+
+              <!-- Glassmorphic Tooltip -->
+              <div id="playbook-tooltip" class="playbook-tooltip hidden-tooltip"></div>
+
+            </div>
+          </div>
+
+          <!-- Quick Actions and Field Legend Bar -->
+          <div class="field-controls-hud">
+            <div class="hud-legend">
+              <span class="legend-item"><span class="legend-dot color-wk"></span> WICKET KEEPER</span>
+              <span class="legend-item"><span class="legend-dot color-bowler"></span> ACTIVE BOWLER</span>
+              <span class="legend-item"><span class="legend-dot color-fielder"></span> ACTIVE FIELDER</span>
+            </div>
+            <div class="circle-telemetry">
+              OUTSIDE 30YD CIRCLE: <span id="outside-circle-count" class="mono-value">0</span> / <span id="outside-circle-limit" class="mono-value">5</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Right Column: Interactive State Controls & Strategic Commentary -->
+      <section class="playbook-commentary-panel">
+        
+        <!-- Individual Variable Manual Switches -->
+        <div class="manual-toggles-card">
+          <h3 class="panel-section-title">⚡ VARIATION CONTROL PANEL</h3>
+          <div class="toggles-flex-grid">
+            
+            <!-- Strike Handedness Toggle Button -->
+            <div class="toggle-control-item">
+              <span class="control-label">BATTER STRIKE</span>
+              <button id="playbook-handedness-toggle" class="hud-toggle-btn">
+                <span class="toggle-badge">RHB</span>
+                <span class="toggle-text">RIGHT-HANDED</span>
+              </button>
+            </div>
+
+            <!-- Powerplay Mode Toggle Button -->
+            <div class="toggle-control-item">
+              <span class="control-label">POWERPLAY STATE</span>
+              <button id="playbook-powerplay-toggle" class="hud-toggle-btn active-state">
+                <span class="toggle-text">POWERPLAY ACTIVE</span>
+              </button>
+            </div>
+
+            <!-- Preset Overlay Toggle Button -->
+            <div class="toggle-control-item">
+              <span class="control-label">POSITIONS GRID</span>
+              <button id="playbook-overlay-toggle" class="hud-toggle-btn">
+                <span class="toggle-text">SHOW ALL 41 POSITIONS</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Dynamic Strategic Commentary Card -->
+        <div class="strategy-details-card">
+          <div class="strategy-header-row">
+            <span id="current-stage-tag" class="strategy-tag">STAGE 1</span>
+            <h2 id="strategy-title" class="strategy-main-title">THE CLASSIC SLIP ATTACK</h2>
+          </div>
+          
+          <div class="strategy-telemetry-strip">
+            <div class="strip-item">
+              <span class="strip-label">PHASE:</span>
+              <span id="telemetry-phase" class="strip-val font-mono">POWERPLAY (OVERS 1-6)</span>
+            </div>
+            <div class="strip-item">
+              <span class="strip-label">STRIKE:</span>
+              <span id="telemetry-strike" class="strip-val font-mono">RHB</span>
+            </div>
+            <div class="strip-item">
+              <span class="strip-label">RING:</span>
+              <span id="telemetry-outside" class="strip-val font-mono">0 OUTSIDE</span>
+            </div>
+          </div>
+
+          <div class="strategy-body-block">
+            <h3 class="section-sub-title">TACTICAL MISSION ANALYSIS</h3>
+            <p id="strategy-explanation" class="strategy-paragraph">
+              During the initial 6 overs of a T20 match, powerplay restrictions allow a maximum of 2 fielders outside the 30-yard circle. In this aggressive configuration, the captain places 0 fielders outside, choosing instead to crowd the batter with 3 slips and a gully. This is designed to force edges from early movement of the new ball.
+            </p>
+          </div>
+
+          <!-- List of 11 Positions on Field -->
+          <div class="squad-positions-checklist">
+            <h3 class="section-sub-title">ACTIVE ROSTER POSITIONING Map</h3>
+            <div id="squad-positions-flex" class="squad-positions-grid">
+              <!-- Active positions injected here, click to flash on field -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Dynamic Transition Master Range Toggle Slider (Playbook Timeline) -->
+    <footer class="playbook-master-timeline">
+      <div class="timeline-slider-card">
+        <h3 class="timeline-card-title">🕹️ TIMELINE PRESET INTERACTION SLIDER</h3>
+        <div class="timeline-step-labels">
+          <div class="timeline-label active" data-step="1">
+            <span class="step-dot"></span>
+            <span class="step-title">1. SLIP ATTACK (PP)</span>
+          </div>
+          <div class="timeline-label" data-step="2">
+            <span class="step-dot"></span>
+            <span class="step-title">2. BALANCED RING</span>
+          </div>
+          <div class="timeline-label" data-step="3">
+            <span class="step-dot"></span>
+            <span class="step-title">3. LHB MIRROR</span>
+          </div>
+          <div class="timeline-label" data-step="4">
+            <span class="step-dot"></span>
+            <span class="step-title">4. DEATH SHIELD</span>
+          </div>
+        </div>
+        <div class="timeline-range-container">
+          <input type="range" id="playbook-range-slider" min="1" max="4" step="1" value="1" class="timeline-slider-element" />
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* --- Master Layout Scaffolding --- */
+  .captains-detail-viewport {
+    min-height: 100vh;
+    background: var(--surface-base, #0c0f0d);
+    display: flex;
+    flex-direction: column;
+    color: var(--ink-primary, #f5edf4);
+  }
+
+  .paddock-override-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--surface-line, rgba(255,255,255,0.06));
+    font-family: var(--font-mono), monospace;
+    z-index: 100;
+  }
+  .return-wall {
+    color: var(--ink-secondary, #9da29e);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .return-wall:hover {
+    color: var(--accent, #7dd3a0);
+  }
+  .nav-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-primary, #f5edf4);
+    font-weight: 600;
+  }
+  .telemetry-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(125, 211, 160, 0.08);
+    border: 1px solid rgba(125, 211, 160, 0.2);
+    padding: 0.35rem 0.6rem;
+    border-radius: 99px;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+  }
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent, #7dd3a0);
+    border-radius: 50%;
+    animation: breathing-pulse 2s infinite ease-in-out;
+  }
+  .pill-label {
+    color: var(--accent, #7dd3a0);
+    font-weight: 700;
+  }
+
+  @keyframes breathing-pulse {
+    0% { transform: scale(0.9); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 8px var(--accent, #7dd3a0); }
+    100% { transform: scale(0.9); opacity: 0.5; }
+  }
+
+  /* --- Intro Header --- */
+  .playbook-intro-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 2rem auto 1rem;
+    padding: 0 1rem;
+  }
+  .playbook-main-title {
+    font-family: var(--font-display), sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    letter-spacing: -0.02em;
+    color: var(--ink-primary, #f5edf4);
+    margin-bottom: 0.5rem;
+  }
+  .playbook-subtitle {
+    font-size: 0.95rem;
+    color: var(--ink-secondary, #9da29e);
+    line-height: 1.5;
+  }
+
+  /* --- Grid Workspace --- */
+  .playbook-grid-container {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 2rem;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 2rem 2rem;
+    flex: 1;
+    align-items: start;
+  }
+
+  @media (max-width: 1024px) {
+    .playbook-grid-container {
+      grid-template-columns: 1fr;
+      padding: 0 1rem 2rem;
+    }
+  }
+
+  /* --- Fielding Radar Sandbox --- */
+  .fielding-radar-sandbox {
+    background: var(--surface-raised, #101411);
+    border: 1px solid var(--surface-line, rgba(255,255,255,0.06));
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .field-outer-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .field-aspect-container {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* Perfect 1:1 Aspect ratio box */
+    border-radius: 50%;
+    background: #090b0a;
+    overflow: hidden;
+  }
+
+  .cricket-turf-field {
+    position: absolute;
+    inset: 0;
+  }
+
+  .svg-field-markings {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* --- Player Tokens Interactive Layer --- */
+  .tokens-layer-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: auto;
+    z-index: 20;
+  }
+
+  .player-token {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono), monospace;
+    transition: left 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    user-select: none;
+    z-index: 100;
+  }
+  .player-token.token-wk {
+    background: #f1c40f;
+    border: 2px solid #ffffff;
+    color: #0c0f0d;
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.6), 0 2px 4px rgba(0,0,0,0.5);
+  }
+  .player-token.token-bowler {
+    background: #e74c3c;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.6), 0 2px 4px rgba(0,0,0,0.5);
+  }
+  .player-token.token-fielder {
+    background: #f4ede4;
+    border: 2px solid #27ae60;
+    color: #2c3e50;
+    box-shadow: 0 0 8px rgba(39, 174, 96, 0.3), 0 2px 4px rgba(0,0,0,0.4);
+  }
+
+  .player-token:hover {
+    transform: translate(-50%, -50%) scale(1.15);
+    z-index: 300;
+  }
+  
+  .player-token.flash-glow {
+    animation: flash-player-neon 1s infinite alternate ease-in-out;
+    z-index: 500;
+  }
+  @keyframes flash-player-neon {
+    0% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 15px #7dd3a0, 0 0 30px #7dd3a0; border-color: #ffffff; }
+    100% { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 30px #27ae60, 0 0 50px #27ae60; border-color: #7dd3a0; }
+  }
+
+  /* HTML Player Name Labels */
+  .player-name-label {
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(12, 15, 13, 0.85);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    color: #f5edf4;
+    font-size: 8px;
+    font-weight: bold;
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono), monospace;
+    opacity: 0.8;
+    transition: opacity 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .player-token:hover .player-name-label {
+    opacity: 1;
+    background: #0c0f0d;
+    border-color: var(--accent, #7dd3a0);
+    box-shadow: 0 0 5px rgba(125, 211, 160, 0.2);
+  }
+
+  /* --- Background Position Grid Overlay --- */
+  .grid-overlay-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    transition: opacity 0.3s ease;
+  }
+  .grid-overlay-container.hidden-grid {
+    opacity: 0;
+  }
+
+  .grid-position-dot {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 45, 85, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono), monospace;
+    font-size: 0px;
+    color: transparent;
+  }
+  .grid-position-dot:hover {
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 45, 85, 0.8);
+    border-color: #ffffff;
+    font-size: 8px;
+    color: #ffffff;
+    font-weight: bold;
+    box-shadow: 0 0 10px #ff2d55;
+    z-index: 10;
+  }
+
+  /* --- HUD Telemetry --- */
+  .field-controls-hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(20, 24, 21, 0.4);
+    border: 1px solid var(--surface-line, rgba(255,255,255,0.06));
+    padding: 0.8rem 1.25rem;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: var(--font-mono), monospace;
+  }
+  .hud-legend {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--ink-secondary, #9da29e);
+    letter-spacing: 0.05em;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .legend-dot.color-wk { background: #f1c40f; border: 1px solid #fff; }
+  .legend-dot.color-bowler { background: #e74c3c; border: 1px solid #fff; }
+  .legend-dot.color-fielder { background: #f4ede4; border: 1px solid #27ae60; }
+  
+  .circle-telemetry {
+    color: var(--ink-secondary, #9da29e);
+    letter-spacing: 0.05em;
+  }
+  .mono-value {
+    color: var(--accent, #7dd3a0);
+    font-weight: bold;
+  }
+
+  /* --- Commentary Side Panel --- */
+  .playbook-commentary-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: 100%;
+  }
+
+  .manual-toggles-card {
+    background: var(--surface-raised, #101411);
+    border: 1px solid var(--surface-line, rgba(255,255,255,0.06));
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .panel-section-title {
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink-tertiary, #6c726e);
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--surface-line, rgba(255,255,255,0.06));
+    padding-bottom: 0.5rem;
+  }
+
+  .toggles-flex-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .toggle-control-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .control-label {
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    color: var(--ink-secondary, #9da29e);
+    letter-spacing: 0.05em;
+  }
+
+  .hud-toggle-btn {
+    background: rgba(20, 24, 21, 0.8);
+    border: 1px solid var(--surface-line, rgba(255,255,255,0.12));
+    border-radius: 6px;
+    padding: 0.5rem 0.8rem;
+    color: var(--ink-secondary, #9da29e);
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+  }
+  .hud-toggle-btn:hover {
+    border-color: var(--accent, #7dd3a0);
+    color: #ffffff;
+  }
+  .hud-toggle-btn.active-state {
+    background: rgba(125, 211, 160, 0.08);
+    border-color: var(--accent, #7dd3a0);
+    color: var(--accent, #7dd3a0);
+    box-shadow: 0 0 10px rgba(125, 211, 160, 0.15);
+  }
+
+  .toggle-badge {
+    background: var(--accent, #7dd3a0);
+    color: #0c0f0d;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 800;
+  }
+  .active-state .toggle-badge {
+    background: #e74c3c;
+    color: #ffffff;
+  }
+
+  /* --- Strategic Commentary Card --- */
+  .strategy-details-card {
+    background: var(--surface-raised, #101411);
+    border: 1px solid var(--surface-line, rgba(255,255,255,0.06));
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .strategy-header-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .strategy-tag {
+    background: var(--accent, #7dd3a0);
+    color: #0c0f0d;
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+  .strategy-main-title {
+    font-family: var(--font-display), sans-serif;
+    font-size: 1.4rem;
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .strategy-telemetry-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    background: rgba(20, 24, 21, 0.5);
+    border: 1px solid var(--surface-line, rgba(255,255,255,0.05));
+    border-radius: 6px;
+    padding: 0.6rem;
+  }
+  .strip-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .strip-label {
+    font-family: var(--font-mono), monospace;
+    font-size: 8px;
+    color: var(--ink-tertiary, #6c726e);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.15rem;
+  }
+  .strip-val {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--accent, #7dd3a0);
+  }
+
+  .strategy-body-block {
+    border-top: 1px solid var(--surface-line, rgba(255,255,255,0.06));
+    padding-top: 1rem;
+  }
+  .section-sub-title {
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink-tertiary, #6c726e);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  .strategy-paragraph {
+    font-size: 0.9rem;
+    color: var(--ink-secondary, #9da29e);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .squad-positions-checklist {
+    border-top: 1px solid var(--surface-line, rgba(255,255,255,0.06));
+    padding-top: 1rem;
+  }
+  .squad-positions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .position-item-btn {
+    background: rgba(20, 24, 21, 0.4);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px;
+    padding: 0.35rem 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--ink-secondary, #9da29e);
+    font-size: 9px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+  }
+  .position-item-btn:hover {
+    border-color: var(--accent, #7dd3a0);
+    color: #ffffff;
+    background: rgba(125, 211, 160, 0.04);
+  }
+  .pos-item-abbr {
+    font-family: var(--font-mono), monospace;
+    font-weight: bold;
+    color: var(--accent, #7dd3a0);
+  }
+  .pos-item-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 0.4rem;
+    flex: 1;
+  }
+
+  /* --- Timeline Footer Range Slider --- */
+  .playbook-master-timeline {
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 2rem 3rem;
+  }
+  @media (max-width: 1024px) {
+    .playbook-master-timeline {
+      padding: 0 1rem 2rem;
+    }
+  }
+
+  .timeline-slider-card {
+    background: var(--surface-raised, #101411);
+    border: 1px solid var(--surface-line, rgba(255,255,255,0.06));
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .timeline-card-title {
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink-tertiary, #6c726e);
+    letter-spacing: 0.15em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .timeline-step-labels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+    position: relative;
+  }
+  .timeline-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--ink-tertiary, #6c726e);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .timeline-label.active {
+    color: var(--accent, #7dd3a0);
+  }
+  
+  .step-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--surface-line, rgba(255,255,255,0.12));
+    border-radius: 50%;
+    border: 2px solid var(--surface-raised, #101411);
+    transition: all 0.3s;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
+  }
+  .timeline-label.active .step-dot {
+    background: var(--accent, #7dd3a0);
+    box-shadow: 0 0 8px var(--accent, #7dd3a0);
+    transform: scale(1.3);
+  }
+  .step-title {
+    font-family: var(--font-mono), monospace;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+  }
+
+  .timeline-range-container {
+    position: relative;
+    width: 100%;
+    margin-top: -0.85rem;
+    padding: 0 12%; /* Perfect spacing align with dots */
+    z-index: 10;
+  }
+  @media (max-width: 600px) {
+    .timeline-range-container {
+      padding: 0 8%;
+    }
+  }
+
+  /* Range input customization */
+  .timeline-slider-element {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--surface-line, rgba(255,255,255,0.12));
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  .timeline-slider-element::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent, #7dd3a0);
+    border: 4px solid var(--surface-raised, #101411);
+    box-shadow: 0 0 10px rgba(125, 211, 160, 0.8);
+    transition: transform 0.1s;
+  }
+  .timeline-slider-element::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+  .timeline-slider-element::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent, #7dd3a0);
+    border: 4px solid var(--surface-raised, #101411);
+    box-shadow: 0 0 10px rgba(125, 211, 160, 0.8);
+  }
+
+  /* --- Premium Tooltip style --- */
+  .playbook-tooltip {
+    position: absolute;
+    background: rgba(12, 15, 13, 0.95);
+    border: 1px solid var(--accent, #7dd3a0);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-family: var(--font-mono), monospace;
+    font-size: 9px;
+    color: #ffffff;
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5), 0 0 10px rgba(125, 211, 160, 0.15);
+    transition: opacity 0.15s;
+    transform: translate(-50%, -120%);
+  }
+  .playbook-tooltip.hidden-tooltip {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  function initPlaybook() {
+    const elBounds = document.getElementById('playbook-field-bounds');
+    if (!elBounds) return;
+
+    if (elBounds.dataset.initialized === 'true') return;
+    elBounds.dataset.initialized = 'true';
+
+    // 41 Preset Fielding Positions Coordinate Mappings
+    const fieldingPositions = [
+      { id: 'wk', name: 'Wicket Keeper', abbr: 'WK', x: 50, y: 65 },
+      { id: 'bowler', name: 'Bowler', abbr: 'BW', x: 50, y: 37.5 },
+      { id: 'slip1', name: 'First Slip', abbr: '1SL', x: 46, y: 63 },
+      { id: 'slip2', name: 'Second Slip', abbr: '2SL', x: 42, y: 61 },
+      { id: 'slip3', name: 'Third Slip', abbr: '3SL', x: 38, y: 59 },
+      { id: 'slip4', name: 'Fourth Slip', abbr: '4SL', x: 34, y: 57 },
+      { id: 'gully', name: 'Gully', abbr: 'GL', x: 35, y: 55 },
+      { id: 'fly_slip', name: 'Fly Slip', abbr: 'FSL', x: 43, y: 67 },
+      { id: 'leg_slip', name: 'Leg Slip', abbr: 'LSL', x: 54, y: 62 },
+      { id: 'leg_gully', name: 'Leg Gully', abbr: 'LGL', x: 62, y: 56 },
+      { id: 'silly_point', name: 'Silly Point', abbr: 'SPT', x: 43, y: 53 },
+      { id: 'point', name: 'Point', abbr: 'PT', x: 22, y: 52 },
+      { id: 'backward_point', name: 'Backward Point', abbr: 'BPT', x: 24, y: 56 },
+      { id: 'deep_point', name: 'Deep Point', abbr: 'DPT', x: 10, y: 50 },
+      { id: 'deep_backward_point', name: 'Deep Backward Point', abbr: 'DBP', x: 15, y: 68 },
+      { id: 'silly_cover', name: 'Silly Cover', abbr: 'SCV', x: 42, y: 47 },
+      { id: 'cover', name: 'Cover', abbr: 'CV', x: 27, y: 43 },
+      { id: 'sweeper_cover', name: 'Sweeper Cover', abbr: 'SWC', x: 14, y: 28 },
+      { id: 'deep_cover', name: 'Deep Cover', abbr: 'DCV', x: 12, y: 35 },
+      { id: 'extra_cover', name: 'Extra Cover', abbr: 'XCV', x: 33, y: 36 },
+      { id: 'deep_extra_cover', name: 'Deep Extra Cover', abbr: 'DXC', x: 18, y: 22 },
+      { id: 'silly_mid_off', name: 'Silly Mid-off', abbr: 'SMO', x: 46, y: 46 },
+      { id: 'mid_off', name: 'Mid-off', abbr: 'MFO', x: 42, y: 34 },
+      { id: 'long_off', name: 'Long-off', abbr: 'LOF', x: 35, y: 12 },
+      { id: 'silly_mid_on', name: 'Silly Mid-on', abbr: 'SMN', x: 54, y: 46 },
+      { id: 'mid_on', name: 'Mid-on', abbr: 'MON', x: 58, y: 34 },
+      { id: 'long_on', name: 'Long-on', abbr: 'LON', x: 65, y: 12 },
+      { id: 'short_mid_wicket', name: 'Short Mid-wicket', abbr: 'SMW', x: 58, y: 48 },
+      { id: 'mid_wicket', name: 'Mid-wicket', abbr: 'MW', x: 68, y: 42 },
+      { id: 'deep_mid_wicket', name: 'Deep Mid-wicket', abbr: 'DMW', x: 82, y: 35 },
+      { id: 'cow_corner', name: 'Cow Corner', abbr: 'CC', x: 74, y: 21 },
+      { id: 'short_leg', name: 'Short Leg', abbr: 'SLG', x: 57, y: 53 },
+      { id: 'square_leg', name: 'Square Leg', abbr: 'SQL', x: 75, y: 52 },
+      { id: 'deep_square_leg', name: 'Deep Square Leg', abbr: 'DSL', x: 90, y: 50 },
+      { id: 'backward_square_leg', name: 'Backward Square Leg', abbr: 'BSL', x: 73, y: 58 },
+      { id: 'deep_backward_square', name: 'Deep Backward Square Leg', abbr: 'DBS', x: 88, y: 61 },
+      { id: 'short_fine_leg', name: 'Short Fine Leg', abbr: 'SFL', x: 60, y: 65 },
+      { id: 'fine_leg', name: 'Fine Leg', abbr: 'FL', x: 68, y: 72 },
+      { id: 'deep_fine_leg', name: 'Deep Fine Leg', abbr: 'DFL', x: 78, y: 84 },
+      { id: 'third_man', name: 'Third Man', abbr: 'TM', x: 30, y: 72 },
+      { id: 'deep_third_man', name: 'Deep Third Man', abbr: 'DTM', x: 20, y: 84 }
+    ];
+
+    // Master playbooks steps variations
+    const playbookStages = {
+      1: {
+        title: 'THE CLASSIC SLIP ATTACK',
+        tag: 'STAGE 1',
+        phase: 'POWERPLAY (OVERS 1-6)',
+        isPowerplay: true,
+        batterHandedness: 'RHB',
+        positions: ['wk', 'bowler', 'slip1', 'slip2', 'slip3', 'gully', 'silly_point', 'point', 'cover', 'mid_wicket', 'mid_on'],
+        explanation: 'In the initial powerplay phase, restrictions limit the defense to a maximum of 2 fielders outside the 30-yard circle. Capturing early wickets is key. In this ultra-aggressive layout, the captain deploys 3 slips, a gully, and a silly point, leaving the outfield completely unprotected. It applies maximum psychological pressure and locks down catching angles near the bat.'
+      },
+      2: {
+        title: 'BALANCED MID-OVERS RING',
+        tag: 'STAGE 2',
+        phase: 'MID-OVERS (OVERS 7-15)',
+        isPowerplay: false,
+        batterHandedness: 'RHB',
+        positions: ['wk', 'bowler', 'slip1', 'point', 'cover', 'mid_off', 'mid_on', 'mid_wicket', 'square_leg', 'deep_cover', 'deep_mid_wicket'],
+        explanation: 'Once the powerplay ends, up to 5 fielders are allowed outside the 30-yard circle. This balanced mid-overs ring is the standard defensive blueprint. The slips are reduced to 1, and 2 boundary riders (Deep Cover, Deep Mid-wicket) are sent deep to protect the major batting hitting arcs, while the remaining 7 fielders form a restrictive ring to dry up singles.'
+      },
+      3: {
+        title: 'THE LEFT-HANDER TRAP',
+        tag: 'STAGE 3',
+        phase: 'MID-OVERS (OVERS 7-15)',
+        isPowerplay: false,
+        batterHandedness: 'LHB',
+        positions: ['wk', 'bowler', 'slip1', 'point', 'cover', 'mid_off', 'mid_on', 'mid_wicket', 'square_leg', 'deep_cover', 'deep_mid_wicket'],
+        explanation: 'A side change in the batter (LHB strike) triggers an instant horizontal mirror transition about the vertical pitch axis (x = 50). This visually showcases mirroring: the off-side fielders (Point, Cover, Deep Cover) glide seamlessly to the opposite side to form the LHB off-side ring, while the slip catcher slides to the left-hand slip angle, neutralizing the change of strike.'
+      },
+      4: {
+        title: 'DEATH OVERS SHIELD',
+        tag: 'STAGE 4',
+        phase: 'DEATH OVERS (OVERS 16-20)',
+        isPowerplay: false,
+        batterHandedness: 'RHB',
+        positions: ['wk', 'bowler', 'point', 'cover', 'mid_wicket', 'short_fine_leg', 'deep_cover', 'long_off', 'long_on', 'deep_mid_wicket', 'deep_fine_leg'],
+        explanation: 'During the final death overs, batters hit aggressively with high lofted shots. To minimize boundaries, the captain deploys the maximum allowed 5 boundary riders (Deep Cover, Long-off, Long-on, Deep Mid-wicket, Deep Fine Leg). The remaining fielders operate as a protection ring. Bowlers are instructed to bowl yorkers or wide-lines matching this layout.'
+      }
+    };
+
+    // State
+    const state = {
+      currentStage: 1,
+      batterHandedness: 'RHB',
+      isPowerplay: true,
+      showGrid: false
+    };
+
+    // DOM Caches
+    const elTokensContainer = document.getElementById('playbook-tokens-container');
+    const elGridOverlay = document.getElementById('all-positions-grid-overlay');
+    const elRangeSlider = document.getElementById('playbook-range-slider');
+    const elHandednessBtn = document.getElementById('playbook-handedness-toggle');
+    const elPowerplayBtn = document.getElementById('playbook-powerplay-toggle');
+    const elOverlayBtn = document.getElementById('playbook-overlay-toggle');
+    const elTooltip = document.getElementById('playbook-tooltip');
+
+    // Text DOMs
+    const elStageTag = document.getElementById('current-stage-tag');
+    const elStrategyTitle = document.getElementById('strategy-title');
+    const elTelePhase = document.getElementById('telemetry-phase');
+    const elTeleStrike = document.getElementById('telemetry-strike');
+    const elTeleOutside = document.getElementById('telemetry-outside');
+    const elExplanation = document.getElementById('strategy-explanation');
+    const elOutsideCount = document.getElementById('outside-circle-count');
+    const elOutsideLimit = document.getElementById('outside-circle-limit');
+    const elPositionsList = document.getElementById('squad-positions-flex');
+
+    // 1. Initial Position Overlay Grid
+    function renderPositionGrid() {
+      if (!elGridOverlay) return;
+      elGridOverlay.innerHTML = '';
+      fieldingPositions.forEach(pos => {
+        const dot = document.createElement('div');
+        dot.className = 'grid-position-dot';
+        dot.dataset.id = pos.id;
+        dot.innerText = pos.abbr;
+        
+        // Handle Handedness horizontal mirroring for background dots
+        let xCoord = pos.x;
+        if (state.batterHandedness === 'LHB') {
+          xCoord = 100 - pos.x;
+        }
+
+        dot.style.left = `${xCoord}%`;
+        dot.style.top = `${pos.y}%`;
+        
+        // Tooltip handlers
+        dot.addEventListener('mouseenter', (e) => {
+          showTooltip(pos.name + ` (${pos.abbr})`, xCoord, pos.y);
+        });
+        dot.addEventListener('mouseleave', hideTooltip);
+
+        elGridOverlay.appendChild(dot);
+      });
+    }
+
+    // 2. Render and Animate the 11 Fielders
+    function renderFielders() {
+      if (!elTokensContainer) return;
+
+      const stageData = playbookStages[state.currentStage];
+      const activePositions = stageData.positions;
+      
+      // Calculate how many are outside the 30-yard circle
+      let outsideCount = 0;
+      
+      activePositions.forEach((posId, idx) => {
+        const posData = fieldingPositions.find(p => p.id === posId);
+        if (!posData) return;
+
+        // Euclidean distance from center (50, 50)
+        const dist = Math.sqrt(Math.pow(posData.x - 50, 2) + Math.pow(posData.y - 50, 2));
+        if (dist > 28) {
+          outsideCount++;
+        }
+
+        // Check if token already exists in DOM to animate smoothly
+        let token = elTokensContainer.querySelector(`.player-token[data-idx="${idx}"]`);
+        if (!token) {
+          token = document.createElement('div');
+          token.className = 'player-token';
+          token.dataset.idx = idx;
+
+          const label = document.createElement('span');
+          label.className = 'player-name-label';
+          token.appendChild(label);
+
+          // Click to highlight position item list
+          token.addEventListener('click', (e) => {
+            e.stopPropagation();
+            highlightListItem(posId);
+          });
+
+          elTokensContainer.appendChild(token);
+        }
+
+        // Determine token roles and styles
+        token.className = 'player-token';
+        if (posId === 'wk') {
+          token.classList.add('token-wk');
+          token.childNodes[0].textContent = 'WK';
+          token.querySelector('.player-name-label').innerText = 'Wicket Keeper';
+        } else if (posId === 'bowler') {
+          token.classList.add('token-bowler');
+          token.childNodes[0].textContent = 'BW';
+          token.querySelector('.player-name-label').innerText = 'Bowler';
+        } else {
+          token.classList.add('token-fielder');
+          token.childNodes[0].textContent = posData.abbr;
+          token.querySelector('.player-name-label').innerText = posData.name;
+        }
+
+        token.dataset.id = posId;
+
+        // Perform Horizontal Reflection if LHB
+        let targetX = posData.x;
+        if (state.batterHandedness === 'LHB') {
+          targetX = 100 - posData.x;
+        }
+
+        token.style.left = `${targetX}%`;
+        token.style.top = `${posData.y}%`;
+
+        // Tooltip hover actions
+        token.addEventListener('mouseenter', () => {
+          showTooltip(posData.name + ` (${posData.abbr})`, targetX, posData.y);
+        });
+        token.addEventListener('mouseleave', hideTooltip);
+      });
+
+      // Update telemetries
+      elOutsideCount.innerText = outsideCount;
+      elOutsideLimit.innerText = state.isPowerplay ? '2' : '5';
+      elTeleOutside.innerText = `${outsideCount} OUTSIDE`;
+    }
+
+    // 3. Highlight list items and flash tokens
+    function highlightListItem(posId) {
+      document.querySelectorAll('.position-item-btn').forEach(btn => {
+        if (btn.dataset.id === posId) {
+          btn.style.borderColor = 'var(--accent)';
+          btn.style.background = 'rgba(125, 211, 160, 0.1)';
+          setTimeout(() => {
+            btn.style.borderColor = '';
+            btn.style.background = '';
+          }, 1500);
+        }
+      });
+
+      // Flash player token
+      const token = elTokensContainer.querySelector(`.player-token[data-id="${posId}"]`);
+      if (token) {
+        token.classList.add('flash-glow');
+        setTimeout(() => {
+          token.classList.remove('flash-glow');
+        }, 1500);
+      }
+    }
+
+    // 4. Update the detailed Explanation commentary side cards
+    function renderCommentary() {
+      const stageData = playbookStages[state.currentStage];
+      
+      elStageTag.innerText = stageData.tag;
+      elStrategyTitle.innerText = stageData.title;
+      elTelePhase.innerText = state.isPowerplay ? 'POWERPLAY (OVERS 1-6)' : 'NON-POWERPLAY (OVERS 7-20)';
+      elTeleStrike.innerText = state.batterHandedness;
+      elExplanation.innerText = stageData.explanation;
+
+      // Populate list of positions
+      if (elPositionsList) {
+        elPositionsList.innerHTML = '';
+        stageData.positions.forEach(posId => {
+          const posData = fieldingPositions.find(p => p.id === posId);
+          if (!posData) return;
+
+          const btn = document.createElement('button');
+          btn.className = 'position-item-btn';
+          btn.dataset.id = posId;
+
+          const abbr = document.createElement('span');
+          abbr.className = 'pos-item-abbr';
+          abbr.innerText = posData.abbr;
+
+          const name = document.createElement('span');
+          name.className = 'pos-item-name';
+          name.innerText = posData.name;
+
+          btn.appendChild(abbr);
+          btn.appendChild(name);
+
+          btn.addEventListener('click', () => {
+            highlightListItem(posId);
+          });
+
+          elPositionsList.appendChild(btn);
+        });
+      }
+    }
+
+    // Tooltip Helpers
+    function showTooltip(text, xPct, yPct) {
+      if (!elTooltip) return;
+      elTooltip.innerText = text;
+      elTooltip.style.left = `${xPct}%`;
+      elTooltip.style.top = `${yPct}%`;
+      elTooltip.classList.remove('hidden-tooltip');
+    }
+    function hideTooltip() {
+      if (elTooltip) {
+        elTooltip.classList.add('hidden-tooltip');
+      }
+    }
+
+    // Synchronize Timeline with Manual Controls
+    function syncControls() {
+      const stageData = playbookStages[state.currentStage];
+      
+      state.batterHandedness = stageData.batterHandedness;
+      state.isPowerplay = stageData.isPowerplay;
+
+      // Handedness toggle update
+      if (elHandednessBtn) {
+        const badge = elHandednessBtn.querySelector('.toggle-badge');
+        const txt = elHandednessBtn.querySelector('.toggle-text');
+        
+        badge.innerText = state.batterHandedness;
+        txt.innerText = state.batterHandedness === 'RHB' ? 'RIGHT-HANDED' : 'LEFT-HANDED';
+        
+        if (state.batterHandedness === 'LHB') {
+          elHandednessBtn.classList.add('active-state');
+        } else {
+          elHandednessBtn.classList.remove('active-state');
+        }
+      }
+
+      // Powerplay toggle update
+      if (elPowerplayBtn) {
+        const txt = elPowerplayBtn.querySelector('.toggle-text');
+        txt.innerText = state.isPowerplay ? 'POWERPLAY ACTIVE' : 'NON-POWERPLAY';
+        
+        if (state.isPowerplay) {
+          elPowerplayBtn.classList.add('active-state');
+        } else {
+          elPowerplayBtn.classList.remove('active-state');
+        }
+      }
+
+      // Slider timeline labels update active states
+      document.querySelectorAll('.timeline-label').forEach(lbl => {
+        lbl.classList.remove('active');
+        if (parseInt(lbl.dataset.step) === state.currentStage) {
+          lbl.classList.add('active');
+        }
+      });
+    }
+
+    // Initialize Redraw Routine
+    function drawPlaybook() {
+      syncControls();
+      renderPositionGrid();
+      renderFielders();
+      renderCommentary();
+    }
+
+    // Timeline Slider Range handler
+    if (elRangeSlider) {
+      elRangeSlider.addEventListener('input', (e) => {
+        state.currentStage = parseInt(e.target.value);
+        drawPlaybook();
+      });
+    }
+
+    // Make timeline labels clickable directly
+    document.querySelectorAll('.timeline-label').forEach(lbl => {
+      lbl.addEventListener('click', () => {
+        const step = parseInt(lbl.dataset.step);
+        state.currentStage = step;
+        if (elRangeSlider) elRangeSlider.value = step;
+        drawPlaybook();
+      });
+    });
+
+    // Manual controls: Handedness Switch
+    if (elHandednessBtn) {
+      elHandednessBtn.addEventListener('click', () => {
+        state.batterHandedness = state.batterHandedness === 'RHB' ? 'LHB' : 'RHB';
+        drawPlaybook();
+      });
+    }
+
+    // Manual controls: Powerplay Switch
+    if (elPowerplayBtn) {
+      elPowerplayBtn.addEventListener('click', () => {
+        state.isPowerplay = !state.isPowerplay;
+        drawPlaybook();
+      });
+    }
+
+    // Manual controls: Show Grid Switch
+    if (elOverlayBtn) {
+      elOverlayBtn.addEventListener('click', () => {
+        state.showGrid = !state.showGrid;
+        if (state.showGrid) {
+          elOverlayBtn.classList.add('active-state');
+          elGridOverlay.classList.remove('hidden-grid');
+        } else {
+          elOverlayBtn.classList.remove('active-state');
+          elGridOverlay.classList.add('hidden-grid');
+        }
+      });
+    }
+
+    // Draw initial playbook instance
+    drawPlaybook();
+  }
+
+  // Bind to dynamic page-loads and hard refreshes
+  initPlaybook();
+  document.addEventListener('astro:page-load', initPlaybook);
+</script>
