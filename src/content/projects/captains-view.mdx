@@ -1,0 +1,77 @@
+---
+title: Captains View
+slug: captains-view
+summary: "An interactive, tactical 2D cricket fielding planner and roster engine with real-time rule enforcement."
+description: "A single-page interactive application designed for cricket captains to visually manage match squads, assign roles, and position fielders on a top-down tactical board while enforcing match format, powerplay, and player role constraints."
+status: live
+category: web app
+stack:
+  - Astro
+  - TypeScript
+  - Vanilla CSS
+  - SVG Vectors
+repoUrl: https://github.com/CMNafi/cmnafi.github.io
+liveUrl: /garage/captains-view
+featured: true
+priority: 95
+startedAt: 2026-05-22
+updatedAt: 2026-05-22
+problem: "Captains and coaches often map out fielding configurations on scraps of paper or generic boards that fail to capture match formats, powerplays, or the direct horizontal mirroring required when switching batter handedness."
+solution: "A modern, responsive tactical canvas styled with a premium minimalist green turf aesthetic, integrated with a real-time reactive mathematical rules engine that instantly validates squad roles and powerplay constraints."
+whoItsFor: "Cricket captains, coaches, strategists, and analytical fans looking for a responsive, rule-aware tool to diagram and share field setups."
+keyFeatures:
+  - Responsive 2D tactical cricket ground drawn dynamically with precise SVG outlines (pitch, 30-yard circle, boundary rope).
+  - Smooth native drag-and-drop mechanics built using browser PointerEvents with mobile touchscreen support.
+  - Interactive roster configuration for a 12-man squad with active role assignments (Wicket Keeper, Bowler, Fielder).
+  - Real-time rules engine validating required roles (exactly 1 active Bowler and 1 Wicket Keeper) and 12th-man benching.
+  - Dynamic Powerplay circle checker using Euclidean distance calculations, automatically rejecting placements and alerting the user when exceeding fielder limits.
+  - Instant batter handedness mirror utility that reflects all fielder coordinates across the pitch vertical center line.
+roadmap:
+  - Export current configurations as high-resolution images or tactical schematics.
+  - Pre-load standard historic fielding setups (e.g., Bodyline, defensive death-overs, or aggressive spin webs).
+  - Multi-over strategy timeline playback to visualize adjustments between consecutive balls.
+seoTitle: "Captains View - Interactive Cricket Fielding Strategist Tool"
+seoDescription: "Diagram, manage, and validate cricket fielding setups in real-time. Features roster management, dynamic powerplay checking, and batter handedness mirroring."
+relatedPosts:
+  - things-im-building-quietly
+---
+
+**An interactive tactical viewport designed to calculate, validate, and mirror cricket fielding configurations on a premium virtual turf.**
+
+---
+
+## The Vision: Tactical Clarity on the Field
+
+In the high-pressure environment of a cricket match, a captain’s ability to coordinate their fielders determines the outcome of the game. However, existing diagram tools are static, clumsy, or entirely unaware of active match rules. 
+
+**Captains View** bridges this gap by providing an interactive digital board that understands the game. Built with premium **vanilla TypeScript** and native vector **SVG**, the application acts as an active strategizing instrument. It tracks every player’s position, calculates their distances from the pitch, and validates if the layout is match-legal.
+
+---
+
+## Core Capabilities
+
+### 1. The Turf Canvas
+Instead of flat, uninspiring clip-art, the fielding canvas displays a highly detailed top-down view of a modern cricket ground. The grass is styled in a deep, rich premium emerald green with subtle rings, contrasted by clean white crease markings, the 30-yard inner circle, and the outer boundary rope. Every coordinate is tracked relative to the pitch center, enabling responsive resizing across screens.
+
+### 2. PointerEvents Drag Engine
+We bypassed heavy frameworks to implement custom drag mechanics using standard web `PointerEvents`. This ensures lag-free movement of player tokens on both desktop mice and mobile touchscreens. When players are dragged:
+- The **Wicket Keeper** and **Bowler** default-snap near the crease lines but can be adjusted for fine tactical tuning.
+- Remaining fielders move freely within the boundary.
+- Snapping and boundaries are verified in real-time on `pointerup`.
+
+### 3. Euclidean Rules Engine
+The core rules engine monitors state continuously:
+- **Active Roster**: Ensures exactly 11 active players are placed on the field, with the 12th man positioned on the bench.
+- **Role Verification**: Confirms that exactly one active Bowler is running in and exactly one Wicket Keeper is positioned behind the stumps.
+- **Powerplay Radar**: When the Powerplay is active, the engine calculates the distance from the pitch midpoint for each fielder:
+  
+  `distance = sqrt((x - 50)² + (y - 50)²)`
+
+  If a captain attempts to drop a third fielder outside the 30-yard circle during a Powerplay, the engine rejects the placement, snaps the player back, and flashes a diagnostic warning.
+
+### 4. Batter Handedness Mirroring
+When a left-handed batter (LHB) takes strike, the captain must quickly mirror the field. The application makes this instant. Clicking the LHB toggle applies a mathematical mirror reflection across the vertical axis of the pitch:
+
+`x_mirrored = 100 - x`
+
+All players transition smoothly to their opposite positions (e.g., a Point fielder automatically moves to Square Leg), saving valuable strategizing time.

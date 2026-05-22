@@ -1,0 +1,1435 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Captains View" hideHeader={true}>
+  <div class="captains-detail-viewport">
+    
+    <!-- Header Navigation -->
+    <nav class="paddock-override-nav">
+      <a href="/garage" class="return-wall">← GARAGE COMMAND</a>
+      <div class="nav-title">CAPTAINS VIEW // FIELDING STRATEGIST</div>
+      <div class="telemetry-pill">
+        <span class="pulse-dot"></span>
+        <span class="pill-label">RADAR SCAN ACTIVE</span>
+      </div>
+    </nav>
+
+    <!-- Main Strategic Board -->
+    <main class="tactical-board-grid">
+      
+      <!-- Left Column: Command & Roster Dashboard -->
+      <section class="command-dashboard">
+        
+        <!-- Section 1: Tactical Setup Dials -->
+        <div class="dashboard-card">
+          <h2 class="card-title">TACTICAL METRICS</h2>
+          <div class="metrics-grid">
+            
+            <div class="metric-group">
+              <label for="match-format">MATCH FORMAT</label>
+              <select id="match-format" class="minimal-select">
+                <option value="T20">T20 (20 Overs)</option>
+                <option value="16-Over" selected>16-Over Game</option>
+                <option value="35-Over">35-Over Game</option>
+              </select>
+            </div>
+
+            <div class="metric-group">
+              <label for="powerplay-toggle">POWERPLAY STATE</label>
+              <div class="toggle-container">
+                <button id="powerplay-toggle" class="telemetry-toggle-btn active-state">
+                  <span class="toggle-indicator"></span>
+                  <span class="toggle-text">POWERPLAY ACTIVE</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="metric-group">
+              <label for="handedness-toggle">BATTER STRIKE</label>
+              <div class="toggle-container">
+                <button id="handedness-toggle" class="telemetry-toggle-btn">
+                  <span class="handedness-badge">RHB</span>
+                  <span class="toggle-text">RIGHT-HANDED</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="metric-group">
+              <label for="bowler-select">CURRENT BOWLER</label>
+              <select id="bowler-select" class="minimal-select">
+                <!-- Dynamically populated from active bowlers in roster -->
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Section 2: Squad Configuration Roster -->
+        <div class="dashboard-card roster-card">
+          <div class="roster-header">
+            <h2 class="card-title">SQUAD ROSTER & ROLES</h2>
+            <div class="squad-counter"><span id="squad-active-count">11</span> / 12 PLACED</div>
+          </div>
+          
+          <div class="roster-list-container">
+            <table class="roster-table">
+              <thead>
+                <tr>
+                  <th style="width: 8%">ID</th>
+                  <th style="width: 47%">PLAYER NAME</th>
+                  <th style="width: 25%">SQUAD ROLE</th>
+                  <th style="width: 20%">STATUS</th>
+                </tr>
+              </thead>
+              <tbody id="roster-rows">
+                <!-- Dynamically generated rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 3: Diagnostic Telemetry Logs -->
+        <div class="dashboard-card terminal-card">
+          <div class="terminal-header">
+            <h2 class="card-title monospace-title">HUD DIAGNOSTIC LOGGER</h2>
+            <button id="clear-logs-btn" class="terminal-clear-btn">CLEAR</button>
+          </div>
+          <div id="terminal-console" class="terminal-log-output">
+            <div class="log-line text-green">[SYSTEM INITIALIZING] Loading pitch topography...</div>
+            <div class="log-line text-green">[SYSTEM INITIALIZING] Turf coordinates successfully resolved.</div>
+            <div class="log-line text-amber">[DIAGNOSTIC] Powerplay restriction active: max 2 fielders outside 30-yard circle.</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Interactive Green Field Sandbox -->
+      <section class="fielding-sandbox">
+        
+        <!-- Diagnostic Warning Banner Overlay -->
+        <div id="rules-violation-alert" class="rules-alert-banner hidden-banner">
+          <div class="alert-content">
+            <span class="warning-icon">⚠️</span>
+            <span id="violation-message">INVALID FIELD SET: Powerplay constraints exceeded!</span>
+          </div>
+        </div>
+
+        <div class="field-outer-wrapper">
+          
+          <div class="field-aspect-container">
+            <div id="field-bounds" class="cricket-turf-field">
+              
+              <!-- SVG Background: Crisp high-contrast cricket markings -->
+              <svg viewBox="0 0 100 100" class="svg-field-markings" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <!-- Soft shadow for the boundary rope -->
+                  <filter id="rope-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="0" dy="0.6" stdDeviation="0.4" flood-color="#000" flood-opacity="0.6" />
+                  </filter>
+                  <radialGradient id="turf-shading" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#2a5c2d" />
+                    <stop offset="70%" stop-color="#1e4321" />
+                    <stop offset="100%" stop-color="#142c16" />
+                  </radialGradient>
+                </defs>
+
+                <!-- Concentric Mowed Grass Turf Rings -->
+                <circle cx="50" cy="50" r="48" fill="url(#turf-shading)" />
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                <circle cx="50" cy="50" r="34" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                <circle cx="50" cy="50" r="26" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                <circle cx="50" cy="50" r="18" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                <circle cx="50" cy="50" r="10" fill="none" stroke="#255127" stroke-width="2.5" opacity="0.4" />
+                
+                <!-- White Boundary Rope -->
+                <circle cx="50" cy="50" r="46" fill="none" stroke="#ffffff" stroke-width="0.8" filter="url(#rope-shadow)" opacity="0.9" />
+                
+                <!-- White 30-Yard Circle (Dashed) -->
+                <circle id="thirty-yard-circle-svg" cx="50" cy="50" r="28" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="0.5" stroke-dasharray="1.5 1" />
+                
+                <!-- Center Clay/Straw Pitch -->
+                <rect x="46.8" y="38" width="6.4" height="24" rx="0.3" fill="#dfc399" stroke="#b29b7a" stroke-width="0.25" />
+                
+                <!-- Crease Markings (White Lines) -->
+                <!-- Top Crease (Stumps and Popping) -->
+                <line x1="47.5" y1="41" x2="52.5" y2="41" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="45" y1="43" x2="55" y2="43" stroke="#ffffff" stroke-width="0.2" />
+                <!-- Return Creases -->
+                <line x1="47.5" y1="41" x2="47.5" y2="39.5" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="52.5" y1="41" x2="52.5" y2="39.5" stroke="#ffffff" stroke-width="0.2" />
+                
+                <!-- Bottom Crease (Stumps and Popping) -->
+                <line x1="47.5" y1="59" x2="52.5" y2="59" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="45" y1="57" x2="55" y2="57" stroke="#ffffff" stroke-width="0.2" />
+                <!-- Return Creases -->
+                <line x1="47.5" y1="59" x2="47.5" y2="60.5" stroke="#ffffff" stroke-width="0.2" />
+                <line x1="52.5" y1="59" x2="52.5" y2="60.5" stroke="#ffffff" stroke-width="0.2" />
+                
+                <!-- Stumps Wickets (3 tiny brown stumps each end) -->
+                <circle cx="49.2" cy="41" r="0.25" fill="#583c18" />
+                <circle cx="50.0" cy="41" r="0.25" fill="#583c18" />
+                <circle cx="50.8" cy="41" r="0.25" fill="#583c18" />
+
+                <circle cx="49.2" cy="59" r="0.25" fill="#583c18" />
+                <circle cx="50.0" cy="59" r="0.25" fill="#583c18" />
+                <circle cx="50.8" cy="59" r="0.25" fill="#583c18" />
+
+                <!-- Pitch Center Mark -->
+                <circle cx="50" cy="50" r="0.3" fill="rgba(255,255,255,0.4)" />
+              </svg>
+
+              <!-- HTML Player Tokens Interactive Layer -->
+              <div id="tokens-container" class="tokens-layer-container">
+                <!-- Draggable player tokens are injected here dynamically -->
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Quick Actions HUD Bar -->
+          <div class="field-controls-hud">
+            <button id="reset-field-btn" class="hud-action-btn">
+              <span>↻</span> RESET TACTICS
+            </button>
+            <div class="hud-legend">
+              <span class="legend-item"><span class="legend-dot color-wk"></span> WICKET KEEPER</span>
+              <span class="legend-item"><span class="legend-dot color-bowler"></span> ACTIVE BOWLER</span>
+              <span class="legend-item"><span class="legend-dot color-fielder"></span> FIELDER</span>
+            </div>
+            <div class="circle-telemetry">
+              OUTSIDE CIRCLE: <span id="outside-circle-count" class="mono-value">3</span> / <span id="outside-circle-limit" class="mono-value">2</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+</BaseLayout>
+
+<style>
+  /* --- Global Scaffolding Override --- */
+  .captains-detail-viewport {
+    min-height: 100vh;
+    background: var(--surface-base);
+    display: flex;
+    flex-direction: column;
+    color: var(--ink-primary);
+  }
+
+  .paddock-override-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--surface-line);
+    font-family: var(--font-mono);
+    z-index: 100;
+  }
+  .return-wall {
+    color: var(--ink-secondary);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .return-wall:hover {
+    color: var(--accent);
+  }
+  .nav-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-primary);
+    font-weight: 600;
+  }
+  .telemetry-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(125, 211, 160, 0.08);
+    border: 1px solid var(--accent-dim);
+    padding: 0.35rem 0.6rem;
+    border-radius: 99px;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+  }
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: breathing-pulse 2s infinite ease-in-out;
+  }
+  .pill-label {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  @keyframes breathing-pulse {
+    0% { transform: scale(0.9); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 8px var(--accent); }
+    100% { transform: scale(0.9); opacity: 0.5; }
+  }
+
+  /* --- Main Columns Grid Layout --- */
+  .tactical-board-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    border-top: none;
+    overflow: hidden;
+  }
+
+  /* --- Left Column: Roster & Command Dashboard --- */
+  .command-dashboard {
+    background: var(--surface-base);
+    border-right: 1px solid var(--surface-line);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 58px);
+  }
+
+  .dashboard-card {
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-line);
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--ink-secondary);
+    margin: 0 0 1rem 0;
+    border-bottom: 1px solid var(--surface-line);
+    padding-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  /* Setup Settings Dials */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .metric-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .metric-group label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--ink-tertiary);
+    font-weight: bold;
+  }
+  .minimal-select {
+    background: var(--surface-base);
+    border: 1px solid var(--surface-line);
+    border-radius: 4px;
+    color: var(--ink-primary);
+    padding: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .minimal-select:focus {
+    border-color: var(--accent);
+  }
+
+  .telemetry-toggle-btn {
+    background: var(--surface-base);
+    border: 1px solid var(--surface-line);
+    border-radius: 4px;
+    color: var(--ink-secondary);
+    padding: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    transition: all 0.2s;
+    height: 100%;
+    min-height: 31px;
+  }
+  .telemetry-toggle-btn:hover {
+    border-color: var(--ink-secondary);
+  }
+  
+  /* Active states for Powerplay & Batter Handedness */
+  .telemetry-toggle-btn.active-state {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(125, 211, 160, 0.05);
+  }
+  .toggle-indicator {
+    width: 6px;
+    height: 6px;
+    background: var(--ink-tertiary);
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  .active-state .toggle-indicator {
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+  }
+  
+  .handedness-badge {
+    background: var(--surface-line);
+    color: var(--ink-secondary);
+    padding: 0.15rem 0.3rem;
+    border-radius: 2px;
+    font-size: 9px;
+    font-weight: bold;
+    transition: all 0.2s;
+  }
+  .active-state .handedness-badge {
+    background: var(--accent);
+    color: var(--surface-base);
+  }
+
+  /* Squad Table list */
+  .roster-card {
+    flex: 1;
+    min-height: 340px;
+  }
+  .roster-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .squad-counter {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    font-weight: bold;
+  }
+
+  .roster-list-container {
+    overflow-y: auto;
+    max-height: 300px;
+    border: 1px solid var(--surface-line);
+    border-radius: 4px;
+    background: var(--surface-base);
+  }
+  .roster-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-align: left;
+  }
+  .roster-table th {
+    background: var(--surface-raised);
+    color: var(--ink-tertiary);
+    padding: 0.5rem;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--surface-line);
+    position: sticky;
+    top: 0;
+  }
+  .roster-table td {
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px solid rgba(42, 37, 32, 0.5);
+    vertical-align: middle;
+  }
+  .player-row-index {
+    color: var(--ink-tertiary);
+    font-weight: bold;
+  }
+  .player-name-input {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--ink-primary);
+    width: 95%;
+    padding: 0.25rem 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .player-name-input:hover {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: var(--surface-line);
+  }
+  .player-name-input:focus {
+    background: var(--surface-raised);
+    border-color: var(--accent);
+    outline: none;
+  }
+
+  .roster-select {
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-line);
+    color: var(--ink-secondary);
+    padding: 0.15rem 0.3rem;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+  }
+  .roster-select:focus {
+    border-color: var(--accent);
+  }
+
+  /* HUD Diagnostic Console */
+  .terminal-card {
+    height: 180px;
+  }
+  .terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .terminal-clear-btn {
+    background: none;
+    border: none;
+    color: var(--ink-tertiary);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .terminal-clear-btn:hover {
+    color: var(--ink-secondary);
+  }
+  .terminal-log-output {
+    background: var(--surface-base);
+    border: 1px solid var(--surface-line);
+    border-radius: 4px;
+    flex: 1;
+    padding: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.4;
+    overflow-y: auto;
+  }
+  .log-line {
+    margin-bottom: 0.25rem;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.02);
+    padding-bottom: 0.15rem;
+  }
+  .text-green { color: var(--accent); }
+  .text-amber { color: var(--status-warn); }
+  .text-red { color: #f28b82; } /* warning light red */
+
+  /* --- Right Column: The Grass Field Viewport --- */
+  .fielding-sandbox {
+    background: #0f1c11; /* Extremely deep forest background for visual framing */
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Rules violation alert banner */
+  .rules-alert-banner {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #b33939; /* Rich alert red */
+    color: #ffffff;
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    z-index: 50;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(179, 57, 57, 0.4);
+    border-left: 4px solid #ff5252;
+    transition: transform 0.3s var(--ease-instrument), opacity 0.3s;
+    pointer-events: none;
+  }
+  .rules-alert-banner.hidden-banner {
+    transform: translate(-50%, -40px);
+    opacity: 0;
+  }
+  .alert-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .field-outer-wrapper {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .field-aspect-container {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    position: relative;
+  }
+
+  /* The actual circle tactical turf field */
+  .cricket-turf-field {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow: 
+      0 10px 40px rgba(0,0,0,0.5), 
+      inset 0 0 30px rgba(0,0,0,0.3);
+    overflow: visible; /* Let player tooltips overflow neatly if needed */
+  }
+
+  .svg-field-markings {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-radius: 50%;
+  }
+
+  /* --- Interactive Player Tokens --- */
+  .tokens-layer-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none; /* Let pointer events hit the tokens directly */
+  }
+
+  .player-token {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: #120f0d;
+    cursor: grab;
+    pointer-events: auto; /* Re-enable pointer events on the token itself */
+    user-select: none;
+    touch-action: none; /* Prevent browser scrolling while dragging on mobile */
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    
+    /* Standard transition when snapping or mirroring */
+    transition: left var(--dur-base) var(--ease-instrument), top var(--dur-base) var(--ease-instrument), border-color 0.2s, box-shadow 0.2s;
+  }
+  .player-token:hover {
+    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+  }
+  .player-token:active {
+    cursor: grabbing;
+  }
+
+  /* Draggable state overrides transitions */
+  .player-token.dragging {
+    transition: none !important;
+    cursor: grabbing;
+    z-index: 1000 !important;
+    opacity: 0.9;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.7), 0 0 12px rgba(255,255,255,0.2) !important;
+  }
+
+  /* Snapped visual highlight */
+  .player-token.snapped-crease {
+    border-color: #ffd700 !important;
+  }
+
+  /* Role specific styles to look like tactical analytical counters */
+  .role-wk {
+    background: #f1c40f; /* Premium Gold Wicket Keeper */
+    border: 2.5px solid #d4ac0d;
+    color: #1a1714;
+    z-index: 200;
+  }
+  .role-wk:hover {
+    box-shadow: 0 0 8px rgba(241, 196, 15, 0.5);
+  }
+  
+  .role-bowler {
+    background: #e74c3c; /* Sharp Crimson Bowler */
+    border: 2.5px solid #c0392b;
+    color: #ffffff;
+    z-index: 200;
+  }
+  .role-bowler:hover {
+    box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+  }
+
+  .role-fielder {
+    background: #f4ede4; /* Clean warm white fielder */
+    border: 2.5px solid #a89c8b;
+    color: #1a1714;
+    z-index: 100;
+  }
+  .role-fielder:hover {
+    box-shadow: 0 0 8px rgba(244, 238, 228, 0.5);
+    border-color: var(--accent);
+  }
+  
+  /* Pulser animation for illegal positions */
+  .player-token.pp-illegal-position {
+    animation: token-error-flicker 1.5s infinite alternate ease-in-out;
+    border-color: #e74c3c !important;
+  }
+  @keyframes token-error-flicker {
+    0% { box-shadow: 0 0 5px #e74c3c; }
+    100% { box-shadow: 0 0 15px #ff6b6b, inset 0 0 5px #ff6b6b; }
+  }
+
+  /* Interactive monogram label tooltip */
+  .player-token::after {
+    content: attr(data-player-name);
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.85);
+    background: rgba(18, 15, 13, 0.9);
+    border: 1px solid var(--surface-line);
+    color: var(--ink-primary);
+    font-family: var(--font-mono);
+    font-size: 8px;
+    padding: 0.1rem 0.35rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s var(--ease-instrument);
+    pointer-events: none;
+    z-index: 1010;
+  }
+  .player-token:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+  }
+
+  /* --- HUD Control Bar --- */
+  .field-controls-hud {
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-line);
+    border-radius: 8px;
+    padding: 0.9rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-secondary);
+  }
+  
+  .hud-action-btn {
+    background: var(--surface-base);
+    border: 1px solid var(--surface-line);
+    color: var(--ink-primary);
+    border-radius: 4px;
+    padding: 0.4rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s;
+  }
+  .hud-action-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .hud-legend {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+  }
+  .legend-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .color-wk { background: #f1c40f; }
+  .color-bowler { background: #e74c3c; }
+  .color-fielder { background: #f4ede4; border: 1px solid #a89c8b; }
+
+  .circle-telemetry {
+    font-weight: 700;
+  }
+  .mono-value {
+    color: var(--ink-primary);
+    font-size: 11px;
+  }
+  #outside-circle-count.count-warn {
+    color: #f28b82;
+    animation: text-pulse 1s infinite alternate;
+  }
+  @keyframes text-pulse {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; text-shadow: 0 0 4px #ff6b6b; }
+  }
+
+  /* --- Responsive Styles Stack --- */
+  @media (max-width: 1080px) {
+    .tactical-board-grid {
+      grid-template-columns: 1fr;
+      overflow-y: auto;
+    }
+    .command-dashboard {
+      max-height: none;
+      border-right: none;
+      border-bottom: 1px solid var(--surface-line);
+    }
+    .fielding-sandbox {
+      padding: 3rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .paddock-override-nav {
+      padding: 1rem;
+    }
+    .metrics-grid {
+      grid-template-columns: 1fr;
+    }
+    .field-controls-hud {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .hud-legend {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+</style>
+
+<!-- Client Side Scripting: Rules Engine, Pointer Events & Handedness Mirroring -->
+<script is:inline>
+  document.addEventListener('astro:page-load', () => {
+    // Initial State Architecture
+    const state = {
+      matchContext: {
+        format: '16-Over',
+        isPowerplay: true,
+        batterHandedness: 'RHB',
+        currentBowlerId: 'p2'
+      },
+      squad: [
+        { id: 'p1', name: 'M.S. Dhoni', role: 'WK', status: 'active', x: 50, y: 62.5, inCircle: true },
+        { id: 'p2', name: 'Jasprit Bumrah', role: 'Bowler', status: 'active', x: 50, y: 37.5, inCircle: true },
+        { id: 'p3', name: 'Virat Kohli', role: 'Fielder', status: 'active', x: 28, y: 50, inCircle: true },      // Point
+        { id: 'p4', name: 'Rohit Sharma', role: 'Fielder', status: 'active', x: 34, y: 42, inCircle: true },      // Cover
+        { id: 'p5', name: 'K.L. Rahul', role: 'Fielder', status: 'active', x: 42, y: 39, inCircle: true },        // Mid-off
+        { id: 'p6', name: 'Hardik Pandya', role: 'Fielder', status: 'active', x: 58, y: 39, inCircle: true },     // Mid-on
+        { id: 'p7', name: 'Ravindra Jadeja', role: 'Fielder', status: 'active', x: 66, y: 42, inCircle: true },   // Mid-wicket
+        { id: 'p8', name: 'Suryakumar Yadav', role: 'Fielder', status: 'active', x: 72, y: 50, inCircle: true },  // Square Leg
+        { id: 'p9', name: 'Mohammed Shami', role: 'Fielder', status: 'active', x: 22, y: 68, inCircle: false },   // Third Man
+        { id: 'p10', name: 'Kuldeep Yadav', role: 'Fielder', status: 'active', x: 78, y: 68, inCircle: false },   // Fine Leg
+        { id: 'p11', name: 'Axar Patel', role: 'Fielder', status: 'active', x: 50, y: 22, inCircle: false },      // Deep Straight
+        { id: 'p12', name: 'Y. Chahal', role: 'Fielder', status: 'benched', x: null, y: null, inCircle: null }    // Substitute
+      ]
+    };
+
+    // Deep Clone of Roster to restore/reset easily
+    const defaultRoster = JSON.parse(JSON.stringify(state.squad));
+
+    // Boundary Radii Config
+    const RADIUS_BOUNDARY = 46;
+    const RADIUS_30YD = 28;
+
+    // DOM Elements Cache
+    const elFieldBounds = document.getElementById('field-bounds');
+    const elTokensContainer = document.getElementById('tokens-container');
+    const elRosterRows = document.getElementById('roster-rows');
+    const elTerminalConsole = document.getElementById('terminal-console');
+    const elMatchFormat = document.getElementById('match-format');
+    const elPowerplayToggle = document.getElementById('powerplay-toggle');
+    const elHandednessToggle = document.getElementById('handedness-toggle');
+    const elBowlerSelect = document.getElementById('bowler-select');
+    const elOutsideCircleCount = document.getElementById('outside-circle-count');
+    const elOutsideCircleLimit = document.getElementById('outside-circle-limit');
+    const elSquadActiveCount = document.getElementById('squad-active-count');
+    const elRulesAlertBanner = document.getElementById('rules-violation-alert');
+    const elViolationMessage = document.getElementById('violation-message');
+    const elResetBtn = document.getElementById('reset-field-btn');
+    const elClearLogsBtn = document.getElementById('clear-logs-btn');
+
+    // System Log Helper
+    function addLog(text, type = 'green') {
+      const time = new Date().toLocaleTimeString().split(' ')[0];
+      const logLine = document.createElement('div');
+      logLine.className = `log-line text-${type}`;
+      logLine.innerText = `[${time}] ${text}`;
+      elTerminalConsole.appendChild(logLine);
+      elTerminalConsole.scrollTop = elTerminalConsole.scrollHeight;
+    }
+
+    // Get initials helper (e.g. "Virat Kohli" -> "VK")
+    function getInitials(name) {
+      if (!name) return '??';
+      const parts = name.trim().split(/\s+/);
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+
+    // Calculates Euclidean Distance from pitch center (50, 50)
+    function calcDistance(x, y) {
+      return Math.sqrt(Math.pow(x - 50, 2) + Math.pow(y - 50, 2));
+    }
+
+    // Count how many players are outside the 30-yard circle
+    function getOutsideCount(squad = state.squad) {
+      return squad.filter(p => p.status === 'active' && calcDistance(p.x, p.y) > RADIUS_30YD).length;
+    }
+
+    // Get max allowed fielders outside the circle based on format and powerplay state
+    function getMaxAllowedOutside() {
+      if (state.matchContext.isPowerplay) return 2;
+      
+      // Standard Non-Powerplay limits
+      return 5;
+    }
+
+    // UI Roster rows renderer
+    function renderRoster() {
+      elRosterRows.innerHTML = '';
+      state.squad.forEach((player, index) => {
+        const tr = document.createElement('tr');
+        tr.className = player.status === 'benched' ? 'row-benched' : '';
+        
+        // ID Cell
+        const tdIdx = document.createElement('td');
+        tdIdx.className = 'player-row-index';
+        tdIdx.innerText = String(index + 1).padStart(2, '0');
+        tr.appendChild(tdIdx);
+
+        // Name cell
+        const tdName = document.createElement('td');
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'player-name-input';
+        input.value = player.name;
+        input.addEventListener('change', (e) => {
+          const oldName = player.name;
+          player.name = e.target.value.trim() || `Player ${index + 1}`;
+          addLog(`Roster rename: ${oldName} is now ${player.name}`);
+          renderApp();
+        });
+        tdName.appendChild(input);
+        tr.appendChild(tdName);
+
+        // Role Selector Cell
+        const tdRole = document.createElement('td');
+        const roleSel = document.createElement('select');
+        roleSel.className = 'roster-select';
+        roleSel.innerHTML = `
+          <option value="Fielder" ${player.role === 'Fielder' ? 'selected' : ''}>Fielder</option>
+          <option value="Bowler" ${player.role === 'Bowler' ? 'selected' : ''}>Bowler</option>
+          <option value="WK" ${player.role === 'WK' ? 'selected' : ''}>Wicket Keeper</option>
+        `;
+        roleSel.addEventListener('change', (e) => {
+          const newRole = e.target.value;
+          
+          if (newRole === 'WK') {
+            // Demote other WKs to fielders
+            state.squad.forEach(p => {
+              if (p.id !== player.id && p.role === 'WK') {
+                p.role = 'Fielder';
+                addLog(`Role conflict: ${p.name} demoted to Fielder. Only 1 Wicket Keeper allowed.`, 'amber');
+              }
+            });
+            player.role = 'WK';
+            // Snap to WK position
+            player.x = 50;
+            player.y = 62.5;
+            addLog(`${player.name} designated Wicket Keeper. Snapped to keeper's crease.`);
+          } else if (newRole === 'Bowler') {
+            player.role = 'Bowler';
+            // Snap to bowler position
+            player.x = 50;
+            player.y = 37.5;
+            state.matchContext.currentBowlerId = player.id;
+            addLog(`${player.name} designated Bowler. Snapped to delivery crease.`);
+          } else {
+            player.role = 'Fielder';
+            addLog(`${player.name} designated Fielder.`);
+          }
+          
+          // Re-validate current bowler select
+          populateBowlerSelect();
+          renderApp();
+        });
+        tdRole.appendChild(roleSel);
+        tr.appendChild(tdRole);
+
+        // Status (Active/Benched) selector
+        const tdStatus = document.createElement('td');
+        const statusSel = document.createElement('select');
+        statusSel.className = 'roster-select';
+        statusSel.innerHTML = `
+          <option value="active" ${player.status === 'active' ? 'selected' : ''}>Active</option>
+          <option value="benched" ${player.status === 'benched' ? 'selected' : ''}>12th Man</option>
+        `;
+        statusSel.addEventListener('change', (e) => {
+          const newStatus = e.target.value;
+          if (newStatus === 'benched') {
+            // Substitute self for the previously benched player
+            const prevBenched = state.squad.find(p => p.status === 'benched');
+            if (prevBenched) {
+              prevBenched.status = 'active';
+              // Place previous benched at the center to be repositioned
+              prevBenched.x = 50;
+              prevBenched.y = 50;
+              addLog(`Subbed in: ${prevBenched.name} enters turf.`);
+            }
+            player.status = 'benched';
+            player.x = null;
+            player.y = null;
+            addLog(`Subbed out: ${player.name} is now the 12th Man.`, 'amber');
+          } else {
+            player.status = 'active';
+            player.x = 50;
+            player.y = 50;
+            addLog(`${player.name} enters turf.`);
+          }
+          populateBowlerSelect();
+          renderApp();
+        });
+        tdStatus.appendChild(statusSel);
+        tr.appendChild(tdStatus);
+
+        elRosterRows.appendChild(tr);
+      });
+    }
+
+    // Populate Current Bowler select
+    function populateBowlerSelect() {
+      const bowlers = state.squad.filter(p => p.status === 'active' && p.role === 'Bowler');
+      elBowlerSelect.innerHTML = '';
+      
+      if (bowlers.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.innerText = 'No active Bowlers';
+        elBowlerSelect.appendChild(opt);
+        return;
+      }
+
+      bowlers.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.innerText = b.name;
+        if (state.matchContext.currentBowlerId === b.id || bowlers.length === 1) {
+          opt.selected = true;
+          state.matchContext.currentBowlerId = b.id;
+        }
+        elBowlerSelect.appendChild(opt);
+      });
+    }
+
+    // Render Canvas Tokens
+    function renderTokens() {
+      // Clear previous tokens
+      elTokensContainer.innerHTML = '';
+
+      state.squad.forEach(player => {
+        if (player.status !== 'active') return;
+
+        const token = document.createElement('div');
+        token.className = 'player-token';
+        token.dataset.id = player.id;
+        token.dataset.playerName = player.name;
+        token.style.left = `${player.x}%`;
+        token.style.top = `${player.y}%`;
+
+        // Apply visual roles classes
+        const isCurrentBowler = (player.id === state.matchContext.currentBowlerId);
+        if (player.role === 'WK') {
+          token.classList.add('role-wk');
+          token.innerText = 'WK';
+        } else if (isCurrentBowler) {
+          token.classList.add('role-bowler');
+          token.innerText = 'BW';
+        } else {
+          token.classList.add('role-fielder');
+          token.innerText = getInitials(player.name);
+        }
+
+        // Apply crease snapping class visually
+        if (player.role === 'WK' && player.x === 50 && player.y === 62.5) {
+          token.classList.add('snapped-crease');
+        } else if (isCurrentBowler && player.x === 50 && player.y === 37.5) {
+          token.classList.add('snapped-crease');
+        }
+
+        // Euclidean Distance check for highlight during active Powerplay warning
+        const dist = calcDistance(player.x, player.y);
+        const isOutside = dist > RADIUS_30YD;
+        const outsideCount = getOutsideCount();
+        const maxLimit = getMaxAllowedOutside();
+
+        if (state.matchContext.isPowerplay && isOutside && outsideCount > maxLimit) {
+          token.classList.add('pp-illegal-position');
+        } else if (!state.matchContext.isPowerplay && isOutside && outsideCount > maxLimit) {
+          token.classList.add('pp-illegal-position');
+        }
+
+        // Setup Drag Event Handlers via PointerEvents
+        setupDragEngine(token, player);
+
+        elTokensContainer.appendChild(token);
+      });
+    }
+
+    // Core Drag and Drop State Machine via PointerEvents
+    function setupDragEngine(token, player) {
+      token.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        token.releasePointerCapture(e.pointerId);
+
+        token.classList.add('dragging');
+        addLog(`Dragging player ${player.name}...`, 'green');
+
+        const rect = elFieldBounds.getBoundingClientRect();
+        const startClientX = e.clientX;
+        const startClientY = e.clientY;
+        const startX = player.x;
+        const startY = player.y;
+
+        let lastX = startX;
+        let lastY = startY;
+
+        function onPointerMove(moveEvent) {
+          const deltaX = moveEvent.clientX - startClientX;
+          const deltaY = moveEvent.clientY - startClientY;
+
+          // Convert client delta px to turf percentage coordinates
+          const pctDx = (deltaX / rect.width) * 100;
+          const pctDy = (deltaY / rect.height) * 100;
+
+          let newX = startX + pctDx;
+          let newY = startY + pctDy;
+
+          // Cap boundaries inside the square coordinate grid
+          if (newX < 1) newX = 1;
+          if (newX > 99) newX = 99;
+          if (newY < 1) newY = 1;
+          if (newY > 99) newY = 99;
+
+          token.style.left = `${newX}%`;
+          token.style.top = `${newY}%`;
+
+          lastX = newX;
+          lastY = newY;
+        }
+
+        function onPointerUp(upEvent) {
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('pointerup', onPointerUp);
+          token.classList.remove('dragging');
+
+          // Position validation checks on drop release
+          const success = processPlayerDrop(player, lastX, lastY, startX, startY);
+          if (!success) {
+            // Apply bounce-back visual transition
+            token.style.transition = 'left 0.4s var(--ease-instrument), top 0.4s var(--ease-instrument)';
+            token.style.left = `${startX}%`;
+            token.style.top = `${startY}%`;
+            addLog(`Fielder placement rejected. Snapping back.`, 'red');
+            setTimeout(() => {
+              token.style.transition = 'left var(--dur-base) var(--ease-instrument), top var(--dur-base) var(--ease-instrument)';
+            }, 400);
+          } else {
+            renderApp();
+          }
+        }
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+      });
+    }
+
+    // Handles Drop validations & rules engine check
+    function processPlayerDrop(player, x, y, origX, origY) {
+      // 1. Boundary rope enforcement (Radius 46)
+      const dist = calcDistance(x, y);
+      if (dist > RADIUS_BOUNDARY) {
+        addLog(`[VIOLATION] Boundary rope exceeded! Fielders must stay inside the rope.`, 'red');
+        showRulesBanner(`Boundary rope exceeded! Placements must stay inside field.`);
+        return false;
+      }
+
+      // 2. Crease Locking / Snapping triggers
+      const isBowler = (player.id === state.matchContext.currentBowlerId);
+      if (player.role === 'WK') {
+        const distWK = Math.sqrt(Math.pow(x - 50, 2) + Math.pow(y - 59, 2));
+        if (distWK < 8) {
+          x = 50;
+          y = 62.5;
+          addLog(`[SNAP] ${player.name} locked behind popping crease stumps.`);
+        }
+      } else if (isBowler) {
+        const distBowler = Math.sqrt(Math.pow(x - 50, 2) + Math.pow(y - 41, 2));
+        if (distBowler < 8) {
+          x = 50;
+          y = 37.5;
+          addLog(`[SNAP] Bowler ${player.name} aligned to bowler end stumps.`);
+        }
+      }
+
+      // 3. Powerplay limits checks
+      const isOutside = dist > RADIUS_30YD;
+      const wasOutside = calcDistance(origX, origY) > RADIUS_30YD;
+      
+      if (isOutside && !wasOutside) {
+        // We are trying to move a fielder from inside to outside. Let's inspect outside limits!
+        const outsideCount = getOutsideCount();
+        const maxLimit = getMaxAllowedOutside();
+
+        if (outsideCount >= maxLimit) {
+          const ruleMsg = state.matchContext.isPowerplay 
+            ? `Only 2 fielders allowed outside during Powerplay!` 
+            : `Only 5 fielders allowed outside during Non-Powerplay!`;
+          
+          addLog(`[VIOLATION] Cannot place fielder outside circle. ${ruleMsg}`, 'red');
+          showRulesBanner(`Fielding Rule Violation: ${ruleMsg}`);
+          return false;
+        }
+      }
+
+      // If all rules hold, commit the position updates
+      player.x = x;
+      player.y = y;
+      player.inCircle = (dist <= RADIUS_30YD);
+      addLog(`Position updated: ${player.name} set at (${Math.round(x)}%, ${Math.round(y)}%)`);
+      hideRulesBanner();
+      return true;
+    }
+
+    // Rules Warning Banner Controller
+    function showRulesBanner(message) {
+      elViolationMessage.innerText = message;
+      elRulesAlertBanner.classList.remove('hidden-banner');
+      
+      // Trigger short container vibrate animation
+      elFieldBounds.style.animation = 'none';
+      elFieldBounds.offsetHeight; // trigger reflow
+      elFieldBounds.style.animation = 'field-shake 0.3s ease';
+      
+      // Clear shake animation
+      setTimeout(() => {
+        elFieldBounds.style.animation = 'none';
+      }, 400);
+    }
+
+    function hideRulesBanner() {
+      elRulesAlertBanner.classList.add('hidden-banner');
+    }
+
+    // Add field shake animation keyframes
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes field-shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-6px); }
+        40%, 80% { transform: translateX(6px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Global Telemetry Counters Refresher
+    function updateCounters() {
+      const activeCount = state.squad.filter(p => p.status === 'active').length;
+      elSquadActiveCount.innerText = activeCount;
+      
+      // Outside Circle telemetry counts
+      const outsideCount = getOutsideCount();
+      const maxLimit = getMaxAllowedOutside();
+      elOutsideCircleCount.innerText = outsideCount;
+      elOutsideCircleLimit.innerText = maxLimit;
+
+      if (outsideCount > maxLimit) {
+        elOutsideCircleCount.classList.add('count-warn');
+        showRulesBanner(`TACTICAL ILLEGAL: ${outsideCount} fielders outside the circle! Move fielders inside immediately.`);
+      } else {
+        elOutsideCircleCount.classList.remove('count-warn');
+        // If there's a warning currently displaying and it's because of outside circle count, hide it
+        if (elViolationMessage.innerText.includes('outside the circle')) {
+          hideRulesBanner();
+        }
+      }
+
+      // Check required roles
+      const wks = state.squad.filter(p => p.status === 'active' && p.role === 'WK');
+      const activeBowlers = state.squad.filter(p => p.status === 'active' && p.role === 'Bowler');
+      
+      if (activeCount !== 11) {
+        addLog(`[SYSTEM DIAGNOSTIC] Team is incomplete: Exactly 11 fielders must be placed. (Active: ${activeCount})`, 'red');
+      }
+      if (wks.length === 0) {
+        addLog(`[WARN] NO WICKET KEEPER ON TURF! Exactly 1 Wicket Keeper required on field.`, 'amber');
+      }
+      if (activeBowlers.length === 0) {
+        addLog(`[WARN] NO ACTIVE BOWLER ON TURF! Roster must contain active bowler.`, 'amber');
+      }
+    }
+
+    // Dynamic Batter Handedness Mirroring Action
+    function mirrorField() {
+      addLog(`Mirroring field positions: Flipping vertical pitch line...`, 'green');
+      
+      state.squad.forEach(player => {
+        if (player.status !== 'active') return;
+        
+        // Mirror coordinates horizontally relative to vertical axis at 50%
+        player.x = 100 - player.x;
+      });
+
+      renderApp();
+      addLog(`Tactical mirroring successfully compiled.`, 'green');
+    }
+
+    // Unified Master Rerender Routine
+    function renderApp() {
+      renderRoster();
+      renderTokens();
+      updateCounters();
+    }
+
+    // Event Handlers Wires
+    elMatchFormat.addEventListener('change', (e) => {
+      state.matchContext.format = e.target.value;
+      addLog(`Match format updated: ${state.matchContext.format}`);
+      
+      // Update powerplay configurations text
+      let ppOvers = '6 overs';
+      if (state.matchContext.format === '16-Over') ppOvers = '3 overs';
+      if (state.matchContext.format === '35-Over') ppOvers = '7 overs';
+      
+      addLog(`Powerplay rules adjusted: ${ppOvers} limit for format.`, 'amber');
+      renderApp();
+    });
+
+    elPowerplayToggle.addEventListener('click', () => {
+      state.matchContext.isPowerplay = !state.matchContext.isPowerplay;
+      
+      if (state.matchContext.isPowerplay) {
+        elPowerplayToggle.classList.add('active-state');
+        elPowerplayToggle.querySelector('.toggle-text').innerText = 'POWERPLAY ACTIVE';
+        addLog(`Powerplay ACTIVATED. Limits constricted: max 2 outside 30yd circle.`, 'green');
+      } else {
+        elPowerplayToggle.classList.remove('active-state');
+        elPowerplayToggle.querySelector('.toggle-text').innerText = 'NON-POWERPLAY';
+        addLog(`Powerplay DEACTIVATED. Limits extended: max 5 outside 30yd circle.`, 'amber');
+      }
+      renderApp();
+    });
+
+    elHandednessToggle.addEventListener('click', () => {
+      const isRHB = state.matchContext.batterHandedness === 'RHB';
+      state.matchContext.batterHandedness = isRHB ? 'LHB' : 'RHB';
+      
+      if (state.matchContext.batterHandedness === 'LHB') {
+        elHandednessToggle.classList.add('active-state');
+        elHandednessToggle.querySelector('.handedness-badge').innerText = 'LHB';
+        elHandednessToggle.querySelector('.toggle-text').innerText = 'LEFT-HANDED';
+      } else {
+        elHandednessToggle.classList.remove('active-state');
+        elHandednessToggle.querySelector('.handedness-badge').innerText = 'RHB';
+        elHandednessToggle.querySelector('.toggle-text').innerText = 'RIGHT-HANDED';
+      }
+      
+      // Run Mirroring Mathematics
+      mirrorField();
+    });
+
+    elBowlerSelect.addEventListener('change', (e) => {
+      const prevBowlerId = state.matchContext.currentBowlerId;
+      state.matchContext.currentBowlerId = e.target.value;
+      
+      const newBowler = state.squad.find(p => p.id === state.matchContext.currentBowlerId);
+      const oldBowler = state.squad.find(p => p.id === prevBowlerId);
+
+      if (newBowler) {
+        // If the new bowler was placed elsewhere, snap them to bowler stumps crease
+        newBowler.x = 50;
+        newBowler.y = 37.5;
+        
+        // If old bowler was at crease, reset them slightly so they don't overlap
+        if (oldBowler && oldBowler.x === 50 && oldBowler.y === 37.5) {
+          oldBowler.x = 42;
+          oldBowler.y = 39; // Mid-off default
+        }
+
+        addLog(`Active bowler switched to ${newBowler.name}. Snapped to delivery stumps.`);
+      }
+      renderApp();
+    });
+
+    elResetBtn.addEventListener('click', () => {
+      addLog(`Resetting strategizing board to default template...`, 'amber');
+      
+      // Perform deep restore of squad coordinates and roles
+      state.squad = JSON.parse(JSON.stringify(defaultRoster));
+      state.matchContext.format = '16-Over';
+      state.matchContext.isPowerplay = true;
+      state.matchContext.batterHandedness = 'RHB';
+      state.matchContext.currentBowlerId = 'p2';
+
+      // Reset DOM selects & buttons state
+      elMatchFormat.value = '16-Over';
+      
+      elPowerplayToggle.classList.add('active-state');
+      elPowerplayToggle.querySelector('.toggle-text').innerText = 'POWERPLAY ACTIVE';
+
+      elHandednessToggle.classList.remove('active-state');
+      elHandednessToggle.querySelector('.handedness-badge').innerText = 'RHB';
+      elHandednessToggle.querySelector('.toggle-text').innerText = 'RIGHT-HANDED';
+
+      populateBowlerSelect();
+      hideRulesBanner();
+      renderApp();
+      addLog(`Roster and field successfully restored to default setups.`, 'green');
+    });
+
+    elClearLogsBtn.addEventListener('click', () => {
+      elTerminalConsole.innerHTML = '<div class="log-line text-green">[LOG CLEAR] Terminal buffer successfully cleared.</div>';
+    });
+
+    // Boot Initialization Sequence
+    populateBowlerSelect();
+    renderApp();
+    addLog(`Strategizer initialized successfully. Match telemetry active.`, 'green');
+  });
+</script>
