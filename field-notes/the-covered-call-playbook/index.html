@@ -1,0 +1,685 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"><title>The Covered Call Playbook: How to Generate $100+/Month on a $10,000 Portfolio - C M Nafi</title><meta name="description" content="A personal website about the places that shaped me, the books I keep nearby, and the cricket matches I still replay."><link rel="canonical" href="https://www.cmnafi.com/field-notes/the-covered-call-playbook/"><meta property="og:type" content="website"><meta property="og:title" content="The Covered Call Playbook: How to Generate $100+/Month on a $10,000 Portfolio - C M Nafi"><meta property="og:description" content="A personal website about the places that shaped me, the books I keep nearby, and the cricket matches I still replay."><meta property="og:url" content="https://www.cmnafi.com/field-notes/the-covered-call-playbook/"><meta property="og:image" content="https://cmnafi.com/og-default.svg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="The Covered Call Playbook: How to Generate $100+/Month on a $10,000 Portfolio - C M Nafi"><meta name="twitter:description" content="A personal website about the places that shaped me, the books I keep nearby, and the cricket matches I still replay."><meta name="twitter:image" content="https://cmnafi.com/og-default.svg"><meta name="theme-color" content="#120f0d"><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-W7QGKS85CP"></script><script type="module">function i(){const t=document.querySelector(".page-shell");t&&setTimeout(()=>{t.classList.add("page-ready")},50),document.addEventListener("click",a=>{const e=a.target.closest("a");if(e&&e.href&&e.target!=="_blank"&&!e.hasAttribute("download")){const n=new URL(e.href,window.location.href);if(n.origin===window.location.origin){if(n.pathname===window.location.pathname&&n.hash)return;a.preventDefault(),t&&(t.classList.remove("page-ready"),t.classList.add("page-exiting")),setTimeout(()=>{window.location.href=e.href},300)}}})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",i):i();</script><link rel="stylesheet" href="/_astro/index.CAiLnJDt.css">
+<style>.flag[data-astro-cid-cutxav4q]{width:20px;height:14px;display:inline-block;border-radius:1px;overflow:hidden;position:relative;box-shadow:0 1px 2px #00000080}.yellow[data-astro-cid-cutxav4q]{background-color:var(--warning-amber)}.red[data-astro-cid-cutxav4q]{background-color:var(--racing-red)}.green[data-astro-cid-cutxav4q]{background-color:var(--telemetry-green)}.checkered[data-astro-cid-cutxav4q]{background-color:var(--pitlane-white)}.checker-pattern[data-astro-cid-cutxav4q]{width:100%;height:100%;background-image:linear-gradient(45deg,var(--paddock-black) 25%,transparent 25%,transparent 75%,var(--paddock-black) 75%),linear-gradient(45deg,var(--paddock-black) 25%,transparent 25%,transparent 75%,var(--paddock-black) 75%);background-size:8px 8px;background-position:0 0,4px 4px}
+.lap-timer[data-astro-cid-h7ihao7v]{font-family:var(--font-mono);color:var(--telemetry-green);background:var(--carbon);border:1px solid var(--graphite);padding:4px var(--grid-unit);border-radius:var(--radius-chip);display:inline-flex;align-items:center;font-size:14px;line-height:1;font-variant-numeric:tabular-nums}.paddock-override-nav[data-astro-cid-xvld5kou]{display:flex;justify-content:space-between;padding:2rem;font-family:var(--font-mono)}.return-wall[data-astro-cid-xvld5kou]{color:var(--muted);font-size:11px;letter-spacing:.15em;text-transform:uppercase}.nav-title[data-astro-cid-xvld5kou]{color:var(--pitlane-white);font-size:11px;letter-spacing:.15em}.note-detail[data-astro-cid-xvld5kou]{min-height:100vh;background:var(--paddock-black)}.paddock-article[data-astro-cid-xvld5kou]{max-width:760px;margin:0 auto;padding:2rem 2rem 6rem}.article-header[data-astro-cid-xvld5kou]{border-bottom:1px solid var(--carbon);padding-bottom:2rem;margin-bottom:3rem}.note-meta[data-astro-cid-xvld5kou]{display:flex;align-items:center;gap:1rem;font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:2rem;letter-spacing:.1em;flex-wrap:wrap}.timer-wrap[data-astro-cid-xvld5kou]{margin-left:auto}.article-header[data-astro-cid-xvld5kou] h1[data-astro-cid-xvld5kou]{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);margin:0 0 1.5rem;color:var(--pitlane-white);line-height:1.1}.summary[data-astro-cid-xvld5kou]{font-family:var(--font-body);font-size:1.25rem;color:var(--muted);margin:0;line-height:1.6}.prose[data-astro-cid-xvld5kou]{font-family:var(--font-body);font-size:1.15rem;line-height:1.8;color:var(--text)}.prose[data-astro-cid-xvld5kou] h2{font-family:var(--font-mono);font-size:1.3rem;letter-spacing:.1em;text-transform:uppercase;margin-top:4rem;margin-bottom:1.5rem;color:var(--warning-amber);padding-bottom:0}.prose[data-astro-cid-xvld5kou] h3{font-family:var(--font-display);font-size:1.8rem;margin-top:3rem;margin-bottom:1rem;color:var(--pitlane-white)}.prose[data-astro-cid-xvld5kou] p{margin-bottom:1.8rem;color:#f4f4f1d9}.prose[data-astro-cid-xvld5kou] a{color:var(--telemetry-green);text-decoration:underline;text-decoration-color:#00e67666;text-underline-offset:4px;transition:.2s}.prose[data-astro-cid-xvld5kou] a:hover{text-decoration-color:var(--telemetry-green)}.prose[data-astro-cid-xvld5kou] blockquote{border-left:3px solid var(--warning-amber);padding-left:1.5rem;margin-left:0;font-style:italic;color:var(--muted)}.prose[data-astro-cid-xvld5kou] ul,.prose[data-astro-cid-xvld5kou] ol{margin-bottom:1.8rem;padding-left:1.5rem}.prose[data-astro-cid-xvld5kou] li{margin-bottom:.8rem}.prose[data-astro-cid-xvld5kou] img{max-width:100%;height:auto;border-radius:var(--radius-card);margin:2rem 0;border:1px solid var(--carbon)}.theme-cricket[data-astro-cid-xvld5kou]{background-color:#0d2912!important}.theme-cricket[data-astro-cid-xvld5kou] .article-header[data-astro-cid-xvld5kou]{border-bottom:1px solid rgba(255,255,255,.4)}.theme-cricket[data-astro-cid-xvld5kou] .paddock-override-nav[data-astro-cid-xvld5kou]{border-bottom:1px solid rgba(255,255,255,.1)}.theme-cricket[data-astro-cid-xvld5kou] .prose[data-astro-cid-xvld5kou] h2{color:#fff;border-bottom:1px dashed rgba(255,255,255,.5);padding-bottom:.5rem;margin-bottom:2rem}.theme-cricket[data-astro-cid-xvld5kou] .prose[data-astro-cid-xvld5kou] blockquote{border-left:3px solid #fff;color:#ffffffe6}.theme-cricket[data-astro-cid-xvld5kou] .prose[data-astro-cid-xvld5kou] a{color:#fff;text-decoration-color:#fff6}.theme-cricket[data-astro-cid-xvld5kou] .prose[data-astro-cid-xvld5kou] a:hover{text-decoration-color:#fff}
+.site-footer[data-astro-cid-sz7xmlte]{width:100%;height:54px;border-top:1px solid rgba(255,255,255,.05);background:#05070b;padding:0 2rem;position:relative;z-index:50;display:flex;align-items:center}.footer-inner[data-astro-cid-sz7xmlte]{width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:nowrap;white-space:nowrap;overflow:hidden}.footer-brand[data-astro-cid-sz7xmlte]{display:flex;align-items:center;gap:1rem;flex-shrink:1;overflow:hidden}.footer-title[data-astro-cid-sz7xmlte]{font-family:Sora,sans-serif;font-weight:700;color:#f3f3f1;text-decoration:none;font-size:.9rem}.footer-copy[data-astro-cid-sz7xmlte]{font-family:Manrope,sans-serif;color:#8b919a;font-size:.8rem;text-overflow:ellipsis;overflow:hidden}.footer-actions[data-astro-cid-sz7xmlte]{display:flex;align-items:center;gap:1.5rem;border-left:1px solid rgba(255,255,255,.1);border-right:1px solid rgba(255,255,255,.1);padding:0 1.5rem;flex-shrink:0}.footer-nav[data-astro-cid-sz7xmlte],.footer-links[data-astro-cid-sz7xmlte]{display:flex;gap:1rem;align-items:center}.footer-nav[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte],.footer-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{font-family:DM Sans,sans-serif;color:#b8ad9a;font-size:.8rem;font-weight:600;text-decoration:none;transition:.2s}.footer-nav[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover,.footer-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:#0ea5b7}.footer-meta[data-astro-cid-sz7xmlte]{display:flex;gap:1rem;align-items:center;font-family:DM Sans,sans-serif;color:#8b919a;font-size:.75rem;flex-shrink:0}@media(max-width:1100px){.site-footer[data-astro-cid-sz7xmlte]{height:auto;min-height:54px;overflow-x:auto;padding:0 1rem}.footer-copy[data-astro-cid-sz7xmlte]{display:none}.footer-actions[data-astro-cid-sz7xmlte]{border:none;padding:0}}.page-shell{opacity:0;transform:scale(1.02);transform-origin:center 10vh;transition:opacity .3s cubic-bezier(.16,1,.3,1),transform .3s cubic-bezier(.16,1,.3,1);will-change:opacity,transform}.page-shell.page-ready{opacity:1;transform:scale(1)}.page-shell.page-exiting{opacity:0;transform:scale(.98)!important}
+</style></head> <body> <div class="page-shell"> <div class="ambient ambient--one"></div> <div class="ambient ambient--two"></div> <div class="grain"></div>  <main>  <div class="note-detail " data-astro-cid-xvld5kou> <nav class="paddock-override-nav" data-astro-cid-xvld5kou> <a href="/field-notes" class="return-wall" data-astro-cid-xvld5kou>← SECURE COMMS</a> <div class="nav-title" data-astro-cid-xvld5kou>INCOMING TELEMETRY</div> </nav> <article class="paddock-article" data-astro-cid-xvld5kou> <header class="article-header" data-astro-cid-xvld5kou> <div class="note-meta" data-astro-cid-xvld5kou> <div class="flag red" data-astro-cid-cutxav4q>  </div>  <span data-astro-cid-xvld5kou>FINANCE</span> <span data-astro-cid-xvld5kou>//</span> <span data-astro-cid-xvld5kou>Mar 19, 2026</span> <span class="timer-wrap" data-astro-cid-xvld5kou><div class="lap-timer" id="global-lap-timer" data-astro-cid-h7ihao7v> <span class="digits" data-astro-cid-h7ihao7v>00:00.000</span> </div> <script type="module">const o=document.querySelector("#global-lap-timer .digits");if(o){const e=Date.now();setInterval(()=>{const t=Date.now()-e,n=Math.floor(t/6e4).toString().padStart(2,"0"),a=Math.floor(t%6e4/1e3).toString().padStart(2,"0"),r=(t%1e3).toString().padStart(3,"0");o.textContent=`${n}:${a}.${r}`},10)}</script> </span> </div> <h1 data-astro-cid-xvld5kou>The Covered Call Playbook: How to Generate $100+/Month on a $10,000 Portfolio</h1> <p class="summary" data-astro-cid-xvld5kou>A deep dive into generating monthly income using covered calls, featuring SOFI, FIG, and RIVN.</p> </header> <div class="prose" data-astro-cid-xvld5kou> <p><strong>Three stocks, three strategies, one goal: turn a $10,000 portfolio into a monthly income machine using the most reliable options strategy ever invented.</strong> This isn’t day trading. This isn’t gambling. This is selling insurance — and the premiums have never been fatter.</p>
+<hr/>
+<h2 id="part-i-what-is-a-covered-call">Part I: What Is a Covered Call?</h2>
+<p>A <a href="/blog/the-covered-call-playbook" title="The Covered Call Playbook" class="cl-autolink">covered call</a> is the most conservative options strategy in existence. It’s so safe that retirement accounts allow it. Here’s how it works in plain English:</p>
+<p><strong>You own 100 shares of a stock. You sell someone the <em>right</em> to buy those shares from you at a higher price by a specific date. They pay you cash upfront for that right. That cash is yours to keep no matter what happens.</strong></p>
+<p>That’s it. That’s the whole strategy.</p>
+<p>The formal definition: a covered call involves holding a long position in a stock and simultaneously selling (writing) a call option on that same stock. The “covered” part means you own the underlying shares — you’re not naked. If the buyer exercises their option, you simply hand over shares you already own.</p>
+<h3 id="the-three-outcomes">The Three Outcomes</h3>
+<p>Every covered call ends one of three ways:</p>
+<p><strong>Outcome 1: Stock stays below the strike price (best case for income).</strong> The option expires worthless. You keep the premium AND your shares. You can immediately sell another call and collect more premium. This is the income machine scenario.</p>
+<p><strong>Outcome 2: Stock rises above the strike price (profitable but capped).</strong> Your shares get “called away” — you sell them at the strike price. You keep the premium PLUS the gain from your purchase price to the strike. You profit, but you miss any upside beyond the strike. This is the opportunity cost scenario.</p>
+<p><strong>Outcome 3: Stock drops significantly (the risk).</strong> The option expires worthless (good), but your shares have lost value (bad). The premium you collected provides a small cushion — your breakeven is your purchase price minus the premium. But if the stock drops 20-30%, the premium won’t save you. This is why stock selection matters.</p>
+<h3 id="the-math-behind-the-magic">The Math Behind the Magic</h3>
+<p>The premium you receive is determined primarily by three factors:</p>
+<p><strong>Implied Volatility (IV):</strong> The market’s expectation of how much the stock will move. Higher IV = fatter premiums. A stock with 65% IV pays roughly 2-3x more premium than one with 25% IV. This is why we specifically screen for high-IV stocks.</p>
+<p><strong>Time to Expiration (DTE):</strong> More time = more premium, but with diminishing returns. The sweet spot is 30-45 days — close enough that time decay (theta) works aggressively in your favor, far enough that you collect meaningful premium.</p>
+<p><strong>Strike Distance (Moneyness):</strong> How far above the current price your strike sits. At-the-money (ATM) strikes pay the most but get called away most often. 10-15% out-of-the-money (OTM) strikes pay less but let you keep the stock ~70-80% of the time.</p>
+<hr/>
+<h2 id="part-ii-when-is-the-best-time-to-sell-covered-calls">Part II: When Is the Best Time to Sell Covered Calls?</h2>
+<p>Not all market environments are created equal for covered call sellers. Here’s when the strategy shines — and when to be cautious.</p>
+<h3 id="ideal-conditions-now-march-2026">Ideal Conditions (Now: March 2026)</h3>
+<p><strong>Elevated implied volatility.</strong> The VIX sits around 25 as of March 20, 2026 — well above its long-term average of ~19. Individual stock IVs are even more inflated, especially in tech, fintech, and speculative growth names. Higher IV means you’re selling expensive insurance. This is the covered call seller’s paradise.</p>
+<p><strong>Range-bound or mildly bullish markets.</strong> The S&amp;P 500 has been choppy in early 2026, with tariff concerns, AI disruption fears, and interest rate uncertainty creating two-way volatility. <a href="/blog/the-covered-call-playbook" title="The Covered Call Playbook" class="cl-autolink">Covered calls</a> thrive in this environment: you collect fat premiums while the stock goes sideways.</p>
+<p><strong>Post-earnings periods.</strong> After a stock reports earnings, IV typically crushes 20-40% in a single day. Selling calls immediately after earnings captures the residual elevated IV while avoiding the binary risk of a surprise.</p>
+<p><strong>Stocks below analyst consensus targets.</strong> When a stock trades well below where analysts think it should be, you have a fundamental cushion. If the stock recovers, you profit from appreciation up to the strike plus premium. If it stays flat, you just collect income.</p>
+<h3 id="when-to-be-cautious">When to Be Cautious</h3>
+<p><strong>Before earnings announcements.</strong> IV spikes into earnings. If you sell a call before earnings and the stock gaps up 15%, you get called away at a price far below where the stock trades. Wait until after.</p>
+<p><strong>In a strong bull market.</strong> If the market is ripping higher, covered calls will cap your upside painfully. In 2024, selling covered calls on NVDA would have cost you tens of thousands in missed gains.</p>
+<p><strong>On stocks with deteriorating fundamentals.</strong> Never sell covered calls on a stock you wouldn’t want to own outright. The premium is not worth riding a stock to zero.</p>
+<hr/>
+<h2 id="part-iii-how-we-screened-for-the-top-3">Part III: How We Screened for the Top 3</h2>
+<p>To find the highest-earning covered call candidates under $10,000, we applied five filters:</p>
+<ol>
+<li><strong>Share price under $25</strong> — so you can buy 400+ shares (4+ contracts) within a $10K budget. More contracts = more premium = more income.</li>
+<li><strong>30-day implied volatility above 60%</strong> — ensures fat premiums worth the effort.</li>
+<li><strong>Average daily options volume above 100,000 contracts</strong> — ensures tight bid-ask spreads and easy execution.</li>
+<li><strong>Market cap above $5 billion</strong> — eliminates penny stocks and micro-caps with existential risk.</li>
+<li><strong>Analyst consensus “Buy” or “Hold”</strong> — confirms fundamental support beneath the position.</li>
+</ol>
+<p>After screening the entire US options market as of March 20, 2026, our top three picks are:</p>
+<hr/>
+<h2 id="pick-1-sofi-technologies-sofi--the-fintech-premium-machine">Pick #1: SoFi Technologies (SOFI) — The Fintech Premium Machine</h2>
+<h3 id="why-sofi">Why SOFI</h3>
+<p>SoFi is the dominant all-in-one fintech platform — banking, lending, investing, and insurance under one roof. The stock has been on a roller coaster: from $8.60 a year ago to $32.73 in November 2025, and back down to ~$17 amid the broader tech selloff and rate uncertainty. This kind of volatility is exactly what creates juicy option premiums.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td><strong>Current Price</strong></td><td>~$17.08</td></tr><tr><td><strong>30-Day IV</strong></td><td>~63% (52-week range: 47-114%)</td></tr><tr><td><strong>52-Week Range</strong></td><td>$8.60 – $32.73</td></tr><tr><td><strong>Market Cap</strong></td><td>~$18B</td></tr><tr><td><strong>Daily Options Volume</strong></td><td>Among most active on NASDAQ</td></tr><tr><td><strong>Analyst Target</strong></td><td>~$22-25 (consensus “Buy”)</td></tr></tbody></table>
+<h3 id="position-construction">Position Construction</h3>
+<p>$10,000 ÷ $17.08 = <strong>585 shares</strong> → round down to <strong>500 shares</strong> (5 round lots)
+Capital deployed: <strong>$8,540</strong>
+Contracts to sell: <strong>5 covered calls</strong>
+Cash reserve: ~$1,460 (buffer or additional buying power)</p>
+<h3 id="three-scenarios">Three Scenarios</h3>
+<p><strong>Scenario A — Conservative: $20 Strike, 30 DTE (17% OTM)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Est. Premium</td><td>~$0.40/share</td></tr><tr><td><strong>Total Income</strong></td><td>5 × 100 × $0.40 = <strong>$200</strong></td></tr><tr><td>Annualized Yield</td><td>~28%</td></tr><tr><td>Breakeven</td><td>$17.08 – $0.40 = $16.68</td></tr><tr><td>Max Profit (called)</td><td>($20 – $17.08 + $0.40) × 500 = <strong>$1,660</strong></td></tr><tr><td>Prob. Keeping Shares</td><td>~80%</td></tr></tbody></table>
+<p><strong>Scenario B — Balanced: $19 Strike, 30 DTE (11% OTM)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Est. Premium</td><td>~$0.70/share</td></tr><tr><td><strong>Total Income</strong></td><td>5 × 100 × $0.70 = <strong>$350</strong></td></tr><tr><td>Annualized Yield</td><td>~49%</td></tr><tr><td>Breakeven</td><td>$17.08 – $0.70 = $16.38</td></tr><tr><td>Max Profit (called)</td><td>($19 – $17.08 + $0.70) × 500 = <strong>$1,310</strong></td></tr><tr><td>Prob. Keeping Shares</td><td>~65%</td></tr></tbody></table>
+<p><strong>Scenario C — Aggressive: $18 Strike, 30 DTE (5% OTM)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Est. Premium</td><td>~$1.10/share</td></tr><tr><td><strong>Total Income</strong></td><td>5 × 100 × $1.10 = <strong>$550</strong></td></tr><tr><td>Annualized Yield</td><td>~77%</td></tr><tr><td>Breakeven</td><td>$17.08 – $1.10 = $15.98</td></tr><tr><td>Max Profit (called)</td><td>($18 – $17.08 + $1.10) × 500 = <strong>$1,010</strong></td></tr><tr><td>Prob. Keeping Shares</td><td>~45%</td></tr></tbody></table>
+<h3 id="the-sofi-edge">The SOFI Edge</h3>
+<p>SOFI’s 63% IV means you’re collecting roughly 2.5x the premium you’d get on a comparable-priced stock with normal volatility. The analyst consensus target of $22-25 provides fundamental upside cushion, and the company’s growing profitability (first full-year profit expected in 2026) gives you confidence in holding the underlying shares. Next earnings: late April 2026 — perfect for selling 30-DTE calls that expire before the report.</p>
+<hr/>
+<h2 id="pick-2-figma-fig--the-post-ipo-volatility-goldmine">Pick #2: Figma (FIG) — The Post-IPO Volatility Goldmine</h2>
+<h3 id="why-fig">Why FIG</h3>
+<p><a href="/blog/figma-the-billion-dollar-bet">Figma</a> is the dominant collaborative design platform used by 95% of the Fortune 500, growing revenue 40% year-over-year to $1.37B guidance for 2026. The stock IPO’d at $33 in July 2025, soared to $143, then crashed 80% to ~$24 — creating a volatility regime that is a covered call seller’s dream. Google’s Stitch launch in March 2026 added another layer of fear-driven IV.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td><strong>Current Price</strong></td><td>~$24.29</td></tr><tr><td><strong>30-Day IV</strong></td><td>~65%</td></tr><tr><td><strong>52-Week Range</strong></td><td>$19.85 – $142.92</td></tr><tr><td><strong>Market Cap</strong></td><td>~$12.6B</td></tr><tr><td><strong>Revenue (2025)</strong></td><td>$1.06B (41% growth)</td></tr><tr><td><strong>Analyst Target</strong></td><td>~$50.50 (consensus “Buy”)</td></tr><tr><td><strong>Cash on Hand</strong></td><td>$1.7B</td></tr></tbody></table>
+<h3 id="position-construction-1">Position Construction</h3>
+<p>$10,000 ÷ $24.29 = <strong>411 shares</strong> → round down to <strong>400 shares</strong> (4 round lots)
+Capital deployed: <strong>$9,716</strong>
+Contracts to sell: <strong>4 covered calls</strong></p>
+<h3 id="three-scenarios-1">Three Scenarios</h3>
+<p><strong>Scenario A — Conservative: $30 Strike, 45 DTE (24% OTM)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Est. Premium</td><td>~$0.55/share</td></tr><tr><td><strong>Total Income</strong></td><td>4 × 100 × $0.55 = <strong>$220</strong></td></tr><tr><td>Annualized Yield</td><td>~18%</td></tr><tr><td>Breakeven</td><td>$24.29 – $0.55 = $23.74</td></tr><tr><td>Max Profit (called)</td><td>($30 – $24.29 + $0.55) × 400 = <strong>$2,504</strong></td></tr><tr><td>Prob. Keeping Shares</td><td>~85%</td></tr></tbody></table>
+<p><strong>Scenario B — Balanced: $27 Strike, 30 DTE (11% OTM)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Est. Premium</td><td>~$1.10/share</td></tr><tr><td><strong>Total Income</strong></td><td>4 × 100 × $1.10 = <strong>$440</strong></td></tr><tr><td>Annualized Yield</td><td>~54%</td></tr><tr><td>Breakeven</td><td>$24.29 – $1.10 = $23.19</td></tr><tr><td>Max Profit (called)</td><td>($27 – $24.29 + $1.10) × 400 = <strong>$1,524</strong></td></tr><tr><td>Prob. Keeping Shares</td><td>~70%</td></tr></tbody></table>
+<p><strong>Scenario C — Aggressive: $25 Strike, 30 DTE (3% OTM)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Est. Premium</td><td>~$1.80/share</td></tr><tr><td><strong>Total Income</strong></td><td>4 × 100 × $1.80 = <strong>$720</strong></td></tr><tr><td>Annualized Yield</td><td>~89%</td></tr><tr><td>Breakeven</td><td>$24.29 – $1.80 = $22.49</td></tr><tr><td>Max Profit (called)</td><td>($25 – $24.29 + $1.80) × 400 = <strong>$1,004</strong></td></tr><tr><td>Prob. Keeping Shares</td><td>~50%</td></tr></tbody></table>
+<h3 id="the-fig-edge">The FIG Edge</h3>
+<p>FIG trades at roughly 9x forward revenue with $1.7B in cash ($3.26/share) — a massive downside cushion. The analyst consensus of ~$50 implies 100%+ upside, meaning even if your shares get called away at $27-30, you’ve still sold well below fair value. The 65% IV is a direct gift from Google Stitch anxiety and post-IPO lock-up selling. Next earnings: June 18, 2026.</p>
+<hr/>
+<h2 id="pick-3-rivian-automotive-rivn--the-volatility-king">Pick #3: Rivian Automotive (RIVN) — The Volatility King</h2>
+<h3 id="why-rivn">Why RIVN</h3>
+<p>Rivian is the highest-IV major stock under $20 in the market right now. The electric vehicle maker just announced a $1.25B robotaxi partnership with Uber, is preparing to launch its make-or-break R2 SUV this spring, and is burning through cash at a rate that has Polymarket pricing a 34.5% probability of bankruptcy before year-end. That level of uncertainty translates to monster option premiums — IV is likely 80-90%+. For a covered call seller willing to accept the fundamental risk, RIVN offers the highest raw premium income per dollar deployed.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td><strong>Current Price</strong></td><td>~$15.21</td></tr><tr><td><strong>30-Day IV</strong></td><td>~80-90% (est.)</td></tr><tr><td><strong>52-Week Range</strong></td><td>$8.26 – $29.22</td></tr><tr><td><strong>Market Cap</strong></td><td>~$15B</td></tr><tr><td><strong>Catalysts</strong></td><td>R2 launch (spring), Uber robotaxi deal</td></tr><tr><td><strong>Risk Level</strong></td><td>HIGH — cash burn, no profitability</td></tr></tbody></table>
+<h3 id="position-construction-2">Position Construction</h3>
+<p>$10,000 ÷ $15.21 = <strong>657 shares</strong> → round down to <strong>600 shares</strong> (6 round lots)
+Capital deployed: <strong>$9,126</strong>
+Contracts to sell: <strong>6 covered calls</strong>
+Cash reserve: ~$874</p>
+<h3 id="three-scenarios-2">Three Scenarios</h3>
+<p><strong>Scenario A — Conservative: $18 Strike, 30 DTE (18% OTM)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Est. Premium</td><td>~$0.50/share</td></tr><tr><td><strong>Total Income</strong></td><td>6 × 100 × $0.50 = <strong>$300</strong></td></tr><tr><td>Annualized Yield</td><td>~39%</td></tr><tr><td>Breakeven</td><td>$15.21 – $0.50 = $14.71</td></tr><tr><td>Max Profit (called)</td><td>($18 – $15.21 + $0.50) × 600 = <strong>$1,974</strong></td></tr><tr><td>Prob. Keeping Shares</td><td>~80%</td></tr></tbody></table>
+<p><strong>Scenario B — Balanced: $17 Strike, 30 DTE (12% OTM)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Est. Premium</td><td>~$0.80/share</td></tr><tr><td><strong>Total Income</strong></td><td>6 × 100 × $0.80 = <strong>$480</strong></td></tr><tr><td>Annualized Yield</td><td>~63%</td></tr><tr><td>Breakeven</td><td>$15.21 – $0.80 = $14.41</td></tr><tr><td>Max Profit (called)</td><td>($17 – $15.21 + $0.80) × 600 = <strong>$1,554</strong></td></tr><tr><td>Prob. Keeping Shares</td><td>~65%</td></tr></tbody></table>
+<p><strong>Scenario C — Aggressive: $16 Strike, 30 DTE (5% OTM)</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Est. Premium</td><td>~$1.20/share</td></tr><tr><td><strong>Total Income</strong></td><td>6 × 100 × $1.20 = <strong>$720</strong></td></tr><tr><td>Annualized Yield</td><td>~95%</td></tr><tr><td>Breakeven</td><td>$15.21 – $1.20 = $14.01</td></tr><tr><td>Max Profit (called)</td><td>($16 – $15.21 + $1.20) × 600 = <strong>$1,194</strong></td></tr><tr><td>Prob. Keeping Shares</td><td>~45%</td></tr></tbody></table>
+<h3 id="the-rivn-edge--and-warning">The RIVN Edge — and Warning</h3>
+<p>RIVN gives you 6 contracts on a $10K budget — more than any other pick. Combined with ~80-90% IV, the raw premium income is extraordinary. But this comes with genuine fundamental risk: Rivian is unprofitable, burning over $1B/quarter in free cash flow, and faces existential questions about its path to viability. <strong>This is the high-risk, high-reward pick.</strong> Only appropriate for investors who understand they could lose 30-50% of the underlying position if the R2 launch disappoints or cash runs low.</p>
+<hr/>
+<h2 id="part-iv-the-10k-monthly-income-dashboard">Part IV: The $10K Monthly Income Dashboard</h2>
+<p>Here’s what monthly income looks like for each pick using the Balanced (Scenario B) approach, repeated monthly for one year:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Stock</th><th>Price</th><th>Shares</th><th>Contracts</th><th>Monthly Premium</th><th>Annual Est.</th><th>Yield on Capital</th></tr></thead><tbody><tr><td><strong>SOFI</strong></td><td>$17.08</td><td>500</td><td>5</td><td><strong>$350</strong></td><td><strong>$4,200</strong></td><td><strong>49%</strong></td></tr><tr><td><strong>FIG</strong></td><td>$24.29</td><td>400</td><td>4</td><td><strong>$440</strong></td><td><strong>$5,280</strong></td><td><strong>54%</strong></td></tr><tr><td><strong>RIVN</strong></td><td>$15.21</td><td>600</td><td>6</td><td><strong>$480</strong></td><td><strong>$5,760</strong></td><td><strong>63%</strong></td></tr></tbody></table>
+<h3 id="or-split-the-10k-across-all-three">Or, Split the $10K Across All Three:</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Allocation</th><th>Shares</th><th>Contracts</th><th>Monthly Premium</th></tr></thead><tbody><tr><td>$3,333 in SOFI (195 shares)</td><td>100</td><td>1</td><td>~$70</td></tr><tr><td>$3,333 in FIG (137 shares)</td><td>100</td><td>1</td><td>~$110</td></tr><tr><td>$3,333 in RIVN (219 shares)</td><td>200</td><td>2</td><td>~$160</td></tr><tr><td><strong>Total</strong></td><td><strong>400</strong></td><td><strong>4</strong></td><td><strong>~$340/month</strong></td></tr></tbody></table>
+<p><em>Diversified approach: ~$340/month = ~$4,080/year = ~41% annualized yield on $10K</em></p>
+<hr/>
+<h2 id="part-v-the-rules-of-engagement">Part V: The Rules of Engagement</h2>
+<h3 id="rule-1-never-sell-through-earnings">Rule 1: Never Sell Through Earnings</h3>
+<p>Close or roll your calls 5-7 days before an earnings announcement. The binary risk of a 15-20% gap is not worth the extra week of theta decay.</p>
+<p><strong>Key Earnings Dates:</strong></p>
+<ul>
+<li>SOFI: Late April 2026</li>
+<li>FIG: June 18, 2026</li>
+<li>RIVN: Early May 2026</li>
+</ul>
+<h3 id="rule-2-target-delta-020030">Rule 2: Target Delta 0.20–0.30</h3>
+<p>This puts your strike at roughly 10-15% OTM — the sweet spot between premium income and probability of keeping your shares. A delta of 0.25 means there’s roughly a 75% chance the option expires worthless (you keep shares + premium).</p>
+<h3 id="rule-3-close-at-50-profit-early">Rule 3: Close at 50% Profit Early</h3>
+<p>If your call drops to 50% of the premium you collected within the first 10-15 days, buy it back and sell a new one. This locks in profit faster and allows you to sell more calls per year.</p>
+<h3 id="rule-4-set-a-hard-stop-on-the-stock">Rule 4: Set a Hard Stop on the Stock</h3>
+<p>If any position drops 25%+ from your entry, reassess the thesis before continuing to sell calls. Covered calls cushion 3-7% of downside per month — they don’t protect against fundamental collapse.</p>
+<h3 id="rule-5-roll-dont-panic">Rule 5: Roll, Don’t Panic</h3>
+<p>If your stock approaches the strike near expiration and you don’t want to be called away, “roll” the call — buy back the current call and sell a new one at a later expiration and/or higher strike. You’ll typically collect additional net premium for the roll.</p>
+<h3 id="rule-6-track-your-basis">Rule 6: Track Your Basis</h3>
+<p>Every premium you collect reduces your cost basis. After 6 months of selling calls on SOFI, your effective cost basis might be $17.08 – $2,100/500 = $12.88. That’s a 25% lower breakeven than your original purchase. This is the compounding magic of covered calls.</p>
+<hr/>
+<h2 id="part-vi-side-by-side-comparison">Part VI: Side-by-Side Comparison</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Factor</th><th>SOFI</th><th>FIG</th><th>RIVN</th></tr></thead><tbody><tr><td><strong>Risk Level</strong></td><td>Moderate</td><td>Moderate</td><td>High</td></tr><tr><td><strong>IV</strong></td><td>~63%</td><td>~65%</td><td>~80-90%</td></tr><tr><td><strong>Contracts per $10K</strong></td><td>5</td><td>4</td><td>6</td></tr><tr><td><strong>Best Monthly Income</strong></td><td>$350 (balanced)</td><td>$440 (balanced)</td><td>$480 (balanced)</td></tr><tr><td><strong>Fundamental Floor</strong></td><td>Growing profitability</td><td>$1.7B cash, 40% growth</td><td>Cash burn, no profit</td></tr><tr><td><strong>Analyst Upside</strong></td><td>~40% to $22-25</td><td>~100% to $50</td><td>Speculative</td></tr><tr><td><strong>Best For</strong></td><td>Moderate risk income</td><td>Growth + income</td><td>Maximum premium seekers</td></tr><tr><td><strong>Biggest Risk</strong></td><td>Rate sensitivity, loan losses</td><td>AI/Google competition</td><td>Bankruptcy risk (34% per Polymarket)</td></tr><tr><td><strong>Next Earnings</strong></td><td>Late April 2026</td><td>June 18, 2026</td><td>Early May 2026</td></tr></tbody></table>
+<hr/>
+<h2 id="part-vii-frequently-asked-questions">Part VII: Frequently Asked Questions</h2>
+<p><strong>Q: Do I need $10,000 in cash to start?</strong>
+A: You need enough to buy at least 100 shares (1 contract). RIVN at $15 means you can start with ~$1,521. SOFI at $17 requires ~$1,708. But more shares = more contracts = more income.</p>
+<p><strong>Q: What if my shares get called away?</strong>
+A: You profit! You keep the premium plus any appreciation up to the strike. You can then rebuy the shares and start again, or move to a different stock.</p>
+<p><strong>Q: Can I do this in a retirement account (IRA)?</strong>
+A: Yes. Covered calls are Level 1 options — approved in most IRAs and retirement accounts. This makes them tax-advantaged if done inside a Roth IRA.</p>
+<p><strong>Q: How much time does this take?</strong>
+A: About 15 minutes per month per position. You set the trade, check it once a week, and manage at expiration. It’s not day trading.</p>
+<p><strong>Q: What about commissions?</strong>
+A: Most major brokers (Robinhood, Schwab, Fidelity, Interactive Brokers) charge $0 commission on stock trades and $0-$0.65 per options contract. On a 5-contract SOFI trade, you’re paying $0-$3.25 total.</p>
+<p><strong>Q: What if IV drops?</strong>
+A: Lower IV means lower premiums. If the market calms down and VIX drops to 15, premiums might fall 30-40%. The strategy still works — just with smaller monthly income. This is why screening for currently elevated IV matters.</p> </div> </article> </div>  </main> <footer class="site-footer" data-astro-cid-sz7xmlte> <div class="footer-inner" data-astro-cid-sz7xmlte> <div class="footer-brand" data-astro-cid-sz7xmlte> <a class="footer-title" href="/" data-astro-cid-sz7xmlte>C M Nafi</a> <span class="footer-copy" data-astro-cid-sz7xmlte>A personal home for my story, my books, and the cricket memories worth keeping.</span> </div> <div class="footer-actions" data-astro-cid-sz7xmlte> <nav class="footer-nav" aria-label="Footer navigation" data-astro-cid-sz7xmlte> <a href="/" data-astro-cid-sz7xmlte>Pit Wall</a><a href="/garage" data-astro-cid-sz7xmlte>Garage</a><a href="/field-notes" data-astro-cid-sz7xmlte>Field Notes</a><a href="/story" data-astro-cid-sz7xmlte>Story</a><a href="/connect" data-astro-cid-sz7xmlte>Connect</a> </nav> <div class="footer-links" data-astro-cid-sz7xmlte> <a href="mailto:nafi@cmnafi.com" data-astro-cid-sz7xmlte>nafi@cmnafi.com</a> <a href="https://github.com/CMNafi" target="_blank" rel="noreferrer" data-astro-cid-sz7xmlte> GitHub </a><a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noreferrer" data-astro-cid-sz7xmlte> LinkedIn </a><a href="mailto:nafi@cmnafi.com" rel="noreferrer" data-astro-cid-sz7xmlte> Email </a> </div> </div> <div class="footer-meta" data-astro-cid-sz7xmlte> <span data-astro-cid-sz7xmlte>&copy; 2026</span> <span data-astro-cid-sz7xmlte>Updated May 21, 2026</span> </div> </div> </footer>  </div>  <script type="module">window.dataLayer=window.dataLayer||[];function a(){dataLayer.push(arguments)}a("js",new Date);a("config","G-W7QGKS85CP");</script> </body> </html> 

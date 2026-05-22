@@ -22,5 +22,15 @@
   /* Motion — easing modeled on acceleration curves */
   --ease-launch:   cubic-bezier(.2, .8, .2, 1);      /* out of pitlane */
   --ease-tire:     cubic-bezier(.6, .04, .98, .335); /* braking */
-  --ease-downforce: cubic-bezier(.4, 0, .2, 1);      /* neutral */
+  /* Jony Ive Inspired Material Design Tokens */
+  --space-black:     #050505;   /* ultra-deep base */
+  --titanium-dark:   #0d0d0f;   /* surface layer 1 */
+  --titanium-light:  #18181b;   /* surface layer 2 */
+  --titanium-border: rgba(255, 255, 255, 0.05); /* hairline chamfer */
+  --titanium-border-hover: rgba(255, 255, 255, 0.15);
+  --text-warm-white: #f5f5f7;   /* premium ink */
+  --text-sand-gray:  #86868b;   /* secondary details */
+  --apple-silver:    #e8e8ed;   /* brushed silver highlights */
+  --ease-spring:     cubic-bezier(0.25, 1, 0.5, 1); /* custom elastic material transition */
 }
+

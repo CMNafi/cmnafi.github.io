@@ -1,218 +1,1340 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import TelemetryGrid from '@/components/telemetry/TelemetryGrid.astro';
-import StatusDot from '@/components/telemetry/StatusDot.astro';
-import SectorBadge from '@/components/telemetry/SectorBadge.astro';
-import LapTimer from '@/components/telemetry/LapTimer.astro';
 import { getCollection } from 'astro:content';
 
 const projects = await getCollection('projects');
 const notes = await getCollection('field-notes');
 
-// Current Lap - Most recently updated active project
-const liveProjects = projects
-  .filter(p => p.data.status === 'live')
+// Current Project - Most recently updated active project
+const activeProjects = projects
+  .filter(p => p.data.status === 'live' || p.data.status === 'brewing')
   .sort((a, b) => {
     const timeA = a.data.updatedAt?.valueOf() || a.data.startedAt?.valueOf() || 0;
     const timeB = b.data.updatedAt?.valueOf() || b.data.startedAt?.valueOf() || 0;
     return timeB - timeA;
   });
-const currentLap = liveProjects[0];
+const featuredProject = activeProjects[0] || projects[0];
 
-// Latest Field Note
-const latestNote = notes.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())[0];
+// Latest Field Note (non-draft)
+const latestNote = notes
+  .filter(n => !n.data.draft)
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())[0];
 
 const sectors = [
-  { id: 'S1', name: 'GARAGE', href: '/garage', label: 'Projects & Apps' },
-  { id: 'S2', name: 'FIELD NOTES', href: '/field-notes', label: 'Telemetry Log' },
-  { id: 'S3', name: 'DRIVER', href: '/story', label: 'Biography' },
-  { id: 'S4', name: 'PARC FERMÉ', href: '/connect', label: 'Comms' },
-  { id: 'S5', name: 'CAIA CORNER', href: '/caia', label: 'Study Hub' }
+  { id: '[G]', name: 'Garage', href: '/garage', label: 'Engineering Showcase', spec: `${projects.length} CHASSIS LOGGED` },
+  { id: '[FN]', name: 'Field Notes', href: '/field-notes', label: 'Capital & Technical Telemetry', spec: `${notes.length} LOGS DEPLOYED` },
+  { id: '[S]', name: 'Story', href: '/story', label: 'Biography & Ethos', spec: 'SPECIFICATION 1.0.0' },
+  { id: '[C]', name: 'Connect', href: '/connect', label: 'Parc Fermé & Feeds', spec: 'COMMS STACK ACTIVE' }
 ];
 ---
 
-<BaseLayout title="Pit Wall" hideHeader={true}>
-  <main class="pit-wall">
-    <div class="strategist-grid">
+<BaseLayout title="Home" hideHeader={true}>
+  <!-- Magnetic Cursor Element -->
+  <div id="magnetic-cursor" class="magnetic-cursor"></div>
+
+  <!-- Real-time scroll telemetry progress line -->
+  <div class="scroll-telemetry-rail">
+    <div id="scroll-progress-indicator" class="scroll-progress-bar"></div>
+  </div>
+
+  <main class="showroom-container">
+    <!-- Bespoke Jony Ive Monogram Header -->
+    <header class="showroom-header">
+      <div class="monogram">
+        <span class="m-serif">C M Nafi</span>
+        <span class="m-breath-dot">•</span>
+        <span class="m-arrow">→</span>
+      </div>
+      <div class="header-specs">
+        <span class="h-spec" id="scroll-percentage-display">[ 00% SCROLL ]</span>
+        <span class="h-divider">/</span>
+        <span class="h-spec monospace" id="header-telemetry-coords">00.0000° N</span>
+      </div>
+    </header>
+
+    <!-- Main Typographic Intro + Subliminal Background Wave Canvas -->
+    <section class="intro-section">
+      <div class="canvas-wrapper">
+        <canvas id="telemetry-canvas"></canvas>
+      </div>
       
-      <!-- HERO: Profile Block -->
-      <section class="hero-block panel p-main">
-        <div class="hero-top">
-          <div class="driver-id">
-            <span class="abbr">CMN</span>
-            <LapTimer />
-          </div>
-          <h1 class="pilot-name">C M NAFI</h1>
-          <h2 class="role">STRATEGIST // ENGINEER</h2>
-        </div>
-        <div class="hero-bottom">
-          <p>I build systems, analyze capital flow, and write the telemetry of it all. You are viewing the global cockpit.</p>
-        </div>
-      </section>
+      <div class="intro-content">
+        <h1 class="intro-headline" id="hero-headline">
+          engineering, finance, technology — and everything I find interesting in between.
+        </h1>
+        <p class="intro-lead">
+          Solutions Engineer at <a href="/story#stint-dasseti" class="standout-link inline-stint">Dasseti</a>. Previously <a href="/story#stint-blackrock" class="standout-link inline-stint">BlackRock</a>, <a href="/story#stint-mayoclinic" class="standout-link inline-stint">Mayo Clinic</a>, <a href="/story#stint-skybridge" class="standout-link inline-stint">SkyBridge</a>. Long-form essays on the businesses and deals shaping <a href="/field-notes/sovereign-wealth-invasion" class="standout-link inline-essay">global capital</a> — and the occasional <a href="/field-notes/seven-to-defend-swat-vs-royal-phoenix" class="standout-link inline-cricket">last-over thriller</a>.
+        </p>
+      </div>
+    </section>
 
-      <!-- CURRENT LAP: Featured Project -->
-      <section class="current-lap panel">
-        {currentLap ? (
-          <>
-            <header class="panel-header">
-              <span class="label">CURRENT LAP</span>
-              <StatusDot state={currentLap.data.status as any} />
-            </header>
-            <div class="lap-data">
-              <h3><a href={currentLap.data.liveUrl || `/garage/${currentLap.slug}`}>{currentLap.data.title}</a></h3>
-              <p>{currentLap.data.summary}</p>
-              <TelemetryGrid 
-                updated={(currentLap.data.updatedAt || currentLap.data.startedAt)?.toLocaleDateString()}
-                status={currentLap.data.status as any}
-                stack={currentLap.data.stack?.slice(0, 2).join(', ') || 'N/A'}
-                link={currentLap.data.liveUrl || `/garage/${currentLap.slug}`}
-                linkLabel={currentLap.data.liveUrl ? "LAUNCH APP →" : "VIEW →"}
-              />
+    <!-- Showcase Pedestal: Featured Active Project -->
+    {featuredProject && (
+      <section class="pedestal-section">
+        <div class="section-label-row">
+          <span class="section-label">ACTIVE SPECIMEN</span>
+          <div class="spec-status">
+            <span class={`status-indicator ${featuredProject.data.status}`}></span>
+            <span class="status-text monospace">{featuredProject.data.status.toUpperCase()}</span>
+          </div>
+        </div>
+        
+        <div class="material-card featured-pedestal">
+          <div class="pedestal-content">
+            <div class="pedestal-left">
+              <span class="pedestal-category monospace">{featuredProject.data.category.toUpperCase()}</span>
+              <h2 class="pedestal-title">
+                <a href={featuredProject.data.liveUrl || `/garage/${featuredProject.slug}`}>
+                  {featuredProject.data.title}
+                </a>
+              </h2>
+              <p class="pedestal-summary">{featuredProject.data.summary}</p>
             </div>
-          </>
-        ) : (
-          <div class="lap-data no-live">
-            <p class="placeholder-msg">NO CAR ON TRACK</p>
-            <a href="/garage" class="sys-btn" style="margin-top: 1rem;">SEE THE GARAGE →</a>
-          </div>
-        )}
-      </section>
-
-      <!-- SECTORS: Navigation -->
-      <section class="sectors-block panel">
-        <header class="panel-header">
-          <span class="label">SECTORS // NAVIGATION</span>
-        </header>
-        <div class="sector-nav">
-          {sectors.map(s => (
-            <a href={s.href} class="sector-button">
-              <SectorBadge variant="sector1" label={s.id} />
-              <div class="s-info">
-                <span class="s-name">{s.name}</span>
-                <span class="s-label">{s.label}</span>
+            
+            <div class="pedestal-right">
+              <div class="spec-grid">
+                <div class="spec-item">
+                  <span class="spec-label">TECHNOLOGY</span>
+                  <span class="spec-val monospace">{featuredProject.data.stack?.slice(0, 3).join(', ') || 'CUSTOM'}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">STARTED</span>
+                  <span class="spec-val monospace">{featuredProject.data.startedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">LATEST BUILD</span>
+                  <span class="spec-val monospace">
+                    {(featuredProject.data.updatedAt || featuredProject.data.startedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                  </span>
+                </div>
               </div>
-              <span class="arrow">→</span>
-            </a>
-          ))}
+              <div class="pedestal-actions">
+                <a href={featuredProject.data.liveUrl || `/garage/${featuredProject.slug}`} class="milled-btn">
+                  LAUNCH SPECIMEN <span class="arrow">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+    )}
 
-      <!-- LATEST TELEMETRY (Field Note) -->
-      <section class="latest-note panel p-alt">
-        <header class="panel-header">
-          <span class="label">LATEST COMMS</span>
-        </header>
-        {latestNote && (
-          <div class="note-data">
-            <SectorBadge variant="p2" label={latestNote.data.category} />
-            <h3 class="note-title"><a href={`/field-notes/${latestNote.slug}`}>{latestNote.data.title}</a></h3>
-            <div class="note-telemetry">
-               <span class="t-line">DATE: {latestNote.data.publishedAt.toLocaleDateString()}</span>
-               <span class="t-line">READ: {latestNote.data.readingTime}</span>
+    <!-- Showcase Grid: Main Directories -->
+    <section class="showroom-grid-section">
+      <div class="section-label-row">
+        <span class="section-label">DIALS & DIRECTORIES</span>
+        <span class="section-spec monospace">4 ACTIVE CHAMBERS</span>
+      </div>
+      
+      <div class="showroom-grid">
+        {sectors.map(s => (
+          <a href={s.href} class="material-card sector-card">
+            <div class="sector-card-inner">
+              <div class="sector-top">
+                <span class="sector-id monospace">{s.id}</span>
+                <span class="arrow">→</span>
+              </div>
+              
+              <div class="sector-middle">
+                <h3 class="sector-title">{s.name}</h3>
+                <p class="sector-description">{s.label}</p>
+              </div>
+              <div class="sector-bottom">
+                <span class="sector-spec-val monospace">{s.spec}</span>
+              </div>
             </div>
-            <a href={`/field-notes/${latestNote.slug}`} class="sys-btn">READ LOG</a>
-          </div>
-        )}
-      </section>
+          </a>
+        ))}
+      </div>
+    </section>
 
-    </div>
+    <!-- Showcase Article: Latest Field Note -->
+    {latestNote && (
+      <section class="latest-log-section">
+        <div class="section-label-row">
+          <span class="section-label">LATEST TELEMETRY LOG</span>
+          <span class="section-spec monospace">{latestNote.data.category.toUpperCase()}</span>
+        </div>
+        
+        <div class="material-card log-card">
+          <div class="log-card-inner">
+            <div class="log-header">
+              <span class="log-date monospace">{latestNote.data.publishedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span class="log-reading-time monospace">{latestNote.data.readingTime.toUpperCase()} READ</span>
+            </div>
+            <h2 class="log-title">
+              <a href={`/field-notes/${latestNote.slug}`}>{latestNote.data.title}</a>
+            </h2>
+            <p class="log-excerpt">{latestNote.data.excerpt || latestNote.data.description}</p>
+            <div class="log-actions">
+              <a href={`/field-notes/${latestNote.slug}`} class="milled-btn-secondary">
+                OPEN TELEMETRY REPORT <span class="arrow">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Simple authentic Jony Ive footer -->
+    <footer class="showroom-footer">
+      <div class="footer-left">
+        <span class="copyright">© 2026 C M Nafi. All rights reserved.</span>
+        <span class="footer-tagline">Crafted with materials of absolute simplicity.</span>
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/CMNafi" target="_blank" rel="noopener noreferrer" class="footer-link">GITHUB</a>
+        <span class="footer-dot">•</span>
+        <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noopener noreferrer" class="footer-link">LINKEDIN</a>
+        <span class="footer-dot">•</span>
+        <a href="mailto:nafi@cmnafi.com" class="footer-link">EMAIL</a>
+      </div>
+    </footer>
   </main>
 </BaseLayout>
 
 <style>
-  .pit-wall {
+  /* --- PREMIUM JONY IVE STYLING --- */
+
+  /* Monogram & Breath Dot */
+  .m-breath-dot {
+    color: var(--apple-silver);
+    font-size: 1.1rem;
+    margin: 0 0.1rem;
+    animation: breathPulse 4s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  .m-arrow {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 1.1rem;
+    font-family: var(--font-mono);
+    transition: color 0.3s ease;
+  }
+  
+  .monogram:hover .m-arrow {
+    color: var(--text-warm-white);
+  }
+
+  @keyframes breathPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1.0; }
+  }
+
+  /* Fixed scroll progress indicator */
+  .scroll-telemetry-rail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.02);
+    z-index: 990;
+    pointer-events: none;
+  }
+
+  .scroll-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), var(--apple-silver));
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    transition: width 0.05s linear;
+  }
+
+  /* Base showroom container styling using Space Black palette */
+  .showroom-container {
+    background-color: var(--space-black);
+    color: var(--text-warm-white);
     min-height: 100vh;
-    background: var(--paddock-black);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-  }
-
-  .strategist-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 1.5rem;
-    max-width: 1200px;
-    width: 100%;
-  }
-
-  .panel {
-    background: var(--carbon);
-    border: 1px solid var(--graphite);
-    border-radius: var(--radius-card);
-    padding: 2rem;
+    padding: clamp(3rem, 8vw, 8rem) clamp(1.5rem, 5vw, 4rem);
     display: flex;
     flex-direction: column;
+    gap: clamp(4rem, 10vw, 8rem);
+    position: relative;
+    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
+    z-index: 1;
   }
 
-  .panel-header {
+  /* Background grid with 1.5s fade-in underneath everything */
+  .showroom-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: center top;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+    animation: gridFadeIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes gridFadeIn {
+    to { opacity: 1; }
+  }
+
+  /* Exquisite monogram header style */
+  .showroom-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px dashed var(--graphite);
-    padding-bottom: 0.8rem;
-    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--titanium-border);
+    padding-bottom: 1.5rem;
+    position: relative;
+    z-index: 10;
   }
 
-  .label {
+  .monogram {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .m-serif {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-warm-white);
+  }
+
+  .header-specs {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-sand-gray);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+  }
+
+  .h-divider {
+    opacity: 0.3;
+  }
+
+  .monospace {
     font-family: var(--font-mono);
-    color: var(--muted);
+  }
+
+  /* Clean typographic intro section */
+  .intro-section {
+    position: relative;
+    z-index: 5;
+    padding: 2rem 0;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Subliminal Wave Canvas wrapper */
+  .canvas-wrapper {
+    position: absolute;
+    inset: -3rem -4rem -3rem -4rem;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.85;
+  }
+
+  #telemetry-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .intro-content {
+    max-width: 860px;
+    position: relative;
+    z-index: 2;
+    will-change: transform;
+  }
+
+  .intro-headline {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(2rem, 5.5vw, 3.8rem);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: var(--text-warm-white);
+    margin: 0 0 2rem 0;
+  }
+
+  .intro-lead {
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    line-height: 1.65;
+    color: var(--text-sand-gray);
+    margin: 0;
+    max-width: 680px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .showroom-container.loaded .intro-lead {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.6s;
+  }
+
+  /* Hero staggered reveal styles */
+  .hero-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(14px);
+    will-change: transform, opacity;
+  }
+
+  .hero-word.revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Pedestal and general section layouts */
+  .pedestal-section,
+  .showroom-grid-section,
+  .latest-log-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .section-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    padding-bottom: 0.8rem;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--text-sand-gray);
+  }
+
+  .section-spec {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  .spec-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .status-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .status-indicator.live {
+    background-color: var(--telemetry-green);
+    box-shadow: 0 0 8px var(--telemetry-green);
+  }
+
+  .status-indicator.brewing {
+    background-color: var(--warning-amber);
+    box-shadow: 0 0 6px var(--warning-amber);
+  }
+
+  .status-indicator.parked {
+    background-color: var(--text-sand-gray);
+  }
+
+  .status-text {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--text-warm-white);
+  }
+
+  /* Premium Milled Material Card Design */
+  .material-card {
+    position: relative;
+    background: linear-gradient(180deg, var(--titanium-dark), var(--space-black));
+    border: 1px solid var(--titanium-border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 
+      0px 12px 30px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    transition: 
+      border-color 0.3s ease,
+      box-shadow 0.4s ease,
+      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .material-card:hover {
+    border-color: var(--titanium-border-hover);
+    box-shadow: 
+      0px 20px 45px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Subtle micro-texture light reflection shine overlay */
+  .material-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.02),
+      transparent 45%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .material-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Featured Pedestal Content Layout */
+  .featured-pedestal {
+    padding: 3rem;
+  }
+
+  .pedestal-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    gap: 3.5rem;
+    align-items: center;
+    position: relative;
+    z-index: 3;
+  }
+
+  .pedestal-category {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    color: var(--text-sand-gray);
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+
+  .pedestal-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0 0 1.2rem 0;
+  }
+
+  .pedestal-title a {
+    color: var(--text-warm-white);
+    transition: opacity 0.2s ease;
+  }
+
+  .pedestal-title a:hover {
+    opacity: 0.85;
+  }
+
+  .pedestal-summary {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-sand-gray);
+    margin: 0;
+  }
+
+  .pedestal-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2.2rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.04);
+    padding-left: 3rem;
+  }
+
+  .spec-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .spec-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .spec-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .spec-val {
+    font-size: 0.85rem;
+    color: var(--text-warm-white);
+  }
+
+  /* Physical high-precision button design */
+  .milled-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: 0.85rem 1.6rem;
+    color: var(--text-warm-white);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    transition: 
+      background 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.2s ease;
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .milled-btn:hover {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 
+      0 6px 16px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .milled-btn:hover .arrow,
+  .milled-btn-secondary:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* Showroom Directory Grid Layout */
+  .showroom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .sector-card {
+    padding: 2.2rem;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sector-card-inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3.5rem;
+    position: relative;
+    z-index: 3;
+  }
+
+  .sector-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sector-id {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--text-sand-gray);
+  }
+
+  .sector-card .arrow {
+    color: rgba(255, 255, 255, 0.2);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .sector-card:hover .arrow {
+    color: var(--text-warm-white);
+    transform: translateX(4px);
+  }
+
+  .sector-middle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .sector-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text-warm-white);
+    margin: 0;
+  }
+
+  .sector-description {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--text-sand-gray);
+    margin: 0;
+  }
+
+  .sector-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    padding-top: 1rem;
+  }
+
+  .sector-spec-val {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  /* Latest Telemetry Log Section Styling */
+  .log-card {
+    padding: 3rem;
+  }
+
+  .log-card-inner {
+    max-width: 880px;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .log-header {
+    display: flex;
+    gap: 1.2rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    color: var(--text-sand-gray);
+  }
+
+  .log-reading-time {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .log-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(1.8rem, 3.8vw, 2.6rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .log-title a {
+    color: var(--text-warm-white);
+    transition: opacity 0.2s ease;
+  }
+
+  .log-title a:hover {
+    opacity: 0.85;
+  }
+
+  .log-excerpt {
+    font-size: 1.02rem;
+    line-height: 1.68;
+    color: var(--text-sand-gray);
+    margin: 0 0 1rem 0;
+  }
+
+  .milled-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: 0.85rem 1.6rem;
+    color: var(--text-warm-white);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    transition: 
+      background 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .milled-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  /* Simple high-end footer */
+  .showroom-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--titanium-border);
+    padding-top: 2rem;
+    margin-top: 2rem;
+    color: var(--text-sand-gray);
     font-size: 0.75rem;
-    letter-spacing: 0.2rem;
+    position: relative;
+    z-index: 5;
+    flex-wrap: wrap;
+    gap: 1.5rem;
   }
 
-  /* HERO */
-  .p-main { border-top: 3px solid var(--racing-red); grid-column: 1 / 2; grid-row: 1 / 2; }
-  .driver-id { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-  .abbr { font-family: var(--font-mono); font-weight: 700; color: var(--pitlane-white); letter-spacing: 0.1em; }
-  .pilot-name { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.5rem); color: var(--pitlane-white); margin: 0 0 0.5rem; line-height: 1; }
-  .role { font-family: var(--font-mono); color: var(--accent); font-size: 0.9rem; margin: 0 0 2rem; letter-spacing: 0.2em; }
-  .hero-bottom p { font-family: var(--font-body); color: var(--muted); font-size: 1.1rem; line-height: 1.6; margin: 0; max-width: 400px; }
-
-  /* CURRENT LAP */
-  .current-lap { grid-column: 2 / 3; grid-row: 1 / 2; }
-  .lap-data h3 { font-family: var(--font-display); font-size: 2rem; color: var(--pitlane-white); margin: 0 0 0.5rem; }
-  .lap-data h3 a { color: inherit; }
-  .lap-data p { font-family: var(--font-body); color: var(--muted); margin: 0 0 2rem; line-height: 1.5; }
-
-  /* SECTORS NAV */
-  .sectors-block { grid-column: 1 / 2; grid-row: 2 / 3; }
-  .sector-nav { display: flex; flex-direction: column; gap: 0.5rem; }
-  .sector-button {
-    display: flex; align-items: center; gap: 1.5rem;
-    padding: 1rem 1.5rem; background: var(--paddock-black);
-    border: 1px solid var(--graphite);
-    border-radius: var(--radius-chip);
-    text-decoration: none; transition: transform 0.2s, border-color 0.2s;
+  .footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
   }
-  .sector-button:hover {
-    transform: translateX(8px);
-    border-color: var(--telemetry-green);
-  }
-  .s-info { display: flex; flex-direction: column; flex: 1; }
-  .s-name { font-family: var(--font-display); color: var(--pitlane-white); font-size: 1.2rem; }
-  .s-label { font-family: var(--font-mono); color: var(--muted); font-size: 0.75rem; letter-spacing: 0.1em; }
-  .arrow { color: var(--telemetry-green); font-family: var(--font-mono); }
 
-  /* LATEST COMMS */
-  .p-alt { border-top: 3px solid var(--warning-amber); grid-column: 2 / 3; grid-row: 2 / 3; justify-content: space-between; }
-  .note-title { font-family: var(--font-display); font-size: 1.8rem; color: var(--pitlane-white); margin: 1rem 0; }
-  .note-title a { color: inherit; }
-  .note-telemetry { display: flex; flex-direction: column; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin-bottom: 2rem; border-left: 2px solid var(--graphite); padding-left: 1rem; }
-  .sys-btn {
-    display: inline-block; font-family: var(--font-mono); background: var(--carbon); border: 1px solid var(--graphite);
-    color: var(--pitlane-white); padding: 0.8rem 1.5rem; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em;
-    border-radius: var(--radius-chip); transition: 0.2s;
+  .footer-tagline {
+    opacity: 0.5;
+    font-size: 0.7rem;
   }
-  .sys-btn:hover { background: var(--pitlane-white); color: var(--paddock-black); }
 
+  .footer-right {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .footer-link {
+    color: var(--text-sand-gray);
+    letter-spacing: 0.08em;
+    transition: color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .footer-link:hover {
+    color: var(--text-warm-white);
+  }
+
+  .footer-dot {
+    opacity: 0.2;
+  }
+
+  /* Responsive layout shifts */
   @media (max-width: 900px) {
-    .strategist-grid { grid-template-columns: 1fr; }
-    .p-main { grid-column: 1; grid-row: 1; }
-    .current-lap { grid-column: 1; grid-row: 2; }
-    .sectors-block { grid-column: 1; grid-row: 3; }
-    .latest-note { grid-column: 1; grid-row: 4; }
+    .showroom-container {
+      gap: 5rem;
+    }
+
+    .pedestal-content {
+      grid-template-columns: 1fr;
+      gap: 2.2rem;
+    }
+
+    .featured-pedestal {
+      padding: 2.2rem;
+    }
+
+    .pedestal-right {
+      border-left: none;
+      padding-left: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 2rem;
+    }
+
+    .log-card {
+      padding: 2.2rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .showroom-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .showroom-footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+  }
+
+  /* Disabled 3D tilt and vector canvas if user prefers reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .material-card {
+      transform: none !important;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+    }
+    
+    .material-card::before {
+      display: none !important;
+    }
+
+    .canvas-wrapper {
+      display: none !important;
+    }
+
+    .hero-word {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* --- PREMIUM STANDOUT INTERACTIVE LINKS & STYLES --- */
+  .standout-link {
+    position: relative;
+    display: inline-block;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  /* Inline Stints (Workplaces) - Brushed Titanium Metaphor */
+  .inline-stint {
+    color: var(--text-warm-white);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    padding: 0.1rem 0.45rem;
+    margin: 0 0.1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    transition: 
+      background 0.2s ease, 
+      border-color 0.2s ease, 
+      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .inline-stint:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  /* Inline Essay (Finance) - Amber / Gold Prestige */
+  .inline-essay {
+    color: #e2ba74; /* Soft warm gold */
+    padding: 0 0.15rem;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .inline-essay::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: 100%;
+    height: 1px;
+    background: #e2ba74;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: 
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1s,
+      height 0.2s ease;
+  }
+
+  .inline-essay:hover {
+    transform: translateY(-1px);
+  }
+
+  .inline-essay:hover::after {
+    height: 2px;
+  }
+
+  /* Inline Cricket (Cricket Essay) - Neon Turf Green */
+  .inline-cricket {
+    color: #5af78e; /* Lime neon green */
+    padding: 0 0.15rem;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .inline-cricket::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: 100%;
+    height: 1px;
+    background: #5af78e;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: 
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1s,
+      height 0.2s ease;
+  }
+
+  .inline-cricket:hover {
+    transform: translateY(-1px);
+  }
+
+  .inline-cricket:hover::after {
+    height: 2px;
+  }
+
+  /* Magnetic Cursor Styling */
+  .magnetic-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background-color: var(--text-warm-white);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate3d(-100px, -100px, 0);
+    will-change: transform, width, height, background-color, border;
+    transition: 
+      background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      border 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .magnetic-cursor.hovered {
+    width: 28px;
+    height: 28px;
+    background-color: transparent;
+    border: 1px solid var(--text-warm-white);
   }
 </style>
+
+<script>
+  // Spring parameters for cursor following
+  const cursorStiffness = 150;
+  const cursorDamping = 20;
+  
+  let cursorX = -100;
+  let cursorY = -100;
+  let cursorVx = 0;
+  let cursorVy = 0;
+  
+  let mouseX = -100;
+  let mouseY = -100;
+  
+  // Track mouse coordinates globally
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  // Spring system for magnetic elements
+  let activeMagElement: HTMLElement | null = null;
+  let magX = 0, magY = 0;
+  let magVx = 0, magVy = 0;
+  let targetMagX = 0, targetMagY = 0;
+  
+  // Initialize and run the 60fps loop for spring animations
+  let lastTime = performance.now();
+  
+  function updateSprings(time: number) {
+    let dt = (time - lastTime) / 1000;
+    lastTime = time;
+    if (dt > 0.1) dt = 0.1; // clamp delta time to avoid instability
+    
+    // 1. Cursor Spring Physics
+    const cursorFx = -cursorStiffness * (cursorX - mouseX);
+    const cursorAx = cursorFx - cursorDamping * cursorVx;
+    cursorVx += cursorAx * dt;
+    cursorX += cursorVx * dt;
+    
+    const cursorFy = -cursorStiffness * (cursorY - mouseY);
+    const cursorAy = cursorFy - cursorDamping * cursorVy;
+    cursorVy += cursorAy * dt;
+    cursorY += cursorVy * dt;
+    
+    const cursorEl = document.getElementById('magnetic-cursor');
+    if (cursorEl) {
+      const isHovered = cursorEl.classList.contains('hovered');
+      const size = isHovered ? 28 : 8;
+      const displayX = cursorX - size / 2;
+      const displayY = cursorY - size / 2;
+      cursorEl.style.transform = `translate3d(${displayX}px, ${displayY}px, 0)`;
+    }
+    
+    // 2. Active Magnetic Element Pull Physics
+    if (activeMagElement) {
+      const k = 180; // slightly stiffer for physical elements
+      const c = 15;
+      
+      const fx = -k * (magX - targetMagX);
+      const ax = fx - c * magVx;
+      magVx += ax * dt;
+      magX += magVx * dt;
+      
+      const fy = -k * (magY - targetMagY);
+      const ay = fy - c * magVy;
+      magVy += ay * dt;
+      magY += magVy * dt;
+      
+      activeMagElement.style.transform = `translate3d(${magX}px, ${magY}px, 0)`;
+    }
+    
+    requestAnimationFrame(updateSprings);
+  }
+  
+  requestAnimationFrame(updateSprings);
+
+  // Initialize magnetic interactions
+  function initMagneticCursor() {
+    const magneticElements = document.querySelectorAll(
+      '.inline-stint, .inline-essay, .inline-cricket, .milled-btn, .milled-btn-secondary, .sector-card, .footer-link, .monogram'
+    );
+    const cursorEl = document.getElementById('magnetic-cursor');
+    
+    magneticElements.forEach(el => {
+      const htmlEl = el as HTMLElement;
+      
+      htmlEl.addEventListener('mouseenter', () => {
+        if (cursorEl) cursorEl.classList.add('hovered');
+        activeMagElement = htmlEl;
+        magVx = 0;
+        magVy = 0;
+      });
+      
+      htmlEl.addEventListener('mousemove', (e: MouseEvent) => {
+        const rect = htmlEl.getBoundingClientRect();
+        const elCenterX = rect.left + rect.width / 2;
+        const elCenterY = rect.top + rect.height / 2;
+        
+        const dx = e.clientX - elCenterX;
+        const dy = e.clientY - elCenterY;
+        
+        const maxPull = 12; // Maximum pull in pixels
+        const pullFactor = 0.25; // Pull strength
+        
+        targetMagX = Math.max(-maxPull, Math.min(maxPull, dx * pullFactor));
+        targetMagY = Math.max(-maxPull, Math.min(maxPull, dy * pullFactor));
+      });
+      
+      htmlEl.addEventListener('mouseleave', () => {
+        if (cursorEl) cursorEl.classList.remove('hovered');
+        targetMagX = 0;
+        targetMagY = 0;
+        
+        // Wait for the element to return close to zero, then release active state
+        const checkReset = setInterval(() => {
+          if (Math.abs(magX) < 0.05 && Math.abs(magY) < 0.05) {
+            htmlEl.style.transform = 'translate3d(0, 0, 0)';
+            if (activeMagElement === htmlEl) {
+              activeMagElement = null;
+            }
+            clearInterval(checkReset);
+          }
+        }, 50);
+      });
+    });
+  }
+
+  // Count up coordinate counter on page load
+  function initCoordinateCounter() {
+    const coordsEl = document.getElementById('header-telemetry-coords');
+    if (!coordsEl) return;
+    
+    const targetValue = 40.7128;
+    const duration = 1500; // ms
+    const startTime = performance.now();
+    
+    function update(time: number) {
+      const elapsed = time - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Simple easeOutQuad for smooth count up
+      const easeProgress = progress * (2 - progress);
+      const currentValue = (targetValue * easeProgress).toFixed(4);
+      
+      coordsEl.textContent = `${currentValue}° N`;
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        coordsEl.textContent = `${targetValue.toFixed(4)}° N`;
+      }
+    }
+    
+    requestAnimationFrame(update);
+  }
+
+  // Hero headline words reveal
+  function initHeroWordReveal() {
+    const headline = document.getElementById('hero-headline');
+    if (!headline) return;
+    
+    const text = headline.textContent || "";
+    const words = text.trim().split(/\s+/);
+    headline.innerHTML = '';
+    
+    words.forEach((wordText, idx) => {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'hero-word';
+      wordSpan.textContent = wordText;
+      headline.appendChild(wordSpan);
+      
+      if (idx < words.length - 1) {
+        headline.appendChild(document.createTextNode(' '));
+      }
+      
+      setTimeout(() => {
+        wordSpan.classList.add('revealed');
+      }, idx * 80); // Stagger ~80ms per word
+    });
+  }
+
+  // Scroll parallax and scroll telemetry display
+  function initScrollBehavior() {
+    const scrollDisplay = document.getElementById('scroll-percentage-display');
+    const progressBar = document.getElementById('scroll-progress-indicator');
+    const introContent = document.querySelector('.intro-content') as HTMLElement;
+    
+    function updateScroll() {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      
+      // 1. Monospace scroll percentage tick
+      if (scrollHeight > 0) {
+        const progress = (scrollTop / scrollHeight) * 100;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (scrollDisplay) {
+          const formatted = String(Math.round(progress)).padStart(2, '0');
+          scrollDisplay.textContent = `[ ${formatted}% SCROLL ]`;
+        }
+      }
+      
+      // 2. Hero parallax translation at 0.92x scroll speed (drifts slower by 0.08x)
+      if (introContent) {
+        introContent.style.transform = `translate3d(0, ${scrollTop * 0.08}px, 0)`;
+      }
+    }
+    
+    window.addEventListener('scroll', updateScroll);
+    updateScroll();
+    
+    document.addEventListener('astro:before-swap', () => {
+      window.removeEventListener('scroll', updateScroll);
+    }, { once: true });
+  }
+
+  // Subliminal ambient flow canvas
+  function initTelemetryFlowCanvas() {
+    const canvas = document.getElementById('telemetry-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let animationId = 0;
+
+    function resize() {
+      dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx!.scale(dpr, dpr);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    const baseGlyphs = ["0", "1", "+", "-", "•", ".", "x", "y", "_", "$", "€", "¥", "₿", "%", "&", "{", "}", "[", "]"];
+    const cells: string[] = [];
+    
+    // Fill a grid of static character choices
+    for (let col = 0; col < 100; col++) {
+      for (let row = 0; row < 50; row++) {
+        cells.push(baseGlyphs[(col * 7 + row * 13) % baseGlyphs.length]);
+      }
+    }
+
+    const cycleDuration = 9000; // 9s cycle (slow wave)
+
+    function draw(time: number) {
+      ctx!.clearRect(0, 0, width, height);
+
+      const spacingX = 22;
+      const spacingY = 22;
+
+      ctx!.font = '9px ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, monospace';
+      ctx!.textAlign = 'center';
+      ctx!.textBaseline = 'middle';
+
+      const phase = (time / cycleDuration) * Math.PI * 2;
+
+      let cellIdx = 0;
+      for (let gridX = spacingX / 2; gridX < width; gridX += spacingX) {
+        for (let gridY = spacingY / 2; gridY < height; gridY += spacingY) {
+          const char = cells[cellIdx % cells.length];
+          cellIdx++;
+
+          // Opacity shifts slowly in a wave (max 15% delta, from 0.03 to 0.18)
+          const wave = Math.sin(phase + (gridX * 0.003) + (gridY * 0.005));
+          const opacity = 0.03 + (wave * 0.5 + 0.5) * 0.15;
+
+          ctx!.fillStyle = `rgba(245, 245, 247, ${opacity})`;
+          ctx!.fillText(char, gridX, gridY);
+        }
+      }
+
+      animationId = requestAnimationFrame(draw);
+    }
+
+    animationId = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resize);
+    };
+  }
+
+  // Card mouseover radial gradient tracking (for material light shine)
+  function initCardShine() {
+    const cards = document.querySelectorAll('.material-card');
+    cards.forEach(c => {
+      const card = c as HTMLElement;
+      card.addEventListener('mousemove', (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+    });
+  }
+
+  // Initialize orchestrator
+  function initAllWorldClassInteractions() {
+    initHeroWordReveal();
+    initCoordinateCounter();
+    initMagneticCursor();
+    initScrollBehavior();
+    initCardShine();
+    const cleanupCanvas = initTelemetryFlowCanvas();
+    
+    // Set loaded class for CSS transition triggers
+    const container = document.querySelector('.showroom-container');
+    if (container) container.classList.add('loaded');
+    
+    document.addEventListener('astro:before-swap', () => {
+      if (cleanupCanvas) cleanupCanvas();
+    }, { once: true });
+  }
+
+  document.addEventListener('DOMContentLoaded', initAllWorldClassInteractions);
+  document.addEventListener('astro:after-swap', initAllWorldClassInteractions);
+</script>

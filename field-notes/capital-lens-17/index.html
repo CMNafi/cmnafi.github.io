@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capital Lens 016 — Q1 2026 Big Tech Earnings: Cloud Beats, Capex Soars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400&family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     CAPITAL LENS — ISSUE 016 — DARK EDITORIAL THEME
+     ========================================================= */
+
+  :root {
+    --bg-deepest: #0a0908;
+    --bg-base: #131110;
+    --bg-elev: #1c1916;
+    --bg-card: #221e1a;
+    --bg-card-hi: #2a251f;
+    --border: #2e2823;
+    --border-hi: #3d3630;
+    --text-primary: #ece4d3;
+    --text-secondary: #a89e8b;
+    --text-muted: #756a5a;
+    --text-faint: #463f37;
+    --gold: #d4a017;
+    --gold-bright: #eab935;
+    --gold-deep: #b08210;
+    --green: #7fa86e;
+    --green-deep: #5a7a4f;
+    --red: #c5523f;
+    --red-deep: #8e3a2c;
+    --blue: #5a8aa8;
+    --rust: #b56843;
+    --cream: #c9b079;
+    --plum: #8a5a6a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-deepest);
+    color: var(--text-primary);
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.65;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+  }
+
+  /* Subtle grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(212, 160, 23, 0.06), transparent 50%),
+      radial-gradient(circle at 80% 100%, rgba(90, 138, 168, 0.04), transparent 50%);
+    z-index: 1;
+  }
+
+  .page > * { position: relative; z-index: 2; }
+
+  /* ===== MASTHEAD ===== */
+  .masthead {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 0 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .masthead .brand {
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .masthead .brand span {
+    color: var(--text-primary);
+    margin-left: 6px;
+  }
+
+  .masthead .meta { color: var(--text-secondary); }
+
+  /* ===== HERO ===== */
+  .hero {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 34px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .hero-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-hi), transparent);
+    max-width: 320px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: clamp(48px, 7.5vw, 92px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+    margin-bottom: 32px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .hero h1 .ampersand {
+    font-style: italic;
+    color: var(--text-secondary);
+    font-family: 'Playfair Display', serif;
+    font-weight: 300;
+  }
+
+  .hero .dek {
+    max-width: 720px;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+
+  .hero .dek b {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .hero-stats {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-stat {
+    padding: 22px 24px 22px 0;
+    border-right: 1px solid var(--border);
+  }
+
+  .hero-stat:last-child { border-right: none; padding-right: 0; }
+  .hero-stat:not(:first-child) { padding-left: 24px; }
+
+  .hero-stat .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .hero-stat .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .hero-stat .value .unit {
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .hero-stat .delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    margin-top: 4px;
+  }
+
+  .hero-stat .delta.neg { color: var(--red); }
+
+  /* ===== SECTION ===== */
+  section {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-eyebrow .num {
+    color: var(--text-faint);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: clamp(34px, 4vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+    max-width: 920px;
+  }
+
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  .section-dek {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 760px;
+    margin-bottom: 50px;
+    font-weight: 300;
+  }
+
+  .section-dek b { color: var(--text-primary); font-weight: 500; }
+
+  /* ===== SNAPSHOT GRID ===== */
+  .snapshot-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .snap-card {
+    background: var(--bg-card);
+    padding: 28px 24px;
+    position: relative;
+    transition: background 0.3s ease;
+  }
+
+  .snap-card:hover { background: var(--bg-card-hi); }
+
+  .snap-card .ticker-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+  }
+
+  .snap-card .ticker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  .snap-card .name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .snap-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: 24px;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+  }
+
+  .snap-card .quarter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+    letter-spacing: 0.05em;
+  }
+
+  .snap-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px dotted var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .snap-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .snap-row .key { color: var(--text-muted); letter-spacing: 0.04em; }
+  .snap-row .val { color: var(--text-primary); font-weight: 500; }
+  .snap-row .delta { color: var(--green); font-size: 11px; margin-left: 6px; }
+  .snap-row .delta.neg { color: var(--red); }
+
+  /* ===== SANKEY BLOCK ===== */
+  .sankey-block {
+    margin-bottom: 70px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .sankey-block:first-child { border-top: none; padding-top: 0; }
+
+  .sankey-header {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 60px;
+    margin-bottom: 36px;
+    align-items: end;
+  }
+
+  .sankey-title-block .ticker-bar {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .sankey-title-block .tk {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    font-weight: 600;
+  }
+
+  .sankey-title-block .tk-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .sankey-title-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    letter-spacing: -0.015em;
+  }
+
+  .sankey-title-block h3 em { font-style: italic; color: var(--gold); }
+
+  .sankey-title-block .lede {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    max-width: 560px;
+  }
+
+  .sankey-takeaways {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--gold);
+    padding: 18px 22px;
+  }
+
+  .sankey-takeaways .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .sankey-takeaways ul { list-style: none; }
+
+  .sankey-takeaways li {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--border);
+    display: flex;
+    gap: 10px;
+  }
+
+  .sankey-takeaways li:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .sankey-takeaways li::before {
+    content: '→';
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .sankey-takeaways li b { color: var(--text-primary); font-weight: 500; }
+
+  .sankey-canvas {
+    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-elev) 100%);
+    border: 1px solid var(--border);
+    padding: 28px 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sankey-canvas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(212, 160, 23, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212, 160, 23, 0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .sankey-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    position: relative;
+  }
+
+  .sankey-svg text { font-family: 'JetBrains Mono', monospace; }
+  .sankey-label {
+    fill: var(--text-primary);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .sankey-value {
+    fill: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 400;
+  }
+  .sankey-pct {
+    fill: var(--text-muted);
+    font-size: 9px;
+  }
+
+  .sankey-footnote {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin-top: 14px;
+    padding: 10px 16px;
+    background: var(--bg-card);
+    border-left: 2px solid var(--text-faint);
+    line-height: 1.55;
+  }
+
+  .sankey-footnote b { color: var(--text-secondary); font-weight: 500; }
+
+  /* ===== CAPEX BAR CHART ===== */
+  .capex-feature {
+    margin-bottom: 60px;
+  }
+
+  .capex-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 42px;
+    align-items: start;
+  }
+
+  .capex-chart {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 32px 28px 24px;
+    position: relative;
+  }
+
+  .capex-chart-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .capex-chart-sub {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    font-weight: 400;
+  }
+
+  .capex-chart-sub em { font-style: italic; color: var(--gold); }
+
+  .capex-legend {
+    display: flex;
+    gap: 22px;
+    margin-bottom: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+  }
+
+  .capex-legend .swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  .capex-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .capex-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .capex-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 22px;
+  }
+
+  .capex-card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .capex-card .big {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 38px;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .capex-card .desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .capex-card .desc b { color: var(--text-primary); font-weight: 500; }
+
+  .capex-guidance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .capex-guidance-table th {
+    text-align: left;
+    padding: 12px 14px;
+    background: var(--bg-elev);
+    color: var(--text-muted);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-hi);
+  }
+
+  .capex-guidance-table th:not(:first-child) { text-align: right; }
+
+  .capex-guidance-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+
+  .capex-guidance-table td:not(:first-child) { text-align: right; }
+
+  .capex-guidance-table tr:last-child td { border-bottom: none; }
+
+  .capex-guidance-table tr:hover td { background: var(--bg-card-hi); }
+
+  .capex-guidance-table .co-name {
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .capex-guidance-table .raised {
+    color: var(--red);
+    font-size: 11px;
+  }
+
+  .capex-guidance-table .raised.up {
+    color: var(--gold-bright);
+  }
+
+  /* ===== CROSS-CO COMPARISON RIBBON ===== */
+  .compare-ribbon {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 32px 0;
+    margin: 50px 0;
+    overflow: hidden;
+  }
+
+  .compare-ribbon-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 32px;
+    margin-bottom: 22px;
+  }
+
+  .compare-bars {
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+  }
+
+  .compare-bar-group h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 18px;
+  }
+
+  .compare-bar-group h4 .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    margin-left: 8px;
+    font-weight: 400;
+  }
+
+  .compare-bar-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 80px;
+    gap: 14px;
+    align-items: center;
+    padding: 6px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .compare-bar-row .co {
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+  }
+
+  .compare-bar-row .bar-wrap {
+    background: var(--bg-deepest);
+    height: 22px;
+    position: relative;
+    border: 1px solid var(--border);
+  }
+
+  .compare-bar-row .bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+    transition: width 0.6s ease;
+  }
+
+  .compare-bar-row .bar.green {
+    background: linear-gradient(90deg, var(--green-deep), var(--green));
+  }
+
+  .compare-bar-row .bar.blue {
+    background: linear-gradient(90deg, #305878, var(--blue));
+  }
+
+  .compare-bar-row .num {
+    color: var(--text-primary);
+    text-align: right;
+    font-weight: 500;
+  }
+
+  /* ===== READTHROUGH ===== */
+  .readthroughs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 38px;
+  }
+
+  .readthrough {
+    background: var(--bg-card);
+    padding: 28px 26px;
+    transition: background 0.3s ease;
+  }
+
+  .readthrough:hover { background: var(--bg-card-hi); }
+
+  .readthrough .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    margin-bottom: 12px;
+  }
+
+  .readthrough h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+  }
+
+  .readthrough h4 em { font-style: italic; color: var(--gold); }
+
+  .readthrough p {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .readthrough p b { color: var(--text-primary); font-weight: 500; }
+
+  /* ===== PULL QUOTE ===== */
+  .pullquote {
+    margin: 60px auto 50px;
+    max-width: 880px;
+    text-align: center;
+    padding: 40px 20px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .pullquote .marks {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 80px;
+    line-height: 0.5;
+    color: var(--gold);
+    margin-bottom: 16px;
+    opacity: 0.6;
+  }
+
+  .pullquote blockquote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.35;
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+
+  .pullquote cite {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 22px;
+    font-style: normal;
+  }
+
+  /* ===== FOOTER ===== */
+  footer.colophon {
+    padding: 50px 0 60px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+  }
+
+  footer.colophon .row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  footer.colophon .left { color: var(--gold); letter-spacing: 0.18em; font-weight: 600; }
+
+  footer.colophon p { max-width: 800px; margin-bottom: 12px; }
+
+  footer.colophon b { color: var(--text-secondary); font-weight: 500; }
+
+  /* ===== PROSE INTERSTITIAL ===== */
+  .prose {
+    max-width: 720px;
+    margin: 50px auto;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .prose p { margin-bottom: 18px; }
+  .prose p:first-child::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 400;
+    float: left;
+    line-height: 0.85;
+    margin: 8px 10px 0 0;
+    color: var(--gold);
+  }
+
+  .prose b { color: var(--text-primary); font-weight: 500; }
+  .prose em { color: var(--cream); font-style: italic; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 980px) {
+    .snapshot-grid { grid-template-columns: repeat(2, 1fr); }
+    .sankey-header { grid-template-columns: 1fr; gap: 30px; }
+    .capex-grid { grid-template-columns: 1fr; }
+    .compare-bars { grid-template-columns: 1fr; gap: 30px; }
+    .readthroughs { grid-template-columns: 1fr; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .hero-stat { border-right: none !important; border-bottom: 1px solid var(--border); padding-left: 0 !important; }
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 0 18px; }
+    .snapshot-grid { grid-template-columns: 1fr; }
+    .hero-stats { grid-template-columns: 1fr; }
+    section { padding: 50px 0; }
+  }
+</style>
+</head>
+<body>
+
+  <div style="background-color: #0c0e13; padding: 15px 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; border-bottom: 1px solid #1f2532; text-align: left; position: sticky; top: 0; z-index: 1000;">
+    <a href="/field-notes" style="color: #6b7488; text-decoration: none; text-transform: uppercase; transition: color 0.2s ease;" onmouseover="this.style.color='#f4f6fb'" onmouseout="this.style.color='#6b7488'">← Secure Comms</a>
+  </div>
+
+
+<div class="page">
+
+  <!-- ============== MASTHEAD ============== -->
+  <div class="masthead">
+    <div class="brand">CAPITAL LENS<span>/ ISSUE 016</span></div>
+    <div class="meta">APRIL 30, 2026 · EARNINGS</div>
+  </div>
+
+  <!-- ============== HERO ============== -->
+  <div class="hero">
+    <div class="hero-eyebrow">Q1 2026 · Big Tech Earnings</div>
+    <h1>
+      Cloud beats. <em>Capex soars.</em><br>
+      <span class="ampersand">&amp;</span> the bill keeps rising.
+    </h1>
+    <p class="dek">
+      In a single Wednesday after-bell, <b>Microsoft, Alphabet, Meta, and Amazon</b> printed the cleanest set of cloud and advertising results of the AI cycle — and simultaneously raised their 2026 capex budgets by tens of billions. Three of the four stocks fell anyway. This is the Q1 2026 earnings book in <b>four Sankeys</b>, with the capital-spending arc traced quarter by quarter.
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="label">Combined Q1 Revenue</div>
+        <div class="value">$430.6<span class="unit">B</span></div>
+        <div class="delta">+22.7% YoY</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">Combined Q1 Capex</div>
+        <div class="value">$135.4<span class="unit">B</span></div>
+        <div class="delta">+78% YoY</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">2026 Capex Guidance (mid)</div>
+        <div class="value">$695<span class="unit">B</span></div>
+        <div class="delta">All four raised</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">Stocks Down After-Hours</div>
+        <div class="value">3<span class="unit"> of 4</span></div>
+        <div class="delta neg">Capex outweighed beats</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== PROSE INTRO ============== -->
+  <div class="prose">
+    <p>
+      The aggregate scoreboard is unambiguous. Every cloud beat. Every ad business accelerated. Every operating margin held or expanded despite an AI investment cycle that has now <em>doubled</em> in twelve months. And every single capex line item — committed, guided, and forecast — moved higher. Microsoft to <b>$190B for fiscal 2026</b>. Alphabet to <b>$180–190B</b>. Meta to <b>$125–145B</b>. Amazon held its <b>$200B</b> 2026 plan and signaled it intends to spend more.
+    </p>
+    <p>
+      What follows is a four-Sankey decomposition of where that revenue came from and where it ended up — followed by the most important chart on Wall Street tonight: the quarterly capex arc from Q1 2025 to Q1 2026, with full-year 2026 guidance ranges layered on top.
+    </p>
+  </div>
+
+  <!-- ============== SECTION 1: SNAPSHOT ============== -->
+  <section>
+    <div class="section-eyebrow"><span class="num">01</span> The Tape</div>
+    <h2 class="section-title">Q1 2026 in <em>twelve numbers</em>.</h2>
+    <p class="section-dek">
+      The four hyperscalers reported within hours of each other on April 29. Each of these snapshots maps to a Sankey below.
+    </p>
+
+    <div class="snapshot-grid">
+
+      <div class="snap-card">
+        <div class="ticker-row">
+          <div class="ticker">MSFT</div>
+          <div class="name">NASDAQ</div>
+        </div>
+        <h3>Microsoft</h3>
+        <div class="quarter">Q3 FY2026 · qtr ended Mar 31</div>
+        <div class="snap-row"><span class="key">Revenue</span><span class="val">$82.9B<span class="delta">+18%</span></span></div>
+        <div class="snap-row"><span class="key">Operating Inc.</span><span class="val">$38.4B<span class="delta">+20%</span></span></div>
+        <div class="snap-row"><span class="key">Net Income</span><span class="val">$31.8B<span class="delta">+23%</span></span></div>
+        <div class="snap-row"><span class="key">Diluted EPS</span><span class="val">$4.27<span class="delta">+23%</span></span></div>
+        <div class="snap-row"><span class="key">Azure Growth</span><span class="val">+40%<span class="delta">+9pp</span></span></div>
+        <div class="snap-row"><span class="key">Q1 Capex</span><span class="val">$36.6B<span class="delta">+49%</span></span></div>
+      </div>
+
+      <div class="snap-card">
+        <div class="ticker-row">
+          <div class="ticker">GOOGL</div>
+          <div class="name">NASDAQ</div>
+        </div>
+        <h3>Alphabet</h3>
+        <div class="quarter">Q1 2026 · qtr ended Mar 31</div>
+        <div class="snap-row"><span class="key">Revenue</span><span class="val">$109.9B<span class="delta">+22%</span></span></div>
+        <div class="snap-row"><span class="key">Operating Inc.</span><span class="val">$39.7B<span class="delta">+30%</span></span></div>
+        <div class="snap-row"><span class="key">Net Income</span><span class="val">$62.6B<span class="delta">+81%*</span></span></div>
+        <div class="snap-row"><span class="key">Diluted EPS</span><span class="val">$5.11<span class="delta">+82%*</span></span></div>
+        <div class="snap-row"><span class="key">Cloud Growth</span><span class="val">+63%<span class="delta">+15pp</span></span></div>
+        <div class="snap-row"><span class="key">Q1 Capex</span><span class="val">$35.7B<span class="delta">+108%</span></span></div>
+      </div>
+
+      <div class="snap-card">
+        <div class="ticker-row">
+          <div class="ticker">META</div>
+          <div class="name">NASDAQ</div>
+        </div>
+        <h3>Meta</h3>
+        <div class="quarter">Q1 2026 · qtr ended Mar 31</div>
+        <div class="snap-row"><span class="key">Revenue</span><span class="val">$56.3B<span class="delta">+33%</span></span></div>
+        <div class="snap-row"><span class="key">Operating Inc.</span><span class="val">$22.9B<span class="delta">+30%</span></span></div>
+        <div class="snap-row"><span class="key">Net Income</span><span class="val">$26.8B<span class="delta">+61%*</span></span></div>
+        <div class="snap-row"><span class="key">Diluted EPS</span><span class="val">$10.44<span class="delta">+62%*</span></span></div>
+        <div class="snap-row"><span class="key">Ad Impressions</span><span class="val">+19%<span class="delta">price +12%</span></span></div>
+        <div class="snap-row"><span class="key">Q1 Capex</span><span class="val">$19.8B<span class="delta">+45%</span></span></div>
+      </div>
+
+      <div class="snap-card">
+        <div class="ticker-row">
+          <div class="ticker">AMZN</div>
+          <div class="name">NASDAQ</div>
+        </div>
+        <h3>Amazon</h3>
+        <div class="quarter">Q1 2026 · qtr ended Mar 31</div>
+        <div class="snap-row"><span class="key">Revenue</span><span class="val">$181.5B<span class="delta">+17%</span></span></div>
+        <div class="snap-row"><span class="key">Operating Inc.</span><span class="val">$23.9B<span class="delta">+30%</span></span></div>
+        <div class="snap-row"><span class="key">Net Income</span><span class="val">$30.3B<span class="delta">+77%*</span></span></div>
+        <div class="snap-row"><span class="key">Diluted EPS</span><span class="val">$2.78<span class="delta">+70%*</span></span></div>
+        <div class="snap-row"><span class="key">AWS Growth</span><span class="val">+28%<span class="delta">15-qtr high</span></span></div>
+        <div class="snap-row"><span class="key">Q1 Capex</span><span class="val">$44.2B<span class="delta">+77%</span></span></div>
+      </div>
+
+    </div>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);margin-top:14px;letter-spacing:0.04em;">
+      * GAAP net income figures include non-recurring items: Alphabet ($36.9B equity-securities gain), Meta ($8.0B income-tax benefit), Amazon ($16.8B pre-tax gain on Anthropic investment). The Sankeys below isolate operating income from these special items.
+    </p>
+  </section>
+
+  <!-- ============== SECTION 2: SANKEYS ============== -->
+  <section>
+    <div class="section-eyebrow"><span class="num">02</span> The Flows</div>
+    <h2 class="section-title">Four Sankeys, <em>one quarter</em>.</h2>
+    <p class="section-dek">
+      Each diagram traces revenue from its segment of origin, through total revenue, into the operating-cost / operating-income split, and out to operating net income and tax & other below the line. Special items above the operating line are noted but excluded from the operating Sankey to preserve comparability.
+    </p>
+
+    <!-- ===== Microsoft Sankey ===== -->
+    <div class="sankey-block">
+      <div class="sankey-header">
+        <div class="sankey-title-block">
+          <div class="ticker-bar">
+            <span class="tk">MSFT</span>
+            <span class="tk-meta">Q3 FY2026 · 18% revenue growth · 46.3% op margin</span>
+          </div>
+          <h3>Microsoft: <em>Azure 40%</em>, supply-constrained.</h3>
+          <p class="lede">
+            Intelligent Cloud crossed <b>$34.7B</b>, up 30%, with Azure accelerating to <b>+40% YoY</b> from 31% in the year-ago quarter. Commercial RPO nearly doubled to <b>$627B</b>. The capacity is sold; the bottleneck is concrete and silicon.
+          </p>
+        </div>
+        <div class="sankey-takeaways">
+          <div class="label">Three Things</div>
+          <ul>
+            <li>AI run-rate at <b>$37B</b>, up 123% YoY — the only Big Tech firm disclosing this metric.</li>
+            <li>Cloud gross margin at <b>66%</b>, down YoY but stabilizing as scale absorbs depreciation.</li>
+            <li>FY26 capex now guided to <b>$190B</b> — $25B of the raise attributed to memory pricing alone.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sankey-canvas">
+        <div class="sankey-svg" id="sankey-msft"></div>
+      </div>
+      <div class="sankey-footnote">
+        <b>Read:</b> Productivity & Business Processes ($35.0B) and Intelligent Cloud ($34.7B) are now near-equal contributors to the top line, with More Personal Computing ($13.2B) the smallest segment and the only one in YoY decline. Of every revenue dollar, ~46¢ converts to operating income — Microsoft's structural margin advantage over the cohort.
+      </div>
+    </div>
+
+    <!-- ===== Alphabet Sankey ===== -->
+    <div class="sankey-block">
+      <div class="sankey-header">
+        <div class="sankey-title-block">
+          <div class="ticker-bar">
+            <span class="tk">GOOGL</span>
+            <span class="tk-meta">Q1 2026 · 22% revenue growth · 36.1% op margin</span>
+          </div>
+          <h3>Alphabet: <em>Cloud +63%</em>, backlog $462B.</h3>
+          <p class="lede">
+            The widest revenue beat in the cohort. <b>Search & Other</b> grew 19% — the fastest in two years — while <b>Google Cloud</b> at $20B grew 63%, eclipsing both Azure and AWS on rate. Cloud backlog <b>nearly doubled QoQ</b> to $462B; management says half converts to revenue inside 24 months.
+          </p>
+        </div>
+        <div class="sankey-takeaways">
+          <div class="label">Three Things</div>
+          <ul>
+            <li>Cloud operating margin tripled YoY to <b>32.9%</b>, up from 17.8%.</li>
+            <li>Capex raised to <b>$180–190B</b>; CFO said 2027 will rise <b>"significantly"</b>.</li>
+            <li>$36.9B equity gain on stake in unidentified investee added <b>$2.35</b> to EPS.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sankey-canvas">
+        <div class="sankey-svg" id="sankey-googl"></div>
+      </div>
+      <div class="sankey-footnote">
+        <b>Read:</b> Of the $109.9B top line, <b>$77.3B (70%)</b> is still advertising — Search dominant, YouTube and Network secondary. Cloud at $20.0B is the fastest-growing line and the highest-incremental-margin business. The diagram excludes the $36.9B equity-securities gain that flows below operating income; including it, GAAP net income reaches $62.6B.
+      </div>
+    </div>
+
+    <!-- ===== Meta Sankey ===== -->
+    <div class="sankey-block">
+      <div class="sankey-header">
+        <div class="sankey-title-block">
+          <div class="ticker-bar">
+            <span class="tk">META</span>
+            <span class="tk-meta">Q1 2026 · 33% revenue growth · 40.6% op margin</span>
+          </div>
+          <h3>Meta: <em>fastest growth since 2021</em>, capex raised.</h3>
+          <p class="lede">
+            <b>33% revenue growth</b> is Meta's fastest print in five years. Ad impressions grew 19%, average price per ad grew 12% — both AI-driven. The market punished the stock anyway: capex guidance was <b>raised by $10B</b>, to $125–145B, and the spend curve is what investors are scoring now.
+          </p>
+        </div>
+        <div class="sankey-takeaways">
+          <div class="label">Three Things</div>
+          <ul>
+            <li>Reality Labs revenue at <b>$402M</b>, down 2% — Quest hardware soft, AI-glasses DAU tripled.</li>
+            <li>2026 capex guidance now nearly <b>2× FY2025's $72.2B</b> total.</li>
+            <li>Headcount reduction (~10%) announced for May; Zuckerberg cited memory pricing.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sankey-canvas">
+        <div class="sankey-svg" id="sankey-meta"></div>
+      </div>
+      <div class="sankey-footnote">
+        <b>Read:</b> Meta is the most concentrated business in the cohort — <b>97.7% of revenue</b> comes from one line item (Family of Apps Ads). Operating margin at 40.6% is the highest reported by any of the four. GAAP net income of $26.8B includes an $8.0B income-tax benefit; the Sankey uses the operating-derived figure (~$18.7B) for cohort comparability.
+      </div>
+    </div>
+
+    <!-- ===== Amazon Sankey ===== -->
+    <div class="sankey-block">
+      <div class="sankey-header">
+        <div class="sankey-title-block">
+          <div class="ticker-bar">
+            <span class="tk">AMZN</span>
+            <span class="tk-meta">Q1 2026 · 17% revenue growth · 13.1% op margin</span>
+          </div>
+          <h3>Amazon: <em>AWS at 28%</em>, fastest in 15 quarters.</h3>
+          <p class="lede">
+            The cleanest beat of the four. AWS reaccelerated to <b>$37.6B / +28%</b>, retail margins expanded, advertising crossed a <b>$70B trailing</b> revenue base. Operating margin hit <b>13.1%</b>, the highest in company history. Capex at <b>$44.2B</b> was also the highest in company history.
+          </p>
+        </div>
+        <div class="sankey-takeaways">
+          <div class="label">Three Things</div>
+          <ul>
+            <li>AWS operating margin at <b>37.7%</b>, holding even as workloads scale.</li>
+            <li>Trainium revenue run-rate now over <b>$20B</b>, growing triple-digits.</li>
+            <li>AWS backlog at <b>$364B</b>, plus a separate $100B Anthropic commitment.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sankey-canvas">
+        <div class="sankey-svg" id="sankey-amzn"></div>
+      </div>
+      <div class="sankey-footnote">
+        <b>Read:</b> Amazon's revenue mix is structurally different — North America retail at $104.1B is still the dominant line, but AWS at $37.6B contributes the majority of operating income (AWS OI of $14.2B vs. consolidated OI of $23.9B). GAAP net income of $30.3B includes a $16.8B pre-tax gain on Anthropic; the operating-derived figure of ~$18.2B is shown here.
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============== PULL QUOTE ============== -->
+  <div class="pullquote">
+    <div class="marks">"</div>
+    <blockquote>
+      Every cloud beat. Every capex forecast rose. Three of the four stocks fell.
+    </blockquote>
+    <cite>— The two-sentence summary of April 29, 2026</cite>
+  </div>
+
+  <!-- ============== SECTION 3: CAPEX ============== -->
+  <section>
+    <div class="section-eyebrow"><span class="num">03</span> The Spend</div>
+    <h2 class="section-title">The capex arc, <em>quarter by quarter</em>.</h2>
+    <p class="section-dek">
+      Combined quarterly capex across the four hyperscalers has roughly tripled in five quarters — from <b>~$77B in Q1 2025</b> to <b>~$135B in Q1 2026</b>. Q4 2025 was the first single quarter in which all four companies posted record capex simultaneously; Q1 2026 is the first in which all four guided upward into a higher range than they sat in just three months ago.
+    </p>
+
+    <div class="capex-feature">
+      <div class="capex-grid">
+        <div class="capex-chart">
+          <div class="capex-chart-title">Capital Expenditure · Quarterly · Calendar Quarters</div>
+          <div class="capex-chart-sub">Five quarters of <em>relentless escalation</em></div>
+          <div class="capex-legend">
+            <span><span class="swatch" style="background:#5a8aa8"></span>MSFT</span>
+            <span><span class="swatch" style="background:#d4a017"></span>GOOGL</span>
+            <span><span class="swatch" style="background:#7fa86e"></span>META</span>
+            <span><span class="swatch" style="background:#b56843"></span>AMZN</span>
+          </div>
+          <div class="capex-svg" id="capex-chart"></div>
+        </div>
+        <div class="capex-aside">
+          <div class="capex-card">
+            <div class="label">Combined 2026 Capex (Mid)</div>
+            <div class="big">$695B</div>
+            <div class="desc">Up from <b>~$378B</b> in 2025 — an 84% YoY ramp. Every guidance was <b>raised</b> on this earnings call, totaling roughly <b>$25B</b> in upward revisions across the four firms.</div>
+          </div>
+          <div class="capex-card">
+            <div class="label">Largest Single-Cohort Driver</div>
+            <div class="big">Memory</div>
+            <div class="desc">Both Nadella and Zuckerberg explicitly attributed material portions of their raises to <b>HBM and DRAM pricing</b>. Microsoft cited a <b>$25B impact</b>; Meta described it as the primary driver of the $10B raise.</div>
+          </div>
+        </div>
+      </div>
+
+      <table class="capex-guidance-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>2025 Actual</th>
+            <th>2026 Prior Guide</th>
+            <th>2026 New Guide</th>
+            <th>YoY Growth (Mid)</th>
+            <th>Raise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="co-name">MSFT</td>
+            <td>~$118B (FY25)</td>
+            <td>~$155B (consensus)</td>
+            <td>$190B (FY26)</td>
+            <td>+61%</td>
+            <td class="raised up">+$35B</td>
+          </tr>
+          <tr>
+            <td class="co-name">GOOGL</td>
+            <td>~$75B</td>
+            <td>$175–185B</td>
+            <td>$180–190B</td>
+            <td>+147%</td>
+            <td class="raised up">+$5B (mid)</td>
+          </tr>
+          <tr>
+            <td class="co-name">META</td>
+            <td>$72.2B</td>
+            <td>$115–135B</td>
+            <td>$125–145B</td>
+            <td>+87%</td>
+            <td class="raised up">+$10B (mid)</td>
+          </tr>
+          <tr>
+            <td class="co-name">AMZN</td>
+            <td>$131B</td>
+            <td>$200B</td>
+            <td>$200B+ <span style="color:var(--text-muted);font-size:10px;">(implied)</span></td>
+            <td>+53%</td>
+            <td class="raised up">held</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Cross-co compare -->
+    <div class="compare-ribbon">
+      <div class="compare-ribbon-title">Cross-Cohort · Q1 2026 · Cloud Growth & Operating Margin</div>
+      <div class="compare-bars">
+        <div class="compare-bar-group">
+          <h4>Cloud Revenue Growth <span class="sub">YoY %</span></h4>
+          <div class="compare-bar-row"><span class="co">GOOGL Cloud</span><span class="bar-wrap"><span class="bar" style="width: 100%"></span></span><span class="num">+63%</span></div>
+          <div class="compare-bar-row"><span class="co">MSFT Azure</span><span class="bar-wrap"><span class="bar" style="width: 63.5%"></span></span><span class="num">+40%</span></div>
+          <div class="compare-bar-row"><span class="co">AMZN AWS</span><span class="bar-wrap"><span class="bar" style="width: 44.4%"></span></span><span class="num">+28%</span></div>
+        </div>
+        <div class="compare-bar-group">
+          <h4>Operating Margin <span class="sub">Q1 2026</span></h4>
+          <div class="compare-bar-row"><span class="co">MSFT</span><span class="bar-wrap"><span class="bar green" style="width: 100%"></span></span><span class="num">46.3%</span></div>
+          <div class="compare-bar-row"><span class="co">META</span><span class="bar-wrap"><span class="bar green" style="width: 87.7%"></span></span><span class="num">40.6%</span></div>
+          <div class="compare-bar-row"><span class="co">GOOGL</span><span class="bar-wrap"><span class="bar green" style="width: 78%"></span></span><span class="num">36.1%</span></div>
+          <div class="compare-bar-row"><span class="co">AMZN</span><span class="bar-wrap"><span class="bar green" style="width: 28.3%"></span></span><span class="num">13.1%</span></div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============== SECTION 4: READTHROUGHS ============== -->
+  <section>
+    <div class="section-eyebrow"><span class="num">04</span> Read-Throughs</div>
+    <h2 class="section-title">What this <em>front-runs</em>.</h2>
+    <p class="section-dek">
+      The Q1 print is a coincident indicator; the more interesting signal is what these results imply for the next two quarters and the supplier ecosystem feeding the buildout.
+    </p>
+
+    <div class="readthroughs">
+      <div class="readthrough">
+        <div class="num">01</div>
+        <h4>Memory pricing is the <em>real story</em>.</h4>
+        <p>
+          Nadella attributed <b>$25B</b> of Microsoft's raise to component costs. Zuckerberg cited memory as the primary driver of Meta's $10B step-up. With HBM <b>sold out through 2026</b>, watch <b>Micron, SK Hynix, and Samsung</b> on the next earnings cycle. The hyperscaler spending is partly a <b>price effect</b>, not just a unit-demand effect — and the price effect is durable.
+        </p>
+      </div>
+      <div class="readthrough">
+        <div class="num">02</div>
+        <h4>Custom silicon is <em>actually working</em>.</h4>
+        <p>
+          Amazon disclosed Trainium at a <b>$20B run-rate</b>, growing triple-digits. Meta announced a <b>1 GW deployment</b> of MTIA chips co-developed with Broadcom. Google's TPU sales are now visible in the cloud backlog. Read-through: <b>NVDA</b> retains its monopoly on training, but inference is migrating to ASIC at a pace Wall Street has not yet fully modeled.
+        </p>
+      </div>
+      <div class="readthrough">
+        <div class="num">03</div>
+        <h4>Free cash flow is <em>compressing</em>.</h4>
+        <p>
+          Microsoft's quarterly free cash flow fell to <b>$15.8B</b> despite $46.7B of operating cash flow — capex absorbed the difference. Amazon's TTM free cash flow declined to <b>$1.2B</b> from $25.9B a year ago. With capex ramping further into Q2, expect <b>FCF prints to look worse before they look better</b>. The buyback math gets harder; debt issuance gets easier.
+        </p>
+      </div>
+      <div class="readthrough">
+        <div class="num">04</div>
+        <h4>Q2 setup is <em>asymmetric</em>.</h4>
+        <p>
+          Microsoft guided Q4 FY26 revenue to <b>$86.7–87.8B</b>, implying re-acceleration. Amazon guided Q2 to <b>$194–199B</b> (+16–19%). Meta guided Q2 to <b>$58–61B</b> (+25% mid). Alphabet did not formally guide. With cloud backlogs at record highs and capacity coming online, <b>upside surprises are statistically more likely than downside</b> — but capex risk has now replaced demand risk as the primary controversy.
+        </p>
+      </div>
+      <div class="readthrough">
+        <div class="num">05</div>
+        <h4>The 2027 number is <em>already moving</em>.</h4>
+        <p>
+          Alphabet's CFO explicitly stated 2027 capex will rise <b>"significantly"</b> over 2026. Amazon's Jassy reaffirmed Amazon will <b>"not be conservative"</b>. Meta's $145B high-end likely becomes the 2027 floor. The market is now pricing a <b>$700B+ 2026</b> followed by <b>$850B–$1T 2027</b> for this cohort — and the bond market is funding it.
+        </p>
+      </div>
+      <div class="readthrough">
+        <div class="num">06</div>
+        <h4>The new <em>controversy</em>: ROIC.</h4>
+        <p>
+          Margins on existing AI revenue are visible and improving — Cloud margins expanded across all three providers. The unanswered question is whether <b>incremental capex</b> earns its cost of capital on the cohort's <b>30+ year data center life</b> assumption. Meta's stock reaction is the cleanest distillation: a 33% revenue beat was insufficient to justify a 7% capex raise. The bar has moved from <b>"is AI generating revenue?"</b> to <b>"is each marginal $1B of compute earning ≥ WACC?"</b>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== COLOPHON ============== -->
+  <footer class="colophon">
+    <div class="row">
+      <div class="left">CAPITAL LENS · ISSUE 016</div>
+      <div>NEXT: Q2 2026 EARNINGS PREVIEW · MAY 2026</div>
+    </div>
+    <p>
+      <b>Sources:</b> Company 8-K filings (Microsoft, Alphabet, Meta, Amazon — all dated April 29, 2026); Q3 FY26 and Q1 2026 earnings call transcripts; CNBC, Yahoo Finance, Reuters, Fortune, The Motley Fool earnings coverage; Visible Alpha and FactSet analyst consensus data; Epoch AI hyperscaler capex extraction methodology for historical quarterly data.
+    </p>
+    <p>
+      <b>Methodology notes:</b> Historical quarterly capex figures use cash payments for property, plant & equipment plus principal payments on finance leases where companies report this combined metric (Meta, Microsoft from FY26 forward). Microsoft fiscal quarters are mapped to calendar quarters (Q3 FY26 = Q1 CY26). Operating-derived net income for Alphabet, Meta, and Amazon excludes specifically disclosed non-recurring items (equity-securities gains, tax benefits, investment-marking gains) and is computed by applying each company's effective tax rate ex-special-items to operating income. Sankey diagrams render proportionally — node and link heights are direct linear functions of dollar amounts. Cloud growth comparison uses Azure (constant-currency reported), Google Cloud, and AWS GAAP-reported figures. All percentage changes are year-over-year unless noted. Figures are <b>not</b> investment recommendations.
+    </p>
+    <p style="margin-top:16px;">
+      <b>Curation disclosure:</b> The four-company cohort was selected by Capital Lens (not algorithmically) to represent the U.S.-listed hyperscalers reporting in a single window. Oracle, Apple, and other adjacent names are excluded due to differing fiscal calendars and reporting cadences.
+    </p>
+  </footer>
+
+</div>
+
+<!-- ============== SCRIPT: SANKEY + CAPEX RENDERERS ============== -->
+<script>
+/* =====================================================================
+   SANKEY DATA CONFIGS
+   ===================================================================== */
+
+const SANKEYS = {
+  msft: {
+    columns: [
+      [
+        { id: 'pbp', label: 'Productivity & Business Processes', value: 35.0, color: '#d4a017' },
+        { id: 'ic',  label: 'Intelligent Cloud',                  value: 34.7, color: '#c89020' },
+        { id: 'mpc', label: 'More Personal Computing',            value: 13.2, color: '#a37234' }
+      ],
+      [
+        { id: 'rev', label: 'Total Revenue', value: 82.9, color: '#d4a017' }
+      ],
+      [
+        { id: 'oi',    label: 'Operating Income',  value: 38.4, color: '#7fa86e' },
+        { id: 'costs', label: 'Operating Costs',   value: 44.5, color: '#a8645a' }
+      ],
+      [
+        { id: 'ni',  label: 'Net Income',  value: 31.8, color: '#7fa86e' },
+        { id: 'tax', label: 'Tax & Other', value: 6.6,  color: '#8e3a2c' }
+      ]
+    ],
+    links: [
+      { from: 'pbp', to: 'rev', value: 35.0 },
+      { from: 'ic',  to: 'rev', value: 34.7 },
+      { from: 'mpc', to: 'rev', value: 13.2 },
+      { from: 'rev', to: 'oi',    value: 38.4 },
+      { from: 'rev', to: 'costs', value: 44.5 },
+      { from: 'oi',  to: 'ni',  value: 31.8 },
+      { from: 'oi',  to: 'tax', value: 6.6 }
+    ]
+  },
+
+  googl: {
+    columns: [
+      [
+        { id: 'search',  label: 'Google Search & Other Ads',      value: 60.4,  color: '#d4a017' },
+        { id: 'yt',      label: 'YouTube Ads',                     value: 9.88,  color: '#c08518' },
+        { id: 'network', label: 'Network Ads',                     value: 6.97,  color: '#a87420' },
+        { id: 'subs',    label: 'Subscriptions, Platforms, Devices', value: 12.38, color: '#8e6428' },
+        { id: 'cloud',   label: 'Google Cloud',                    value: 20.03, color: '#5a8aa8' },
+        { id: 'other',   label: 'Other Bets & Hedging',            value: 0.24,  color: '#6e6056' }
+      ],
+      [
+        { id: 'rev', label: 'Total Revenue', value: 109.9, color: '#d4a017' }
+      ],
+      [
+        { id: 'oi',    label: 'Operating Income', value: 39.7, color: '#7fa86e' },
+        { id: 'costs', label: 'Operating Costs',  value: 70.2, color: '#a8645a' }
+      ],
+      [
+        { id: 'ni',  label: 'Operating NI',  value: 25.7, color: '#7fa86e' },
+        { id: 'tax', label: 'Tax & Other',   value: 14.0, color: '#8e3a2c' }
+      ]
+    ],
+    links: [
+      { from: 'search',  to: 'rev', value: 60.4 },
+      { from: 'yt',      to: 'rev', value: 9.88 },
+      { from: 'network', to: 'rev', value: 6.97 },
+      { from: 'subs',    to: 'rev', value: 12.38 },
+      { from: 'cloud',   to: 'rev', value: 20.03 },
+      { from: 'other',   to: 'rev', value: 0.24 },
+      { from: 'rev', to: 'oi',    value: 39.7 },
+      { from: 'rev', to: 'costs', value: 70.2 },
+      { from: 'oi',  to: 'ni',  value: 25.7 },
+      { from: 'oi',  to: 'tax', value: 14.0 }
+    ]
+  },
+
+  meta: {
+    columns: [
+      [
+        { id: 'foa_ads',   label: 'Family of Apps Ads', value: 55.02, color: '#d4a017' },
+        { id: 'foa_other', label: 'FoA Other Revenue',  value: 0.89,  color: '#a37434' },
+        { id: 'rl',        label: 'Reality Labs',       value: 0.40,  color: '#7c6e58' }
+      ],
+      [
+        { id: 'rev', label: 'Total Revenue', value: 56.31, color: '#d4a017' }
+      ],
+      [
+        { id: 'oi',    label: 'Operating Income', value: 22.87, color: '#7fa86e' },
+        { id: 'costs', label: 'Operating Costs',  value: 33.44, color: '#a8645a' }
+      ],
+      [
+        { id: 'ni',  label: 'Operating NI',  value: 18.70, color: '#7fa86e' },
+        { id: 'tax', label: 'Tax & Other',   value: 4.17,  color: '#8e3a2c' }
+      ]
+    ],
+    links: [
+      { from: 'foa_ads',   to: 'rev', value: 55.02 },
+      { from: 'foa_other', to: 'rev', value: 0.89 },
+      { from: 'rl',        to: 'rev', value: 0.40 },
+      { from: 'rev', to: 'oi',    value: 22.87 },
+      { from: 'rev', to: 'costs', value: 33.44 },
+      { from: 'oi',  to: 'ni',  value: 18.70 },
+      { from: 'oi',  to: 'tax', value: 4.17 }
+    ]
+  },
+
+  amzn: {
+    columns: [
+      [
+        { id: 'na',   label: 'North America', value: 104.1, color: '#d4a017' },
+        { id: 'intl', label: 'International',  value: 39.8,  color: '#a87420' },
+        { id: 'aws',  label: 'AWS',            value: 37.6,  color: '#5a8aa8' }
+      ],
+      [
+        { id: 'rev', label: 'Total Revenue', value: 181.5, color: '#d4a017' }
+      ],
+      [
+        { id: 'oi',    label: 'Operating Income', value: 23.9,  color: '#7fa86e' },
+        { id: 'costs', label: 'Operating Costs',  value: 157.6, color: '#a8645a' }
+      ],
+      [
+        { id: 'ni',  label: 'Operating NI',  value: 18.20, color: '#7fa86e' },
+        { id: 'tax', label: 'Tax & Other',   value: 5.70,  color: '#8e3a2c' }
+      ]
+    ],
+    links: [
+      { from: 'na',   to: 'rev', value: 104.1 },
+      { from: 'intl', to: 'rev', value: 39.8 },
+      { from: 'aws',  to: 'rev', value: 37.6 },
+      { from: 'rev', to: 'oi',    value: 23.9 },
+      { from: 'rev', to: 'costs', value: 157.6 },
+      { from: 'oi',  to: 'ni',  value: 18.20 },
+      { from: 'oi',  to: 'tax', value: 5.70 }
+    ]
+  }
+};
+
+/* =====================================================================
+   SANKEY RENDERER
+   ===================================================================== */
+
+function renderSankey(containerId, data) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const W = 1180, H = 540;
+  const PAD_TOP = 28, PAD_BOTTOM = 28, PAD_LX = 250, PAD_RX = 200;
+  const NODE_W = 13;
+  const GAP = 5;
+
+  // Compute scale based on max column total
+  const colTotals = data.columns.map(col => col.nodes ? col.nodes.reduce((s, n) => s + n.value, 0) : col.reduce((s, n) => s + n.value, 0));
+  const maxTotal = Math.max(...colTotals);
+  const innerH = H - PAD_TOP - PAD_BOTTOM;
+  const SCALE = innerH / maxTotal;
+
+  const colCount = data.columns.length;
+  const innerW = W - PAD_LX - PAD_RX;
+
+  // Position nodes
+  const nodes = {};
+  data.columns.forEach((col, ci) => {
+    const colNodes = col;
+    const colTotal = colNodes.reduce((s, n) => s + n.value, 0);
+    const colTotalH = colTotal * SCALE + (colNodes.length - 1) * GAP;
+    let y = PAD_TOP + (innerH - colTotalH) / 2;
+
+    const x = PAD_LX + (ci / (colCount - 1)) * innerW;
+
+    colNodes.forEach(node => {
+      nodes[node.id] = {
+        ...node,
+        x: x,
+        y: y,
+        h: Math.max(node.value * SCALE, 1.2),
+        col: ci,
+        outLinks: [],
+        inLinks: []
+      };
+      y += node.value * SCALE + GAP;
+    });
+  });
+
+  // Group links
+  data.links.forEach(link => {
+    if (nodes[link.from]) nodes[link.from].outLinks.push(link);
+    if (nodes[link.to])   nodes[link.to].inLinks.push(link);
+  });
+
+  // Sort outgoing links by target y, incoming by source y
+  Object.values(nodes).forEach(n => {
+    n.outLinks.sort((a, b) => (nodes[a.to].y) - (nodes[b.to].y));
+    n.inLinks.sort((a, b) => (nodes[a.from].y) - (nodes[b.from].y));
+  });
+
+  // Compute link y-positions on each node
+  Object.values(nodes).forEach(n => {
+    let outOffset = 0;
+    n.outLinks.forEach(link => {
+      link.srcY = n.y + outOffset;
+      outOffset += link.value * SCALE;
+    });
+    let inOffset = 0;
+    n.inLinks.forEach(link => {
+      link.tgtY = n.y + inOffset;
+      inOffset += link.value * SCALE;
+    });
+  });
+
+  // Build SVG
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" class="sankey-svg" preserveAspectRatio="xMidYMid meet">`;
+
+  // Defs for gradients on links
+  svg += '<defs>';
+  data.links.forEach((link, i) => {
+    const src = nodes[link.from];
+    const tgt = nodes[link.to];
+    svg += `<linearGradient id="grad-${containerId}-${i}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="${src.color}" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="${tgt.color}" stop-opacity="0.32"/>
+    </linearGradient>`;
+  });
+  svg += '</defs>';
+
+  // Draw links
+  data.links.forEach((link, i) => {
+    const src = nodes[link.from];
+    const tgt = nodes[link.to];
+    const v = link.value * SCALE;
+
+    const x0 = src.x + NODE_W;
+    const x1 = tgt.x;
+    const y0 = link.srcY;
+    const y1 = link.tgtY;
+    const cx0 = x0 + (x1 - x0) * 0.5;
+    const cx1 = x1 - (x1 - x0) * 0.5;
+
+    const path = `M ${x0} ${y0}
+                  C ${cx0} ${y0}, ${cx1} ${y1}, ${x1} ${y1}
+                  L ${x1} ${y1 + v}
+                  C ${cx1} ${y1 + v}, ${cx0} ${y0 + v}, ${x0} ${y0 + v}
+                  Z`;
+
+    svg += `<path d="${path}" fill="url(#grad-${containerId}-${i})" class="sankey-link" />`;
+  });
+
+  // Draw nodes + labels
+  const totalRev = data.columns[1][0].value; // total revenue node
+  Object.values(nodes).forEach(n => {
+    svg += `<rect x="${n.x}" y="${n.y}" width="${NODE_W}" height="${n.h}" fill="${n.color}" rx="0.5"/>`;
+
+    const isLeft = n.col === 0;
+    const isRight = n.col === colCount - 1;
+    const labelX = isLeft ? n.x - 12 : n.x + NODE_W + 12;
+    const anchor = isLeft ? 'end' : 'start';
+
+    // Label and value placement
+    let labelY = n.y + Math.max(n.h / 2 - 4, 8);
+    let valueY = labelY + 14;
+
+    // For very small nodes, push labels to align at center
+    if (n.h < 20) {
+      labelY = n.y + n.h / 2 - 4;
+      valueY = n.y + n.h / 2 + 10;
+    }
+
+    svg += `<text x="${labelX}" y="${labelY}" text-anchor="${anchor}" class="sankey-label">${n.label}</text>`;
+
+    const pct = ((n.value / totalRev) * 100).toFixed(1);
+    const valueText = `$${n.value.toFixed(n.value < 10 ? 2 : 1)}B`;
+    svg += `<text x="${labelX}" y="${valueY}" text-anchor="${anchor}" class="sankey-value">${valueText}<tspan class="sankey-pct" dx="6">${pct}%</tspan></text>`;
+  });
+
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+
+/* =====================================================================
+   CAPEX QUARTERLY BAR CHART
+   ===================================================================== */
+
+const CAPEX_DATA = {
+  // Calendar quarters Q1 2025 → Q1 2026, in $B
+  // Combined with finance leases where reported
+  quarters: ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026'],
+  series: [
+    { name: 'MSFT',  color: '#5a8aa8', values: [21.4, 24.2, 34.9, 37.5, 36.6] },
+    { name: 'GOOGL', color: '#d4a017', values: [17.2, 22.4, 24.0, 26.0, 35.7] },
+    { name: 'META',  color: '#7fa86e', values: [13.7, 17.0, 19.0, 22.5, 19.84] },
+    { name: 'AMZN',  color: '#b56843', values: [25.0, 28.0, 30.0, 47.5, 44.2] }
+  ]
+};
+
+function renderCapexChart() {
+  const container = document.getElementById('capex-chart');
+  if (!container) return;
+
+  const W = 760, H = 380;
+  const PAD_TOP = 24, PAD_BOTTOM = 60, PAD_LEFT = 50, PAD_RIGHT = 18;
+  const innerW = W - PAD_LEFT - PAD_RIGHT;
+  const innerH = H - PAD_TOP - PAD_BOTTOM;
+
+  // Compute totals per quarter for stacking
+  const totals = CAPEX_DATA.quarters.map((_, qi) =>
+    CAPEX_DATA.series.reduce((s, ser) => s + ser.values[qi], 0)
+  );
+  const maxTotal = Math.max(...totals);
+  // Round up to nice gridline (e.g. 160)
+  const yMax = Math.ceil(maxTotal / 20) * 20;
+  const SCALE = innerH / yMax;
+
+  const nQuarters = CAPEX_DATA.quarters.length;
+  const groupW = innerW / nQuarters;
+  const barW = groupW * 0.62;
+  const barX0 = (groupW - barW) / 2;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">`;
+
+  // Gridlines (every $40B)
+  const gridStep = 40;
+  for (let v = 0; v <= yMax; v += gridStep) {
+    const yy = PAD_TOP + innerH - v * SCALE;
+    svg += `<line x1="${PAD_LEFT}" y1="${yy}" x2="${PAD_LEFT + innerW}" y2="${yy}" stroke="#2e2823" stroke-width="1" stroke-dasharray="2,3"/>`;
+    svg += `<text x="${PAD_LEFT - 10}" y="${yy + 4}" text-anchor="end" font-family="JetBrains Mono" font-size="10" fill="#756a5a">$${v}B</text>`;
+  }
+
+  // Stacked bars
+  CAPEX_DATA.quarters.forEach((qLabel, qi) => {
+    const xBase = PAD_LEFT + qi * groupW + barX0;
+    let yStack = PAD_TOP + innerH;
+    let qTotal = 0;
+
+    CAPEX_DATA.series.forEach((ser, si) => {
+      const v = ser.values[qi];
+      qTotal += v;
+      const h = v * SCALE;
+      yStack -= h;
+      svg += `<rect x="${xBase}" y="${yStack}" width="${barW}" height="${h}" fill="${ser.color}" opacity="0.92" stroke="#0a0908" stroke-width="0.5"/>`;
+    });
+
+    // Quarter label
+    const qcx = PAD_LEFT + qi * groupW + groupW / 2;
+    svg += `<text x="${qcx}" y="${PAD_TOP + innerH + 18}" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#a89e8b" font-weight="500">${qLabel}</text>`;
+    // Total above bar
+    svg += `<text x="${qcx}" y="${yStack - 8}" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#ece4d3" font-weight="600">$${qTotal.toFixed(0)}B</text>`;
+  });
+
+  // YoY annotation
+  const q1_25 = totals[0];
+  const q1_26 = totals[4];
+  const yoy = ((q1_26 - q1_25) / q1_25 * 100).toFixed(0);
+  svg += `<g transform="translate(${PAD_LEFT + innerW - 130}, ${PAD_TOP + 8})">
+    <rect x="0" y="0" width="125" height="46" fill="#0a0908" stroke="#d4a017" stroke-width="1" opacity="0.95"/>
+    <text x="9" y="16" font-family="JetBrains Mono" font-size="9" fill="#756a5a" letter-spacing="0.1em">Q1 25 → Q1 26</text>
+    <text x="9" y="34" font-family="JetBrains Mono" font-size="14" fill="#d4a017" font-weight="600">+${yoy}% YoY</text>
+  </g>`;
+
+  // X axis line
+  svg += `<line x1="${PAD_LEFT}" y1="${PAD_TOP + innerH}" x2="${PAD_LEFT + innerW}" y2="${PAD_TOP + innerH}" stroke="#3d3630" stroke-width="1"/>`;
+
+  // X axis label
+  svg += `<text x="${PAD_LEFT + innerW / 2}" y="${H - 8}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#463f37" letter-spacing="0.18em">CALENDAR QUARTER · CAPEX INCL. FINANCE LEASES</text>`;
+
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderSankey('sankey-msft',  SANKEYS.msft);
+  renderSankey('sankey-googl', SANKEYS.googl);
+  renderSankey('sankey-meta',  SANKEYS.meta);
+  renderSankey('sankey-amzn',  SANKEYS.amzn);
+  renderCapexChart();
+});
+</script>
+
+</body>
+</html>

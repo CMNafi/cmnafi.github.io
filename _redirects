@@ -1,0 +1,8 @@
+/blog/* /field-notes/:splat 301
+/interests/* /story/ 301
+/apps/* /garage/ 301
+/projects/* /garage/:splat 301
+/writing/* /field-notes/ 301
+/adventures/* /story/ 301
+
+/projects/*  /garage  301
