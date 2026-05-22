@@ -202,6 +202,57 @@ try {
 
     <!-- Sector Divider -->
     <div class="sector-divider">
+      <span class="sector-divider-label">[ SECTOR 2B // EVENT.FEED ]</span>
+      <span class="sector-divider-dash"></span>
+    </div>
+
+    <!-- Promoted Specimen: World Cup 2026 Telemetry -->
+    <section class="world-cup-section">
+      <div class="section-label-row">
+        <span class="section-label">PROMOTED ACTIVE FEED</span>
+        <div class="spec-status">
+          <span class="status-indicator live pulsing-indicator" style="background-color: var(--accent); box-shadow: 0 0 8px var(--accent);"></span>
+          <span class="status-text monospace">[ TELEMETRY LIVE ]</span>
+        </div>
+      </div>
+      
+      <div class="material-card world-cup-promoted">
+        <div class="pedestal-content">
+          <div class="pedestal-left">
+            <span class="pedestal-category monospace">SPECIAL DEPLOYMENT</span>
+            <h2 class="pedestal-title scramble-header" data-text="World Cup 2026 Portal">
+              <a href="/world-cup-2026">
+                World Cup 2026 Portal
+              </a>
+            </h2>
+            <p class="pedestal-summary">
+              Tracking match tables, teams, schedules, and live telemetry for the smart fan. Zero clutter, pure performance statistics.
+            </p>
+            <div class="pedestal-actions" style="margin-top: 1.5rem;">
+              <a href="/world-cup-2026" class="milled-btn">
+                ENTER WORLD CUP PORTAL <span class="arrow">→</span>
+              </a>
+            </div>
+          </div>
+          
+          <div class="pedestal-right wc-countdown-column">
+            <div class="countdown-container">
+              <span class="spec-label">COUNTDOWN TO KICKOFF</span>
+              <div class="countdown-timer monospace" id="wc-countdown">
+                <div class="countdown-segment"><span class="countdown-num" id="wc-days">00</span><span class="countdown-lbl">D</span></div>
+                <div class="countdown-segment"><span class="countdown-num" id="wc-hours">00</span><span class="countdown-lbl">H</span></div>
+                <div class="countdown-segment"><span class="countdown-num" id="wc-mins">00</span><span class="countdown-lbl">M</span></div>
+                <div class="countdown-segment"><span class="countdown-num" id="wc-secs">00</span><span class="countdown-lbl">S</span></div>
+              </div>
+              <div class="countdown-target monospace">TARGET: 2026-06-11 17:00:00 UTC</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sector Divider -->
+    <div class="sector-divider">
       <span class="sector-divider-label">[ SECTOR 3 // CHAMBERS ]</span>
       <span class="sector-divider-dash"></span>
     </div>
@@ -1807,6 +1858,7 @@ try {
       { selector: '.intro-section', coord: '25.6279° N' },
       { selector: '.story-glimpse-section', coord: '31.6536° N' },
       { selector: '.caia-corner-section', coord: '38.9072° N' },
+      { selector: '.world-cup-section', coord: '40.7128° N' },
       { selector: '.showroom-grid-section', coord: '43.3036° N' },
       { selector: '.latest-log-section', coord: '27.9506° N' },
       { selector: '.showroom-footer', coord: '00.0000° N' }
@@ -2075,6 +2127,53 @@ try {
     };
   }
 
+  // World Cup Live Kickoff Countdown
+  function initWorldCupCountdown() {
+    const target = new Date('2026-06-11T17:00:00Z').getTime();
+    
+    const dEl = document.getElementById('wc-days');
+    const hEl = document.getElementById('wc-hours');
+    const mEl = document.getElementById('wc-mins');
+    const sEl = document.getElementById('wc-secs');
+
+    if (!dEl || !hEl || !mEl || !sEl) return () => {};
+
+    const d = dEl;
+    const h = hEl;
+    const m = mEl;
+    const s = sEl;
+
+    function update() {
+      const now = new Date().getTime();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        d.textContent = '00';
+        h.textContent = '00';
+        m.textContent = '00';
+        s.textContent = '00';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      d.textContent = String(days).padStart(2, '0');
+      h.textContent = String(hours).padStart(2, '0');
+      m.textContent = String(mins).padStart(2, '0');
+      s.textContent = String(secs).padStart(2, '0');
+    }
+
+    update();
+    const interval = setInterval(update, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }
+
   // Subliminal ambient flow canvas
   function initTelemetryFlowCanvas() {
     const canvas = document.getElementById('telemetry-canvas') as HTMLCanvasElement;
@@ -2172,6 +2271,7 @@ try {
     initScrollCompass();
     initCardShine();
     initStatsRollup();
+    const cleanupWorldCup = initWorldCupCountdown();
     const cleanupStory = initStoryRouteCanvas();
     const cleanupCanvas = initTelemetryFlowCanvas();
     const cleanupCaia = initCaiaFrontierCanvas();
@@ -2180,6 +2280,7 @@ try {
     if (container) container.classList.add('loaded');
     
     document.addEventListener('astro:before-swap', () => {
+      if (cleanupWorldCup) cleanupWorldCup();
       if (cleanupStory) cleanupStory();
       if (cleanupCanvas) cleanupCanvas();
       if (cleanupCaia) cleanupCaia();
