@@ -72,20 +72,27 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
             <div class="squad-counter"><span id="squad-active-count">11</span> / 12 PLACED</div>
           </div>
           
-          <div class="roster-list-container">
-            <table class="roster-table">
-              <thead>
-                <tr>
-                  <th style="width: 8%">ID</th>
-                  <th style="width: 47%">PLAYER NAME</th>
-                  <th style="width: 25%">SQUAD ROLE</th>
-                  <th style="width: 20%">STATUS</th>
-                </tr>
-              </thead>
-              <tbody id="roster-rows">
-                <!-- Dynamically generated rows -->
-              </tbody>
-            </table>
+          <!-- Bulk Import Action Controls -->
+          <div class="bulk-import-container">
+            <button id="bulk-import-toggle-btn" class="hud-action-btn bulk-toggle-btn">
+              📋 BULK ROSTER COPY-PASTE
+            </button>
+            
+            <div id="bulk-import-panel" class="bulk-import-box hidden-panel">
+              <p class="bulk-tip">Paste 12 names (one per line) to import squad instantly:</p>
+              <textarea id="bulk-names-textarea" rows="6" class="minimal-textarea" placeholder="MS Dhoni&#10;Jasprit Bumrah&#10;Virat Kohli&#10;Rohit Sharma&#10;KL Rahul&#10;Hardik Pandya&#10;Ravindra Jadeja&#10;Suryakumar Yadav&#10;Mohammed Shami&#10;Kuldeep Yadav&#10;Axar Patel&#10;Yuzvendra Chahal"></textarea>
+              <div class="bulk-import-actions">
+                <button id="apply-bulk-btn" class="hud-action-btn btn-primary">APPLY IMPORT</button>
+                <button id="cancel-bulk-btn" class="hud-action-btn">CANCEL</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Modern Flex Roster List -->
+          <div class="roster-list-wrapper">
+            <div id="roster-items-list" class="roster-flex-list">
+              <!-- Dynamically generated rows -->
+            </div>
           </div>
         </div>
 
@@ -279,7 +286,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .tactical-board-grid {
     flex: 1;
     display: grid;
-    grid-template-columns: 460px 1fr;
+    grid-template-columns: 480px 1fr;
     border-top: none;
     overflow: hidden;
   }
@@ -288,7 +295,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .command-dashboard {
     background: var(--surface-base);
     border-right: 1px solid var(--surface-line);
-    padding: 1.5rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
@@ -402,15 +409,16 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: var(--surface-base);
   }
 
-  /* Squad Table list */
+  /* Squad Configuration Roster Card */
   .roster-card {
     flex: 1;
-    min-height: 340px;
+    min-height: 380px;
   }
   .roster-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    margin-bottom: 0.5rem;
   }
   .squad-counter {
     font-family: var(--font-mono);
@@ -420,49 +428,123 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     font-weight: bold;
   }
 
-  .roster-list-container {
+  /* Bulk Import panel controls */
+  .bulk-import-container {
+    margin-bottom: 0.75rem;
+  }
+  .bulk-toggle-btn {
+    width: 100%;
+    justify-content: center;
+    border-style: dashed;
+    font-size: 10px;
+  }
+  .bulk-import-box {
+    background: var(--surface-base);
+    border: 1px solid var(--surface-line);
+    border-radius: 6px;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: max-height 0.3s ease, opacity 0.2s;
+  }
+  .bulk-import-box.hidden-panel {
+    display: none;
+  }
+  .bulk-tip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--ink-tertiary);
+    margin: 0;
+  }
+  .minimal-textarea {
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-line);
+    border-radius: 4px;
+    color: var(--ink-primary);
+    padding: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.4;
+    resize: none;
+    outline: none;
+  }
+  .minimal-textarea:focus {
+    border-color: var(--accent);
+  }
+  .bulk-import-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+  .btn-primary {
+    background: var(--accent) !important;
+    color: var(--surface-base) !important;
+    border: none !important;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+
+  /* Modern flex-based roster list */
+  .roster-list-wrapper {
+    flex: 1;
     overflow-y: auto;
-    max-height: 300px;
+    max-height: 290px;
     border: 1px solid var(--surface-line);
     border-radius: 4px;
     background: var(--surface-base);
   }
-  .roster-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-align: left;
+  .roster-flex-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem;
   }
-  .roster-table th {
-    background: var(--surface-raised);
-    color: var(--ink-tertiary);
-    padding: 0.5rem;
-    font-size: 9px;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--surface-line);
-    position: sticky;
-    top: 0;
-  }
-  .roster-table td {
-    padding: 0.4rem 0.5rem;
+  
+  .roster-flex-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.6rem;
     border-bottom: 1px solid rgba(42, 37, 32, 0.5);
-    vertical-align: middle;
+    gap: 0.4rem;
+    transition: background 0.2s;
   }
-  .player-row-index {
+  .roster-flex-item:hover {
+    background: rgba(255, 255, 255, 0.01);
+  }
+  .roster-flex-item.item-benched {
+    background: rgba(18, 15, 13, 0.4);
+    opacity: 0.7;
+  }
+  .roster-flex-item.item-benched .player-name-input {
+    color: var(--ink-tertiary);
+  }
+  
+  /* Row 1: Number + Name Input */
+  .roster-row-primary {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .roster-index {
+    font-family: var(--font-mono);
+    font-size: 10px;
     color: var(--ink-tertiary);
     font-weight: bold;
+    min-width: 14px;
   }
   .player-name-input {
     background: transparent;
     border: 1px solid transparent;
     color: var(--ink-primary);
-    width: 95%;
-    padding: 0.25rem 0.4rem;
+    flex: 1;
+    padding: 0.2rem 0.4rem;
     font-family: var(--font-mono);
     font-size: 11px;
     border-radius: 2px;
     transition: all 0.2s;
+    font-weight: 600;
   }
   .player-name-input:hover {
     background: rgba(255, 255, 255, 0.02);
@@ -474,6 +556,13 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     outline: none;
   }
 
+  /* Row 2: Selects + Position Telemetry Badge */
+  .roster-row-secondary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 1.5rem;
+  }
   .roster-select {
     background: var(--surface-raised);
     border: 1px solid var(--surface-line);
@@ -481,18 +570,38 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     padding: 0.15rem 0.3rem;
     border-radius: 2px;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 9px;
     outline: none;
     cursor: pointer;
-    width: 100%;
+    max-width: 90px;
   }
   .roster-select:focus {
     border-color: var(--accent);
   }
+  
+  /* Calculated Fielding Position Badge */
+  .position-telemetry-badge {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    background: rgba(125, 211, 160, 0.06);
+    border: 1px solid var(--accent-dim);
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+  .item-benched .position-telemetry-badge {
+    color: var(--ink-tertiary);
+    background: transparent;
+    border-color: var(--surface-line);
+  }
 
   /* HUD Diagnostic Console */
   .terminal-card {
-    height: 180px;
+    height: 170px;
   }
   .terminal-header {
     display: flex;
@@ -702,7 +811,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
   /* Interactive monogram label tooltip */
   .player-token::after {
-    content: attr(data-player-name);
+    content: attr(data-player-name) " (" attr(data-player-pos) ")";
     position: absolute;
     bottom: -22px;
     left: 50%;
@@ -871,7 +980,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     // DOM Elements Cache
     const elFieldBounds = document.getElementById('field-bounds');
     const elTokensContainer = document.getElementById('tokens-container');
-    const elRosterRows = document.getElementById('roster-rows');
+    const elRosterItemsList = document.getElementById('roster-items-list');
     const elTerminalConsole = document.getElementById('terminal-console');
     const elMatchFormat = document.getElementById('match-format');
     const elPowerplayToggle = document.getElementById('powerplay-toggle');
@@ -884,6 +993,13 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     const elViolationMessage = document.getElementById('violation-message');
     const elResetBtn = document.getElementById('reset-field-btn');
     const elClearLogsBtn = document.getElementById('clear-logs-btn');
+    
+    // Bulk import elements
+    const elBulkImportToggleBtn = document.getElementById('bulk-import-toggle-btn');
+    const elBulkImportPanel = document.getElementById('bulk-import-panel');
+    const elBulkNamesTextarea = document.getElementById('bulk-names-textarea');
+    const elApplyBulkBtn = document.getElementById('apply-bulk-btn');
+    const elCancelBulkBtn = document.getElementById('cancel-bulk-btn');
 
     // System Log Helper
     function addLog(text, type = 'green') {
@@ -916,41 +1032,132 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     // Get max allowed fielders outside the circle based on format and powerplay state
     function getMaxAllowedOutside() {
       if (state.matchContext.isPowerplay) return 2;
-      
-      // Standard Non-Powerplay limits
       return 5;
     }
 
-    // UI Roster rows renderer
-    function renderRoster() {
-      elRosterRows.innerHTML = '';
-      state.squad.forEach((player, index) => {
-        const tr = document.createElement('tr');
-        tr.className = player.status === 'benched' ? 'row-benched' : '';
-        
-        // ID Cell
-        const tdIdx = document.createElement('td');
-        tdIdx.className = 'player-row-index';
-        tdIdx.innerText = String(index + 1).padStart(2, '0');
-        tr.appendChild(tdIdx);
+    // Mathematical Cricket Fielding Position Classifier
+    function getFieldPositionName(player) {
+      if (player.status === 'benched') return '12th Man';
+      
+      const { x, y } = player;
+      
+      // Pitch snaps
+      if (x === 50 && y === 62.5 && player.role === 'WK') return 'Wicket Keeper';
+      if (x === 50 && y === 37.5 && player.id === state.matchContext.currentBowlerId) return 'Bowler';
 
-        // Name cell
-        const tdName = document.createElement('td');
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'player-name-input';
-        input.value = player.name;
-        input.addEventListener('change', (e) => {
+      // Batter location coordinates (bottom crease end stumps)
+      const bx = 50;
+      const by = 58.5;
+
+      // Mirror horizontally if Left-Handed Batter (LHB) to run identical classification
+      let rx = x;
+      if (state.matchContext.batterHandedness === 'LHB') {
+        rx = 100 - x;
+      }
+
+      const dx = rx - bx;  // negative = off side, positive = leg side
+      const dy = y - by;   // negative = in front of batter, positive = behind batter
+
+      const r = Math.sqrt(dx * dx + dy * dy);
+      
+      const isClose = r <= 12;
+      const isRing = r > 12 && r <= 28;
+      const isDeep = r > 28;
+
+      // 1. BEHIND THE WICKET (y > 58.5)
+      if (y > 58.5) {
+        if (rx < 50) { // Off Side Behind
+          if (isClose) {
+            if (rx > 46) return 'First Slip';
+            if (rx > 42) return 'Second Slip';
+            return 'Third Slip';
+          }
+          if (isRing) return 'Gully';
+          return 'Third Man';
+        } else { // Leg Side Behind
+          if (isClose) return 'Leg Slip';
+          if (isRing) return 'Fine Leg';
+          return 'Deep Fine Leg';
+        }
+      }
+
+      // 2. SQUARE OF THE WICKET (y is roughly around stumps, y between 52 and 60)
+      if (y >= 52 && y <= 60) {
+        if (rx < 45) { // Off Side Square
+          if (isClose) return 'Silly Point';
+          if (isRing) return 'Point';
+          return 'Deep Point';
+        } else if (rx > 55) { // Leg Side Square
+          if (isClose) return 'Short Leg';
+          if (isRing) return 'Square Leg';
+          return 'Deep Square Leg';
+        }
+      }
+
+      // 3. IN FRONT OF THE WICKET (y < 52)
+      if (rx < 50) { // Off Side Front
+        // Angle sectors: Cover (diagonal) vs Mid-off (straighter)
+        // Cover diagonal: rx between 15 and 42, y between 38 and 52
+        if (rx < 42) {
+          if (isClose) return 'Silly Point';
+          if (isRing) return 'Cover';
+          return 'Deep Cover';
+        } else {
+          if (isClose) return 'Silly Mid-off';
+          if (isRing) return 'Mid-off';
+          return 'Long-off';
+        }
+      } else { // Leg Side Front
+        // Angle sectors: Mid-wicket (diagonal) vs Mid-on (straighter)
+        if (rx > 58) {
+          if (isClose) return 'Short Mid-wicket';
+          if (isRing) return 'Mid-wicket';
+          return 'Deep Mid-wicket';
+        } else {
+          if (isClose) return 'Silly Mid-on';
+          if (isRing) return 'Mid-on';
+          return 'Long-on';
+        }
+      }
+
+      return 'Fielder';
+    }
+
+    // UI Roster rows renderer (Flex Layout upgrade)
+    function renderRoster() {
+      elRosterItemsList.innerHTML = '';
+      
+      state.squad.forEach((player, index) => {
+        const item = document.createElement('div');
+        item.className = `roster-flex-item ${player.status === 'benched' ? 'item-benched' : ''}`;
+        
+        // Row 1: Index + Roster Name text input
+        const row1 = document.createElement('div');
+        row1.className = 'roster-row-primary';
+        
+        const idxBadge = document.createElement('span');
+        idxBadge.className = 'roster-index';
+        idxBadge.innerText = String(index + 1).padStart(2, '0');
+        row1.appendChild(idxBadge);
+        
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.className = 'player-name-input';
+        nameInput.value = player.name;
+        nameInput.addEventListener('change', (e) => {
           const oldName = player.name;
           player.name = e.target.value.trim() || `Player ${index + 1}`;
           addLog(`Roster rename: ${oldName} is now ${player.name}`);
           renderApp();
         });
-        tdName.appendChild(input);
-        tr.appendChild(tdName);
+        row1.appendChild(nameInput);
+        item.appendChild(row1);
 
-        // Role Selector Cell
-        const tdRole = document.createElement('td');
+        // Row 2: Select inputs + calculated position readout
+        const row2 = document.createElement('div');
+        row2.className = 'roster-row-secondary';
+        
+        // Role Selector dropdown
         const roleSel = document.createElement('select');
         roleSel.className = 'roster-select';
         roleSel.innerHTML = `
@@ -962,7 +1169,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
           const newRole = e.target.value;
           
           if (newRole === 'WK') {
-            // Demote other WKs to fielders
+            // Enforce maximum 1 WK
             state.squad.forEach(p => {
               if (p.id !== player.id && p.role === 'WK') {
                 p.role = 'Fielder';
@@ -970,31 +1177,26 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
               }
             });
             player.role = 'WK';
-            // Snap to WK position
             player.x = 50;
             player.y = 62.5;
             addLog(`${player.name} designated Wicket Keeper. Snapped to keeper's crease.`);
           } else if (newRole === 'Bowler') {
             player.role = 'Bowler';
-            // Snap to bowler position
             player.x = 50;
             player.y = 37.5;
             state.matchContext.currentBowlerId = player.id;
-            addLog(`${player.name} designated Bowler. Snapped to delivery crease.`);
+            addLog(`${player.name} designated Bowler. Snapped to bowler's end.`);
           } else {
             player.role = 'Fielder';
             addLog(`${player.name} designated Fielder.`);
           }
           
-          // Re-validate current bowler select
           populateBowlerSelect();
           renderApp();
         });
-        tdRole.appendChild(roleSel);
-        tr.appendChild(tdRole);
+        row2.appendChild(roleSel);
 
-        // Status (Active/Benched) selector
-        const tdStatus = document.createElement('td');
+        // Active/Benched state select
         const statusSel = document.createElement('select');
         statusSel.className = 'roster-select';
         statusSel.innerHTML = `
@@ -1008,7 +1210,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
             const prevBenched = state.squad.find(p => p.status === 'benched');
             if (prevBenched) {
               prevBenched.status = 'active';
-              // Place previous benched at the center to be repositioned
               prevBenched.x = 50;
               prevBenched.y = 50;
               addLog(`Subbed in: ${prevBenched.name} enters turf.`);
@@ -1016,7 +1217,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
             player.status = 'benched';
             player.x = null;
             player.y = null;
-            addLog(`Subbed out: ${player.name} is now the 12th Man.`, 'amber');
+            addLog(`Subbed out: ${player.name} is now the 12th Man substitute.`, 'amber');
           } else {
             player.status = 'active';
             player.x = 50;
@@ -1026,10 +1227,16 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
           populateBowlerSelect();
           renderApp();
         });
-        tdStatus.appendChild(statusSel);
-        tr.appendChild(tdStatus);
+        row2.appendChild(statusSel);
 
-        elRosterRows.appendChild(tr);
+        // Real-time calculated field position indicator
+        const posLabel = document.createElement('span');
+        posLabel.className = 'position-telemetry-badge';
+        posLabel.innerText = getFieldPositionName(player).toUpperCase();
+        row2.appendChild(posLabel);
+        
+        item.appendChild(row2);
+        elRosterItemsList.appendChild(item);
       });
     }
 
@@ -1060,7 +1267,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
     // Render Canvas Tokens
     function renderTokens() {
-      // Clear previous tokens
       elTokensContainer.innerHTML = '';
 
       state.squad.forEach(player => {
@@ -1070,6 +1276,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
         token.className = 'player-token';
         token.dataset.id = player.id;
         token.dataset.playerName = player.name;
+        
+        const posName = getFieldPositionName(player);
+        token.dataset.playerPos = posName;
         token.style.left = `${player.x}%`;
         token.style.top = `${player.y}%`;
 
@@ -1134,14 +1343,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
           const deltaX = moveEvent.clientX - startClientX;
           const deltaY = moveEvent.clientY - startClientY;
 
-          // Convert client delta px to turf percentage coordinates
           const pctDx = (deltaX / rect.width) * 100;
           const pctDy = (deltaY / rect.height) * 100;
 
           let newX = startX + pctDx;
           let newY = startY + pctDy;
 
-          // Cap boundaries inside the square coordinate grid
           if (newX < 1) newX = 1;
           if (newX > 99) newX = 99;
           if (newY < 1) newY = 1;
@@ -1152,6 +1359,13 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
           lastX = newX;
           lastY = newY;
+          
+          // Real-time update of position tooltip on hover
+          player.x = newX;
+          player.y = newY;
+          const currentPos = getFieldPositionName(player);
+          token.dataset.playerPos = currentPos;
+          token.setAttribute('data-player-name', player.name);
         }
 
         function onPointerUp(upEvent) {
@@ -1162,13 +1376,18 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
           // Position validation checks on drop release
           const success = processPlayerDrop(player, lastX, lastY, startX, startY);
           if (!success) {
-            // Apply bounce-back visual transition
             token.style.transition = 'left 0.4s var(--ease-instrument), top 0.4s var(--ease-instrument)';
             token.style.left = `${startX}%`;
             token.style.top = `${startY}%`;
+            
+            // Restore coordinates in state
+            player.x = startX;
+            player.y = startY;
+            
             addLog(`Fielder placement rejected. Snapping back.`, 'red');
             setTimeout(() => {
               token.style.transition = 'left var(--dur-base) var(--ease-instrument), top var(--dur-base) var(--ease-instrument)';
+              renderApp();
             }, 400);
           } else {
             renderApp();
@@ -1210,29 +1429,34 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
       // 3. Powerplay limits checks
       const isOutside = dist > RADIUS_30YD;
-      const wasOutside = calcDistance(origX, origY) > RADIUS_30YD;
       
-      if (isOutside && !wasOutside) {
-        // We are trying to move a fielder from inside to outside. Let's inspect outside limits!
-        const outsideCount = getOutsideCount();
-        const maxLimit = getMaxAllowedOutside();
+      // Calculate active outside count excluding this player's original position
+      const otherOutsideCount = state.squad.filter(p => 
+        p.id !== player.id && 
+        p.status === 'active' && 
+        calcDistance(p.x, p.y) > RADIUS_30YD
+      ).length;
 
-        if (outsideCount >= maxLimit) {
-          const ruleMsg = state.matchContext.isPowerplay 
-            ? `Only 2 fielders allowed outside during Powerplay!` 
-            : `Only 5 fielders allowed outside during Non-Powerplay!`;
-          
-          addLog(`[VIOLATION] Cannot place fielder outside circle. ${ruleMsg}`, 'red');
-          showRulesBanner(`Fielding Rule Violation: ${ruleMsg}`);
-          return false;
-        }
+      const newOutsideCount = otherOutsideCount + (isOutside ? 1 : 0);
+      const maxLimit = getMaxAllowedOutside();
+
+      if (isOutside && newOutsideCount > maxLimit) {
+        const ruleMsg = state.matchContext.isPowerplay 
+          ? `Only 2 fielders allowed outside during Powerplay!` 
+          : `Only 5 fielders allowed outside during Non-Powerplay!`;
+        
+        addLog(`[VIOLATION] Cannot place fielder outside circle. ${ruleMsg}`, 'red');
+        showRulesBanner(`Fielding Rule Violation: ${ruleMsg}`);
+        return false;
       }
 
       // If all rules hold, commit the position updates
       player.x = x;
       player.y = y;
       player.inCircle = (dist <= RADIUS_30YD);
-      addLog(`Position updated: ${player.name} set at (${Math.round(x)}%, ${Math.round(y)}%)`);
+      
+      const newPos = getFieldPositionName(player);
+      addLog(`Position updated: ${player.name} set at ${newPos} (${Math.round(x)}%, ${Math.round(y)}%)`);
       hideRulesBanner();
       return true;
     }
@@ -1242,12 +1466,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       elViolationMessage.innerText = message;
       elRulesAlertBanner.classList.remove('hidden-banner');
       
-      // Trigger short container vibrate animation
       elFieldBounds.style.animation = 'none';
       elFieldBounds.offsetHeight; // trigger reflow
       elFieldBounds.style.animation = 'field-shake 0.3s ease';
       
-      // Clear shake animation
       setTimeout(() => {
         elFieldBounds.style.animation = 'none';
       }, 400);
@@ -1257,23 +1479,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       elRulesAlertBanner.classList.add('hidden-banner');
     }
 
-    // Add field shake animation keyframes
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes field-shake {
-        0%, 100% { transform: translateX(0); }
-        20%, 60% { transform: translateX(-6px); }
-        40%, 80% { transform: translateX(6px); }
-      }
-    `;
-    document.head.appendChild(style);
-
     // Global Telemetry Counters Refresher
     function updateCounters() {
       const activeCount = state.squad.filter(p => p.status === 'active').length;
       elSquadActiveCount.innerText = activeCount;
       
-      // Outside Circle telemetry counts
       const outsideCount = getOutsideCount();
       const maxLimit = getMaxAllowedOutside();
       elOutsideCircleCount.innerText = outsideCount;
@@ -1284,7 +1494,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
         showRulesBanner(`TACTICAL ILLEGAL: ${outsideCount} fielders outside the circle! Move fielders inside immediately.`);
       } else {
         elOutsideCircleCount.classList.remove('count-warn');
-        // If there's a warning currently displaying and it's because of outside circle count, hide it
         if (elViolationMessage.innerText.includes('outside the circle')) {
           hideRulesBanner();
         }
@@ -1311,13 +1520,45 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       
       state.squad.forEach(player => {
         if (player.status !== 'active') return;
-        
-        // Mirror coordinates horizontally relative to vertical axis at 50%
         player.x = 100 - player.x;
       });
 
       renderApp();
       addLog(`Tactical mirroring successfully compiled.`, 'green');
+    }
+
+    // Bulk copy-paste roster importer logic
+    function handleBulkImport() {
+      const text = elBulkNamesTextarea.value.trim();
+      if (!text) {
+        addLog(`[IMPORT ERROR] No names entered for bulk import.`, 'red');
+        return;
+      }
+
+      // Parse by newlines or commas
+      const rawNames = text.split(/[\n,]+/).map(name => name.trim()).filter(name => name.length > 0);
+      
+      if (rawNames.length === 0) {
+        addLog(`[IMPORT ERROR] No valid names parsed.`, 'red');
+        return;
+      }
+
+      addLog(`Bulk import triggered: Parsed ${rawNames.length} names.`, 'green');
+      
+      // Update name properties up to 12 squad spaces
+      const limit = Math.min(rawNames.length, 12);
+      for (let i = 0; i < limit; i++) {
+        const oldName = state.squad[i].name;
+        state.squad[i].name = rawNames[i];
+        addLog(`Import slot ${i+1}: ${oldName} -> ${rawNames[i]}`);
+      }
+
+      // Hide the import block and clean up
+      elBulkNamesTextarea.value = '';
+      elBulkImportPanel.classList.add('hidden-panel');
+      
+      renderApp();
+      addLog(`Bulk import complete. ${limit} roster slots updated.`, 'green');
     }
 
     // Unified Master Rerender Routine
@@ -1332,7 +1573,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       state.matchContext.format = e.target.value;
       addLog(`Match format updated: ${state.matchContext.format}`);
       
-      // Update powerplay configurations text
       let ppOvers = '6 overs';
       if (state.matchContext.format === '16-Over') ppOvers = '3 overs';
       if (state.matchContext.format === '35-Over') ppOvers = '7 overs';
@@ -1370,7 +1610,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
         elHandednessToggle.querySelector('.toggle-text').innerText = 'RIGHT-HANDED';
       }
       
-      // Run Mirroring Mathematics
       mirrorField();
     });
 
@@ -1382,32 +1621,43 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       const oldBowler = state.squad.find(p => p.id === prevBowlerId);
 
       if (newBowler) {
-        // If the new bowler was placed elsewhere, snap them to bowler stumps crease
         newBowler.x = 50;
         newBowler.y = 37.5;
         
-        // If old bowler was at crease, reset them slightly so they don't overlap
         if (oldBowler && oldBowler.x === 50 && oldBowler.y === 37.5) {
           oldBowler.x = 42;
-          oldBowler.y = 39; // Mid-off default
+          oldBowler.y = 39; // Default snap to Mid-off
         }
 
-        addLog(`Active bowler switched to ${newBowler.name}. Snapped to delivery stumps.`);
+        addLog(`Active bowler switched to ${newBowler.name}. Snapped to bowler stumps crease.`);
       }
       renderApp();
+    });
+
+    // Bulk roster toggle triggers
+    elBulkImportToggleBtn.addEventListener('click', () => {
+      elBulkImportPanel.classList.toggle('hidden-panel');
+      if (!elBulkImportPanel.classList.contains('hidden-panel')) {
+        elBulkNamesTextarea.focus();
+      }
+    });
+
+    elApplyBulkBtn.addEventListener('click', handleBulkImport);
+    elCancelBulkBtn.addEventListener('click', () => {
+      elBulkNamesTextarea.value = '';
+      elBulkImportPanel.classList.add('hidden-panel');
+      addLog(`Bulk import cancelled.`);
     });
 
     elResetBtn.addEventListener('click', () => {
       addLog(`Resetting strategizing board to default template...`, 'amber');
       
-      // Perform deep restore of squad coordinates and roles
       state.squad = JSON.parse(JSON.stringify(defaultRoster));
       state.matchContext.format = '16-Over';
       state.matchContext.isPowerplay = true;
       state.matchContext.batterHandedness = 'RHB';
       state.matchContext.currentBowlerId = 'p2';
 
-      // Reset DOM selects & buttons state
       elMatchFormat.value = '16-Over';
       
       elPowerplayToggle.classList.add('active-state');
