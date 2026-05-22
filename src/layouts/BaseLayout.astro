@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import { siteConfig } from '@/config/site';
 import Footer from '@/components/Footer.astro';
+import { ViewTransitions } from 'astro:transitions';
+import { execSync } from 'child_process';
 
 interface Props {
   title?: string;
@@ -25,8 +27,15 @@ const pageTitle = title === siteConfig.title ? title : `${title} - ${siteConfig.
 const canonicalUrl = canonical ? new URL(canonical, siteConfig.siteUrl).toString() : Astro.url.toString();
 const imageUrl = new URL(image, siteConfig.siteUrl).toString();
 const currentPath = Astro.url.pathname;
----
 
+// Dynamic Git hash and build timestamp compilation
+let commitSha = 'unknown';
+try {
+  commitSha = execSync('git rev-parse HEAD', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim().slice(0, 7);
+} catch (e) {}
+const buildDate = new Date().toISOString();
+---
+<!-- [SYSTEM TELEMETRY] COMMIT: {commitSha} | COMPILED: {buildDate} | CHASSIS LOGGED -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -52,9 +61,10 @@ const currentPath = Astro.url.pathname;
     <meta name="twitter:image" content={imageUrl} />
     <meta name="theme-color" content="#120f0d" />
     <slot name="head" />
+    <ViewTransitions />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-W7QGKS85CP"></script>
-    <script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -100,13 +110,25 @@ const currentPath = Astro.url.pathname;
       <Footer />
     </div>
 
+    <!-- System routing transition modal -->
+    <div id="routing-overlay" class="routing-overlay" aria-hidden="true">
+      <div class="routing-box">
+        <div class="routing-header">[ SYSTEM REROUTING ]</div>
+        <div class="routing-sector" id="routing-sector-label">SECTOR: PIT WALL</div>
+        <div class="routing-progress">
+          <div class="routing-progress-bar"></div>
+        </div>
+        <div class="routing-footer">TELEMETRY TRANSFER IN PROGRESS...</div>
+      </div>
+    </div>
+
     <style is:global>
       /* Jony Ive-style Elegant Page Transitions */
       .page-shell {
         opacity: 0;
-        transform: scale(1.02);
+        transform: scale(1.01);
         transform-origin: center 10vh;
-        transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1), transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
         will-change: opacity, transform;
       }
 
@@ -117,47 +139,159 @@ const currentPath = Astro.url.pathname;
 
       .page-shell.page-exiting {
         opacity: 0;
-        transform: scale(0.98) !important;
+        transform: scale(0.99) !important;
+      }
+
+      /* Rerouting Telemetry Overlay Styles */
+      .routing-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(18, 15, 13, 0.95);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 160ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .routing-overlay.is-active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .routing-box {
+        background: var(--surface-raised);
+        border: 1px solid var(--surface-line);
+        padding: 2rem;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        width: min(90vw, 400px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(125, 211, 160, 0.05);
+        letter-spacing: 0.05em;
+      }
+
+      .routing-header {
+        color: var(--ink-tertiary);
+        font-size: 10px;
+        margin-bottom: 0.5rem;
+      }
+
+      .routing-sector {
+        color: var(--accent);
+        font-weight: bold;
+        font-size: 15px;
+        margin-bottom: 1.5rem;
+      }
+
+      .routing-progress {
+        height: 2px;
+        background: var(--surface-line);
+        margin-bottom: 1rem;
+        overflow: hidden;
+      }
+
+      .routing-progress-bar {
+        height: 100%;
+        width: 100%;
+        background: var(--accent);
+        transform: translateX(-100%);
+      }
+
+      .routing-overlay.is-active .routing-progress-bar {
+        animation: routing-loading 800ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+
+      @keyframes routing-loading {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(0); }
+      }
+
+      .routing-footer {
+        color: var(--ink-tertiary);
+        font-size: 9px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .page-shell, .routing-overlay {
+          transition: none !important;
+          transform: none !important;
+        }
+        .routing-progress-bar {
+          animation: none !important;
+          transform: none !important;
+        }
       }
     </style>
 
     <script>
+      import { initKeyboardShortcuts } from '../scripts/keyboard';
+
       function initPageTransitions() {
         const shell = document.querySelector('.page-shell');
         if (shell) {
           setTimeout(() => {
             shell.classList.add('page-ready');
-          }, 50); // 50ms entry delay
+          }, 20); // entry delay
+        }
+      }
+
+      // Initialize keyboard shortcuts & page shell active state
+      document.addEventListener('astro:page-load', () => {
+        initPageTransitions();
+        initKeyboardShortcuts();
+      });
+
+      // View Transitions routing interceptor
+      document.addEventListener('astro:before-preparation', (e: any) => {
+        const toUrl = new URL(e.to);
+        const path = toUrl.pathname;
+        let sector = 'SECTOR P — PIT WALL';
+        
+        if (path === '/') {
+          sector = 'SECTOR P — PIT WALL';
+        } else if (path.startsWith('/garage')) {
+          sector = 'SECTOR G — GARAGE';
+        } else if (path.startsWith('/field-notes')) {
+          sector = 'SECTOR FN — FIELD NOTES';
+        } else if (path.startsWith('/story')) {
+          sector = 'SECTOR S — STORY';
+        } else if (path.startsWith('/connect') || path.startsWith('/contact')) {
+          sector = 'SECTOR C — PARC FERMÉ';
+        } else if (path.startsWith('/caia')) {
+          sector = 'SECTOR CAIA — CAIA CORNER';
+        } else if (path.startsWith('/world-cup-2026')) {
+          sector = 'SECTOR WC — WORLD CUP CORNER';
         }
 
-        document.addEventListener('click', (e) => {
-          const target = e.target as HTMLElement;
-          const anchor = target.closest('a');
-          
-          if (anchor && anchor.href && anchor.target !== '_blank' && !anchor.hasAttribute('download')) {
-            const url = new URL(anchor.href, window.location.href);
-            if (url.origin === window.location.origin) {
-              if (url.pathname === window.location.pathname && url.hash) {
-                return;
-              }
-              e.preventDefault();
-              if (shell) {
-                shell.classList.remove('page-ready');
-                shell.classList.add('page-exiting');
-              }
-              setTimeout(() => {
-                window.location.href = anchor.href;
-              }, 300);
-            }
-          }
-        });
-      }
+        const label = document.getElementById('routing-sector-label');
+        if (label) label.textContent = sector;
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initPageTransitions);
-      } else {
-        initPageTransitions();
-      }
+        const overlay = document.getElementById('routing-overlay');
+        if (overlay) overlay.classList.add('is-active');
+      });
+
+      document.addEventListener('astro:after-swap', () => {
+        const overlay = document.getElementById('routing-overlay');
+        if (overlay) overlay.classList.remove('is-active');
+      });
+    </script>
+
+    <!-- Pit Wall startup ascii banner -->
+    <script define:vars={{ commitSha, buildDate }}>
+      console.log(`%c
+   ___ __  __   _  _   _   ___ ___ 
+  / __|  \\/  | | \\| | /_\\ | __|_ _|
+ | (__| |\\/| | | .\` |/ _ \\| _| | | 
+  \\___|_|  |_| |_|\\_/_/ \\_\\_| |___|
+                                   
+ [ SYSTEM ACTIVE SPECIMEN ]
+ TELEMETRY: SECTOR-2 ONLINE
+ GIT COMMIT: ${commitSha}
+ COMPILED: ${buildDate}
+`, "color: #7dd3a0; font-family: monospace; font-weight: bold;");
     </script>
   </body>
 </html>

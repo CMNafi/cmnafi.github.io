@@ -1,36 +1,64 @@
 :root {
-  /* Palette — lock it, never add */
-  --paddock-black:   #0A0B0D;   /* page base */
-  --carbon:          #14161B;   /* surface 1 */
-  --graphite:        #1F232B;   /* surface 2 */
-  --pitlane-white:   #F4F4F1;   /* ink on dark */
-  --telemetry-green: #00E676;   /* success, current lap */
-  --warning-amber:   #FFB300;   /* caution, brewing */
-  --racing-red:      #E10600;   /* live, attention */
-  --violet-flag:     #7F5AF0;   /* personal best */
+  /* Surfaces */
+  --surface-base:        #120f0d;   /* page background */
+  --surface-raised:      #1a1714;   /* cards, panels */
+  --surface-line:        #2a2520;   /* hairline borders */
 
-  /* Typography — two fonts, both distinctive */
-  --font-display: "PP Editorial New", "GT Sectra", Georgia, serif;
-  --font-mono:    "JetBrains Mono", "Berkeley Mono", ui-monospace, monospace;
-  --font-body:    "Söhne", "Fraunces", Georgia, serif;
+  /* Ink */
+  --ink-primary:         #f4ede4;   /* body + headlines */
+  --ink-secondary:       #a89c8b;   /* labels, captions */
+  --ink-tertiary:        #6a6055;   /* metadata, footnotes */
 
-  /* Grid */
-  --grid-unit: 8px;
-  --radius-chip: 2px;    /* tight, technical */
-  --radius-card: 4px;
+  /* Accent — sector-2 green, single accent in the whole system */
+  --accent:              #7dd3a0;
+  --accent-dim:          #7dd3a033; /* 20% alpha for backgrounds */
+  --accent-glow:         #7dd3a066; /* 40% alpha for halos */
 
-  /* Motion — easing modeled on acceleration curves */
-  --ease-launch:   cubic-bezier(.2, .8, .2, 1);      /* out of pitlane */
-  --ease-tire:     cubic-bezier(.6, .04, .98, .335); /* braking */
-  /* Jony Ive Inspired Material Design Tokens */
-  --space-black:     #050505;   /* ultra-deep base */
-  --titanium-dark:   #0d0d0f;   /* surface layer 1 */
-  --titanium-light:  #18181b;   /* surface layer 2 */
-  --titanium-border: rgba(255, 255, 255, 0.05); /* hairline chamfer */
-  --titanium-border-hover: rgba(255, 255, 255, 0.15);
-  --text-warm-white: #f5f5f7;   /* premium ink */
-  --text-sand-gray:  #86868b;   /* secondary details */
-  --apple-silver:    #e8e8ed;   /* brushed silver highlights */
-  --ease-spring:     cubic-bezier(0.25, 1, 0.5, 1); /* custom elastic material transition */
+  /* Status — live / recording / warning */
+  --status-live:         var(--accent);
+  --status-warn:         #e8b86a;
+
+  /* Type */
+  --font-serif:          'Cardinal Fruit', 'Tiempos', 'Cormorant Garamond', Georgia, serif;
+  --font-mono:           'Berkeley Mono', 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Motion */
+  --ease-instrument:     cubic-bezier(0.16, 1, 0.3, 1);   /* settle, no bounce */
+  --ease-mechanical:     cubic-bezier(0.4, 0, 0.2, 1);    /* precise, no overshoot */
+  --dur-fast:            160ms;
+  --dur-base:            320ms;
+  --dur-slow:            640ms;
+  --dur-cinematic:       1200ms;
+
+  /* Grain */
+  --grain-opacity:       0.035;
+
+  /* --- BACKWARDS COMPATIBILITY MAPPINGS --- */
+  --space-black:         var(--surface-base);
+  --paddock-black:       var(--surface-base);
+  
+  --titanium-dark:       var(--surface-raised);
+  --carbon:              var(--surface-raised);
+  
+  --titanium-light:      var(--surface-raised);
+  --graphite:            var(--surface-raised);
+  
+  --titanium-border:       var(--surface-line);
+  --titanium-border-hover: var(--accent);
+  
+  --text-warm-white:     var(--ink-primary);
+  --pitlane-white:       var(--ink-primary);
+  --apple-silver:        var(--ink-primary);
+  
+  --text-sand-gray:      var(--ink-secondary);
+  
+  --telemetry-green:     var(--accent);
+  --warning-amber:       var(--status-warn);
+  
+  --font-display:        var(--font-serif);
+  --font-body:           var(--font-serif);
+  
+  --ease-spring:         var(--ease-instrument);
+  --ease-launch:         var(--ease-instrument);
+  --ease-tire:           var(--ease-mechanical);
 }
-

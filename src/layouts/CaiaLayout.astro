@@ -2,6 +2,7 @@
 import '../styles/global.css'; // Just in case, though we will override via scoped styles
 import { siteConfig } from '@/config/site';
 import { getCollection } from 'astro:content';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -33,6 +34,63 @@ const level2Topics = allCaia.filter(e => e.data.level === 'II').sort((a, b) => a
     
     <title>{pageTitle} - CAIA Corner</title>
     <meta name="description" content={pageDescription} />
+    <ViewTransitions />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W7QGKS85CP"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-W7QGKS85CP');
+    </script>
+  </head>
+  <body class="caia-mode">
+    <div class="grain"></div>
+    <nav class="caia-nav">
+      <div class="brand">
+        <a href="/caia">CAIA Corner</a> <span style="color: var(--caia-border)">/</span>
+        <a href="/" style="font-size:13px; color: var(--caia-accent); font-weight: 500;">← Back to cmnafi.com</a>
+      </div>
+      <div class="actions">
+        <button id="caia-theme-toggle" class="theme-toggle">TOGGLE THEME</button>
+      </div>
+    </nav>
+    
+    <div class="caia-layout">
+      <aside class="caia-sidebar">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em; margin-bottom: 1rem;">NAVIGATION</div>
+        <ul style="list-style: none; padding: 0; font-family: 'IBM Plex Serif'; font-size: 15px; display: flex; flex-direction: column; gap: 0.5rem;">
+          <li><a href="/caia" style="color: var(--caia-ink); text-decoration: none; font-weight: 600;">Home Overview</a></li>
+          
+          <li style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em;">LEVEL I</li>
+          {level1Topics.map(topic => (
+            <li>
+              <a href={`/caia/${topic.slug}`} style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85; transition: opacity 0.2s, color 0.2s;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">
+                {topic.data.topicNumber === 0 ? 'Overview' : `${topic.data.topicNumber}. ${topic.data.title}`}
+              </a>
+            </li>
+          ))}
+
+          <li style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em;">LEVEL II</li>
+          {level2Topics.map(topic => (
+            <li>
+              <a href={`/caia/${topic.slug}`} style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85; transition: opacity 0.2s, color 0.2s;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">
+                {topic.data.topicNumber === 0 ? 'Overview' : `${topic.data.topicNumber}. ${topic.data.title}`}
+              </a>
+            </li>
+          ))}
+
+          <li style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em;">REFERENCE</li>
+          <li><a href="/caia/glossary" style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">Glossary</a></li>
+          <li><a href="/caia/formulas" style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">Master Formulas</a></li>
+        </ul>
+      </aside>
+
+      <main class="caia-main">
+        <slot />
+      </main>
+    </div>
 
     <style is:global>
       :root[data-theme="light"] {
@@ -146,76 +204,31 @@ const level2Topics = allCaia.filter(e => e.data.level === 'II').sort((a, b) => a
       .caia-main ul, .caia-main ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
       .caia-main li { margin-bottom: 0.5rem; font-weight: 300; }
     </style>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W7QGKS85CP"></script>
+
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      import { initKeyboardShortcuts } from '../scripts/keyboard';
 
-      gtag('config', 'G-W7QGKS85CP');
-    </script>
-  </head>
-  <body class="caia-mode">
-    <nav class="caia-nav">
-      <div class="brand">
-        <a href="/caia">CAIA Corner</a> <span style="color: var(--caia-border)">/</span>
-        <a href="/" style="font-size:13px; color: var(--caia-accent); font-weight: 500;">← Back to cmnafi.com</a>
-      </div>
-      <div class="actions">
-        <button id="caia-theme-toggle" class="theme-toggle">TOGGLE THEME</button>
-      </div>
-    </nav>
-    
-    <div class="caia-layout">
-      <aside class="caia-sidebar">
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em; margin-bottom: 1rem;">NAVIGATION</div>
-        <ul style="list-style: none; padding: 0; font-family: 'IBM Plex Serif'; font-size: 15px; display: flex; flex-direction: column; gap: 0.5rem;">
-          <li><a href="/caia" style="color: var(--caia-ink); text-decoration: none; font-weight: 600;">Home Overview</a></li>
-          
-          <li style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em;">LEVEL I</li>
-          {level1Topics.map(topic => (
-            <li>
-              <a href={`/caia/${topic.slug}`} style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85; transition: opacity 0.2s, color 0.2s;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">
-                {topic.data.topicNumber === 0 ? 'Overview' : `${topic.data.topicNumber}. ${topic.data.title}`}
-              </a>
-            </li>
-          ))}
+      function setupTheme() {
+        const toggle = document.getElementById('caia-theme-toggle');
+        const html = document.documentElement;
+        if (!toggle) return;
 
-          <li style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em;">LEVEL II</li>
-          {level2Topics.map(topic => (
-            <li>
-              <a href={`/caia/${topic.slug}`} style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85; transition: opacity 0.2s, color 0.2s;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">
-                {topic.data.topicNumber === 0 ? 'Overview' : `${topic.data.topicNumber}. ${topic.data.title}`}
-              </a>
-            </li>
-          ))}
+        // Load preference from localStorage
+        const savedTheme = localStorage.getItem('caia-theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
 
-          <li style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--caia-highlight); letter-spacing: 0.1em;">REFERENCE</li>
-          <li><a href="/caia/glossary" style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">Glossary</a></li>
-          <li><a href="/caia/formulas" style="color: var(--caia-ink); text-decoration: none; font-size: 0.9em; opacity: 0.85;" onmouseover="this.style.opacity='1'; this.style.color='var(--caia-accent)';" onmouseout="this.style.opacity='0.85'; this.style.color='var(--caia-ink)';">Master Formulas</a></li>
-        </ul>
-      </aside>
+        toggle.addEventListener('click', () => {
+          const currentTheme = html.getAttribute('data-theme');
+          const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+          html.setAttribute('data-theme', newTheme);
+          localStorage.setItem('caia-theme', newTheme);
+        });
+      }
 
-      <main class="caia-main">
-        <slot />
-      </main>
-    </div>
-
-    <script is:inline>
-      // Theme toggling logic
-      const toggle = document.getElementById('caia-theme-toggle');
-      const html = document.documentElement;
-
-      // Load preference from localStorage
-      const savedTheme = localStorage.getItem('caia-theme') || 'light';
-      html.setAttribute('data-theme', savedTheme);
-
-      toggle.addEventListener('click', () => {
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('caia-theme', newTheme);
+      // Safe re-run on page swaps
+      document.addEventListener('astro:page-load', () => {
+        setupTheme();
+        initKeyboardShortcuts();
       });
     </script>
   </body>

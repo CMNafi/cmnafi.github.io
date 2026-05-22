@@ -2,16 +2,131 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Still brewing" description="This page is still brewing. Head back to the main site directory.">
-  <section class="page-section narrow-stack">
-    <div class="panel prose">
-      <p class="eyebrow">404</p>
-      <h1>Still brewing</h1>
-      <p>The page you were looking for hasn’t surfaced yet, but the rest of the site is ready to explore.</p>
-      <div class="hero-actions">
-        <a class="button button-primary" href="/blog">Go to Blog</a>
-        <a class="button button-secondary" href="/projects">Go to Projects</a>
+<BaseLayout title="Off Track / Gravel Trap" description="The page you requested has retired from the session.">
+  <nav class="paddock-override-nav">
+    <a href="/" class="return-wall">← PIT WALL</a>
+    <div class="nav-title">GRAVEL TRAP</div>
+  </nav>
+
+  <main class="connect-viewport">
+    <div class="comms-panel error-panel">
+      <div class="error-code monospace">[ 404 // SESSION RETIREMENT ]</div>
+      <h1 id="error-title" class="scramble-header" data-text="OFF TRACK">OFF TRACK</h1>
+      <p>The page you requested has retired from the session or suffered a mechanical failure.</p>
+      
+      <div class="comms-grid">
+        <a href="/" class="comms-link">
+          <span class="c-label">RETURN TO PIT WALL</span>
+          <span class="arrow">→</span>
+        </a>
       </div>
     </div>
-  </section>
+  </main>
 </BaseLayout>
+
+<style>
+  .paddock-override-nav { display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono); }
+  .return-wall { color: var(--ink-secondary); font-size: 11px; letter-spacing: 0.15em; text-decoration: none; transition: color var(--dur-fast) var(--ease-instrument); }
+  .return-wall:hover { color: var(--accent); }
+  .nav-title { color: var(--ink-secondary); font-size: 11px; letter-spacing: 0.15em; }
+  
+  .connect-viewport {
+    min-height: 80vh;
+    background: var(--surface-base);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  .comms-panel {
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-line);
+    padding: 4rem;
+    border-radius: 16px;
+    border-top: 3px solid var(--status-warn);
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  }
+
+  .error-code {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: var(--status-warn);
+    margin-bottom: 1rem;
+  }
+
+  .comms-panel h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    color: var(--ink-primary);
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.03em;
+  }
+  
+  .comms-panel p {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--ink-secondary);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+
+  .comms-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .comms-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: var(--surface-base);
+    border: 1px solid var(--surface-line);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color var(--dur-fast) var(--ease-instrument), transform var(--dur-fast) var(--ease-instrument);
+  }
+  
+  .comms-link:hover {
+    border-color: var(--accent);
+    transform: translateX(5px);
+  }
+
+  .c-label {
+    font-family: var(--font-mono);
+    color: var(--ink-primary);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+  }
+  
+  .arrow {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 600px) {
+    .comms-panel { padding: 2rem; }
+  }
+</style>
+
+<script>
+  import { scrambleTo } from '../scripts/scramble';
+
+  function init404Scramble() {
+    const errorTitle = document.getElementById('error-title');
+    if (errorTitle) {
+      const text = errorTitle.getAttribute('data-text') || errorTitle.textContent || '';
+      scrambleTo(errorTitle, text, 900);
+    }
+  }
+
+  document.addEventListener('astro:page-load', init404Scramble);
+</script>
+

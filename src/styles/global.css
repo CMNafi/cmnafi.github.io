@@ -7,8 +7,8 @@
   --border: rgba(244, 244, 241, 0.12);
   --text: var(--pitlane-white);
   --muted: rgba(244, 244, 241, 0.5);
-  --accent: var(--warning-amber);
-  --accent-soft: rgba(255, 179, 0, 0.1);
+  --accent: var(--telemetry-green, #7dd3a0);
+  --accent-soft: var(--accent-dim, rgba(125, 211, 160, 0.1));
   --cool: var(--graphite);
   --shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
   --radius: var(--radius-card);
@@ -31,8 +31,8 @@ img { max-width: 100%; display: block; }
 button, input { font: inherit; }
 button { cursor: pointer; }
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .page-shell {
@@ -68,7 +68,7 @@ button { cursor: pointer; }
 }
 
 .grain {
-  opacity: 0.06;
+  opacity: var(--grain-opacity, 0.035);
   background-image: radial-gradient(rgba(255, 255, 255, 0.8) 0.6px, transparent 0.6px);
   background-size: 10px 10px;
   mix-blend-mode: soft-light;
