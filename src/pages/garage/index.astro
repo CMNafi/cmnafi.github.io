@@ -31,7 +31,7 @@ const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
   
   <nav class="paddock-override-nav">
     <a href="/" class="return-wall">← PIT WALL</a>
-    <div class="nav-title">GARAGE COMMAND</div>
+    <div class="nav-title monospace telemetry-number">SECTOR G // GARAGE CONTROL</div>
   </nav>
 
   <main class="garage-viewport">
@@ -41,10 +41,104 @@ const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
       <GarageScene projects={mappedProjects} />
     </div>
 
+    <!-- Slid-out Telemetry Panels (Hidden on right by default, slide in on lift hover) -->
+    <div class="project-panels-container">
+      {brewingProjects.map((proj) => {
+        const hasEngine = (proj.data.stack?.length || 0) > 0;
+        const hasAero = (proj.data.keyFeatures?.length || 0) > 0;
+        const hasWheels = !!proj.data.liveUrl;
+        const hasLivery = proj.data.featured;
+        
+        return (
+          <aside class="project-panel" id={`panel-${proj.slug}`} data-project-panel>
+            <button class="close-panel-btn" data-close-target={proj.slug}>✕</button>
+            <div class="panel-header">
+              <div class="panel-category monospace">{proj.data.category?.toUpperCase() || 'DEVELOPMENT PORT'}</div>
+              <h2>{proj.data.title}</h2>
+              <div class="panel-status-row">
+                <span class="status-dot-wrap">
+                  <span class={`status-indicator ${proj.data.status}`}></span>
+                </span>
+                <span class="status-text monospace">{proj.data.status.toUpperCase()}</span>
+              </div>
+            </div>
+            
+            <div class="panel-body">
+              <div class="panel-section">
+                <div class="panel-label">THE METAPHOR</div>
+                <p class="panel-text">{proj.data.summary}</p>
+              </div>
+              
+              <div class="panel-section">
+                <div class="panel-label">BUILD METRICS</div>
+                <div class="build-metrics-grid">
+                  <div class="metric-row">
+                    <span>CHASSIS</span>
+                    <span class="metric-status active">READY</span>
+                  </div>
+                  <div class="metric-row">
+                    <span>ENGINE BLOCK (DATA LAYER)</span>
+                    <span class={`metric-status ${hasEngine ? 'active' : 'pending'}`}>
+                      {hasEngine ? 'READY' : 'PENDING'}
+                    </span>
+                  </div>
+                  <div class="metric-row">
+                    <span>AERO KIT (UI SHELL)</span>
+                    <span class={`metric-status ${hasAero ? 'active' : 'pending'}`}>
+                      {hasAero ? 'READY' : 'PENDING'}
+                    </span>
+                  </div>
+                  <div class="metric-row">
+                    <span>WHEELS (DEPLOYED TO PROD)</span>
+                    <span class={`metric-status ${hasWheels ? 'active' : 'pending'}`}>
+                      {hasWheels ? 'READY' : 'PENDING'}
+                    </span>
+                  </div>
+                  <div class="metric-row">
+                    <span>LIVERY (POLISH & FINISH)</span>
+                    <span class={`metric-status ${hasLivery ? 'active' : 'pending'}`}>
+                      {hasLivery ? 'READY' : 'PENDING'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              {proj.data.problem && (
+                <div class="panel-section">
+                  <div class="panel-label">PROBLEM STATEMENT</div>
+                  <p class="panel-text">{proj.data.problem}</p>
+                </div>
+              )}
+              
+              {proj.data.solution && (
+                <div class="panel-section">
+                  <div class="panel-label">SOLUTION BRIEF</div>
+                  <p class="panel-text">{proj.data.solution}</p>
+                </div>
+              )}
+              
+              {proj.data.stack && (
+                <div class="panel-section">
+                  <div class="panel-label">TECHNICAL STACK</div>
+                  <div class="stack-tags">
+                    {proj.data.stack.map((s: string) => <span class="stack-tag">{s}</span>)}
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div class="panel-footer">
+              <a href={`/garage/${proj.slug}`} class="panel-action-btn">ENTER DEVELOPMENT PORT →</a>
+            </div>
+          </aside>
+        );
+      })}
+    </div>
+
     <!-- Data Telemetry Area -->
     <section class="garage-telemetry">
       <div class="container">
-        <h2 class="telemetry-title">LIVE DEPLOYMENTS</h2>
+        <h2 class="telemetry-title monospace telemetry-number">LIVE DEPLOYMENTS</h2>
         
         <div class="live-grid">
           {liveProjects.map(proj => (
@@ -67,6 +161,42 @@ const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
   </main>
 </BaseLayout>
 
+<script>
+  function initGarageInteractions() {
+    const lifts = document.querySelectorAll('.lift-station');
+    const panels = document.querySelectorAll('[data-project-panel]');
+    
+    lifts.forEach(lift => {
+      const projId = lift.getAttribute('data-project-id');
+      if (!projId) return;
+      const panel = document.getElementById(`panel-${projId}`);
+      
+      // Hover triggers slide-in
+      lift.addEventListener('mouseenter', () => {
+        panels.forEach(p => p.classList.remove('active'));
+        if (panel) panel.classList.add('active');
+      });
+      
+      lift.addEventListener('mouseleave', () => {
+        if (panel) panel.classList.remove('active');
+      });
+    });
+
+    // Close button dismissal
+    const closeBtns = document.querySelectorAll('.close-panel-btn');
+    closeBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = btn.getAttribute('data-close-target');
+        const panel = document.getElementById(`panel-${target}`);
+        if (panel) panel.classList.remove('active');
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initGarageInteractions);
+</script>
+
 <style>
   .paddock-override-nav {
     position: absolute;
@@ -74,6 +204,7 @@ const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
     z-index: 50;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 1.5rem 2rem;
     font-family: var(--font-mono);
   }
@@ -82,6 +213,8 @@ const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
     font-size: 11px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.2s;
   }
   .return-wall:hover {
     color: var(--pitlane-white);
@@ -97,16 +230,204 @@ const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
     background: var(--paddock-black);
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
   }
   
   .garage-hero {
     height: 65vh;
     min-height: 480px;
-    border-bottom: 2px solid var(--graphite);
+    border-bottom: 1px solid var(--surface-line);
     background-image: 
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, transparent 1px, transparent 10px, rgba(255,255,255,0.01) 11px);
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.005) 0px, transparent 1px, transparent 10px, rgba(255,255,255,0.005) 11px);
   }
 
+  /* --- Sliding Telemetry Panels --- */
+  .project-panels-container {
+    position: relative;
+  }
+  .project-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 440px;
+    background: #090a0d;
+    border-left: 1px solid var(--surface-line);
+    padding: 3rem 2rem;
+    transform: translateX(100%);
+    transition: transform 0.4s var(--ease-launch);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: -15px 0 40px rgba(0, 0, 0, 0.7);
+    overflow-y: auto;
+    pointer-events: auto;
+  }
+  .project-panel.active {
+    transform: translateX(0);
+  }
+  
+  .close-panel-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--ink-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .close-panel-btn:hover {
+    color: var(--pitlane-white);
+  }
+
+  .panel-header {
+    border-bottom: 1px solid var(--surface-line);
+    padding-bottom: 1.5rem;
+  }
+  .panel-category {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+  }
+  .panel-header h2 {
+    font-family: var(--font-display);
+    color: var(--pitlane-white);
+    font-size: 2rem;
+    margin: 0 0 0.8rem 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .panel-status-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  
+  .panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1;
+  }
+  .panel-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .panel-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-secondary);
+    letter-spacing: 0.15em;
+  }
+  .panel-text {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: rgba(244, 244, 241, 0.85);
+    line-height: 1.6;
+  }
+
+  /* Build metrics layout */
+  .build-metrics-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: var(--carbon);
+    border: 1px solid var(--surface-line);
+    border-radius: var(--radius-card);
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px dashed var(--surface-line);
+    color: var(--ink-primary);
+  }
+  .metric-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .metric-status {
+    font-weight: 700;
+  }
+  .metric-status.active {
+    color: var(--accent);
+  }
+  .metric-status.pending {
+    color: var(--ink-tertiary);
+  }
+
+  .stack-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .stack-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 0.2rem 0.5rem;
+    background: var(--carbon);
+    border: 1px solid var(--surface-line);
+    border-radius: var(--radius-chip);
+    color: var(--ink-secondary);
+  }
+
+  .panel-footer {
+    border-top: 1px solid var(--surface-line);
+    padding-top: 1.5rem;
+    margin-top: auto;
+  }
+  .panel-action-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: var(--paddock-black);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    border-radius: var(--radius-card);
+    transition: all 0.3s;
+  }
+  .panel-action-btn:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  /* Status elements */
+  .status-dot-wrap {
+    display: inline-flex;
+    align-items: center;
+  }
+  .status-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--ink-tertiary);
+    display: inline-block;
+  }
+  .status-indicator.live { background-color: var(--accent); }
+  .status-indicator.brewing { background-color: var(--warning-amber); }
+
+  /* Live deployments */
   .garage-telemetry {
     flex: 1;
     padding: 4rem 2rem;
@@ -122,7 +443,7 @@ const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
     font-size: 0.9rem;
     letter-spacing: 0.25em;
     margin-bottom: 2.5rem;
-    border-bottom: 1px solid var(--carbon);
+    border-bottom: 1px solid var(--surface-line);
     padding-bottom: 1rem;
   }
 
@@ -133,16 +454,15 @@ const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
   }
 
   .live-card {
-    background: var(--page-bg);
-    border: 1px solid var(--carbon);
-    border-left: 2px solid var(--telemetry-green);
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-line);
+    border-left: 2px solid var(--accent);
     padding: 2.5rem;
     border-radius: var(--radius-card);
-    transition: transform 0.2s;
+    transition: border-color 0.2s;
   }
   .live-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--graphite);
+    border-color: var(--accent);
   }
 
   .live-card h3 {
@@ -151,17 +471,21 @@ const mappedProjects: ProjectStatus[] = brewingProjects.map(p => {
     color: var(--pitlane-white);
     margin: 0 0 0.8rem 0;
   }
-  .live-card h3 a { color: inherit; }
+  .live-card h3 a { color: inherit; text-decoration: none; }
 
   .live-card p {
-    color: var(--muted);
+    color: var(--ink-secondary);
     font-family: var(--font-body);
     font-size: 1rem;
     margin: 0 0 2rem 0;
     line-height: 1.6;
   }
   
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    .project-panel {
+      width: 100%;
+      padding: 2rem 1.5rem;
+    }
     .live-grid { grid-template-columns: 1fr; }
     .live-card { padding: 1.5rem; }
   }

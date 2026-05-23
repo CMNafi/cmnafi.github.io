@@ -4,6 +4,7 @@ import { siteConfig } from '@/config/site';
 import Footer from '@/components/Footer.astro';
 import { ViewTransitions } from 'astro:transitions';
 import { execSync } from 'child_process';
+import LapTimer from '@/components/telemetry/LapTimer.astro';
 
 interface Props {
   title?: string;
@@ -44,7 +45,7 @@ const buildDate = new Date().toISOString();
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
     <title>{pageTitle}</title>
@@ -83,7 +84,7 @@ const buildDate = new Date().toISOString();
             <span>C M Nafi</span>
             <small>Curiosities, systems, & stories</small>
           </a>
-          <nav aria-label="Primary navigation">
+          <nav aria-label="Primary navigation" class="nav-container">
             <ul class="nav-list">
               {siteConfig.nav.map((item) => {
                 const isCurrent = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(`${item.href}/`));
@@ -101,6 +102,9 @@ const buildDate = new Date().toISOString();
                 );
               })}
             </ul>
+            <div class="header-timer-wrap">
+              <LapTimer id="global-header-timer" isLive={true} />
+            </div>
           </nav>
         </header>
       )}
@@ -123,6 +127,24 @@ const buildDate = new Date().toISOString();
     </div>
 
     <style is:global>
+      /* Primary Navigation Layout & Timer */
+      .nav-container {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .header-timer-wrap {
+        display: inline-flex;
+        align-items: center;
+      }
+      @media (max-width: 768px) {
+        .nav-container {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: center;
+        }
+      }
+
       /* Jony Ive-style Elegant Page Transitions */
       .page-shell {
         opacity: 0;

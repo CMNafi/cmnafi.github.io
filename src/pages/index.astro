@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { execSync } from 'child_process';
+import SectorBadge from '@/components/telemetry/SectorBadge.astro';
 
 const projects = await getCollection('projects');
 const notes = await getCollection('field-notes');
@@ -36,9 +37,6 @@ try {
 ---
 
 <BaseLayout title="Home" hideHeader={true}>
-  <!-- Magnetic Cursor Element -->
-  <div id="magnetic-cursor" class="magnetic-cursor"></div>
-
   <!-- Real-time scroll telemetry progress line -->
   <div class="scroll-telemetry-rail">
     <div id="scroll-progress-indicator" class="scroll-progress-bar"></div>
@@ -82,7 +80,7 @@ try {
 
     <!-- Sector Divider -->
     <div class="sector-divider">
-      <span class="sector-divider-label">[ SECTOR 1 // DRIVER.BIOGRAPHY ]</span>
+      <SectorBadge variant="sector1" label="SECTOR 1 // DRIVER.BIOGRAPHY" />
       <span class="sector-divider-dash"></span>
     </div>
 
@@ -144,7 +142,7 @@ try {
 
     <!-- Sector Divider -->
     <div class="sector-divider">
-      <span class="sector-divider-label">[ SECTOR 2 // CAIA.TELEMETRY ]</span>
+      <SectorBadge variant="sector2" label="SECTOR 2 // CAIA.TELEMETRY" />
       <span class="sector-divider-dash"></span>
     </div>
 
@@ -202,7 +200,7 @@ try {
 
     <!-- Sector Divider -->
     <div class="sector-divider">
-      <span class="sector-divider-label">[ SECTOR 2B // EVENT.FEED ]</span>
+      <SectorBadge variant="sector2b" label="SECTOR 2B // EVENT.FEED" />
       <span class="sector-divider-dash"></span>
     </div>
 
@@ -253,7 +251,7 @@ try {
 
     <!-- Sector Divider -->
     <div class="sector-divider">
-      <span class="sector-divider-label">[ SECTOR 3 // CHAMBERS ]</span>
+      <SectorBadge variant="sector3" label="SECTOR 3 // CHAMBERS" />
       <span class="sector-divider-dash"></span>
     </div>
 
@@ -296,7 +294,7 @@ try {
 
     <!-- Sector Divider -->
     <div class="sector-divider">
-      <span class="sector-divider-label">[ SECTOR 4 // METRICS ]</span>
+      <SectorBadge variant="sector4" label="SECTOR 4 // METRICS" />
       <span class="sector-divider-dash"></span>
     </div>
 
@@ -683,20 +681,11 @@ try {
     border: 1px solid var(--surface-line);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 
-      0px 12px 30px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.02);
-    transition: 
-      border-color var(--dur-base) var(--ease-instrument),
-      box-shadow var(--dur-base) var(--ease-instrument);
+    transition: border-color var(--dur-base) var(--ease-instrument);
   }
 
   .material-card:hover {
     border-color: var(--accent) !important;
-    box-shadow: 
-      0px 20px 45px rgba(0, 0, 0, 0.6),
-      0 0 15px var(--accent-dim),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   }
 
   /* CRT Signal Flicker on hover */
@@ -1285,32 +1274,7 @@ try {
     height: 2px;
   }
 
-  /* Magnetic Cursor Styling */
-  .magnetic-cursor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 8px;
-    height: 8px;
-    background-color: var(--accent);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate3d(-100px, -100px, 0);
-    will-change: transform, width, height, background-color, border;
-    transition: 
-      background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-      border 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-      width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-      height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  
-  .magnetic-cursor.hovered {
-    width: 28px;
-    height: 28px;
-    background-color: transparent;
-    border: 1px solid var(--accent);
-  }
+
 
   /* Promoted Story Glimpse Card */
   .story-glimpse-section {
@@ -1323,11 +1287,10 @@ try {
   .story-promoted {
     padding: 3rem;
     min-height: 320px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease;
   }
   .story-promoted:hover {
     border-color: var(--accent) !important;
-    box-shadow: 0 0 30px rgba(125, 211, 160, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.02) !important;
   }
   .story-visualizer-column {
     display: flex;
@@ -1386,11 +1349,10 @@ try {
   .caia-promoted {
     padding: 3rem;
     min-height: 320px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease;
   }
   .caia-promoted:hover {
     border-color: var(--caia-accent-main) !important;
-    box-shadow: 0 0 30px rgba(122, 174, 153, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.02) !important;
   }
   .caia-visualizer-column {
     display: flex;
@@ -1447,129 +1409,7 @@ try {
   import { rollupCounter } from '../scripts/counter';
   import { scrambleTo } from '../scripts/scramble';
 
-  // Spring parameters for cursor following
-  const cursorStiffness = 150;
-  const cursorDamping = 20;
-  
-  let cursorX = -100;
-  let cursorY = -100;
-  let cursorVx = 0;
-  let cursorVy = 0;
-  
-  let mouseX = -100;
-  let mouseY = -100;
-  
-  // Track mouse coordinates globally
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
 
-  // Spring system for magnetic elements
-  let activeMagElement: HTMLElement | null = null;
-  let magX = 0, magY = 0;
-  let magVx = 0, magVy = 0;
-  let targetMagX = 0, targetMagY = 0;
-  
-  let lastTime = performance.now();
-  
-  function updateSprings(time: number) {
-    let dt = (time - lastTime) / 1000;
-    lastTime = time;
-    if (dt > 0.1) dt = 0.1;
-    
-    // 1. Cursor Spring Physics
-    const cursorFx = -cursorStiffness * (cursorX - mouseX);
-    const cursorAx = cursorFx - cursorDamping * cursorVx;
-    cursorVx += cursorAx * dt;
-    cursorX += cursorVx * dt;
-    
-    const cursorFy = -cursorStiffness * (cursorY - mouseY);
-    const cursorAy = cursorFy - cursorDamping * cursorVy;
-    cursorVy += cursorAy * dt;
-    cursorY += cursorVy * dt;
-    
-    const cursorEl = document.getElementById('magnetic-cursor');
-    if (cursorEl) {
-      const isHovered = cursorEl.classList.contains('hovered');
-      const size = isHovered ? 28 : 8;
-      const displayX = cursorX - size / 2;
-      const displayY = cursorY - size / 2;
-      cursorEl.style.transform = `translate3d(${displayX}px, ${displayY}px, 0)`;
-    }
-    
-    // 2. Active Magnetic Element Pull Physics
-    if (activeMagElement) {
-      const k = 180;
-      const c = 15;
-      
-      const fx = -k * (magX - targetMagX);
-      const ax = fx - c * magVx;
-      magVx += ax * dt;
-      magX += magVx * dt;
-      
-      const fy = -k * (magY - targetMagY);
-      const ay = fy - c * magVy;
-      magVy += ay * dt;
-      magY += magVy * dt;
-      
-      activeMagElement.style.transform = `translate3d(${magX}px, ${magY}px, 0)`;
-    }
-    
-    requestAnimationFrame(updateSprings);
-  }
-  
-  requestAnimationFrame(updateSprings);
-
-  // Initialize magnetic interactions
-  function initMagneticCursor() {
-    const magneticElements = document.querySelectorAll(
-      '.inline-stint, .inline-essay, .inline-cricket, .milled-btn, .milled-btn-secondary, .sector-card, .footer-link, .monogram'
-    );
-    const cursorEl = document.getElementById('magnetic-cursor');
-    
-    magneticElements.forEach(el => {
-      const htmlEl = el as HTMLElement;
-      
-      htmlEl.addEventListener('mouseenter', () => {
-        if (cursorEl) cursorEl.classList.add('hovered');
-        activeMagElement = htmlEl;
-        magVx = 0;
-        magVy = 0;
-      });
-      
-      htmlEl.addEventListener('mousemove', (e: MouseEvent) => {
-        const rect = htmlEl.getBoundingClientRect();
-        const elCenterX = rect.left + rect.width / 2;
-        const elCenterY = rect.top + rect.height / 2;
-        
-        const dx = e.clientX - elCenterX;
-        const dy = e.clientY - elCenterY;
-        
-        const maxPull = 12;
-        const pullFactor = 0.25;
-        
-        targetMagX = Math.max(-maxPull, Math.min(maxPull, dx * pullFactor));
-        targetMagY = Math.max(-maxPull, Math.min(maxPull, dy * pullFactor));
-      });
-      
-      htmlEl.addEventListener('mouseleave', () => {
-        if (cursorEl) cursorEl.classList.remove('hovered');
-        targetMagX = 0;
-        targetMagY = 0;
-        
-        const checkReset = setInterval(() => {
-          if (Math.abs(magX) < 0.05 && Math.abs(magY) < 0.05) {
-            htmlEl.style.transform = 'translate3d(0, 0, 0)';
-            if (activeMagElement === htmlEl) {
-              activeMagElement = null;
-            }
-            clearInterval(checkReset);
-          }
-        }, 50);
-      });
-    });
-  }
 
   // Count up stats rollup on IntersectionObserver
   function initStatsRollup() {
@@ -2266,7 +2106,7 @@ try {
   // Page load initializer
   function initAllWorldClassInteractions() {
     initScrambleHeaders();
-    initMagneticCursor();
+
     initScrollBehavior();
     initScrollCompass();
     initCardShine();

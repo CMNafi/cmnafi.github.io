@@ -19,8 +19,11 @@
   --status-warn:         #e8b86a;
 
   /* Type */
-  --font-serif:          'Cardinal Fruit', 'Tiempos', 'Cormorant Garamond', Georgia, serif;
-  --font-mono:           'Berkeley Mono', 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --font-serif:          "PP Editorial New", "GT Sectra", "Fraunces", Georgia, serif;
+  --font-mono:           "JetBrains Mono", "Berkeley Mono", ui-monospace, monospace;
+  --font-body:           "Söhne", "Fraunces", Georgia, serif;
+  --radius-chip:         2px;
+  --radius-card:         4px;
 
   /* Motion */
   --ease-instrument:     cubic-bezier(0.16, 1, 0.3, 1);   /* settle, no bounce */
@@ -56,7 +59,6 @@
   --warning-amber:       var(--status-warn);
   
   --font-display:        var(--font-serif);
-  --font-body:           var(--font-serif);
   
   --ease-spring:         var(--ease-instrument);
   --ease-launch:         var(--ease-instrument);

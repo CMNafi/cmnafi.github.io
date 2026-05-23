@@ -26,6 +26,15 @@ const notesByCategory = sortedCategories.reduce((acc, cat) => {
 const flatSortedNotes = allNotes.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
 const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
+
+const financeNotes = allNotes.filter(n => n.data.category === 'Finance');
+const vcCount      = financeNotes.filter(n => n.data.subCategory === 'Venture Capital').length;
+const peCount      = financeNotes.filter(n => n.data.subCategory === 'Private Equity').length;
+const eqCount      = financeNotes.filter(n => n.data.subCategory === 'Public Equities').length;
+const macroCount   = financeNotes.filter(n => n.data.subCategory === 'Macro').length;
+const financeTotal = financeNotes.length;
+const booksCount   = allNotes.filter(n => n.data.category === 'Books').length;
+const cricketCount = allNotes.filter(n => n.data.category === 'Cricket').length;
 ---
 
 <BaseLayout title="Field Notes" hideHeader={true}>
@@ -58,6 +67,128 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
         </div>
       </header>
 
+      <!-- ════════════════════════════════════════════
+           TOPIC TOPOLOGY MAP
+           Static mind-map — categories branch from the
+           root, sub-topics branch from categories.
+           Connector lines are SVG; nodes are HTML.
+      ════════════════════════════════════════════ -->
+      <section class="topic-map-section" aria-label="Topic topology">
+        <div class="map-eyebrow">TOPIC TOPOLOGY</div>
+
+        <div class="topic-map-scroll">
+          <div class="mindmap-wrap">
+
+            <!-- ─── SVG connector paths (behind nodes) ─── -->
+            <svg class="connectors" viewBox="0 0 670 510"
+                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+
+              <!-- root → category trunks -->
+              <path class="conn c-finance"  d="M 180,291 C 210,291 210,113 230,113"/>
+              <path class="conn c-books"    d="M 180,291 C 210,291 210,323 230,323"/>
+              <path class="conn c-cricket"  d="M 180,291 C 210,291 210,460 230,460"/>
+
+              <!-- finance → leaves -->
+              <path class="conn c-finance"  d="M 360,113 C 392,113 392,39  430,39"/>
+              <path class="conn c-finance"  d="M 360,113 C 392,113 392,89  430,89"/>
+              <path class="conn c-finance"  d="M 360,113 C 392,113 392,139 430,139"/>
+              <path class="conn c-finance"  d="M 360,113 C 392,113 392,189 430,189"/>
+
+              <!-- books → leaves -->
+              <path class="conn c-books"    d="M 360,323 C 392,323 392,274 430,274"/>
+              <path class="conn c-books"    d="M 360,323 L 430,323"/>
+              <path class="conn c-books"    d="M 360,323 C 392,323 392,374 430,374"/>
+
+              <!-- cricket → leaf -->
+              <path class="conn c-cricket"  d="M 360,460 L 430,460"/>
+            </svg>
+
+            <!-- ─── ROOT ─── -->
+            <div class="mn-node mn-root" style="left:20px;top:265px">
+              FIELD<br>NOTES
+            </div>
+
+            <!-- ─── CATEGORY NODES ─── -->
+            <a class="mn-node mn-cat mn-finance"
+               href="#section-finance" style="left:230px;top:91px">
+              <span class="mn-cat-label">FINANCE</span>
+              <span class="mn-cat-count">{financeTotal}</span>
+            </a>
+
+            <a class="mn-node mn-cat mn-books"
+               href="#section-books" style="left:230px;top:301px">
+              <span class="mn-cat-label">BOOKS</span>
+              <span class="mn-cat-count">{booksCount}</span>
+            </a>
+
+            <a class="mn-node mn-cat mn-cricket"
+               href="#section-cricket" style="left:230px;top:438px">
+              <span class="mn-cat-label">CRICKET</span>
+              <span class="mn-cat-count">{cricketCount}</span>
+            </a>
+
+            <!-- ─── FINANCE LEAVES ─── -->
+            <a class="mn-node mn-leaf mn-lf"
+               href="/field-notes?category=finance"
+               data-mapsubcat="venture-capital"
+               style="left:430px;top:20px">
+              <span class="mn-leaf-name">Venture Capital</span>
+              <span class="mn-leaf-n">{vcCount}</span>
+            </a>
+            <a class="mn-node mn-leaf mn-lf"
+               href="/field-notes?category=finance"
+               data-mapsubcat="private-equity"
+               style="left:430px;top:70px">
+              <span class="mn-leaf-name">Private Equity</span>
+              <span class="mn-leaf-n">{peCount}</span>
+            </a>
+            <a class="mn-node mn-leaf mn-lf"
+               href="/field-notes?category=finance"
+               data-mapsubcat="public-equities"
+               style="left:430px;top:120px">
+              <span class="mn-leaf-name">Public Equities</span>
+              <span class="mn-leaf-n">{eqCount}</span>
+            </a>
+            <a class="mn-node mn-leaf mn-lf"
+               href="/field-notes?category=finance"
+               data-mapsubcat="macro"
+               style="left:430px;top:170px">
+              <span class="mn-leaf-name">Macro</span>
+              <span class="mn-leaf-n">{macroCount}</span>
+            </a>
+
+            <!-- ─── BOOKS LEAVES (thematic clusters) ─── -->
+            <a class="mn-node mn-leaf mn-lb"
+               href="/field-notes/category/books"
+               style="left:430px;top:255px">
+              <span class="mn-leaf-name">Founders &amp; Builders</span>
+            </a>
+            <a class="mn-node mn-leaf mn-lb"
+               href="/field-notes/category/books"
+               style="left:430px;top:305px">
+              <span class="mn-leaf-name">Philosophy &amp; Meaning</span>
+            </a>
+            <a class="mn-node mn-leaf mn-lb"
+               href="/field-notes/category/books"
+               style="left:430px;top:355px">
+              <span class="mn-leaf-name">Markets &amp; Money</span>
+            </a>
+
+            <!-- ─── CRICKET LEAF ─── -->
+            <a class="mn-node mn-leaf mn-lc"
+               href="/field-notes/category/cricket"
+               style="left:430px;top:441px">
+              <span class="mn-leaf-name">Match Reports</span>
+              <span class="mn-leaf-n">{cricketCount}</span>
+            </a>
+
+          </div><!-- /mindmap-wrap -->
+        </div><!-- /scroll -->
+
+        <p class="map-hint">SCROLL RIGHT ON MOBILE</p>
+      </section>
+      <!-- ════════════════════════════════════════════ -->
+
       <div class="main-feed-container" id="notes-feed">
         
         <div id="all-view" class="view-layer">
@@ -65,7 +196,7 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
             const catNotes = notesByCategory[cat];
             const top4 = catNotes.slice(0, 4);
             return (
-              <section class="category-section">
+              <section class="category-section" id={`section-${slugify(cat)}`}>
                 <h2 class="section-header">{cat.toUpperCase()}</h2>
                 
                 <div class="timeline-wrapper">
@@ -210,6 +341,17 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
   });
 
   window.addEventListener('popstate', () => applyFilter());
+
+  // Mindmap Finance leaves → navigate + activate subcategory filter
+  document.querySelectorAll('.mn-lf[data-mapsubcat]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const sub = el.getAttribute('data-mapsubcat');
+      window.history.pushState({}, '', '/field-notes?category=finance');
+      applyFilter('finance', sub || 'all');
+      document.getElementById('notes-feed')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
 </script>
 
 <style>
@@ -413,4 +555,178 @@ const slugify = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
     .note-time { justify-content: flex-start; gap: 1rem; flex-direction: row-reverse; }
     .view-all-link { margin-left: 0; }
   }
+
+  /* ═══════════════════════════════════════════════
+     TOPIC TOPOLOGY MAP
+  ═══════════════════════════════════════════════ */
+  .topic-map-section {
+    margin-bottom: 5rem;
+    border-top: 1px solid var(--surface-line);
+    padding-top: 2.5rem;
+  }
+
+  .map-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--ink-tertiary);
+    margin-bottom: 1.5rem;
+  }
+
+  .topic-map-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.5rem;
+  }
+  .topic-map-scroll::-webkit-scrollbar { display: none; }
+
+  /* Fixed-size canvas; SVG + nodes share the same pixel grid */
+  .mindmap-wrap {
+    position: relative;
+    width: 670px;
+    height: 510px;
+    min-width: 670px;
+  }
+
+  /* SVG fills the canvas behind nodes */
+  .connectors {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  /* Connector path defaults */
+  .conn {
+    fill: none;
+    stroke-width: 1.5px;
+    stroke-linecap: round;
+  }
+  .c-finance { stroke: rgba(232, 184, 106, 0.35); }
+  .c-books   { stroke: rgba(168, 156, 139, 0.35); }
+  .c-cricket { stroke: rgba(125, 211, 160, 0.35); }
+
+  /* ── Base node ── */
+  .mn-node {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    transition: transform var(--dur-fast) var(--ease-instrument),
+                border-color var(--dur-fast) var(--ease-instrument),
+                background var(--dur-fast) var(--ease-instrument);
+  }
+
+  /* ── ROOT ── */
+  .mn-root {
+    width: 160px;
+    height: 52px;
+    background: var(--accent);
+    border: 1.5px solid var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--surface-base);
+    text-align: center;
+    line-height: 1.45;
+    flex-direction: column;
+    cursor: default;
+    /* pulse glow */
+    box-shadow: 0 0 0 0 var(--accent-glow);
+    animation: rootPulse 3s ease-in-out infinite;
+  }
+  @keyframes rootPulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+    50%       { box-shadow: 0 0 12px 4px var(--accent-glow); }
+  }
+
+  /* ── CATEGORY nodes ── */
+  .mn-cat {
+    width: 130px;
+    height: 44px;
+    background: var(--surface-raised);
+    border-width: 1.5px;
+    border-style: solid;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .mn-finance { border-color: var(--status-warn); }
+  .mn-books   { border-color: var(--ink-secondary); }
+  .mn-cricket { border-color: var(--accent); }
+
+  .mn-cat-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--ink-primary);
+  }
+  .mn-cat-count {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+  .mn-finance .mn-cat-count { color: var(--status-warn); }
+  .mn-books   .mn-cat-count { color: var(--ink-secondary); }
+  .mn-cricket .mn-cat-count { color: var(--accent); }
+
+  .mn-finance:hover { background: rgba(232,184,106,0.08); transform: translateY(-2px); }
+  .mn-books:hover   { background: rgba(168,156,139,0.08); transform: translateY(-2px); }
+  .mn-cricket:hover { background: var(--accent-dim);      transform: translateY(-2px); }
+
+  /* ── LEAF nodes ── */
+  .mn-leaf {
+    height: 38px;
+    width: 190px;
+    background: var(--surface-base);
+    border: 1px solid var(--surface-line);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .mn-leaf-name {
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    color: var(--ink-secondary);
+    white-space: nowrap;
+    transition: color var(--dur-fast) var(--ease-instrument);
+  }
+  .mn-leaf-n {
+    font-size: 9px;
+    color: var(--ink-tertiary);
+    flex-shrink: 0;
+  }
+
+  /* Finance leaves */
+  .mn-lf { border-color: rgba(232,184,106,0.25); }
+  .mn-lf:hover { border-color: var(--status-warn); }
+  .mn-lf:hover .mn-leaf-name { color: var(--status-warn); }
+
+  /* Books leaves */
+  .mn-lb { border-color: rgba(168,156,139,0.25); }
+  .mn-lb:hover { border-color: var(--ink-secondary); }
+  .mn-lb:hover .mn-leaf-name { color: var(--ink-primary); }
+
+  /* Cricket leaves */
+  .mn-lc { border-color: rgba(125,211,160,0.25); }
+  .mn-lc:hover { border-color: var(--accent); }
+  .mn-lc:hover .mn-leaf-name { color: var(--accent); }
+
+  /* Mobile scroll hint */
+  .map-hint {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--ink-tertiary);
+    margin-top: 0.75rem;
+    display: none;
+  }
+  @media (max-width: 720px) { .map-hint { display: block; } }
 </style>

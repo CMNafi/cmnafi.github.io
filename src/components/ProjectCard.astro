@@ -39,16 +39,16 @@ const { project } = Astro.props;
   
   .card-core { display: flex; flex-direction: column; gap: 0.75rem; max-width: 600px; }
   .meta-row { display: flex; gap: 1rem; align-items: center; }
-  .category-text { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #8B919A; }
-  .title-text { margin: 0; font-family: 'Sora', 'Fraunces', serif; font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.02em; }
+  .category-text { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #8B919A; }
+  .title-text { margin: 0; font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.02em; }
   .title-text a { color: #F3F3F1; text-decoration: none; }
-  .desc-text { margin: 0; font-family: 'Manrope', sans-serif; font-size: 1rem; color: #8B919A; line-height: 1.6; }
+  .desc-text { margin: 0; font-family: var(--font-body); font-size: 1rem; color: #8B919A; line-height: 1.6; }
   
   .action-core { display: flex; flex-direction: column; gap: 1.5rem; align-items: flex-end; }
   .tag-row { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
-  .tag-chip { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.05); color: #8B919A; border-radius: 4px; }
+  .tag-chip { font-family: var(--font-mono); font-size: 0.75rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.05); color: #8B919A; border-radius: var(--radius-chip); }
   
-  .primary-action { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.85rem; color: #F3F3F1; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; transition: color 0.3s; }
+  .primary-action { font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem; color: #F3F3F1; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; transition: color 0.3s; }
   .compact-row:hover .primary-action { color: #E10600; }
   
   @media(max-width: 800px) {

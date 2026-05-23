@@ -209,8 +209,8 @@ const layoutKind = entry.data.featured ? 'feature' : index % 2 === 1 ? 'reverse'
   .journey-chapter__deep-link {
     display: inline-flex;
     align-items: center;
-    border-radius: 999px;
-    font-family: 'Manrope', sans-serif;
+    border-radius: var(--radius-chip);
+    font-family: var(--font-mono);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     font-size: 0.72rem;
@@ -409,11 +409,12 @@ const layoutKind = entry.data.featured ? 'feature' : index % 2 === 1 ? 'reverse'
     display: inline-flex;
     align-items: center;
     padding: 0.45rem 0.8rem;
-    border-radius: 999px;
+    border-radius: var(--radius-chip);
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(243, 237, 225, 0.08);
     color: rgba(243, 237, 225, 0.78);
     font-size: 0.88rem;
+    font-family: var(--font-body);
   }
 
   .journey-chapter__body-wrap {

@@ -24,20 +24,25 @@ const displayProjects = [projects[0], projects[1], projects[2]]; // Exactly 3 li
     <defs>
       <!-- Floor Grid -->
       <pattern id="garage-floor" width="40" height="40" patternUnits="userSpaceOnUse">
-        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--graphite)" stroke-width="1" opacity="0.4"/>
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--surface-line)" stroke-width="1" opacity="0.3"/>
       </pattern>
       <!-- Lift Base Shadow -->
       <filter id="lift-shadow">
-        <feDropShadow dx="0" dy="20" stdDeviation="15" flood-color="#000" flood-opacity="0.9"/>
+        <feDropShadow dx="0" dy="16" stdDeviation="12" flood-color="#000" flood-opacity="0.95"/>
       </filter>
       <!-- Ambient light flicker for idle loop -->
       <filter id="flicker-glow">
-        <feGaussianBlur stdDeviation="12" result="blur"/>
+        <feGaussianBlur stdDeviation="10" result="blur"/>
         <feMerge>
           <feMergeNode in="blur"/>
           <feMergeNode in="SourceGraphic"/>
         </feMerge>
       </filter>
+      <!-- Spark welding radial glow -->
+      <radialGradient id="spark-glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="var(--warning-amber)" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="var(--warning-amber)" stop-opacity="0"/>
+      </radialGradient>
     </defs>
 
     <!-- Background Pattern -->
@@ -46,12 +51,12 @@ const displayProjects = [projects[0], projects[1], projects[2]]; // Exactly 3 li
 
     <!-- Top Apron / Pit Lane (live glowing area) -->
     <rect x="0" y="0" width="1200" height="80" fill="var(--carbon)"/>
-    <line x1="0" y1="80" x2="1200" y2="80" stroke="var(--racing-red)" stroke-width="4"/>
+    <line x1="0" y1="80" x2="1200" y2="80" stroke="var(--surface-line)" stroke-width="1"/>
 
     <!-- Garage Lights -->
-    <circle cx="200" cy="150" r="50" fill="var(--pitlane-white)" opacity="0.05" filter="url(#flicker-glow)" class="ambient-light"/>
-    <circle cx="600" cy="150" r="50" fill="var(--pitlane-white)" opacity="0.05" filter="url(#flicker-glow)" class="ambient-light" style="animation-delay: -2s;"/>
-    <circle cx="1000" cy="150" r="50" fill="var(--pitlane-white)" opacity="0.05" filter="url(#flicker-glow)" class="ambient-light" style="animation-delay: -5s;"/>
+    <circle cx="200" cy="150" r="50" fill="var(--pitlane-white)" opacity="0.04" filter="url(#flicker-glow)" class="ambient-light"/>
+    <circle cx="600" cy="150" r="50" fill="var(--pitlane-white)" opacity="0.04" filter="url(#flicker-glow)" class="ambient-light" style="animation-delay: -2.5s;"/>
+    <circle cx="1000" cy="150" r="50" fill="var(--pitlane-white)" opacity="0.04" filter="url(#flicker-glow)" class="ambient-light" style="animation-delay: -5.5s;"/>
 
     <!-- 3 Lifts -->
     {displayProjects.map((proj, i) => {
@@ -59,65 +64,111 @@ const displayProjects = [projects[0], projects[1], projects[2]]; // Exactly 3 li
       const oy = 400; // y-center of lift
       
       return (
-        <g class="lift-station" transform={`translate(${ox}, ${oy})`}>
+        <g class="lift-station" transform={`translate(${ox}, ${oy})`} data-project-id={proj?.id}>
+          <!-- Interactive hover target range -->
+          <circle cx="0" cy="0" r="180" fill="transparent" class="hover-target" />
+          
           <!-- Mechanic Area Range -->
-          <circle cx="0" cy="0" r="160" fill="var(--carbon)" opacity="0.2" />
-          <circle cx="0" cy="0" r="160" fill="none" stroke="var(--graphite)" stroke-width="2" stroke-dasharray="10 10" />
+          <circle cx="0" cy="0" r="160" fill="var(--carbon)" opacity="0.15" />
+          <circle cx="0" cy="0" r="160" fill="none" stroke="var(--surface-line)" stroke-width="1" stroke-dasharray="6 6" />
           
-          <!-- Hydraulic Lift Structure -->
-          <rect x="-80" y="-120" width="160" height="240" fill="#0A0B0D" rx="8" filter="url(#lift-shadow)"/>
-          <path d="M-60 -100 L 60 -100 L 60 100 L -60 100 Z" fill="none" stroke="var(--graphite)" stroke-width="4"/>
-          
-          {proj && (
-            <a href={`/garage/${proj.id}`} class="project-link">
-              <!-- Car Wrapper (hovers on mouse) -->
-              <g class="car-wrapper">
-                <!-- Chassis (Always there) -->
-                <path d="M-20 -80 Q 0 -90 20 -80 L 40 80 Q 0 90 -40 80 Z" fill="var(--carbon)" stroke="var(--graphite)" stroke-width="2"/>
-                
-                <!-- Engine Block -->
-                {proj.parts.engine && (
-                  <rect x="-15" y="-50" width="30" height="40" fill="var(--graphite)" stroke="var(--warning-amber)" stroke-width="1.5" />
-                )}
-                
-                <!-- Aero Kit (UI) -->
-                {proj.parts.aero && (
-                  <path d="M-35 -70 L 35 -70 L 45 -20 L -45 -20 L -35 -20 Z" fill="rgba(20,22,27,0.8)" stroke="var(--pitlane-white)" stroke-width="1.5"/>
-                )}
-                
-                <!-- Wheels (Deployed) -->
-                {proj.parts.wheels && (
-                  <g class="wheels">
-                    <rect x="-55" y="-60" width="15" height="30" rx="4" fill="#000"/>
-                    <rect x="40" y="-60" width="15" height="30" rx="4" fill="#000"/>
-                    <rect x="-55" y="40" width="15" height="30" rx="4" fill="#000"/>
-                    <rect x="40" y="40" width="15" height="30" rx="4" fill="#000"/>
-                  </g>
-                )}
-                
-                <!-- Livery (Polish) -->
-                {proj.parts.livery ? (
-                  <path d="M-3 80 L 3 80 L 3 -70 L -3 -70 Z" fill="var(--racing-red)"/>
-                ) : (
-                  <path d="M-3 80 L 3 80 L 3 -70 L -3 -70 Z" fill="var(--carbon)"/>
-                )}
-              </g>
+          <!-- Smooth Lift Movable Group -->
+          <g class="lift-movable">
+            <!-- Hydraulic Lift Base -->
+            <rect x="-85" y="-125" width="170" height="250" fill="#07080a" rx="4" filter="url(#lift-shadow)" stroke="var(--surface-line)" stroke-width="1"/>
+            <!-- Metal frames -->
+            <path d="M-65 -105 L 65 -105 L 65 105 L -65 105 Z" fill="none" stroke="var(--surface-line)" stroke-width="2"/>
+            
+            {proj ? (
+              <a href={`/garage/${proj.id}`} class="project-link">
+                <!-- Car Wrapper -->
+                <g class="car-wrapper">
+                  <!-- Chassis (Always present) -->
+                  <path d="M-18 -80 Q 0 -90 18 -80 L 35 75 Q 0 85 -35 75 Z" fill="var(--carbon)" stroke="var(--surface-line)" stroke-width="2"/>
+                  
+                  <!-- Engine Block -->
+                  {proj.parts.engine && (
+                    <rect x="-12" y="-45" width="24" height="35" fill="var(--graphite)" stroke="var(--warning-amber)" stroke-width="1.5" />
+                  )}
+                  
+                  <!-- Aero Kit (UI) -->
+                  {proj.parts.aero && (
+                    <path d="M-30 -65 L 30 -65 L 38 -20 L -38 -20 L -30 -65 Z" fill="rgba(31,35,43,0.7)" stroke="var(--pitlane-white)" stroke-width="1"/>
+                  )}
+                  
+                  <!-- Wheels (Deployed) -->
+                  {proj.parts.wheels && (
+                    <g class="wheels">
+                      <rect x="-50" y="-55" width="12" height="25" rx="2" fill="#000" stroke="var(--surface-line)" stroke-width="1"/>
+                      <rect x="38" y="-55" width="12" height="25" rx="2" fill="#000" stroke="var(--surface-line)" stroke-width="1"/>
+                      <rect x="-50" y="35" width="12" height="25" rx="2" fill="#000" stroke="var(--surface-line)" stroke-width="1"/>
+                      <rect x="38" y="35" width="12" height="25" rx="2" fill="#000" stroke="var(--surface-line)" stroke-width="1"/>
+                    </g>
+                  )}
+                  
+                  <!-- Livery (Polish status) -->
+                  {proj.parts.livery ? (
+                    <path d="M-2 75 L 2 75 L 2 -65 L -2 -65 Z" fill="var(--racing-red)"/>
+                  ) : (
+                    <path d="M-2 75 L 2 75 L 2 -65 L -2 -65 Z" fill="var(--surface-line)"/>
+                  )}
+                </g>
 
-              <!-- Labeling -->
-              <rect x="-70" y="145" width="140" height="25" fill="var(--carbon)" rx="4"/>
-              <text x="0" y="162" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text)" letter-spacing="0.1em">
-                {proj.name.substring(0, 15).toUpperCase()}{proj.name.length > 15 ? '...' : ''}
-              </text>
-            </a>
-          )}
+                <!-- Technical Milled Label -->
+                <g class="label-group">
+                  <rect x="-65" y="145" width="130" height="24" fill="var(--carbon)" rx="2" stroke="var(--surface-line)" stroke-width="1"/>
+                  <text x="0" y="160" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--pitlane-white)" letter-spacing="0.1em" class="label-text">
+                    {proj.name.substring(0, 14).toUpperCase()}{proj.name.length > 14 ? '..' : ''}
+                  </text>
+                </g>
+              </a>
+            ) : (
+              <text x="0" y="10" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--ink-tertiary)" letter-spacing="0.25em">BAY EMPTY</text>
+            )}
+          </g>
           
-          <!-- Idle Mechanic & Sparks -->
-          <g class="mechanic" style={`animation-delay: -${i * 3}s;`}>
-            <circle cx="-100" cy="0" r="12" fill="var(--carbon)" stroke="var(--graphite)" stroke-width="2"/>
-          </g>
-          <g class="sparks" transform="translate(-40, -40)" style={`animation-delay: -${i * 2}s;`}>
-            <circle cx="0" cy="0" r="2" fill="var(--warning-amber)" opacity="0"/>
-          </g>
+          <!-- Detailed SVG Paddock Mechanic Silhouettes -->
+          {proj && i === 0 && (
+            <!-- Stand-and-Inspect Mechanic -->
+            <g class="mechanic mechanic-idle" transform="translate(-100, 20)">
+              <circle cx="0" cy="0" r="5" fill="var(--ink-secondary)" />
+              <path d="M-4 6 L4 6 L5 25 L-5 25 Z" fill="var(--graphite)" stroke="var(--surface-line)" stroke-width="1" />
+              <path d="M-3 25 L-3 44 M2 25 L2 44" fill="none" stroke="var(--graphite)" stroke-width="2.5" stroke-linecap="round" />
+              <!-- Clipboard -->
+              <path d="M-2 8 L-8 16 L-4 20" fill="none" stroke="var(--ink-secondary)" stroke-width="1.8" stroke-linecap="round" />
+              <rect x="-10" y="18" width="8" height="10" fill="var(--carbon)" rx="1" stroke="var(--surface-line)" stroke-width="0.5" />
+            </g>
+          )}
+
+          {proj && i === 1 && (
+            <!-- Leaning Engine Mechanic & Sparking Emitter -->
+            <g class="mechanic-group">
+              <g class="mechanic mechanic-lean" transform="translate(0, -112)">
+                <circle cx="4" cy="2" r="4.5" fill="var(--ink-secondary)" />
+                <path d="M-6 8 L6 8 L4 24 L-4 24 Z" fill="var(--graphite)" stroke="var(--surface-line)" stroke-width="1" transform="rotate(25)" />
+                <path d="M-4 8 L-1 1 M2 8 L8 -1" fill="none" stroke="var(--ink-secondary)" stroke-width="2" stroke-linecap="round" />
+              </g>
+              <!-- Spark Cluster Welding Emitter -->
+              <g class="spark-cluster" transform="translate(0, -60)">
+                <circle cx="0" cy="0" r="16" fill="url(#spark-glow)" class="spark-glow" />
+                <line x1="0" y1="0" x2="16" y2="-16" stroke="var(--warning-amber)" stroke-width="1.5" class="spark-particle p1" />
+                <line x1="0" y1="0" x2="-14" y2="-12" stroke="var(--warning-amber)" stroke-width="1.2" class="spark-particle p2" />
+                <line x1="0" y1="0" x2="10" y2="-22" stroke="var(--warning-amber)" stroke-width="1" class="spark-particle p3" />
+                <line x1="0" y1="0" x2="-4" y2="-8" stroke="var(--warning-amber)" stroke-width="1.8" class="spark-particle p4" />
+              </g>
+            </g>
+          )}
+
+          {proj && i === 2 && (
+            <!-- Kneeling Wheel Mechanic -->
+            <g class="mechanic mechanic-kneel" transform="translate(90, 50)">
+              <circle cx="-1" cy="0" r="4.5" fill="var(--ink-secondary)" />
+              <path d="M-5 5 L5 5 L3 18 L-3 18 Z" fill="var(--graphite)" stroke="var(--surface-line)" stroke-width="1" transform="rotate(-15)" />
+              <!-- Kneeling leg -->
+              <path d="M-3 18 L-8 28 L1 28" fill="none" stroke="var(--graphite)" stroke-width="3" stroke-linecap="round" />
+              <path d="M2 7 L12 12" fill="none" stroke="var(--ink-secondary)" stroke-width="2" stroke-linecap="round" />
+            </g>
+          )}
         </g>
       )
     })}
@@ -142,52 +193,90 @@ const displayProjects = [projects[0], projects[1], projects[2]]; // Exactly 3 li
     pointer-events: auto;
   }
 
-  /* --- Motion Vocabulary --- */
-  
+  /* --- Smooth Lift Movable System --- */
+  .lift-movable {
+    transition: transform 0.45s var(--ease-launch);
+  }
+  .lift-station:hover .lift-movable {
+    transform: translateY(-12px); /* Raises whole lift smoothly */
+  }
+
   .lift-station {
     transition: opacity 0.4s var(--ease-launch);
   }
   .garage-scene:hover .lift-station:not(:hover) {
-    opacity: 0.3;
+    opacity: 0.4; /* Dims other stations to 40% */
   }
   
   .project-link { cursor: pointer; }
+  .hover-target { cursor: pointer; }
 
   .car-wrapper {
     transition: transform 0.4s var(--ease-launch);
   }
   .project-link:hover .car-wrapper {
-    transform: translateY(-16px);
+    transform: scale(1.02);
   }
 
   /* Ambient light flicker */
   .ambient-light {
-    animation: flicker 6s infinite alternate ease-in-out;
+    animation: flicker 7s infinite alternate ease-in-out;
   }
   @keyframes flicker {
-    0% { opacity: 0.05; }
-    50% { opacity: 0.12; }
-    100% { opacity: 0.03; }
+    0% { opacity: 0.03; }
+    50% { opacity: 0.08; }
+    100% { opacity: 0.02; }
   }
 
-  /* Mechanic moving */
-  .mechanic {
-    animation: mechanicMove 12s infinite ease-in-out;
+  /* Mechanics idle loops */
+  .mechanic-idle {
+    animation: mechStand 6s infinite ease-in-out alternate;
+    transform-origin: 0% 100%;
   }
-  @keyframes mechanicMove {
-    0% { transform: translateY(-40px); }
-    50% { transform: translateY(40px); }
-    100% { transform: translateY(-40px); }
+  @keyframes mechStand {
+    0% { transform: translate(-100px, 20px) scaleY(1); }
+    100% { transform: translate(-100px, 20px) scaleY(1.02); }
   }
 
-  /* Periodic Sparking */
-  .sparks circle {
-    animation: sparkEmitter 4s infinite;
+  .mechanic-lean {
+    animation: mechLean 3s infinite ease-in-out alternate;
   }
-  @keyframes sparkEmitter {
-    0%, 95% { opacity: 0; transform: scale(0.5); }
-    96% { opacity: 1; transform: scale(2) translate(10px, -10px); }
-    98% { opacity: 0.8; transform: scale(1) translate(15px, -15px); }
-    100% { opacity: 0; transform: scale(0); }
+  @keyframes mechLean {
+    0% { transform: translate(0px, -112px) rotate(0deg); }
+    100% { transform: translate(2px, -110px) rotate(3deg); }
+  }
+
+  .mechanic-kneel {
+    animation: mechKneel 4s infinite ease-in-out alternate;
+  }
+  @keyframes mechKneel {
+    0% { transform: translate(90px, 50px) translateY(0); }
+    100% { transform: translate(90px, 50px) translateY(1px); }
+  }
+
+  /* Periodic Welding Spark Burst */
+  .spark-cluster {
+    opacity: 0;
+    animation: welderSpark 8s infinite ease-in-out;
+  }
+  .spark-particle {
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+    animation: sparkFly 8s infinite ease-in-out;
+  }
+  .spark-particle.p1 { animation-delay: 0.05s; }
+  .spark-particle.p2 { animation-delay: 0.12s; }
+  .spark-particle.p3 { animation-delay: 0.02s; }
+  .spark-particle.p4 { animation-delay: 0.08s; }
+  
+  @keyframes welderSpark {
+    0%, 96%, 100% { opacity: 0; }
+    97%, 99% { opacity: 1; }
+  }
+  @keyframes sparkFly {
+    0%, 96% { stroke-dashoffset: 20; opacity: 0; }
+    97% { stroke-dashoffset: 0; opacity: 1; }
+    99% { stroke-dashoffset: -20; opacity: 0.6; }
+    100% { stroke-dashoffset: -20; opacity: 0; }
   }
 </style>

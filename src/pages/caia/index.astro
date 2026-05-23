@@ -7,55 +7,445 @@ const allCaia = await getCollection('caia');
 // Group by level
 const level1Topics = allCaia.filter(e => e.data.level === 'I').sort((a, b) => a.data.topicNumber - b.data.topicNumber);
 const level2Topics = allCaia.filter(e => e.data.level === 'II').sort((a, b) => a.data.topicNumber - b.data.topicNumber);
+
+// Mock data for the dashboard. In a real app, this would come from localStorage or Supabase.
+const progressData = {
+  level1: { completion: 45, target: 100 },
+  level2: { completion: 0, target: 100 },
+  streak: 12,
+  lastSector: { title: "Topic 3: Private Equity", href: "/caia/level-1-topic-3-private-equity" } // Assuming this exists or will exist
+};
 ---
 <CaiaLayout title="CAIA Corner" description="A structured, exam-aligned study tool and public knowledge resource for CAIA Levels I and II.">
-  <header style="margin-bottom: 3rem;">
-    <h1>CAIA Corner</h1>
-    <p style="font-size: 1.2em; color: var(--caia-highlight);">A structured study tool and public knowledge hub for the Chartered Alternative Investment Analyst (CAIA) curriculum.</p>
+  <header class="caia-header">
+    <div class="header-content">
+      <h1 class="caia-title scramble-header" data-text="CAIA TELEMETRY">CAIA TELEMETRY</h1>
+      <p class="caia-subtitle">Alternative Investment Knowledge Base & Certification Preparation.</p>
+    </div>
+    
+    <div class="telemetry-dashboard">
+      <!-- Last Sector / Resume -->
+      <div class="dashboard-panel last-sector-panel">
+        <span class="panel-label monospace">[ LAST LOGGED SECTOR ]</span>
+        <h3 class="last-sector-title">{progressData.lastSector.title}</h3>
+        <a href={progressData.lastSector.href} class="milled-btn-caia resume-btn">
+          RESUME PROTOCOL <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <!-- Velocity / Streak -->
+      <div class="dashboard-panel velocity-panel">
+        <span class="panel-label monospace">[ KNOWLEDGE VELOCITY ]</span>
+        <div class="velocity-metrics">
+          <div class="metric">
+            <span class="metric-val text-accent">{progressData.streak}</span>
+            <span class="metric-unit monospace">DAY STREAK</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">MACH 1.2</span>
+            <span class="metric-unit monospace">PACE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Dials -->
+      <div class="dashboard-panel progress-panel">
+        <span class="panel-label monospace">[ CURRICULUM MASTERY ]</span>
+        <div class="dials-container">
+          <div class="progress-dial">
+             <svg viewBox="0 0 36 36" class="circular-chart caia-chart">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="circle" stroke-dasharray={`${progressData.level1.completion}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <text x="18" y="20.35" class="percentage">{progressData.level1.completion}%</text>
+            </svg>
+            <span class="dial-label monospace">LVL I</span>
+          </div>
+          <div class="progress-dial">
+             <svg viewBox="0 0 36 36" class="circular-chart caia-chart-dim">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="circle" stroke-dasharray={`${progressData.level2.completion}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <text x="18" y="20.35" class="percentage">{progressData.level2.completion}%</text>
+            </svg>
+            <span class="dial-label monospace">LVL II</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <section style="margin-bottom: 3rem;">
-    <h2>Curriculum Overview</h2>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-      <div class="level-card" style="background: var(--caia-card); padding: 2rem; border-top: 4px solid var(--caia-accent); border-radius: 4px;">
-        <h3><a href="/caia/level-1" style="color: var(--caia-ink); text-decoration: none;">Level I</a></h3>
-        <p style="font-size: 0.9em; margin-bottom: 1.5rem;">Fundamentals of alternative investments, including private equity, private debt, real assets, hedge funds, and digital assets.</p>
-        <ul style="list-style: none; padding: 0; font-size: 0.95em;">
-          {level1Topics.map(topic => (
-            <li style="margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--caia-border);">
-              <a href={`/caia/${topic.slug}`} style="text-decoration: none; color: var(--caia-ink); display: flex; justify-content: space-between;">
-                <span>{topic.data.topicNumber === 0 ? 'Overview' : `Topic ${topic.data.topicNumber}: ${topic.data.title}`}</span>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75em; color: var(--caia-highlight);">{topic.data.examWeight}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+  <!-- Sector Divider -->
+  <div class="sector-divider">
+    <span class="sector-divider-label">[ DIRECTORY // LEVEL.I ]</span>
+    <span class="sector-divider-dash"></span>
+  </div>
+
+  <section class="curriculum-section">
+    <div class="level-directory">
+      <div class="directory-header">
+        <h2 class="directory-title">Level I: Fundamentals</h2>
+        <span class="directory-spec monospace">CORE PROTOCOLS</span>
       </div>
-      
-      <div class="level-card" style="background: var(--caia-card); padding: 2rem; border-top: 4px solid var(--caia-border); border-radius: 4px;">
-        <h3><a href="/caia/level-2" style="color: var(--caia-ink); text-decoration: none;">Level II</a></h3>
-        <p style="font-size: 0.9em;">Advanced topics including asset allocation, institutional investors, complex strategies, and emerging topics.</p>
-        <ul style="list-style: none; padding: 0; font-size: 0.95em;">
-          {level2Topics.length > 0 ? level2Topics.map(topic => (
-            <li style="margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--caia-border);">
-              <a href={`/caia/${topic.slug}`} style="text-decoration: none; color: var(--caia-ink); display: flex; justify-content: space-between;">
-                <span>{topic.data.topicNumber === 0 ? 'Overview' : `Topic ${topic.data.topicNumber}: ${topic.data.title}`}</span>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75em; color: var(--caia-highlight);">{topic.data.examWeight}</span>
-              </a>
-            </li>
-          )) : (
-            <li style="font-style: italic; opacity: 0.6; font-size: 0.85em;">No modules published yet.</li>
-          )}
-        </ul>
+      <div class="module-grid">
+        {level1Topics.map(topic => (
+          <a href={`/caia/${topic.slug}`} class="module-card">
+            <div class="module-id monospace">{topic.data.topicNumber === 0 ? 'INT' : `T${topic.data.topicNumber.toString().padStart(2, '0')}`}</div>
+            <h3 class="module-title">{topic.data.topicNumber === 0 ? 'Overview' : topic.data.title}</h3>
+            <div class="module-footer">
+               <span class="module-weight monospace">{topic.data.examWeight} WEIGHT</span>
+               <span class="arrow">→</span>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   </section>
 
-  <section>
-    <h2>Reference</h2>
-    <ul>
-      <li><a href="/caia/glossary">Glossary</a> — A-Z searchable terms</li>
-      <li><a href="/caia/formulas">Master Formula Sheet</a> — Keyed by topic</li>
-    </ul>
+  <!-- Sector Divider -->
+  <div class="sector-divider">
+    <span class="sector-divider-label">[ DIRECTORY // LEVEL.II ]</span>
+    <span class="sector-divider-dash"></span>
+  </div>
+
+  <section class="curriculum-section">
+    <div class="level-directory">
+       <div class="directory-header">
+        <h2 class="directory-title">Level II: Advanced</h2>
+        <span class="directory-spec monospace">COMPLEX DEPLOYMENTS</span>
+      </div>
+      <div class="module-grid">
+        {level2Topics.length > 0 ? level2Topics.map(topic => (
+          <a href={`/caia/${topic.slug}`} class="module-card">
+            <div class="module-id monospace">{topic.data.topicNumber === 0 ? 'INT' : `T${topic.data.topicNumber.toString().padStart(2, '0')}`}</div>
+            <h3 class="module-title">{topic.data.topicNumber === 0 ? 'Overview' : topic.data.title}</h3>
+            <div class="module-footer">
+               <span class="module-weight monospace">{topic.data.examWeight} WEIGHT</span>
+               <span class="arrow">→</span>
+            </div>
+          </a>
+        )) : (
+          <div class="module-card empty-state">
+             <span class="monospace">[ NO MODULES DEPLOYED ]</span>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Sector Divider -->
+  <div class="sector-divider">
+    <span class="sector-divider-label">[ REFERENCE // TOOLS ]</span>
+    <span class="sector-divider-dash"></span>
+  </div>
+
+  <section class="reference-section">
+     <div class="reference-grid">
+        <a href="/caia/glossary" class="reference-card">
+          <h3 class="ref-title">Glossary</h3>
+          <p class="ref-desc">A-Z searchable terms</p>
+          <span class="arrow">→</span>
+        </a>
+        <a href="/caia/formulas" class="reference-card">
+          <h3 class="ref-title">Master Formula Sheet</h3>
+          <p class="ref-desc">Keyed by topic</p>
+          <span class="arrow">→</span>
+        </a>
+     </div>
   </section>
 </CaiaLayout>
+
+<style>
+  /* CAIA Specific Overrides */
+  :root {
+    --caia-accent: #7AAE99; /* Example green from previous snippet */
+    --caia-highlight: #D4A857; /* Example gold */
+    --caia-panel-bg: rgba(255, 255, 255, 0.02);
+    --caia-border: rgba(255, 255, 255, 0.08);
+  }
+
+  .caia-header {
+    margin-bottom: 4rem;
+  }
+
+  .caia-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 500;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.02em;
+  }
+
+  .caia-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-sand-gray);
+    margin: 0 0 3rem 0;
+  }
+
+  /* Telemetry Dashboard */
+  .telemetry-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .dashboard-panel {
+    background: var(--caia-panel-bg);
+    border: 1px solid var(--caia-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .panel-label {
+    font-size: 0.65rem;
+    color: var(--text-sand-gray);
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .last-sector-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.4rem;
+    margin: 0 0 1.5rem 0;
+    color: var(--text-warm-white);
+  }
+
+  .milled-btn-caia {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--caia-accent);
+    color: var(--caia-accent);
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+  }
+
+  .milled-btn-caia:hover {
+    background: var(--caia-accent);
+    color: var(--paddock-black);
+  }
+  
+  .milled-btn-caia .arrow {
+     transition: transform 0.2s ease;
+  }
+  
+  .milled-btn-caia:hover .arrow {
+      transform: translateX(4px);
+  }
+
+  .velocity-metrics {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metric-val {
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: var(--font-mono);
+  }
+
+  .text-accent {
+    color: var(--caia-highlight);
+  }
+
+  .metric-unit {
+    font-size: 0.65rem;
+    color: var(--text-sand-gray);
+    letter-spacing: 0.1em;
+  }
+
+  /* SVG Progress Dials */
+  .dials-container {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .progress-dial {
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .circular-chart {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 250px;
+  }
+
+  .circle-bg {
+    fill: none;
+    stroke: rgba(255,255,255,0.05);
+    stroke-width: 3.8;
+  }
+
+  .circle {
+    fill: none;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    transition: stroke-dasharray 1s ease-out;
+  }
+  
+  .caia-chart .circle {
+      stroke: var(--caia-accent);
+  }
+  
+  .caia-chart-dim .circle {
+      stroke: var(--text-sand-gray);
+  }
+
+  .percentage {
+    fill: var(--text-warm-white);
+    font-family: var(--font-mono);
+    font-size: 0.5em;
+    text-anchor: middle;
+  }
+
+  .dial-label {
+    font-size: 0.65rem;
+    color: var(--text-sand-gray);
+  }
+
+  /* Grid Layouts */
+  .curriculum-section, .reference-section {
+    margin-bottom: 4rem;
+  }
+
+  .directory-header {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+  }
+  
+  .directory-title {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.8rem;
+      margin: 0;
+      color: var(--text-warm-white);
+  }
+  
+  .directory-spec {
+      font-size: 0.7rem;
+      color: var(--text-sand-gray);
+      letter-spacing: 0.1em;
+  }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .module-card, .reference-card {
+    background: var(--caia-panel-bg);
+    border: 1px solid var(--caia-border);
+    padding: 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+  }
+
+  .module-card:hover, .reference-card:hover {
+    border-color: var(--caia-accent);
+    background: rgba(122, 174, 153, 0.05);
+    transform: translateY(-2px);
+  }
+
+  .module-id {
+    font-size: 0.7rem;
+    color: var(--caia-highlight);
+    margin-bottom: 0.5rem;
+  }
+
+  .module-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.2rem;
+    margin: 0 0 1.5rem 0;
+    flex-grow: 1;
+  }
+
+  .module-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 1rem;
+  }
+
+  .module-weight {
+    font-size: 0.65rem;
+    color: var(--text-sand-gray);
+  }
+  
+  .empty-state {
+      justify-content: center;
+      align-items: center;
+      min-height: 120px;
+      opacity: 0.5;
+  }
+  
+  .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+  }
+  
+  .ref-title {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.4rem;
+      margin: 0 0 0.5rem 0;
+  }
+  
+  .ref-desc {
+      color: var(--text-sand-gray);
+      margin: 0 0 1.5rem 0;
+      font-size: 0.9rem;
+      flex-grow: 1;
+  }
+
+  /* Utility Classes (reused from index) */
+  .monospace { font-family: var(--font-mono); }
+  .arrow { transition: transform 0.2s ease; }
+  .module-card:hover .arrow, .reference-card:hover .arrow { transform: translateX(4px); }
+  
+  .sector-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    margin: 3rem 0 2rem 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-tertiary);
+    letter-spacing: 0.15em;
+    user-select: none;
+  }
+  .sector-divider-label { flex-shrink: 0; font-weight: 500; }
+  .sector-divider-dash {
+    flex-grow: 1;
+    height: 1px;
+    background-image: linear-gradient(to right, var(--surface-line) 60%, transparent 40%);
+    background-size: 8px 1px;
+    background-repeat: repeat-x;
+  }
+</style>

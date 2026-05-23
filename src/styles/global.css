@@ -40,7 +40,10 @@ button { cursor: pointer; }
   overflow: hidden;
 }
 
-.ambient,
+.ambient {
+  display: none !important;
+}
+
 .grain {
   pointer-events: none;
   position: fixed;
@@ -3735,4 +3738,21 @@ main { padding-bottom: 4rem; }
 .cl-section-dark .cl-autolink:hover {
   color: #b8ff6e;
   text-decoration-color: #b8ff6e;
+}
+
+/* --- MONOSPACE DOMINANCE UTILITIES --- */
+.monospace,
+.mono-number,
+.telemetry-number,
+.telemetry-stat,
+.val,
+.spec-status,
+.status-text,
+.section-spec,
+.time-stamp,
+.digits,
+.stat-roll {
+  font-family: var(--font-mono) !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
 }
