@@ -2,9 +2,21 @@
 import WorldCupLayout from '../../layouts/WorldCupLayout.astro';
 import LifecycleBanner from '../../components/worldcup/LifecycleBanner.astro';
 import ScoreStrip from '../../components/worldcup/ScoreStrip.astro';
+import { getCollection } from 'astro:content';
 
 // We mock the tournament state for Phase 0 scaffolding.
 const tournamentState = 'pre-tournament'; // Can be 'pre-tournament', 'group-stage', etc.
+
+// Query the 48 participating teams from content collections to serialize
+const teams = await getCollection('wc-teams');
+const teamsData = teams.map(t => ({
+  name: t.data.name,
+  code: t.data.code,
+  group: t.data.group,
+  fifaRanking: t.data.fifaRanking || 99,
+  coach: t.data.coach || 'TBD',
+  slug: t.slug
+}));
 ---
 <WorldCupLayout title="World Cup 2026 Corner" description="The smart fan’s home for World Cup 2026.">
   <LifecycleBanner 
@@ -12,25 +24,62 @@ const tournamentState = 'pre-tournament'; // Can be 'pre-tournament', 'group-sta
     type={tournamentState === 'pre-tournament' ? 'info' : 'live'} 
   />
 
-  <header style="margin-bottom: 3rem;">
-    <h1>World Cup 2026</h1>
-    <p style="font-size: 1.2rem; color: var(--wc-muted); max-width: 600px;">
-      A standalone companion for the smart fan. Verified data, sharp editorial takes, and transparent prediction models.
-    </p>
-  </header>
+  <!-- Responsive Split Hero Layout -->
+  <div class="wc-hero-grid" style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 3.5rem; align-items: start; margin-bottom: 3.5rem;">
+    
+    <!-- Left Column: Title & Featured Matches -->
+    <div style="display: flex; flex-direction: column; gap: 2rem; width: 100%;">
+      <header style="margin-bottom: 0.5rem;">
+        <h1 style="font-size: 2.6rem; margin: 0 0 0.75rem 0; font-family: 'PP Editorial New', serif; font-weight: normal; line-height: 1.1;">World Cup 2026</h1>
+        <p style="font-size: 1.15rem; color: var(--wc-muted); max-width: 580px; margin: 0; line-height: 1.5;">
+          A standalone companion for the smart fan. Verified data, sharp editorial takes, and transparent prediction models.
+        </p>
+      </header>
 
-  <section style="margin-bottom: 3rem;">
-    <h2 style="font-size: 1.2rem; color: var(--wc-highlight); text-transform: uppercase; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; border-bottom: 1px solid var(--wc-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
-      Featured Matches
-    </h2>
-    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-      <ScoreStrip matchId="m1" homeTeam="Mexico" homeCode="MEX" awayTeam="South Africa" awayCode="RSA" status="preview" timeInfo="June 11 · 3:00 PM EDT" />
-      <ScoreStrip matchId="m2" homeTeam="USA" homeCode="USA" awayTeam="Paraguay" awayCode="PAR" status="preview" timeInfo="June 12 · 9:00 PM EDT" />
-      <ScoreStrip matchId="m3" homeTeam="Canada" homeCode="CAN" awayTeam="Switzerland" awayCode="SUI" status="preview" timeInfo="June 12 · 6:00 PM EDT" />
+      <section>
+        <h2 style="font-size: 1.05rem; color: var(--wc-highlight); text-transform: uppercase; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; border-bottom: 1px solid var(--wc-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span style="display: inline-block; width: 6px; height: 6px; background: var(--wc-accent, #7dd3a0); border-radius: 50%;"></span>
+          Featured Openers
+        </h2>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <ScoreStrip matchId="m1" homeTeam="Mexico" homeCode="MEX" awayTeam="South Africa" awayCode="RSA" status="preview" timeInfo="June 11 · 3:00 PM EDT" />
+          <ScoreStrip matchId="m2" homeTeam="USA" homeCode="USA" awayTeam="Paraguay" awayCode="PAR" status="preview" timeInfo="June 12 · 9:00 PM EDT" />
+          <ScoreStrip matchId="m3" homeTeam="Canada" homeCode="CAN" awayTeam="Switzerland" awayCode="SUI" status="preview" timeInfo="June 12 · 6:00 PM EDT" />
+        </div>
+      </section>
     </div>
-  </section>
 
-  <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+    <!-- Right Column: Breathtaking Interactive 3D Globe -->
+    <div class="globe-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; width: 100%; border: 1px solid var(--wc-border); padding: 1.5rem 1rem; border-radius: 4px; background: rgba(12, 12, 12, 0.6); backdrop-filter: blur(10px); overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+      
+      <div style="position: absolute; top: 1rem; left: 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--wc-muted); letter-spacing: 0.08em; display: flex; align-items: center; gap: 0.5rem; text-transform: uppercase;">
+        <span style="display: inline-block; width: 6px; height: 6px; background: var(--wc-accent, #7dd3a0); border-radius: 50%; box-shadow: 0 0 8px var(--wc-accent);"></span>
+        Telemetry World Map
+      </div>
+
+      <div style="position: relative; width: 100%; max-width: 320px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; margin: 1rem 0;">
+        <!-- Loading spinner placeholder -->
+        <div id="globe-loader" style="position: absolute; color: var(--wc-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+          <div class="loader-ring" style="width: 24px; height: 24px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--wc-accent, #7dd3a0); border-radius: 50%; animation: spin-loader 1s infinite linear;"></div>
+          <span>INITIALIZING RADAR...</span>
+        </div>
+        <canvas id="globe-canvas" style="width: 100%; height: 100%; cursor: grab; outline: none; opacity: 0; transition: opacity 0.4s;"></canvas>
+      </div>
+
+      <div style="position: absolute; bottom: 0.85rem; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--wc-muted); pointer-events: none; text-transform: uppercase; letter-spacing: 0.08em; width: 100%;">
+        Drag to spin · Swipe on mobile · Hover beacons
+      </div>
+
+      <!-- Telemetry Tooltip (glassmorphic absolute div overlay) -->
+      <div id="globe-tooltip" style="position: absolute; display: none; background: rgba(8, 8, 8, 0.95); border: 1px solid var(--wc-border); color: #fff; padding: 0.75rem 1rem; border-radius: 4px; pointer-events: none; font-size: 0.8rem; z-index: 1000; min-width: 170px; backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 10px rgba(125,211,160,0.12);">
+        <!-- Populated dynamically by script -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Main Navigation Cards -->
+  <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3.5rem;">
     <a href="/world-cup-2026/teams" class="wc-card" style="text-decoration: none; display: block; transition: border-color 0.2s;">
       <h3>The 48 Teams</h3>
       <p style="color: var(--wc-muted); font-size: 0.9em; margin-bottom: 0;">Squads, key players, and tactical previews for every nation.</p>
@@ -47,3 +96,454 @@ const tournamentState = 'pre-tournament'; // Can be 'pre-tournament', 'group-sta
     </a>
   </section>
 </WorldCupLayout>
+
+<!-- Load D3 and TopoJSON Libraries via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7" is:inline></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson@3" is:inline></script>
+
+<!-- Globe Interactive Telemetry Logic -->
+<script is:inline define:vars={{ serializedTeams: teamsData }}>
+  // Coordinates mapping for all 48 participating countries
+  const countryCoords = {
+    'USA': [-95.7129, 37.0902],
+    'MEX': [-102.5528, 23.6345],
+    'CAN': [-106.3468, 56.1304],
+    'ARG': [-63.6167, -38.4161],
+    'BRA': [-51.9253, -14.235],
+    'ENG': [-1.1743, 52.3555],
+    'FRA': [2.2137, 46.2276],
+    'GER': [10.4515, 51.1657],
+    'ESP': [-3.7492, 40.4637],
+    'POR': [-8.2245, 39.3999],
+    'NED': [5.2913, 52.1326],
+    'BEL': [4.4699, 50.5039],
+    'CRO': [15.2000, 45.1000],
+    'SUI': [8.2275, 46.8182],
+    'SWE': [18.6435, 60.1282],
+    'NOR': [8.4689, 60.4720],
+    'URU': [-55.7658, -32.5228],
+    'COL': [-74.2973, 4.5709],
+    'ECU': [-78.1834, -1.8312],
+    'PAR': [-58.4438, -23.4425],
+    'CHI': [-71.5430, -35.6751],
+    'CRC': [-83.7534, 9.7489],
+    'PAN': [-80.7821, 8.5380],
+    'CUW': [-68.9900, 12.1690],
+    'HAI': [-72.2852, 18.9712],
+    'SEN': [-14.4524, 14.4974],
+    'MAR': [-7.0926, 31.7917],
+    'EGY': [30.8025, 26.8206],
+    'ALG': [1.6596, 28.0339],
+    'TUN': [9.5375, 33.8869],
+    'GHA': [-1.0232, 7.9465],
+    'CIV': [-5.5471, 7.5400],
+    'COD': [21.7587, -4.0383],
+    'RSA': [25.0479, -30.5595],
+    'MLI': [-3.9962, 17.5707],
+    'KSA': [45.0792, 23.8859],
+    'QAT': [51.1839, 25.3548],
+    'IRN': [53.6880, 32.4279],
+    'IRQ': [43.6793, 33.2232],
+    'JOR': [36.2384, 30.5852],
+    'UZB': [64.5853, 41.3775],
+    'AUS': [133.7751, -25.2744],
+    'NZL': [174.8860, -40.9006],
+    'JPN': [138.2529, 36.2048],
+    'KOR': [127.7669, 35.9078],
+    'BIH': [17.6791, 43.9159],
+    'SRB': [21.0059, 44.0165]
+  };
+
+  // GeoJSON names mapping to highlight their land outlines
+  const participatingCountryNames = [
+    'United States of America', 'Mexico', 'Canada', 'Argentina', 'Brazil',
+    'England', 'France', 'Germany', 'Spain', 'Portugal', 'Netherlands',
+    'Belgium', 'Croatia', 'Switzerland', 'Sweden', 'Norway', 'Uruguay',
+    'Colombia', 'Ecuador', 'Paraguay', 'Chile', 'Costa Rica', 'Panama', 'Senegal',
+    'Morocco', 'Egypt', 'Algeria', 'Tunisia', 'Ghana', "Côte d'Ivoire",
+    'Dem. Rep. Congo', 'South Africa', 'Mali', 'Saudi Arabia', 'Qatar',
+    'Iran', 'Iraq', 'Jordan', 'Uzbekistan', 'Australia', 'New Zealand',
+    'Japan', 'South Korea', 'Bosnia and Herz.', 'Serbia', 'Haiti'
+  ];
+
+  // Map coordinate pairs into structured team records
+  const participatingCountries = serializedTeams.map(t => ({
+    ...t,
+    coords: countryCoords[t.code] || [0, 0]
+  }));
+
+  // Global variables
+  let worldData = null;
+  let countriesFeatures = null;
+  let canvas = null;
+  let ctx = null;
+  let tooltip = null;
+  let loader = null;
+
+  let width = 320;
+  let height = 320;
+
+  // Globe D3 Projection
+  let projection = null;
+  let path = null;
+  let graticule = null;
+
+  // Physics & Animation State
+  let rotation = [25, -35, 0]; // lon, lat, roll
+  let velocity = [0.015, -0.002]; // lon speed, lat speed
+  let lastTime = Date.now();
+  let isDragging = false;
+  let dragStart = null;
+  let dragRotate = null;
+  let hoverTeam = null;
+  let autoRotationTimer = null;
+  let autoRotationActive = true;
+  let frameId = null;
+
+  async function initGlobe() {
+    canvas = document.getElementById('globe-canvas');
+    tooltip = document.getElementById('globe-tooltip');
+    loader = document.getElementById('globe-loader');
+    if (!canvas || !window.d3 || !window.topojson) {
+      // Retry in 250ms if scripts are still loading
+      setTimeout(initGlobe, 250);
+      return;
+    }
+
+    ctx = canvas.getContext('2d');
+    
+    // Set responsive dimensions
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Setup projections
+    projection = d3.geoOrthographic()
+      .scale(width * 0.48)
+      .translate([width / 2, height / 2])
+      .clipAngle(90);
+
+    path = d3.geoPath(projection, ctx);
+    graticule = d3.geoGraticule()();
+
+    // Fetch World Topology Boundaries
+    try {
+      const response = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+      worldData = await response.json();
+      countriesFeatures = topojson.feature(worldData, worldData.objects.countries).features;
+      
+      // Hide loader and show canvas smoothly
+      loader.style.display = 'none';
+      canvas.style.opacity = '1';
+
+      // Setup interaction listeners
+      setupInteractions();
+
+      // Launch 60fps render loop
+      lastTime = Date.now();
+      tick();
+    } catch (err) {
+      console.error('Failed loading globe topology', err);
+      loader.textContent = 'ERROR INITIALIZING RADAR';
+    }
+  }
+
+  function resize() {
+    if (!canvas) return;
+    const parent = canvas.parentElement;
+    width = parent.clientWidth;
+    height = parent.clientHeight || width;
+
+    // Support high DPI screens
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
+
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+
+    if (projection) {
+      projection
+        .scale(width * 0.48)
+        .translate([width / 2, height / 2]);
+    }
+  }
+
+  function setupInteractions() {
+    // Mouse down / Touch start
+    const onStart = (clientX, clientY) => {
+      isDragging = true;
+      autoRotationActive = false;
+      clearTimeout(autoRotationTimer);
+      dragStart = [clientX, clientY];
+      dragRotate = [...rotation];
+      canvas.style.cursor = 'grabbing';
+    };
+
+    // Mouse move / Touch move
+    const onMove = (clientX, clientY, pageX, pageY) => {
+      if (isDragging) {
+        const dx = clientX - dragStart[0];
+        const dy = clientY - dragStart[1];
+        
+        // Scale drag sensitivity by zoom/scale
+        const k = 70 / projection.scale();
+        rotation[0] = dragRotate[0] + dx * k;
+        rotation[1] = Math.max(-80, Math.min(80, dragRotate[1] - dy * k)); // clamp poles
+        projection.rotate(rotation);
+      } else {
+        // Handle hovering highlights
+        const rect = canvas.getBoundingClientRect();
+        const mx = clientX - rect.left;
+        const my = clientY - rect.top;
+        
+        let found = null;
+        const centerCoords = projection.invert([width / 2, height / 2]);
+
+        for (let i = 0; i < participatingCountries.length; i++) {
+          const t = participatingCountries[i];
+          // Check if country coordinate is in the facing hemisphere
+          const distance = d3.geoDistance(centerCoords, t.coords);
+          if (distance < Math.PI / 2) {
+            const pt = projection(t.coords);
+            if (pt) {
+              const dx = mx - pt[0];
+              const dy = my - pt[1];
+              const dist = Math.sqrt(dx*dx + dy*dy);
+              
+              if (dist <= 12) { // 12px hover radius
+                found = t;
+                break;
+              }
+            }
+          }
+        }
+
+        if (found) {
+          canvas.style.cursor = 'pointer';
+          if (hoverTeam !== found) {
+            hoverTeam = found;
+            // Draw premium telemetry tooltip
+            tooltip.style.display = 'block';
+            tooltip.innerHTML = `
+              <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
+                <span style="font-family:'JetBrains Mono', monospace; font-size:0.75rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:1px 5px; border-radius:1px; color:#fff;">
+                  ${found.code}
+                </span>
+                <strong style="font-size:0.9rem; color:var(--wc-highlight);">${found.name}</strong>
+              </div>
+              <div style="font-family:'JetBrains Mono', monospace; font-size:0.72rem; color:var(--wc-muted); display:flex; flex-direction:column; gap:2px;">
+                <span>GROUP: ${found.group}</span>
+                <span>FIFA RANK: #${found.fifaRanking}</span>
+                <span>COACH: ${found.coach}</span>
+              </div>
+              <div style="margin-top:0.5rem; font-size:0.65rem; color:var(--wc-accent, #7dd3a0); font-family:'JetBrains Mono', monospace; border-top:1px dashed rgba(255,255,255,0.15); padding-top:0.4rem; text-transform:uppercase; letter-spacing:0.02em;">
+                Click to explore squads &rarr;
+              </div>
+            `;
+          }
+          // Position tooltip
+          const tooltipW = tooltip.offsetWidth;
+          const tooltipH = tooltip.offsetHeight;
+          const wrapperRect = canvas.parentElement.parentElement.getBoundingClientRect();
+          const tx = pageX - wrapperRect.left + 15;
+          const ty = pageY - wrapperRect.top - tooltipH / 2;
+
+          tooltip.style.left = `${tx}px`;
+          tooltip.style.top = `${ty}px`;
+
+          // Pause auto rotation during hover
+          autoRotationActive = false;
+        } else {
+          canvas.style.cursor = 'grab';
+          if (hoverTeam) {
+            hoverTeam = null;
+            tooltip.style.display = 'none';
+          }
+          if (!isDragging) {
+            autoRotationActive = true;
+          }
+        }
+      }
+    };
+
+    // Mouse up / Touch end
+    const onEnd = () => {
+      if (isDragging) {
+        isDragging = false;
+        canvas.style.cursor = 'grab';
+        
+        // Reset auto rotation fade-back timer (5 seconds idle)
+        clearTimeout(autoRotationTimer);
+        autoRotationTimer = setTimeout(() => {
+          autoRotationActive = true;
+        }, 5000);
+      }
+    };
+
+    // Mouse Listeners
+    canvas.addEventListener('mousedown', (e) => onStart(e.clientX, e.clientY));
+    window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY, e.pageX, e.pageY));
+    window.addEventListener('mouseup', onEnd);
+
+    // Touch Listeners
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        onStart(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 1) {
+        onMove(e.touches[0].clientX, e.touches[0].clientY, e.touches[0].pageX, e.touches[0].pageY);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', onEnd);
+
+    // Click navigation
+    canvas.addEventListener('click', () => {
+      if (hoverTeam) {
+        // Kill frame loop
+        cancelAnimationFrame(frameId);
+        window.location.href = `/world-cup-2026/teams/${hoverTeam.slug}`;
+      }
+    });
+  }
+
+  function tick() {
+    const now = Date.now();
+    const dt = now - lastTime;
+    lastTime = now;
+
+    if (autoRotationActive && !isDragging) {
+      rotation[0] += velocity[0] * dt;
+      rotation[1] += velocity[1] * dt;
+      projection.rotate(rotation);
+    }
+
+    renderGlobe();
+    frameId = requestAnimationFrame(tick);
+  }
+
+  function renderGlobe() {
+    if (!ctx || !projection) return;
+
+    // Clear Canvas
+    ctx.clearRect(0, 0, width, height);
+
+    // 1. Draw Globe Sphere Shadow Backdrop
+    ctx.beginPath();
+    projection.clipAngle(90);
+    path({ type: 'Sphere' });
+    ctx.fillStyle = '#050505';
+    ctx.fill();
+
+    // Subtle holographic grid lines behind land
+    ctx.beginPath();
+    path(graticule);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+
+    // 2. Render Landmasses
+    if (countriesFeatures) {
+      countriesFeatures.forEach(feature => {
+        const isParticipating = participatingCountryNames.includes(feature.properties.name);
+        
+        ctx.beginPath();
+        path(feature);
+        
+        if (isParticipating) {
+          // Highlight participating countries land contour
+          ctx.fillStyle = 'rgba(125, 211, 160, 0.09)'; // Telemetry accent dim green
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(125, 211, 160, 0.28)';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        } else {
+          // Non-participating countries
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      });
+    }
+
+    // 3. Draw Graticules grid on top
+    ctx.beginPath();
+    path(graticule);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+
+    // 4. Draw outer horizon outline halo
+    ctx.beginPath();
+    path({ type: 'Sphere' });
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    // 5. Render pulsating participating country beacons
+    const centerCoords = projection.invert([width / 2, height / 2]);
+    const pulseRadius = Math.sin(Date.now() / 240) * 3 + 5.5;
+
+    participatingCountries.forEach(t => {
+      // Check if pin is on the facing hemisphere
+      const distance = d3.geoDistance(centerCoords, t.coords);
+      if (distance < Math.PI / 2) {
+        const pt = projection(t.coords);
+        if (pt) {
+          const isHovered = (hoverTeam && hoverTeam.code === t.code);
+          
+          // Draw pulsating outer telemetry wave
+          ctx.beginPath();
+          ctx.arc(pt[0], pt[1], isHovered ? 11 : pulseRadius, 0, 2 * Math.PI);
+          ctx.fillStyle = isHovered ? 'rgba(225, 6, 0, 0.25)' : 'rgba(125, 211, 160, 0.2)';
+          ctx.fill();
+          ctx.strokeStyle = isHovered ? 'rgba(225, 6, 0, 0.8)' : 'rgba(125, 211, 160, 0.65)';
+          ctx.lineWidth = isHovered ? 1.5 : 1;
+          ctx.stroke();
+
+          // Draw solid core
+          ctx.beginPath();
+          ctx.arc(pt[0], pt[1], isHovered ? 4.5 : 2.5, 0, 2 * Math.PI);
+          ctx.fillStyle = isHovered ? '#e10600' : '#7dd3a0';
+          ctx.fill();
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 0.75;
+          ctx.stroke();
+        }
+      }
+    });
+  }
+
+  // Launch on DOM ready
+  document.addEventListener('DOMContentLoaded', initGlobe);
+  // Transition safety launch
+  initGlobe();
+</script>
+
+<style is:global>
+  /* Loader spin animation */
+  @keyframes spin-loader {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .wc-hero-grid {
+    box-sizing: border-box;
+  }
+  .wc-hero-grid * {
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 860px) {
+    .wc-hero-grid {
+      grid-template-columns: 1fr !important;
+      gap: 2.5rem !important;
+    }
+  }
+</style>
