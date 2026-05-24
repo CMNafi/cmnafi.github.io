@@ -35,36 +35,23 @@ const venueTimezones: Record<string, string> = {
   'BC Place': 'America/Vancouver'
 };
 
-function formatDualTime(isoString: string, venue: string) {
+function formatEasternTime(isoString: string) {
   const d = new Date(isoString);
-  const floridaTime = new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/New_York',
+    month: 'short',
+    day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
     timeZoneName: 'short'
   }).format(d);
-
-  const venueTz = venueTimezones[venue] || 'America/New_York';
-  const localTime = new Intl.DateTimeFormat('en-US', {
-    timeZone: venueTz,
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit'
-  }).format(d);
-
-  if (venueTz === 'America/New_York' || venueTz === 'America/Toronto') {
-    return `${localTime} EDT`; // Local is Florida time
-  }
-  
-  return `${localTime} Local / ${floridaTime}`;
 }
 ---
 <WorldCupLayout title="Matches | World Cup 2026 Corner">
   <header style="margin-bottom: 2rem;">
     <a href="/world-cup-2026" style="color: var(--wc-muted); text-decoration: none; font-size: 0.9em; margin-bottom: 1rem; display: inline-block;">← Back to Hub</a>
     <h1>Match Schedule</h1>
-    <p style="color: var(--wc-muted);">All 104 matches precisely mapped to the official FIFA schedule. Displaying Local Venue Time / Florida Time (EDT).</p>
+    <p style="color: var(--wc-muted);">All 104 matches precisely mapped to the official FIFA schedule. All times displayed in Eastern Time (EDT).</p>
   </header>
 
   <section>
@@ -82,7 +69,7 @@ function formatDualTime(isoString: string, venue: string) {
               awayTeam={m.awayTeam} 
               awayCode={m.awayCode} 
               status="preview" 
-              timeInfo={`${formatDualTime(m.date, m.venue)} · ${m.venue}`} 
+              timeInfo={`${formatEasternTime(m.date)} · ${m.venue}`} 
             />
           ))}
         </div>

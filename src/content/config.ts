@@ -140,6 +140,12 @@ const wcTeams = defineCollection({
     captain: z.string().optional(),
     baseCamp: z.string().optional(),
     status: z.enum(['qualified', 'active', 'eliminated', 'champion']).default('qualified'),
+    squad: z.array(z.object({
+      name: z.string(),
+      position: z.enum(['GK', 'DEF', 'MID', 'FWD']),
+      club: z.string(),
+      isKeyPlayer: z.boolean().default(false)
+    })).optional()
   })
 });
 

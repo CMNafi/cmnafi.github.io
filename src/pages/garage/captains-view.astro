@@ -399,12 +399,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
                   <circle cx="50" cy="50" r="0.3" fill="rgba(255,255,255,0.4)" />
 
                   <!-- === DYNAMIC ANALYSIS OVERLAY LAYERS === -->
-                  <!-- Boundary Coverage Sectors (activated by Boundary Map toggle) -->
-                  <g id="boundary-arcs-layer" style="display:none;"></g>
+                  <!-- Boundary Coverage Arc Segments (activated by Boundary Map toggle) -->
+                  <g id="boundary-arcs-layer" display="none"></g>
                   <!-- Bowler Guard Highlight Rings (activated by Boundary Map toggle) -->
-                  <g id="bowler-guard-layer" style="display:none;"></g>
+                  <g id="bowler-guard-layer" display="none"></g>
                   <!-- Over Flip Economy Arrows (activated by Flip Economy toggle) -->
-                  <g id="over-flip-arrows-layer" style="display:none;"></g>
+                  <g id="over-flip-arrows-layer" display="none"></g>
                 </svg>
 
                 <!-- Preset position slots layer -->
@@ -3990,45 +3990,59 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       renderApp();
     }
 
+    // ─── SVG layer visibility helpers (use SVG display attr, not CSS style) ──
+    function svgShow(el) { if (el) el.removeAttribute('display'); }
+    function svgHide(el) { if (el) el.setAttribute('display', 'none'); }
+
     // ─── Over Flip Economy ──────────────────────────────────────────────
     function calcFlipDist(posId) {
       const pos = fieldingPositions.find(p => p.id === posId);
       if (!pos) return 0;
-      return Math.abs(100 - 2 * pos.y);
+      // Distance a fielder runs when bowling end swaps = |2*(y - 50)|
+      return Math.abs(2 * (pos.y - 50));
     }
 
     function renderOverFlipArrows() {
       const layer = document.getElementById('over-flip-arrows-layer');
       if (!layer) return;
       layer.innerHTML = '';
-      if (!state.isOverFlipActive) { layer.style.display = 'none'; return; }
-      layer.style.display = '';
+      if (!state.isOverFlipActive) { svgHide(layer); return; }
+      svgShow(layer);
 
       state.squad.forEach(player => {
         if (player.status === 'benched' || !player.positionId) return;
         if (player.positionId === 'wk' || player.positionId === 'bowler') return;
         const pos = fieldingPositions.find(p => p.id === player.positionId);
         if (!pos) return;
-        const dist = Math.abs(100 - 2 * pos.y);
-        if (dist < 2) return;
+        const dist = calcFlipDist(player.positionId);
+        if (dist < 3) return; // negligible — near y=50
         const toY = 100 - pos.y;
-        const color = dist > 40 ? '#e55555' : dist > 20 ? '#e8b86a' : '#7dd3a0';
-        const markerId = dist > 40 ? 'arrow-red' : dist > 20 ? 'arrow-amber' : 'arrow-green';
+        const color = dist > 35 ? '#e55555' : dist > 18 ? '#e8b86a' : '#7dd3a0';
+        const markerId = dist > 35 ? 'arrow-red' : dist > 18 ? 'arrow-amber' : 'arrow-green';
 
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', pos.x); line.setAttribute('y1', pos.y);
-        line.setAttribute('x2', pos.x); line.setAttribute('y2', toY);
+        // Dashed travel line
+        const SVG_NS = 'http://www.w3.org/2000/svg';
+        const line = document.createElementNS(SVG_NS, 'line');
+        line.setAttribute('x1', String(pos.x));
+        line.setAttribute('y1', String(pos.y));
+        line.setAttribute('x2', String(pos.x));
+        line.setAttribute('y2', String(toY));
         line.setAttribute('stroke', color);
-        line.setAttribute('stroke-width', '0.6');
-        line.setAttribute('stroke-opacity', '0.75');
+        line.setAttribute('stroke-width', '0.9');
+        line.setAttribute('stroke-opacity', '0.8');
         line.setAttribute('marker-end', `url(#${markerId})`);
-        line.setAttribute('stroke-dasharray', '1.5 0.8');
+        line.setAttribute('stroke-dasharray', '1.8 1');
         layer.appendChild(line);
 
-        const circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circ.setAttribute('cx', pos.x); circ.setAttribute('cy', toY);
-        circ.setAttribute('r', '1.5');
-        circ.setAttribute('fill', color); circ.setAttribute('opacity', '0.45');
+        // Landing ring at destination
+        const circ = document.createElementNS(SVG_NS, 'circle');
+        circ.setAttribute('cx', String(pos.x));
+        circ.setAttribute('cy', String(toY));
+        circ.setAttribute('r', '2');
+        circ.setAttribute('fill', 'none');
+        circ.setAttribute('stroke', color);
+        circ.setAttribute('stroke-width', '0.5');
+        circ.setAttribute('stroke-opacity', '0.6');
         layer.appendChild(circ);
       });
     }
@@ -4049,17 +4063,20 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
         if (!pos) return;
         const dist = calcFlipDist(player.positionId);
         totalDist += dist;
-        if (dist > 40) sprintCount++;
+        if (dist > 35) sprintCount++;
         rows.push({ name: player.name, abbr: pos.abbr, dist });
       });
 
       rows.sort((a, b) => b.dist - a.dist);
+
+      // Always show live numbers even when overlay is off
       if (elTotalRun) elTotalRun.textContent = Math.round(totalDist) + ' u';
       if (elSprintCount) elSprintCount.textContent = String(sprintCount);
 
+      // Breakdown list only shown when overlay active
       elBreakdownList.innerHTML = rows.map(r => {
-        const color = r.dist > 40 ? '#e55555' : r.dist > 20 ? '#e8b86a' : '#7dd3a0';
-        const pct = Math.min(100, Math.round(r.dist));
+        const color = r.dist > 35 ? '#e55555' : r.dist > 18 ? '#e8b86a' : '#7dd3a0';
+        const pct = Math.min(100, Math.round((r.dist / 50) * 100)); // max dist ~50
         const shortName = r.name.split(' ').pop();
         return `<div class="flip-row">
           <span class="flip-name">${shortName}</span>
@@ -4073,64 +4090,69 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     }
 
     // ─── Boundary Coverage ──────────────────────────────────────────────
+    // Draws thick arc SEGMENTS along the boundary rope, not pie wedges.
+    // Each of 16 sectors is colored green (covered) or red (gap).
     function renderBoundaryCoverage() {
       const layer = document.getElementById('boundary-arcs-layer');
       if (!layer) return;
       layer.innerHTML = '';
-      if (!state.isBoundaryMapActive) { layer.style.display = 'none'; return; }
-      layer.style.display = '';
+      if (!state.isBoundaryMapActive) { svgHide(layer); return; }
+      svgShow(layer);
 
-      const sectors = 12;
-      const R = RADIUS_BOUNDARY;
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+      const SECTORS = 16;
+      const R = RADIUS_BOUNDARY;   // 46
       const cx = 50, cy = 50;
-      const coverRadius = 12;
+      const COVER_RADIUS = 14;     // fielder must be within 14 units of boundary point
+      const GAP_FRAC = 0.08;       // 8% gap between segments for visual clarity
 
-      for (let i = 0; i < sectors; i++) {
-        const angle = (i / sectors) * Math.PI * 2 - Math.PI / 2;
-        const nextAngle = ((i + 1) / sectors) * Math.PI * 2 - Math.PI / 2;
-        const midAngle = (angle + nextAngle) / 2;
-        const px = cx + R * Math.cos(midAngle);
-        const py = cy + R * Math.sin(midAngle);
+      for (let i = 0; i < SECTORS; i++) {
+        const a0 = (i / SECTORS) * Math.PI * 2 - Math.PI / 2;
+        const a1 = ((i + 1) / SECTORS) * Math.PI * 2 - Math.PI / 2;
+        const aMid = (a0 + a1) / 2;
+        const arcSpan = a1 - a0;
+        const aStart = a0 + arcSpan * GAP_FRAC;
+        const aEnd   = a1 - arcSpan * GAP_FRAC;
+
+        // Sample midpoint of boundary arc to check coverage
+        const px = cx + R * Math.cos(aMid);
+        const py = cy + R * Math.sin(aMid);
 
         let covered = false;
-        state.squad.forEach(player => {
-          if (player.status === 'benched' || !player.positionId) return;
-          const pos = fieldingPositions.find(p => p.id === player.positionId);
-          if (!pos) return;
-          const dx = pos.x - px, dy = pos.y - py;
-          if (Math.sqrt(dx * dx + dy * dy) < coverRadius) covered = true;
-        });
-
-        const x1 = cx + R * Math.cos(angle), y1 = cy + R * Math.sin(angle);
-        const x2 = cx + R * Math.cos(nextAngle), y2 = cy + R * Math.sin(nextAngle);
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', `M ${cx} ${cy} L ${x1} ${y1} A ${R} ${R} 0 0 1 ${x2} ${y2} Z`);
-        path.setAttribute('fill', covered ? 'rgba(125,211,160,0.1)' : 'rgba(221,68,68,0.16)');
-        path.setAttribute('stroke', covered ? 'rgba(125,211,160,0.3)' : 'rgba(221,68,68,0.4)');
-        path.setAttribute('stroke-width', '0.3');
-        layer.appendChild(path);
-
-        if (!covered) {
-          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          dot.setAttribute('cx', cx + (R - 2) * Math.cos(midAngle));
-          dot.setAttribute('cy', cy + (R - 2) * Math.sin(midAngle));
-          dot.setAttribute('r', '1.2');
-          dot.setAttribute('fill', 'rgba(221,68,68,0.65)');
-          layer.appendChild(dot);
+        for (const player of state.squad) {
+          if (player.status === 'benched' || !player.positionId) continue;
+          const fp = fieldingPositions.find(p => p.id === player.positionId);
+          if (!fp) continue;
+          const dx = fp.x - px, dy = fp.y - py;
+          if (Math.sqrt(dx * dx + dy * dy) < COVER_RADIUS) { covered = true; break; }
         }
+
+        // Arc start/end points
+        const xs = cx + R * Math.cos(aStart);
+        const ys = cy + R * Math.sin(aStart);
+        const xe = cx + R * Math.cos(aEnd);
+        const ye = cy + R * Math.sin(aEnd);
+
+        const arc = document.createElementNS(SVG_NS, 'path');
+        arc.setAttribute('d', `M ${xs.toFixed(2)} ${ys.toFixed(2)} A ${R} ${R} 0 0 1 ${xe.toFixed(2)} ${ye.toFixed(2)}`);
+        arc.setAttribute('fill', 'none');
+        arc.setAttribute('stroke', covered ? '#7dd3a0' : '#e55555');
+        arc.setAttribute('stroke-width', '2.4');
+        arc.setAttribute('stroke-opacity', covered ? '0.55' : '0.85');
+        arc.setAttribute('stroke-linecap', 'round');
+        layer.appendChild(arc);
       }
     }
 
     // ─── Bowler Guard ───────────────────────────────────────────────────
+    // Highlights the five bowler-protection positions with rings + updates sidebar pills.
     function renderBowlerGuard() {
       const layer = document.getElementById('bowler-guard-layer');
       if (!layer) return;
       layer.innerHTML = '';
-      if (!state.isBoundaryMapActive) { layer.style.display = 'none'; return; }
-      layer.style.display = '';
 
-      const guardPositions = ['fine_leg', 'third_man', 'short_fine_leg', 'deep_fine_leg', 'deep_third_man'];
-
+      // Always update sidebar pills (regardless of map toggle)
+      const GUARD_IDS = ['fine_leg', 'third_man', 'short_fine_leg', 'deep_fine_leg', 'deep_third_man'];
       const guardStrip = document.getElementById('bowler-guard-strip');
       if (guardStrip) {
         guardStrip.querySelectorAll('.guard-pos-pill').forEach(pill => {
@@ -4141,18 +4163,34 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
         });
       }
 
-      guardPositions.forEach(posId => {
+      if (!state.isBoundaryMapActive) { svgHide(layer); return; }
+      svgShow(layer);
+
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+      GUARD_IDS.forEach(posId => {
         const pos = fieldingPositions.find(p => p.id === posId);
         if (!pos) return;
         const isCov = state.squad.some(p => p.positionId === posId && p.status === 'active');
-        const circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circ.setAttribute('cx', pos.x); circ.setAttribute('cy', pos.y);
-        circ.setAttribute('r', '3.8');
-        circ.setAttribute('fill', isCov ? 'rgba(125,211,160,0.08)' : 'rgba(232,184,106,0.1)');
-        circ.setAttribute('stroke', isCov ? 'rgba(125,211,160,0.55)' : 'rgba(232,184,106,0.65)');
-        circ.setAttribute('stroke-width', '0.5');
-        if (!isCov) circ.setAttribute('stroke-dasharray', '1 0.8');
-        layer.appendChild(circ);
+
+        // Outer pulsing ring
+        const ring = document.createElementNS(SVG_NS, 'circle');
+        ring.setAttribute('cx', String(pos.x));
+        ring.setAttribute('cy', String(pos.y));
+        ring.setAttribute('r', '4.5');
+        ring.setAttribute('fill', isCov ? 'rgba(125,211,160,0.1)' : 'rgba(232,184,106,0.12)');
+        ring.setAttribute('stroke', isCov ? '#7dd3a0' : '#e8b86a');
+        ring.setAttribute('stroke-width', '0.7');
+        ring.setAttribute('stroke-opacity', '0.75');
+        if (!isCov) ring.setAttribute('stroke-dasharray', '1.2 0.9');
+        layer.appendChild(ring);
+
+        // Small center dot
+        const dot = document.createElementNS(SVG_NS, 'circle');
+        dot.setAttribute('cx', String(pos.x));
+        dot.setAttribute('cy', String(pos.y));
+        dot.setAttribute('r', '0.8');
+        dot.setAttribute('fill', isCov ? 'rgba(125,211,160,0.5)' : 'rgba(232,184,106,0.5)');
+        layer.appendChild(dot);
       });
     }
 
