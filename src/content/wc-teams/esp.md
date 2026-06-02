@@ -29,19 +29,19 @@ squad:
     isKeyPlayer: true
   - name: "Robin Le Normand"
     position: "DEF"
-    club: "Real Sociedad"
+    club: "Atletico Madrid"
     isKeyPlayer: false
   - name: "Alejandro Grimaldo"
     position: "DEF"
     club: "Bayer Leverkusen"
     isKeyPlayer: false
-  - name: "Jesus Navas"
+  - name: "Pau Cubarsi"
     position: "DEF"
-    club: "Sevilla"
+    club: "Barcelona"
     isKeyPlayer: false
   - name: "Nacho"
     position: "DEF"
-    club: "Real Madrid"
+    club: "Al Qadsiah"
     isKeyPlayer: false
   - name: "Marc Cucurella"
     position: "DEF"
@@ -65,7 +65,7 @@ squad:
     isKeyPlayer: false
   - name: "Mikel Merino"
     position: "MID"
-    club: "Real Sociedad"
+    club: "Arsenal"
     isKeyPlayer: false
   - name: "Martin Zubimendi"
     position: "MID"
@@ -89,11 +89,11 @@ squad:
     isKeyPlayer: true
   - name: "Alvaro Morata"
     position: "FWD"
-    club: "Atletico Madrid"
+    club: "AC Milan"
     isKeyPlayer: false
   - name: "Dani Olmo"
     position: "FWD"
-    club: "RB Leipzig"
+    club: "Barcelona"
     isKeyPlayer: false
   - name: "Ferran Torres"
     position: "FWD"
@@ -105,11 +105,11 @@ squad:
     isKeyPlayer: false
   - name: "Ayoze Perez"
     position: "FWD"
-    club: "Real Betis"
+    club: "Villarreal"
     isKeyPlayer: false
   - name: "Joselu"
     position: "FWD"
-    club: "Real Madrid"
+    club: "Al Gharafa"
     isKeyPlayer: false
 ---
 

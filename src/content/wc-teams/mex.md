@@ -4,12 +4,12 @@ code: "MEX"
 group: "A"
 status: "qualified"
 fifaRanking: 14
-coach: "Jaime Lozano"
+coach: "Javier Aguirre"
 captain: "Edson Alvarez"
 squad:
   - name: "Guillermo Ochoa"
     position: "GK"
-    club: "Salernitana"
+    club: "AVS"
     isKeyPlayer: false
   - name: "Luis Malagon"
     position: "GK"
@@ -25,11 +25,11 @@ squad:
     isKeyPlayer: true
   - name: "Cesar Montes"
     position: "DEF"
-    club: "Almeria"
+    club: "Lokomotiv Moscow"
     isKeyPlayer: false
   - name: "Jorge Sanchez"
     position: "DEF"
-    club: "Porto"
+    club: "Cruz Azul"
     isKeyPlayer: false
   - name: "Gerardo Arteaga"
     position: "DEF"
@@ -61,7 +61,7 @@ squad:
     isKeyPlayer: false
   - name: "Erick Sanchez"
     position: "MID"
-    club: "Pachuca"
+    club: "Club America"
     isKeyPlayer: false
   - name: "Luis Romo"
     position: "MID"
@@ -77,11 +77,11 @@ squad:
     isKeyPlayer: true
   - name: "Hirving Lozano"
     position: "FWD"
-    club: "PSV"
+    club: "San Diego FC"
     isKeyPlayer: true
   - name: "Julian Quinones"
     position: "FWD"
-    club: "Club America"
+    club: "Al Qadsiah"
     isKeyPlayer: false
   - name: "Uriel Antuna"
     position: "FWD"

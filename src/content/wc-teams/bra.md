@@ -17,7 +17,7 @@ squad:
     isKeyPlayer: false
   - name: "Bento"
     position: "GK"
-    club: "Athletico Paranaense"
+    club: "Al-Nassr"
     isKeyPlayer: false
   - name: "Marquinhos"
     position: "DEF"
@@ -41,7 +41,7 @@ squad:
     isKeyPlayer: false
   - name: "Yan Couto"
     position: "DEF"
-    club: "Girona"
+    club: "Dortmund"
     isKeyPlayer: false
   - name: "Wendell"
     position: "DEF"
@@ -61,7 +61,7 @@ squad:
     isKeyPlayer: false
   - name: "Douglas Luiz"
     position: "MID"
-    club: "Aston Villa"
+    club: "Juventus"
     isKeyPlayer: false
   - name: "Joao Gomes"
     position: "MID"
@@ -105,7 +105,7 @@ squad:
     isKeyPlayer: false
   - name: "Savio"
     position: "FWD"
-    club: "Girona"
+    club: "Man City"
     isKeyPlayer: false
   - name: "Pepe"
     position: "FWD"

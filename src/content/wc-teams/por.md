@@ -13,7 +13,7 @@ squad:
     isKeyPlayer: true
   - name: "Rui Patricio"
     position: "GK"
-    club: "Roma"
+    club: "Atalanta"
     isKeyPlayer: false
   - name: "Jose Sa"
     position: "GK"
@@ -23,9 +23,9 @@ squad:
     position: "DEF"
     club: "Man City"
     isKeyPlayer: true
-  - name: "Pepe"
+  - name: "Renato Veiga"
     position: "DEF"
-    club: "Porto"
+    club: "Chelsea"
     isKeyPlayer: false
   - name: "Goncalo Inacio"
     position: "DEF"
@@ -37,7 +37,7 @@ squad:
     isKeyPlayer: false
   - name: "Joao Cancelo"
     position: "DEF"
-    club: "Barcelona"
+    club: "Al-Hilal"
     isKeyPlayer: true
   - name: "Diogo Dalot"
     position: "DEF"
@@ -53,7 +53,7 @@ squad:
     isKeyPlayer: false
   - name: "Joao Palhinha"
     position: "MID"
-    club: "Fulham"
+    club: "Bayern Munich"
     isKeyPlayer: true
   - name: "Vitinha"
     position: "MID"
@@ -77,7 +77,7 @@ squad:
     isKeyPlayer: false
   - name: "Joao Neves"
     position: "MID"
-    club: "Benfica"
+    club: "PSG"
     isKeyPlayer: false
   - name: "Cristiano Ronaldo"
     position: "FWD"
@@ -89,7 +89,7 @@ squad:
     isKeyPlayer: true
   - name: "Joao Felix"
     position: "FWD"
-    club: "Barcelona"
+    club: "Chelsea"
     isKeyPlayer: false
   - name: "Diogo Jota"
     position: "FWD"
@@ -101,11 +101,11 @@ squad:
     isKeyPlayer: false
   - name: "Pedro Neto"
     position: "FWD"
-    club: "Wolves"
+    club: "Chelsea"
     isKeyPlayer: false
   - name: "Francisco Conceicao"
     position: "FWD"
-    club: "Porto"
+    club: "Juventus"
     isKeyPlayer: false
   - name: "Otavio"
     position: "MID"

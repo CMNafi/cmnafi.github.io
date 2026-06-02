@@ -37,7 +37,7 @@ squad:
     isKeyPlayer: false
   - name: "Nahitan Nandez"
     position: "DEF"
-    club: "Cagliari"
+    club: "Al Qadsiah"
     isKeyPlayer: false
   - name: "Matias Vina"
     position: "DEF"
@@ -53,7 +53,7 @@ squad:
     isKeyPlayer: true
   - name: "Manuel Ugarte"
     position: "MID"
-    club: "PSG"
+    club: "Man United"
     isKeyPlayer: true
   - name: "Rodrigo Bentancur"
     position: "MID"
@@ -69,7 +69,7 @@ squad:
     isKeyPlayer: false
   - name: "Maximiliano Araujo"
     position: "MID"
-    club: "Toluca"
+    club: "Sporting CP"
     isKeyPlayer: false
   - name: "Darwin Nunez"
     position: "FWD"
@@ -77,7 +77,7 @@ squad:
     isKeyPlayer: true
   - name: "Facundo Pellistri"
     position: "FWD"
-    club: "Granada"
+    club: "Panathinaikos"
     isKeyPlayer: false
   - name: "Brian Rodriguez"
     position: "FWD"
@@ -93,11 +93,11 @@ squad:
     isKeyPlayer: false
   - name: "Luciano Rodriguez"
     position: "FWD"
-    club: "Liverpool (URU)"
+    club: "Bahia"
     isKeyPlayer: false
-  - name: "Luis Suarez"
+  - name: "Facundo Torres"
     position: "FWD"
-    club: "Inter Miami"
+    club: "Orlando City"
     isKeyPlayer: false
   - name: "Emiliano Martinez"
     position: "MID"

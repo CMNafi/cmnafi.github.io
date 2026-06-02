@@ -4,7 +4,7 @@ code: "ENG"
 group: "F"
 status: "qualified"
 fifaRanking: 3
-coach: "Gareth Southgate"
+coach: "Thomas Tuchel"
 captain: "Harry Kane"
 squad:
   - name: "Jordan Pickford"
@@ -13,7 +13,7 @@ squad:
     isKeyPlayer: false
   - name: "Aaron Ramsdale"
     position: "GK"
-    club: "Arsenal"
+    club: "Southampton"
     isKeyPlayer: false
   - name: "Nick Pope"
     position: "GK"
@@ -35,9 +35,9 @@ squad:
     position: "DEF"
     club: "Man United"
     isKeyPlayer: false
-  - name: "Kieran Trippier"
+  - name: "Levi Colwill"
     position: "DEF"
-    club: "Newcastle"
+    club: "Chelsea"
     isKeyPlayer: false
   - name: "Marc Guehi"
     position: "DEF"
@@ -61,7 +61,7 @@ squad:
     isKeyPlayer: true
   - name: "Conor Gallagher"
     position: "MID"
-    club: "Chelsea"
+    club: "Atletico Madrid"
     isKeyPlayer: false
   - name: "Kobbie Mainoo"
     position: "MID"
@@ -109,7 +109,7 @@ squad:
     isKeyPlayer: false
   - name: "Ivan Toney"
     position: "FWD"
-    club: "Brentford"
+    club: "Al-Ahli"
     isKeyPlayer: false
 ---
 

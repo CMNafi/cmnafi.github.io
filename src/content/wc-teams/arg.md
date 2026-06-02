@@ -17,7 +17,7 @@ squad:
     isKeyPlayer: false
   - name: "Geronimo Rulli"
     position: "GK"
-    club: "Ajax"
+    club: "Marseille"
     isKeyPlayer: false
   - name: "Cristian Romero"
     position: "DEF"
@@ -41,7 +41,7 @@ squad:
     isKeyPlayer: false
   - name: "Marcos Acuna"
     position: "DEF"
-    club: "Sevilla"
+    club: "River Plate"
     isKeyPlayer: false
   - name: "Gonzalo Montiel"
     position: "DEF"
@@ -49,7 +49,7 @@ squad:
     isKeyPlayer: false
   - name: "German Pezzella"
     position: "DEF"
-    club: "Real Betis"
+    club: "River Plate"
     isKeyPlayer: false
   - name: "Enzo Fernandez"
     position: "MID"
@@ -69,7 +69,7 @@ squad:
     isKeyPlayer: false
   - name: "Giovani Lo Celso"
     position: "MID"
-    club: "Tottenham"
+    club: "Real Betis"
     isKeyPlayer: false
   - name: "Exequiel Palacios"
     position: "MID"
@@ -77,7 +77,7 @@ squad:
     isKeyPlayer: false
   - name: "Guido Rodriguez"
     position: "MID"
-    club: "Real Betis"
+    club: "West Ham"
     isKeyPlayer: false
   - name: "Lionel Messi"
     position: "FWD"
@@ -85,15 +85,15 @@ squad:
     isKeyPlayer: true
   - name: "Julian Alvarez"
     position: "FWD"
-    club: "Man City"
+    club: "Atletico Madrid"
     isKeyPlayer: true
   - name: "Lautaro Martinez"
     position: "FWD"
     club: "Inter Milan"
     isKeyPlayer: false
-  - name: "Angel Di Maria"
-    position: "FWD"
-    club: "Benfica"
+  - name: "Nicolas Paz"
+    position: "MID"
+    club: "Como"
     isKeyPlayer: false
   - name: "Nicolas Gonzalez"
     position: "FWD"

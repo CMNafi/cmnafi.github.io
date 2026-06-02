@@ -5,7 +5,7 @@ group: "B"
 status: "qualified"
 fifaRanking: 49
 coach: "Jesse Marsch"
-captain: "Milan Borjan"
+captain: "Alphonso Davies"
 squad:
   - name: "Maxime Crepeau"
     position: "GK"
@@ -33,11 +33,11 @@ squad:
     isKeyPlayer: false
   - name: "Derek Cornelius"
     position: "DEF"
-    club: "Malmo"
+    club: "Marseille"
     isKeyPlayer: false
   - name: "Moise Bombito"
     position: "DEF"
-    club: "Colorado Rapids"
+    club: "Nice"
     isKeyPlayer: false
   - name: "Luc de Fougerolles"
     position: "DEF"
@@ -53,7 +53,7 @@ squad:
     isKeyPlayer: true
   - name: "Ismael Kone"
     position: "MID"
-    club: "Watford"
+    club: "Marseille"
     isKeyPlayer: true
   - name: "Jonathan Osorio"
     position: "MID"
@@ -85,7 +85,7 @@ squad:
     isKeyPlayer: true
   - name: "Liam Millar"
     position: "FWD"
-    club: "Preston North End"
+    club: "Hull City"
     isKeyPlayer: false
   - name: "Jacob Shaffelburg"
     position: "FWD"
@@ -101,7 +101,7 @@ squad:
     isKeyPlayer: false
   - name: "Theo Bair"
     position: "FWD"
-    club: "Motherwell"
+    club: "Auxerre"
     isKeyPlayer: false
   - name: "Charles-Andreas Brym"
     position: "FWD"

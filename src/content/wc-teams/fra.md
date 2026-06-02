@@ -49,7 +49,7 @@ squad:
     isKeyPlayer: false
   - name: "Jonathan Clauss"
     position: "DEF"
-    club: "Marseille"
+    club: "Nice"
     isKeyPlayer: false
   - name: "Aurelien Tchouameni"
     position: "MID"
@@ -61,7 +61,7 @@ squad:
     isKeyPlayer: false
   - name: "Adrien Rabiot"
     position: "MID"
-    club: "Juventus"
+    club: "Marseille"
     isKeyPlayer: false
   - name: "Warren Zaire-Emery"
     position: "MID"
@@ -69,7 +69,7 @@ squad:
     isKeyPlayer: false
   - name: "Youssouf Fofana"
     position: "MID"
-    club: "Monaco"
+    club: "AC Milan"
     isKeyPlayer: false
   - name: "N'Golo Kante"
     position: "MID"
@@ -83,17 +83,17 @@ squad:
     position: "FWD"
     club: "Real Madrid"
     isKeyPlayer: true
-  - name: "Antoine Griezmann"
+  - name: "Michael Olise"
     position: "FWD"
-    club: "Atletico Madrid"
+    club: "Bayern Munich"
     isKeyPlayer: true
   - name: "Ousmane Dembele"
     position: "FWD"
     club: "PSG"
     isKeyPlayer: false
-  - name: "Olivier Giroud"
+  - name: "Christopher Nkunku"
     position: "FWD"
-    club: "AC Milan"
+    club: "Chelsea"
     isKeyPlayer: false
   - name: "Marcus Thuram"
     position: "FWD"

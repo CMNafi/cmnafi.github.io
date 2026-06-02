@@ -5,11 +5,11 @@ group: "J"
 status: "qualified"
 fifaRanking: 16
 coach: "Julian Nagelsmann"
-captain: "Ilkay Gündogan"
+captain: "Joshua Kimmich"
 squad:
-  - name: "Manuel Neuer"
+  - name: "Alexander Nübel"
     position: "GK"
-    club: "Bayern Munich"
+    club: "Stuttgart"
     isKeyPlayer: false
   - name: "Marc-Andre ter Stegen"
     position: "GK"
@@ -33,7 +33,7 @@ squad:
     isKeyPlayer: false
   - name: "Waldemar Anton"
     position: "DEF"
-    club: "Stuttgart"
+    club: "Dortmund"
     isKeyPlayer: false
   - name: "Joshua Kimmich"
     position: "DEF"
@@ -51,26 +51,26 @@ squad:
     position: "DEF"
     club: "RB Leipzig"
     isKeyPlayer: false
-  - name: "Toni Kroos"
+  - name: "Angelo Stiller"
     position: "MID"
-    club: "Real Madrid"
-    isKeyPlayer: true
+    club: "Stuttgart"
+    isKeyPlayer: false
   - name: "Robert Andrich"
     position: "MID"
     club: "Bayer Leverkusen"
     isKeyPlayer: false
   - name: "Pascal Gross"
     position: "MID"
-    club: "Brighton"
+    club: "Dortmund"
     isKeyPlayer: false
   - name: "Aleksandar Pavlovic"
     position: "MID"
     club: "Bayern Munich"
     isKeyPlayer: false
-  - name: "Ilkay Gündogan"
+  - name: "Jamie Leweling"
     position: "MID"
-    club: "Barcelona"
-    isKeyPlayer: true
+    club: "Stuttgart"
+    isKeyPlayer: false
   - name: "Jamal Musiala"
     position: "FWD"
     club: "Bayern Munich"
@@ -91,9 +91,9 @@ squad:
     position: "FWD"
     club: "Dortmund"
     isKeyPlayer: false
-  - name: "Thomas Müller"
+  - name: "Tim Kleindienst"
     position: "FWD"
-    club: "Bayern Munich"
+    club: "Gladbach"
     isKeyPlayer: false
   - name: "Chris Führich"
     position: "FWD"
@@ -101,7 +101,7 @@ squad:
     isKeyPlayer: false
   - name: "Maximilian Beier"
     position: "FWD"
-    club: "Hoffenheim"
+    club: "Dortmund"
     isKeyPlayer: false
   - name: "Deniz Undav"
     position: "FWD"

@@ -29,7 +29,7 @@ squad:
     isKeyPlayer: true
   - name: "Matthijs de Ligt"
     position: "DEF"
-    club: "Bayern Munich"
+    club: "Manchester United"
     isKeyPlayer: false
   - name: "Stefan de Vrij"
     position: "DEF"
@@ -49,11 +49,11 @@ squad:
     isKeyPlayer: false
   - name: "Lutsharel Geertruida"
     position: "DEF"
-    club: "Feyenoord"
+    club: "RB Leipzig"
     isKeyPlayer: false
-  - name: "Daley Blind"
+  - name: "Jorrel Hato"
     position: "DEF"
-    club: "Girona"
+    club: "Ajax"
     isKeyPlayer: false
   - name: "Frenkie de Jong"
     position: "MID"
@@ -77,7 +77,7 @@ squad:
     isKeyPlayer: false
   - name: "Teun Koopmeiners"
     position: "MID"
-    club: "Atalanta"
+    club: "Juventus"
     isKeyPlayer: false
   - name: "Georginio Wijnaldum"
     position: "MID"
@@ -93,7 +93,7 @@ squad:
     isKeyPlayer: true
   - name: "Memphis Depay"
     position: "FWD"
-    club: "Atletico Madrid"
+    club: "Corinthians"
     isKeyPlayer: false
   - name: "Donyell Malen"
     position: "FWD"
@@ -105,11 +105,11 @@ squad:
     isKeyPlayer: false
   - name: "Wout Weghorst"
     position: "FWD"
-    club: "Hoffenheim"
+    club: "Ajax"
     isKeyPlayer: false
   - name: "Steven Bergwijn"
     position: "FWD"
-    club: "Ajax"
+    club: "Al-Ittihad"
     isKeyPlayer: false
 ---
 

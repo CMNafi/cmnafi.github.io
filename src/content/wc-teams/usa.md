@@ -29,7 +29,7 @@ squad:
     isKeyPlayer: false
   - name: "Tim Ream"
     position: "DEF"
-    club: "Fulham"
+    club: "Charlotte FC"
     isKeyPlayer: false
   - name: "Antonee Robinson"
     position: "DEF"
@@ -65,7 +65,7 @@ squad:
     isKeyPlayer: false
   - name: "Gio Reyna"
     position: "MID"
-    club: "Nott Forest"
+    club: "Dortmund"
     isKeyPlayer: true
   - name: "Johnny Cardoso"
     position: "MID"
@@ -101,7 +101,7 @@ squad:
     isKeyPlayer: false
   - name: "Brenden Aaronson"
     position: "FWD"
-    club: "Union Berlin"
+    club: "Leeds"
     isKeyPlayer: false
   - name: "Haji Wright"
     position: "FWD"
