@@ -71,3 +71,11 @@ I wrote up the full data analysis that came out of this build separately — the
 ## Roadmap
 
 The engine works end-to-end today, but "almost built" is the honest status. The next moves are about making it live rather than local: ingestion that auto-tracks the SEC's monthly and quarterly releases, a hosted MCP endpoint so nobody has to clone a repo, semantic search across the brochure text, change-tracking and alerts when a firm's filing shifts, and retrieval-augmented answers that keep the fine-tuned models grounded in real rows instead of their own memory. The goal is for this to quietly power the rest of the ADV tools — the layer you never see but the reason the rest feels fast.
+
+---
+
+## AI Studio: Llama Model Training & Playground
+
+If your local backend server is running (`ml_env\Scripts\python.exe dashboard/app.py --port 8000`), the panel below will automatically connect to stream GPU/VRAM telemetry, render Chart.js loss curves, display the standard output training log stream, and let you test the QLoRA adapter models in the Playground:
+
+<iframe src="/garage/form-adv-data-finder/training.html" width="100%" height="900px" style="border:none; border-radius:12px; background:#0b0816; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); margin: 2rem 0;"></iframe>
