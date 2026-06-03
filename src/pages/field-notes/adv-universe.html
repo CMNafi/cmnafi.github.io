@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Universe of Form ADV: A Data Analysis of 56,000+ SEC-Registered Investment Advisers</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d2e;
+    --surface2: #252840;
+    --accent: #6c63ff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #2d3348;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.7;
+  }
+  .hero {
+    background: linear-gradient(135deg, #1a1d2e 0%, #0f1117 50%, #16213e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(108,99,255,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(0,212,170,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    background: linear-gradient(90deg, #6c63ff, #00d4aa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero .subtitle {
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto 24px;
+  }
+  .hero .meta {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero .meta span {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  section {
+    padding: 64px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-child { border-bottom: none; }
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  h2 .num {
+    font-size: 0.75rem;
+    background: var(--accent);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .section-intro {
+    color: var(--muted);
+    margin-bottom: 32px;
+    max-width: 700px;
+    font-size: 1.05rem;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+  .stat-card.green::before { background: var(--accent2); }
+  .stat-card.red::before { background: var(--accent3); }
+  .stat-card.yellow::before { background: var(--accent4); }
+  .stat-card .value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .stat-card .label {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 6px;
+  }
+  .stat-card .sub {
+    color: var(--accent2);
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-top: 24px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  thead tr {
+    background: var(--surface2);
+  }
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  td {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    color: var(--text);
+  }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .rank-badge {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--surface2);
+    text-align: center;
+    line-height: 24px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .rank-badge.gold { background: linear-gradient(135deg, #ffd700, #ffa500); color: #000; }
+  .rank-badge.silver { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); color: #000; }
+  .rank-badge.bronze { background: linear-gradient(135deg, #cd7f32, #a0522d); color: #fff; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .bar-label { width: 140px; font-size: 0.85rem; color: var(--muted); flex-shrink: 0; text-align: right; }
+  .bar-track { flex: 1; background: var(--surface2); border-radius: 4px; height: 28px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 10px; font-size: 0.8rem; font-weight: 600; color: #fff; transition: width 1s ease; }
+  .bar-fill.purple { background: linear-gradient(90deg, #6c63ff, #9c8fff); }
+  .bar-fill.teal { background: linear-gradient(90deg, #00d4aa, #00b8d4); }
+  .bar-fill.red { background: linear-gradient(90deg, #ff6b6b, #ff8e53); }
+  .bar-fill.yellow { background: linear-gradient(90deg, #ffd166, #ffa500); }
+  .bar-fill.green { background: linear-gradient(90deg, #06d6a0, #1b998b); }
+  .bar-fill.blue { background: linear-gradient(90deg, #4cc9f0, #4361ee); }
+  .insight-box {
+    background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(0,212,170,0.08));
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 28px 0;
+  }
+  .insight-box h3 {
+    color: var(--accent);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .insight-box p { color: var(--text); font-size: 0.97rem; }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 28px;
+  }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .panel h3 {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+  }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+  .pill.highlight { background: rgba(108,99,255,0.2); border-color: var(--accent); color: #a08fff; }
+  .ticker {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .footnote {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-top: 16px;
+    font-style: italic;
+  }
+  .donut-container {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .donut-legend { flex: 1; min-width: 180px; }
+  .donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+  .donut-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .highlight-stat {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+  }
+  .highlight-stat span { color: var(--accent2); }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <h1>The Universe of Form ADV</h1>
+    <p class="subtitle">
+      A comprehensive data analysis of 56,000+ SEC-registered investment advisers —
+      their assets, disclosures, institutional holdings, and the firms that shape American finance.
+    </p>
+    <div class="meta">
+      <span>📅 June 2026</span>
+      <span>📊 Source: SEC IAPD / Form ADV</span>
+      <span>🏦 56,107 Firms Analyzed</span>
+      <span>💰 $163 Trillion in AUM</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Section 1: Overview ── -->
+<section>
+<div class="container">
+  <h2><span class="num">01</span>The Scale of the Industry</h2>
+  <p class="section-intro">
+    Form ADV is the SEC's registration form for investment advisers. Every firm managing
+    money for clients must file one. The result is a remarkable dataset: 56,107 firms,
+    collectively managing $163.2 trillion in reported assets.
+  </p>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="value">56,107</div>
+      <div class="label">Registered Investment Advisers</div>
+      <div class="sub">37,751 SEC-registered + 18,356 ERAs</div>
+    </div>
+    <div class="stat-card green">
+      <div class="value">$163.2T</div>
+      <div class="label">Total Regulatory AUM Reported</div>
+      <div class="sub">Across all Form ADV filers</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="value">$5.1B</div>
+      <div class="label">Average AUM per Reporting Firm</div>
+      <div class="sub">Median is far lower — heavily skewed</div>
+    </div>
+    <div class="stat-card red">
+      <div class="value">117M</div>
+      <div class="label">Total Client Accounts Served</div>
+      <div class="sub">Across all registered advisers</div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h3>Key Insight</h3>
+    <p>
+      Two registration types exist: <strong>SEC-Registered Investment Advisers (IAs)</strong>
+      — firms managing $110M+ in assets and subject to full SEC oversight — and
+      <strong>Exempt Reporting Advisers (ERAs)</strong>, typically private fund managers
+      who file a partial Form ADV but are exempt from full registration. ERAs represent
+      nearly one-third (32.7%) of all filers.
+    </p>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <h3>Registration Type Breakdown</h3>
+      <div class="bar-row">
+        <div class="bar-label">SEC Reg. IA</div>
+        <div class="bar-track"><div class="bar-fill purple" style="width:67.3%">37,751</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">ERA</div>
+        <div class="bar-track"><div class="bar-fill teal" style="width:32.7%">18,356</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Firm Size by Employee Count</h3>
+      <div class="bar-row">
+        <div class="bar-label">Micro &lt;10</div>
+        <div class="bar-track"><div class="bar-fill purple" style="width:63%">16,096</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Small 10-99</div>
+        <div class="bar-track"><div class="bar-fill teal" style="width:31%">8,002</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Mid 100-999</div>
+        <div class="bar-track"><div class="bar-fill yellow" style="width:5%">1,220</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Large 1,000+</div>
+        <div class="bar-track"><div class="bar-fill red" style="width:1%">159</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ── Section 2: Geography ── -->
+<section>
+<div class="container">
+  <h2><span class="num">02</span>Where Are the Advisers?</h2>
+  <p class="section-intro">
+    Investment advisory firms cluster around financial hubs. New York and California
+    together account for over 26% of all registered advisers in the country.
+  </p>
+  <div class="bar-row"><div class="bar-label">New York</div><div class="bar-track"><div class="bar-fill purple" style="width:100%">8,093 firms</div></div></div>
+  <div class="bar-row"><div class="bar-label">California</div><div class="bar-track"><div class="bar-fill purple" style="width:85%">6,884 firms</div></div></div>
+  <div class="bar-row"><div class="bar-label">Texas</div><div class="bar-track"><div class="bar-fill purple" style="width:34.6%">2,801 firms</div></div></div>
+  <div class="bar-row"><div class="bar-label">Florida</div><div class="bar-track"><div class="bar-fill purple" style="width:30.5%">2,471 firms</div></div></div>
+  <div class="bar-row"><div class="bar-label">Massachusetts</div><div class="bar-track"><div class="bar-fill purple" style="width:24.4%">1,971 firms</div></div></div>
+  <div class="bar-row"><div class="bar-label">Illinois</div><div class="bar-track"><div class="bar-fill purple" style="width:23.3%">1,884 firms</div></div></div>
+  <div class="bar-row"><div class="bar-label">Connecticut</div><div class="bar-track"><div class="bar-fill purple" style="width:20%">1,621 firms</div></div></div>
+  <div class="bar-row"><div class="bar-label">Pennsylvania</div><div class="bar-track"><div class="bar-fill purple" style="width:17.9%">1,451 firms</div></div></div>
+  <div class="bar-row"><div class="bar-label">Colorado</div><div class="bar-track"><div class="bar-fill purple" style="width:14.9%">1,203 firms</div></div></div>
+  <div class="bar-row"><div class="bar-label">New Jersey</div><div class="bar-track"><div class="bar-fill purple" style="width:13.4%">1,084 firms</div></div></div>
+
+  <div class="insight-box">
+    <h3>The Connecticut Factor</h3>
+    <p>
+      Connecticut's 1,621 advisers punch far above the state's population size —
+      driven by the hedge fund capital of Greenwich and Stamford. Similarly,
+      Massachusetts (1,971) reflects Boston's concentration of institutional asset
+      managers like Fidelity, State Street, and Wellington Management.
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- ── Section 3: AUM Giants ── -->
+<section>
+<div class="container">
+  <h2><span class="num">03</span>The Giants: Top Firms by AUM</h2>
+  <p class="section-intro">
+    A handful of mega-firms dominate the industry. The top 15 firms below collectively
+    manage tens of trillions in assets — dwarfing the thousands of boutique advisers.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Firm Name</th>
+          <th>Total AUM (Reported)</th>
+          <th>State</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="rank-badge gold">1</span></td><td>The Vanguard Group, Inc.</td><td>$7.9 Trillion</td><td>PA</td></tr>
+        <tr><td><span class="rank-badge silver">2</span></td><td>Fidelity Management &amp; Research Company LLC</td><td>$3.96 Trillion</td><td>MA</td></tr>
+        <tr><td><span class="rank-badge bronze">3</span></td><td>Capital Research and Management Company</td><td>$3.32 Trillion</td><td>CA</td></tr>
+        <tr><td><span class="rank-badge">4</span></td><td>BlackRock Fund Advisors</td><td>$3.05 Trillion</td><td>CA</td></tr>
+        <tr><td><span class="rank-badge">5</span></td><td>Pacific Investment Management Company LLC (PIMCO)</td><td>$2.62 Trillion</td><td>CA</td></tr>
+        <tr><td><span class="rank-badge">6</span></td><td>J.P. Morgan Investment Management Inc.</td><td>$2.55 Trillion</td><td>NY</td></tr>
+        <tr><td><span class="rank-badge">7</span></td><td>T. Rowe Price Associates, Inc.</td><td>$1.75 Trillion</td><td>MD</td></tr>
+        <tr><td><span class="rank-badge">8</span></td><td>Goldman Sachs Asset Management, L.P.</td><td>$1.66 Trillion</td><td>NY</td></tr>
+        <tr><td><span class="rank-badge">9</span></td><td>Morgan Stanley Smith Barney LLC</td><td>$1.40 Trillion</td><td>NY</td></tr>
+        <tr><td><span class="rank-badge">10</span></td><td>BlackRock Financial Management, Inc.</td><td>$1.29 Trillion</td><td>NY</td></tr>
+        <tr><td><span class="rank-badge">11</span></td><td>Wellington Management Company LLP</td><td>$1.28 Trillion</td><td>MA</td></tr>
+        <tr><td><span class="rank-badge">12</span></td><td>Merrill Lynch, Pierce, Fenner &amp; Smith Inc.</td><td>$1.27 Trillion</td><td>NY</td></tr>
+        <tr><td><span class="rank-badge">13</span></td><td>Charles Schwab Investment Management, Inc.</td><td>$1.10 Trillion</td><td>TX</td></tr>
+        <tr><td><span class="rank-badge">14</span></td><td>Geode Capital Management, LLC</td><td>$1.06 Trillion</td><td>MA</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="footnote">
+    AUM figures as reported on the firm's most recent Form ADV Part 1 filing.
+    "Regulatory AUM" per Item 5.F may differ from commercially reported AUM figures.
+  </p>
+</div>
+</section>
+
+<!-- ── Section 4: Disclosures ── -->
+<section>
+<div class="container">
+  <h2><span class="num">04</span>The Disclosure Landscape</h2>
+  <p class="section-intro">
+    Form ADV Item 11 asks advisers whether they — or their personnel — have any criminal,
+    regulatory, or civil judicial history. Answering "yes" triggers a Disclosure Reporting
+    Page (DRP). Of the 56,107 firms in the database, <strong>6,519 (11.6%)</strong>
+    have at least one affirmative Item 11 disclosure.
+  </p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="value">548,616</div>
+      <div class="label">Total Disclosure Records</div>
+      <div class="sub">Across all Item 11 question items</div>
+    </div>
+    <div class="stat-card red">
+      <div class="value">6,519</div>
+      <div class="label">Firms with Any Disclosure</div>
+      <div class="sub">11.6% of all registered advisers</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="value">78,706</div>
+      <div class="label">11.D(2) Regulatory Events</div>
+      <div class="sub">Most common disclosure type</div>
+    </div>
+    <div class="stat-card green">
+      <div class="value">13,711</div>
+      <div class="label">Firms with Criminal Disclosures</div>
+      <div class="sub">Item 11.A(2) — criminal charges</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px; margin-bottom:16px; color: var(--muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em;">
+    Disclosure Type Frequency (Yes Answers)
+  </h3>
+  <div class="bar-row"><div class="bar-label">11.D(2) Regulatory</div><div class="bar-track"><div class="bar-fill red" style="width:100%">78,706</div></div></div>
+  <div class="bar-row"><div class="bar-label">11.D(4) Regulatory</div><div class="bar-track"><div class="bar-fill red" style="width:84.9%">66,833</div></div></div>
+  <div class="bar-row"><div class="bar-label">11.E(2) Civil</div><div class="bar-track"><div class="bar-fill yellow" style="width:84.0%">66,128</div></div></div>
+  <div class="bar-row"><div class="bar-label">11.C(2) Regulatory</div><div class="bar-track"><div class="bar-fill red" style="width:65.8%">51,769</div></div></div>
+  <div class="bar-row"><div class="bar-label">11.C(5) Regulatory</div><div class="bar-track"><div class="bar-fill red" style="width:62.8%">49,442</div></div></div>
+  <div class="bar-row"><div class="bar-label">11.C(4) Regulatory</div><div class="bar-track"><div class="bar-fill red" style="width:61.0%">48,023</div></div></div>
+  <div class="bar-row"><div class="bar-label">11.A(2) Criminal</div><div class="bar-track"><div class="bar-fill blue" style="width:17.4%">13,711</div></div></div>
+  <div class="bar-row"><div class="bar-label">11.E(1) Civil</div><div class="bar-track"><div class="bar-fill yellow" style="width:14.1%">11,098</div></div></div>
+  <div class="bar-row"><div class="bar-label">11.A(1) Criminal</div><div class="bar-track"><div class="bar-fill blue" style="width:9.3%">7,306</div></div></div>
+  <div class="bar-row"><div class="bar-label">11.B(1) Criminal</div><div class="bar-track"><div class="bar-fill blue" style="width:8.9%">6,993</div></div></div>
+
+  <div class="insight-box">
+    <h3>What These Items Mean</h3>
+    <p>
+      <strong>Item 11.D</strong> covers regulatory actions taken by the SEC, CFTC, exchanges, or
+      self-regulatory organizations — the most common category.
+      <strong>Item 11.E</strong> covers civil court injunctions and orders.
+      <strong>Items 11.A–11.B</strong> cover criminal indictments, pleas, and convictions.
+      The high counts for 11.D(2) and 11.D(4) reflect many large broker-dealers registering
+      as dual registrants (both IA and BD), carrying their broker-dealer enforcement history.
+    </p>
+  </div>
+
+  <h3 style="margin-top:32px; margin-bottom:16px; font-size:1.1rem; color:#fff;">
+    Firms with the Most Disclosure Items
+  </h3>
+  <p style="color:var(--muted); font-size:0.9rem; margin-bottom:16px;">
+    Large broker-dealer dual-registrants dominate — their large networks of registered reps
+    generate many individual DRP events that roll up to the firm level.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Firm Name</th><th>Disclosure Items</th><th>Type</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="rank-badge gold">1</span></td><td>Merrill Lynch, Pierce, Fenner &amp; Smith Inc.</td><td>12,958</td><td>Broker-Dealer / IA</td></tr>
+        <tr><td><span class="rank-badge silver">2</span></td><td>Wells Fargo Clearing Services, LLC</td><td>11,772</td><td>Broker-Dealer / IA</td></tr>
+        <tr><td><span class="rank-badge bronze">3</span></td><td>Stifel, Nicolaus &amp; Company, Incorporated</td><td>6,165</td><td>Broker-Dealer / IA</td></tr>
+        <tr><td><span class="rank-badge">4</span></td><td>J.P. Morgan Securities LLC</td><td>5,593</td><td>Broker-Dealer / IA</td></tr>
+        <tr><td><span class="rank-badge">5</span></td><td>Deutsche Bank Securities Inc.</td><td>4,626</td><td>Broker-Dealer / IA</td></tr>
+        <tr><td><span class="rank-badge">6</span></td><td>Wells Fargo Advisors Financial Network, LLC</td><td>4,517</td><td>IA / BD Network</td></tr>
+        <tr><td><span class="rank-badge">7</span></td><td>Morgan Stanley Smith Barney LLC</td><td>4,434</td><td>Broker-Dealer / IA</td></tr>
+        <tr><td><span class="rank-badge">8</span></td><td>Goldman Sachs &amp; Co. LLC</td><td>4,094</td><td>Broker-Dealer / IA</td></tr>
+        <tr><td><span class="rank-badge">9</span></td><td>Harbour Investments, Inc.</td><td>3,737</td><td>IA</td></tr>
+        <tr><td><span class="rank-badge">10</span></td><td>Credit Suisse Securities (USA) LLC</td><td>3,568</td><td>Broker-Dealer / IA</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ── Section 5: 13F Holdings ── -->
+<section>
+<div class="container">
+  <h2><span class="num">05</span>Institutional Holdings: Form 13F</h2>
+  <p class="section-intro">
+    Form 13F requires institutional managers with $100M+ AUM to disclose all long equity
+    positions each quarter. The database contains 17,489 filings from 6,215 unique advisers,
+    covering 6.75 million individual position records.
+  </p>
+
+  <div class="stat-grid">
+    <div class="stat-card green">
+      <div class="value">6,215</div>
+      <div class="label">Firms Filing Form 13F</div>
+      <div class="sub">11.1% of all registered advisers</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">17,489</div>
+      <div class="label">Total 13F Filings</div>
+      <div class="sub">Across all quarters in database</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="value">6.75M</div>
+      <div class="label">Individual Holding Records</div>
+      <div class="sub">Individual position entries</div>
+    </div>
+    <div class="stat-card red">
+      <div class="value">$545B</div>
+      <div class="label">Largest Single Position</div>
+      <div class="sub">Reported across all filings</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px; margin-bottom:16px; font-size:1.1rem; color:#fff;">
+    Most Held Securities (by Aggregate Reported Value)
+  </h3>
+  <p style="color:var(--muted); font-size:0.9rem; margin-bottom:16px;">
+    Summing the declared value of each issuer across all filers and periods reveals the
+    securities that dominate institutional portfolios. iShares (BlackRock's ETF brand)
+    tops the list as a wrapper holding billions in underlying equities.
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Issuer</th><th>Aggregate Reported Value</th><th>Category</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="rank-badge gold">1</span></td><td><span class="ticker">iShares TR</span></td><td>$6.58 Trillion</td><td>ETF Family</td></tr>
+        <tr><td><span class="rank-badge silver">2</span></td><td><span class="ticker">MICROSOFT CORP</span></td><td>$4.99 Trillion</td><td>Technology</td></tr>
+        <tr><td><span class="rank-badge bronze">3</span></td><td><span class="ticker">NVIDIA CORPORATION</span></td><td>$4.79 Trillion</td><td>Semiconductors</td></tr>
+        <tr><td><span class="rank-badge">4</span></td><td><span class="ticker">APPLE INC</span></td><td>$4.63 Trillion</td><td>Technology</td></tr>
+        <tr><td><span class="rank-badge">5</span></td><td><span class="ticker">ALPHABET INC</span></td><td>$3.63 Trillion</td><td>Technology</td></tr>
+        <tr><td><span class="rank-badge">6</span></td><td><span class="ticker">AMAZON COM INC</span></td><td>$2.70 Trillion</td><td>Technology / Retail</td></tr>
+        <tr><td><span class="rank-badge">7</span></td><td><span class="ticker">SPDR S&P 500 ETF TR</span></td><td>$2.53 Trillion</td><td>ETF</td></tr>
+        <tr><td><span class="rank-badge">8</span></td><td><span class="ticker">META PLATFORMS INC</span></td><td>$1.91 Trillion</td><td>Technology</td></tr>
+        <tr><td><span class="rank-badge">9</span></td><td><span class="ticker">VANGUARD INDEX FDS</span></td><td>$1.84 Trillion</td><td>ETF / Index Funds</td></tr>
+        <tr><td><span class="rank-badge">10</span></td><td><span class="ticker">BROADCOM INC</span></td><td>$1.83 Trillion</td><td>Semiconductors</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight-box">
+    <h3>The Magnificent Seven Dominates Institutional Portfolios</h3>
+    <p>
+      Six of the top 10 most-held securities by aggregate value are Big Tech — Microsoft,
+      NVIDIA, Apple, Alphabet, Amazon, and Meta. Combined, these six account for over
+      <strong>$22.7 trillion</strong> in reported institutional holdings. NVIDIA's $4.79T
+      position is particularly striking given that its market cap was under $1T just two
+      years prior, illustrating how quickly AI-driven momentum reshapes institutional allocation.
+    </p>
+  </div>
+
+  <div class="two-col" style="margin-top:32px;">
+    <div class="panel">
+      <h3>Largest Single Reported Position</h3>
+      <p style="font-size:2rem; font-weight:800; color:#fff;">$545B</p>
+      <p style="color:var(--muted); margin-top:8px; font-size:0.9rem;">
+        The single largest position reported in any 13F filing in the database.
+        This reflects Vanguard's or BlackRock's internally-held index fund positions,
+        where a single ETF or fund can represent hundreds of billions.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>13F Coverage</h3>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:12px;">
+        Of the 56,107 registered advisers, only 6,215 (11.1%) are large enough to trigger
+        the $100M 13F threshold. These firms punch well above their weight — managing
+        the vast majority of institutional assets.
+      </p>
+      <div class="pill-row">
+        <span class="pill highlight">11.1% file 13F</span>
+        <span class="pill">88.9% below threshold</span>
+        <span class="pill highlight">6.75M position records</span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ── Section 6: Brochures ── -->
+<section>
+<div class="container">
+  <h2><span class="num">06</span>Part 2A Brochures: What Firms Say About Themselves</h2>
+  <p class="section-intro">
+    Unlike Part 1's structured checkboxes, Part 2A is a narrative document where firms
+    describe their strategies, fees, risks, and conflicts of interest in plain English.
+    The database currently holds 2,676 brochures extracted from SEC FOIA bulk downloads.
+  </p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="value">2,676</div>
+      <div class="label">Part 2A Brochures Loaded</div>
+      <div class="sub">Full text extracted from SEC FOIA ZIPs</div>
+    </div>
+    <div class="stat-card green">
+      <div class="value">2,007</div>
+      <div class="label">Brochures with Brokerage Disclosures</div>
+      <div class="sub">Item 12 — naming custodians &amp; brokers</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:28px; margin-bottom:12px; font-size:1.1rem; color:#fff;">
+    Custodians Most Referenced in Brokerage Sections
+  </h3>
+  <p style="color:var(--muted); font-size:0.9rem; margin-bottom:16px;">
+    From analysis of Item 12 (Brokerage Practices) across available brochures,
+    a handful of custodians dominate the RIA custody landscape:
+  </p>
+  <div class="pill-row">
+    <span class="pill highlight">Charles Schwab &amp; Co.</span>
+    <span class="pill highlight">Fidelity Investments</span>
+    <span class="pill highlight">TD Ameritrade / Schwab</span>
+    <span class="pill highlight">Pershing LLC</span>
+    <span class="pill">Interactive Brokers</span>
+    <span class="pill">Raymond James</span>
+    <span class="pill">National Financial Services</span>
+  </div>
+
+  <div class="insight-box" style="margin-top:28px;">
+    <h3>Why Item 12 Matters</h3>
+    <p>
+      Item 12 (Brokerage Practices) is one of the most consequential sections of any
+      investment adviser's brochure. It discloses <em>soft dollar arrangements</em>
+      (where advisers receive research or services in exchange for directing client trades
+      to specific brokers), custodian recommendations, and any directed brokerage that
+      may not represent best execution. Regulators scrutinize this section closely.
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- ── Section 7: Notable Records ── -->
+<section>
+<div class="container">
+  <h2><span class="num">07</span>Notable Records &amp; Extremes</h2>
+  <p class="section-intro">
+    Every large dataset has outliers. Here are some of the most striking data points
+    found across the Form ADV universe.
+  </p>
+
+  <div class="two-col">
+    <div class="panel">
+      <h3>Most Client Accounts</h3>
+      <p style="font-size:1.6rem; font-weight:800; color:#fff;">88,400,000</p>
+      <p style="color:var(--muted); font-size:0.9rem; margin-top:8px;">
+        The registered adviser with the highest reported client count serves 88.4 million
+        accounts — characteristic of a massive fund supermarket or robo-adviser platform
+        serving retail investors at scale.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>Average Clients per Firm</h3>
+      <p style="font-size:1.6rem; font-weight:800; color:#fff;">16,572</p>
+      <p style="color:var(--muted); font-size:0.9rem; margin-top:8px;">
+        Total reported clients: 117 million across all advisers. The distribution is
+        heavily right-skewed — most boutique RIAs serve dozens to hundreds of clients
+        while a handful of mega-platforms serve millions.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>Largest 13F Position</h3>
+      <p style="font-size:1.6rem; font-weight:800; color: var(--accent2);">$545 Billion</p>
+      <p style="color:var(--muted); font-size:0.9rem; margin-top:8px;">
+        The single largest individual position reported in any 13F filing. This occurs
+        when a mega-fund manager reports their internally-held ETF position at total fund
+        NAV — a single line item representing hundreds of underlying holdings.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>Disclosure Concentration</h3>
+      <p style="font-size:1.6rem; font-weight:800; color: var(--accent3);">11.6%</p>
+      <p style="color:var(--muted); font-size:0.9rem; margin-top:8px;">
+        Despite the high total disclosure count (548K records), only 11.6% of firms
+        have any affirmative Item 11 answer. The skew toward large broker-dealers means
+        the majority of boutique RIAs have clean records.
+      </p>
+    </div>
+  </div>
+
+  <div class="insight-box" style="margin-top:28px;">
+    <h3>On DRP Monetary Amounts &amp; Named Individuals</h3>
+    <p>
+      Form ADV Item 11 captures <em>whether</em> events occurred, not the dollar amounts
+      or individual names involved. For granular enforcement data — specific fine amounts,
+      named individuals, case descriptions — the SEC's full EDGAR enforcement database and
+      individual Disclosure Reporting Pages (accessible through IAPD search) contain the
+      detailed narratives. The largest SEC enforcement actions typically involve billions
+      in penalties: the Goldman Sachs 1MDB settlement ($2.9B), Allianz Global Investors
+      ($6B), and various LIBOR manipulation cases each exceeded the largest structured
+      fine amounts in SEC history.
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- ── Section 8: Methodology ── -->
+<section>
+<div class="container">
+  <h2><span class="num">08</span>Data &amp; Methodology</h2>
+  <p class="section-intro">
+    All data in this analysis comes from publicly available SEC filings, downloaded
+    and parsed into a local SQLite database.
+  </p>
+  <div class="two-col">
+    <div class="panel">
+      <h3>Data Sources</h3>
+      <div class="pill-row">
+        <span class="pill">SEC IAPD Bulk Download</span>
+        <span class="pill">EDGAR FOIA Bulk ZIPs</span>
+        <span class="pill">13F EDGAR Filings</span>
+        <span class="pill">Form ADV Part 2A PDFs</span>
+      </div>
+      <p style="color:var(--muted); font-size:0.88rem; margin-top:16px;">
+        Form ADV Part 1 structured data downloaded from the SEC's bulk IAPD dataset.
+        Part 2A brochures extracted via pypdf from SEC FOIA bulk ZIP archives (84 ZIPs,
+        approx. Dec 2019–Dec 2024). 13F filings parsed from EDGAR full-text submission files.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>Database</h3>
+      <p style="color:var(--muted); font-size:0.88rem;">
+        SQLite (1.2GB) with tables:
+      </p>
+      <div class="pill-row" style="margin-top:10px;">
+        <span class="pill highlight">firms (56,107 rows)</span>
+        <span class="pill highlight">firm_disclosures (548K rows)</span>
+        <span class="pill highlight">firm_brochures (2,676 rows)</span>
+        <span class="pill highlight">form_13f_submissions (17,489 rows)</span>
+        <span class="pill highlight">form_13f_holdings (6.75M rows)</span>
+      </div>
+    </div>
+  </div>
+  <p class="footnote" style="margin-top:24px;">
+    This analysis reflects data as of June 2026. AUM figures are as self-reported on the
+    most recent Form ADV filing for each firm. Regulatory AUM (RAUM) per Item 5.F may
+    differ from commercially advertised AUM. Brochure coverage is partial (2,676 of
+    56,107 firms). 13F data covers filings available through the EDGAR bulk dataset.
+    All data is publicly available from the SEC.
+  </p>
+</div>
+</section>
+
+<!-- ── Section 9: How This Was Built ── -->
+<section>
+<div class="container">
+  <h2><span class="num">09</span>How This Was Built</h2>
+  <p class="section-intro">
+    None of these numbers came out of a spreadsheet. This analysis is a by-product of an
+    engineering project &mdash; a unified data pipeline, a Model Context Protocol (MCP)
+    server, and a pair of locally fine-tuned language models that together turn three
+    disconnected SEC datasets into something an AI agent can query directly.
+  </p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="value">3 &rarr; 1</div>
+      <div class="label">SEC Sources Unified</div>
+      <div class="sub">Part 1 + Part 2A + 13F, joined on CRD</div>
+    </div>
+    <div class="stat-card green">
+      <div class="value">7</div>
+      <div class="label">MCP Tools Exposed</div>
+      <div class="sub">search, lookup, disclosures, brochures, 13F&hellip;</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="value">2</div>
+      <div class="label">Fine-Tuned LLMs</div>
+      <div class="sub">QLoRA adapters trained on the dataset</div>
+    </div>
+    <div class="stat-card red">
+      <div class="value">6GB</div>
+      <div class="label">GPU Used to Train</div>
+      <div class="sub">4-bit quantization on a single laptop</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <h3>The Pipeline</h3>
+      <p style="color:var(--muted); font-size:0.9rem;">
+        A polite, resumable downloader pulls the SEC bulk files &mdash; rate-limited and
+        identified, respecting fair-access rules &mdash; then unzips and streams them through a
+        pandas transform layer into the database. The 6.75M 13F holdings load in 10,000-row
+        chunks. Everything joins on the <strong>CRD number</strong>, the one identifier shared
+        across every filing.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>The Store</h3>
+      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:12px;">
+        A 1.2GB SQLite build with FTS5 full-text search for local work, and a Postgres path for
+        production &mdash; same schema, same loader, swapped underneath.
+      </p>
+      <div class="pill-row">
+        <span class="pill highlight">SQLite + FTS5</span>
+        <span class="pill">PostgreSQL</span>
+        <span class="pill">pandas ETL</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px; margin-bottom:16px; font-size:1.1rem; color:#fff;">
+    The Stack
+  </h3>
+  <div class="pill-row">
+    <span class="pill highlight">FastMCP</span>
+    <span class="pill highlight">Python</span>
+    <span class="pill">SQLite / FTS5</span>
+    <span class="pill">PostgreSQL</span>
+    <span class="pill">FastAPI</span>
+    <span class="pill highlight">QLoRA &middot; TinyLlama</span>
+    <span class="pill">PyTorch</span>
+    <span class="pill">Docker</span>
+  </div>
+
+  <div class="insight-box">
+    <h3>The Model Context Protocol Layer</h3>
+    <p>
+      The point of the build is that the data is shaped for an AI agent, not a human clicking
+      around. Seven MCP tools &mdash; <strong>search_advisers</strong>,
+      <strong>get_adviser</strong>, <strong>get_disclosures</strong>,
+      <strong>get_brochure</strong>, <strong>get_13f_holdings</strong>, <strong>stats</strong>,
+      and a read-only <strong>query_sql</strong> &mdash; let any MCP-aware client (Claude,
+      Cursor, and others) ask questions of all 56,107 firms without a bespoke scraper. Two
+      TinyLlama-1.1B models, fine-tuned with QLoRA on Q&amp;A pairs generated from the live
+      database, answer ADV questions on hardware I own &mdash; one general adapter, one
+      specialized for reading disclosures.
+    </p>
+  </div>
+
+  <div class="insight-box" style="background: linear-gradient(135deg, rgba(0,212,170,0.12), rgba(108,99,255,0.08)); border-color: rgba(0,212,170,0.3);">
+    <h3 style="color: var(--accent2);">Read the Full Technical Write-Up</h3>
+    <p>
+      This was the data-analysis half of the project. The engineering half &mdash; the
+      architecture, the design decisions, and the roadmap for where it goes next &mdash; is
+      written up on my portfolio:
+      <a href="https://cmnafi.com/garage/form-adv-mcp-server" style="color: var(--accent2); font-weight:600;">Form ADV MCP Server &rarr;</a>
+    </p>
+  </div>
+</div>
+</section>
+
+<footer style="background:var(--surface); border-top:1px solid var(--border); padding:32px; text-align:center; color:var(--muted); font-size:0.85rem;">
+  Built from SEC public data using the
+  <a href="https://cmnafi.com/garage/form-adv-mcp-server" style="color:var(--accent2);">Form ADV MCP Server</a>
+  pipeline &mdash; Form ADV Part 1, Part 2A, and Form 13F &mdash; stored in SQLite and
+  queryable via a local LLM trained on the dataset.
+</footer>
+
+</body>
+</html>

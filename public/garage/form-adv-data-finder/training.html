@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form ADV AI Studio</title>
+    <!-- Google Fonts Outfit & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Loss curve -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="/garage/form-adv-data-finder/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-brain-circuit logo-icon"></i>
+                    <span>ADV AI Studio</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-btn active" id="tab-train-btn">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Training Monitor</span>
+                </button>
+                <button class="nav-btn" id="tab-play-btn">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>Model Playground</span>
+                </button>
+                <button class="nav-btn" id="tab-dash-btn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>AI Dashboard Builder</span>
+                </button>
+            </nav>
+
+            <div class="model-status-card">
+                <div class="card-title">Model In VRAM</div>
+                <div class="status-indicator">
+                    <span class="status-dot offline" id="model-status-dot"></span>
+                    <span id="model-status-text">Not Loaded</span>
+                </div>
+                <div class="btn-group" style="margin-top: 12px; width: 100%;">
+                    <button id="load-model-btn" class="action-btn primary-sm">
+                        <i class="fa-solid fa-download"></i> Load Model
+                    </button>
+                    <button id="unload-model-btn" class="action-btn danger-sm" disabled>
+                        <i class="fa-solid fa-power-off"></i> Unload
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header with System Info -->
+            <header class="app-header">
+                <h1 id="page-title">Training Monitor</h1>
+                
+                <!-- System Resource Indicators -->
+                <div class="system-stats">
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-microchip text-purple"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">CPU</span>
+                            <span class="stat-val" id="cpu-percent">0%</span>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-memory text-blue"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">RAM</span>
+                            <span class="stat-val" id="ram-percent">0%</span>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-bolt text-cyan"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">GPU Load</span>
+                            <span class="stat-val" id="gpu-percent">0%</span>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-server text-emerald"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">VRAM</span>
+                            <span class="stat-val" id="gpu-vram">0 / 0 MB</span>
+                        </div>
+                    </div>
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-temperature-half text-amber"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">Temp</span>
+                            <span class="stat-val" id="gpu-temp">0°C</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- TAB 1: Training Monitor -->
+            <section id="tab-train" class="tab-pane active">
+                <!-- Training Info Summary Grid -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon bg-purple-glow"><i class="fa-solid fa-database"></i></div>
+                        <div class="metric-details">
+                            <span class="metric-label">Dataset Examples</span>
+                            <span class="metric-val" id="dataset-count">--</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon bg-blue-glow"><i class="fa-solid fa-shoe-prints"></i></div>
+                        <div class="metric-details">
+                            <span class="metric-label">Current Step</span>
+                            <span class="metric-val" id="train-step">--</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon bg-cyan-glow"><i class="fa-solid fa-fire"></i></div>
+                        <div class="metric-details">
+                            <span class="metric-label">Training Loss</span>
+                            <span class="metric-val" id="train-loss">--</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon bg-emerald-glow"><i class="fa-solid fa-gauge-high"></i></div>
+                        <div class="metric-details">
+                            <span class="metric-label">Learning Rate</span>
+                            <span class="metric-val" id="train-lr">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Left: Controls & Loss Curve -->
+                    <div class="column-left">
+                        <!-- Chart Card -->
+                        <div class="glass-card flex-grow" style="margin-bottom: 20px;">
+                            <div class="card-header">
+                                <h3>Training Loss Curve</h3>
+                                <span class="badge" id="training-badge">Idle</span>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="lossChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Settings Card -->
+                        <div class="glass-card">
+                            <div class="card-header">
+                                <h3>Fine-Tuning Configuration</h3>
+                            </div>
+                            <form id="training-form" class="form-grid">
+                                <div class="form-group">
+                                    <label for="epochs">Epochs</label>
+                                    <input type="number" id="epochs" value="3" min="1" max="10">
+                                </div>
+                                <div class="form-group">
+                                    <label for="max_steps">Max Steps <span class="info-label">(-1 = run all epochs)</span></label>
+                                    <input type="number" id="max_steps" value="-1" min="-1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lr">Learning Rate</label>
+                                    <input type="number" id="lr" value="0.0002" step="0.00005" min="0.000001" max="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lora_rank">LoRA Rank (Rank)</label>
+                                    <select id="lora_rank">
+                                        <option value="8">8 (Low VRAM)</option>
+                                        <option value="16" selected>16 (Standard)</option>
+                                        <option value="32">32 (Complex)</option>
+                                        <option value="64">64 (Heavy)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="no_merge" checked>
+                                        <label for="no_merge">Save adapter only (don't merge weights to save time)</label>
+                                    </div>
+                                </div>
+                                <div class="form-actions full-width">
+                                    <button type="button" id="start-train-btn" class="action-btn success">
+                                        <i class="fa-solid fa-play"></i> Start Fine-Tuning
+                                    </button>
+                                    <button type="button" id="stop-train-btn" class="action-btn danger" disabled>
+                                        <i class="fa-solid fa-stop"></i> Stop Training
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right: Terminal Output -->
+                    <div class="column-right">
+                        <div class="glass-card console-card">
+                            <div class="card-header">
+                                <h3>Console Output</h3>
+                                <div class="console-controls">
+                                    <span class="status-text" id="log-speed-text">Auto-scrolling logs</span>
+                                    <button id="clear-console-btn" class="console-btn" title="Clear console"><i class="fa-solid fa-trash-can"></i></button>
+                                </div>
+                            </div>
+                            <div class="console-wrapper">
+                                <div id="console-terminal" class="terminal-log">
+                                    <div class="log-line system">ADV AI Studio server running. Press "Start Fine-Tuning" to begin.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: Model Playground -->
+            <section id="tab-play" class="tab-pane">
+                <div class="playground-layout">
+                    <!-- Left: Control & System settings -->
+                    <div class="play-sidebar">
+                        <div class="glass-card">
+                            <div class="card-header">
+                                <h3>Inference Settings</h3>
+                            </div>
+                            <div class="settings-form">
+                                <div class="form-group">
+                                    <label>Model Variation</label>
+                                    <div class="model-select-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="model_type" value="lora" checked>
+                                            <span class="radio-custom"></span>
+                                            <div>
+                                                <strong>Fine-Tuned LoRA</strong>
+                                                <span class="radio-desc">Uses ADV specific adapters</span>
+                                            </div>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="model_type" value="base">
+                                            <span class="radio-custom"></span>
+                                            <div>
+                                                <strong>Base Model</strong>
+                                                <span class="radio-desc">General TinyLlama-Chat</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="warning-box" id="adapter-warning" style="display: none;">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        <span>No trained LoRA adapter found yet. Make sure to train the model first or the system will fallback to base weights.</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="max_new_tokens">Max Output Length <span class="val-lbl" id="lbl-max-tokens">256 tokens</span></label>
+                                    <input type="range" id="max_new_tokens" min="32" max="1024" step="32" value="256">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="temperature">Temperature <span class="val-lbl" id="lbl-temperature">0.3</span></label>
+                                    <input type="range" id="temperature" min="0.0" max="1.5" step="0.1" value="0.3">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="top_p">Top P <span class="val-lbl" id="lbl-topp">0.9</span></label>
+                                    <input type="range" id="top_p" min="0.1" max="1.0" step="0.05" value="0.9">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- API snippet -->
+                        <div class="glass-card" style="margin-top: 20px;">
+                            <div class="card-header">
+                                <h3>Website Integration API</h3>
+                            </div>
+                            <div class="api-docs">
+                                <p class="desc-text">Host locally and call the model from your website via the REST API.</p>
+                                <div class="tab-docs-nav">
+                                    <button class="doc-tab-btn active" onclick="switchDocTab('curl')">cURL</button>
+                                    <button class="doc-tab-btn" onclick="switchDocTab('python')">Python</button>
+                                    <button class="doc-tab-btn" onclick="switchDocTab('fetch')">Fetch JS</button>
+                                </div>
+                                <div class="doc-code-block">
+                                    <pre id="code-curl" class="code-snippet"><code>curl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      {"role": "user", "content": "What is Form ADV?"}
+    ],
+    "temperature": 0.3
+  }'</code></pre>
+                                    <pre id="code-python" class="code-snippet" style="display: none;"><code>import requests
+
+url = "http://localhost:8000/v1/chat/completions"
+data = {
+    "messages": [
+        {"role": "user", "content": "What is the AUM for firm CRD 361?"}
+    ],
+    "temperature": 0.3
+}
+
+response = requests.post(url, json=data).json()
+reply = response["choices"][0]["message"]["content"]
+print(reply)</code></pre>
+                                    <pre id="code-fetch" class="code-snippet" style="display: none;"><code>fetch("http://localhost:8000/v1/chat/completions", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    messages: [{ role: "user", content: "Where is CRD 361 headquartered?" }]
+  })
+})
+.then(res => res.json())
+.then(data => console.log(data.choices[0].message.content));</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Chat Interface -->
+                    <div class="play-chat-area">
+                        <!-- Alert when training is running -->
+                        <div class="error-banner" id="training-active-banner" style="display: none;">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <div>
+                                <strong>Training is currently active!</strong> 
+                                <span>Inference is disabled to prevent GPU out-of-memory crashes. Stop training to test the model.</span>
+                            </div>
+                        </div>
+
+                        <div class="chat-container-card">
+                            <div class="chat-header">
+                                <div class="chat-title-info">
+                                    <span class="model-badge" id="chat-model-badge">TinyLlama-1.1B</span>
+                                    <h3>Form ADV Regulatory Expert</h3>
+                                </div>
+                                <button class="console-btn" id="clear-chat-btn" title="Clear Chat history"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                            
+                            <!-- Chat Threads -->
+                            <div class="chat-thread" id="chat-thread">
+                                <div class="message assistant">
+                                    <div class="message-content">
+                                        <p>Hello! I am fine-tuned on Form ADV filing summaries and general regulatory information. Ask me anything about the registered investment advisers, Exempt Reporting Advisers, or Form ADV rules.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Suggestion Pills -->
+                            <div class="suggestions-container" id="suggestions">
+                                <button class="suggest-pill" onclick="sendSuggestion('What is Form ADV Item 11?')">What is Form ADV Item 11?</button>
+                                <button class="suggest-pill" onclick="sendSuggestion('What is RAUM in the context of Form ADV?')">What is RAUM?</button>
+                                <button class="suggest-pill" onclick="sendSuggestion('Provide a summary of the SEC-registered investment adviser Vanguard (CRD 105658).')">Vanguard Summary (CRD 105658)</button>
+                                <button class="suggest-pill" onclick="sendSuggestion('What is the CRD number for BlackRock?')">BlackRock CRD?</button>
+                            </div>
+
+                            <!-- Chat Input Container -->
+                            <div class="chat-input-area">
+                                <div class="input-row">
+                                    <textarea id="prompt-input" placeholder="Type a question about Form ADV..." rows="2"></textarea>
+                                    <button id="send-btn" class="send-button">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                                <div class="generation-stats" id="generation-stats" style="display: none;">
+                                    <span>Time: <strong id="stat-time">0.0s</strong></span>
+                                    <span>Tokens: <strong id="stat-tokens">0</strong></span>
+                                    <span>Speed: <strong id="stat-speed">0 tok/s</strong></span>
+                                    <span>VRAM: <strong id="stat-vram">0 MB</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: AI Dashboard Assistant -->
+            <section id="tab-dash" class="tab-pane">
+                <div class="playground-layout" style="grid-template-columns: 320px 1fr;">
+                    <!-- Left: Sidebar information and SQL history -->
+                    <div class="play-sidebar">
+                        <div class="glass-card">
+                            <div class="card-header">
+                                <h3>AI Dashboard Assistant</h3>
+                            </div>
+                            <div class="settings-form" style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.6;">
+                                <p>Ask this chatbot natural language questions about the Form ADV dataset. It will translate your queries into SQLite commands and render interactive graphs on the fly.</p>
+                                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 12px 0;">
+                                <p><strong>Example Prompts:</strong></p>
+                                <ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                                    <li>"Compare total AUM in NY and CA"</li>
+                                    <li>"Show me the top 5 states by firm count"</li>
+                                    <li>"What is the breakdown of SEC registrations?"</li>
+                                    <li>"Show me the top 10 firms by employee count"</li>
+                                    <li>"Show me disclosure rates"</li>
+                                </ul>
+                                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 12px 0;">
+                                <p>You can also enter raw SQL select queries like: <code>SELECT office_city, COUNT(*) FROM firms GROUP BY office_city LIMIT 5</code></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Dashboard Chat panel -->
+                    <div class="play-chat-area">
+                        <div class="chat-container-card" style="max-height: 580px;">
+                            <div class="chat-header">
+                                <div class="chat-title-info">
+                                    <span class="model-badge">AI SQL Agent</span>
+                                    <h3>Interactive Visual Analytics</h3>
+                                </div>
+                                <button class="console-btn" id="clear-dash-chat-btn" title="Clear Chat history"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                            
+                            <!-- Chat Thread -->
+                            <div class="chat-thread" id="dash-chat-thread">
+                                <div class="message assistant">
+                                    <div class="message-content">
+                                        <p>Hello! Ask me any analytical question about the investment advisers database. I will query the live SQLite data and draw a dashboard chart for you!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Suggestion Pills -->
+                            <div class="suggestions-container" id="dash-suggestions">
+                                <button class="suggest-pill" onclick="sendDashSuggestion('Compare total AUM in NY and CA')">Compare AUM (NY vs CA)</button>
+                                <button class="suggest-pill" onclick="sendDashSuggestion('Show me the top 5 states by firm count')">Top States by Firms</button>
+                                <button class="suggest-pill" onclick="sendDashSuggestion('What is the breakdown of registration status?')">Registration Status</button>
+                                <button class="suggest-pill" onclick="sendDashSuggestion('Show disclosure rates')">Disclosures breakdown</button>
+                            </div>
+
+                            <!-- Input Area -->
+                            <div class="chat-input-area">
+                                <div class="input-row">
+                                    <textarea id="dash-prompt-input" placeholder="Compare total AUM in NY, CA, and TX..." rows="2"></textarea>
+                                    <button id="dash-send-btn" class="send-button">
+                                        <i class="fa-solid fa-chart-column"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script loading -->
+    <script src="/garage/form-adv-data-finder/app.js"></script>
+</body>
+</html>

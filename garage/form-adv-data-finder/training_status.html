@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form ADV · Mission Control</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:      #070a0f;
+  --surface: #0d1117;
+  --card:    #111822;
+  --border:  #1a2535;
+  --border2: #243347;
+  --accent:  #7c6af7;
+  --cyan:    #22d3ee;
+  --green:   #34d399;
+  --amber:   #fbbf24;
+  --red:     #f87171;
+  --text:    #dde6f0;
+  --muted:   #445566;
+  --mono: 'JetBrains Mono','Fira Code','Cascadia Code','Courier New',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;line-height:1.55}
+
+/* scanline overlay */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.018) 3px,rgba(0,0,0,.018) 4px);pointer-events:none;z-index:9999}
+
+.page{max-width:1440px;margin:0 auto;padding:10px 12px 40px}
+
+/* ── HEADER ── */
+.header{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:16px;
+  padding:9px 14px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-top:2px solid var(--accent);
+  border-radius:0 0 8px 8px;
+  margin-bottom:8px;
+}
+.logo{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.header-stats{display:flex;gap:20px;flex-wrap:wrap}
+.hstat{font-size:11px;color:var(--muted);display:flex;align-items:baseline;gap:5px}
+.hstat strong{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
+.header-right{display:flex;align-items:center;gap:10px}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1px solid}
+.status-badge.running{background:rgba(52,211,153,.08);color:var(--green);border-color:rgba(52,211,153,.3)}
+.status-badge.idle{background:rgba(68,85,102,.08);color:var(--muted);border-color:var(--border)}
+.status-badge.done{background:rgba(124,106,247,.1);color:var(--accent);border-color:rgba(124,106,247,.3)}
+.status-badge.offline{background:rgba(248,113,113,.08);color:var(--red);border-color:rgba(248,113,113,.3)}
+.status-badge.live{background:rgba(34,211,238,.08);color:var(--cyan);border-color:rgba(34,211,238,.3)}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.badge-dot.pulse{animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.clock{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:68px;text-align:right}
+
+/* ── ALERT ── */
+.alert{padding:7px 14px;border-radius:6px;font-size:12px;margin-bottom:8px;display:none;border:1px solid}
+.alert.ok  {background:rgba(52,211,153,.08);color:var(--green);border-color:rgba(52,211,153,.25)}
+.alert.err {background:rgba(248,113,113,.08);color:var(--red);border-color:rgba(248,113,113,.25)}
+.alert.warn{background:rgba(251,191,36,.08);color:var(--amber);border-color:rgba(251,191,36,.25)}
+
+/* ── PROGRESS SECTION ── */
+.progress-section{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 15px;margin-bottom:8px}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.progress-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.progress-pct{font-size:22px;font-weight:700;color:var(--cyan);font-variant-numeric:tabular-nums;line-height:1}
+.bar-track{height:7px;background:var(--card);border-radius:4px;overflow:hidden;margin-bottom:8px;position:relative}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:4px;transition:width .9s cubic-bezier(.4,0,.2,1);position:relative}
+.bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,rgba(255,255,255,.08));border-radius:4px}
+.bar-shimmer{position:absolute;top:0;height:100%;width:40px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:shimmer 2.5s infinite}
+@keyframes shimmer{0%{left:-40px}100%{left:calc(100% + 40px)}}
+.progress-meta{display:flex;gap:22px;flex-wrap:wrap}
+.pmeta{display:flex;align-items:baseline;gap:5px;font-size:12px}
+.pmeta .k{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.1em}
+.pmeta .v{font-variant-numeric:tabular-nums}
+.pmeta .v.loss{color:var(--green)}
+.pmeta .v.lr{color:var(--accent)}
+
+/* ── GRID LAYOUTS ── */
+.grid3{display:grid;grid-template-columns:2fr 1.1fr 1fr;gap:8px;margin-bottom:8px}
+.grid-bottom{display:grid;grid-template-columns:180px 1fr 1fr;gap:8px}
+@media(max-width:1100px){.grid3{grid-template-columns:1fr 1fr}.grid-bottom{grid-template-columns:180px 1fr}}
+@media(max-width:700px){.grid3,.grid-bottom{grid-template-columns:1fr}}
+
+/* ── PANEL ── */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.panel.glow{border-color:rgba(124,106,247,.3);box-shadow:0 0 20px rgba(124,106,247,.06)}
+.ptitle{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:7px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.ptitle-badge{font-size:9px;letter-spacing:0;text-transform:none;color:var(--muted)}
+
+/* ── LOSS CHART ── */
+canvas.loss-canvas{max-height:220px}
+
+/* ── SYSTEM STATS ── */
+.sysrow{margin-bottom:9px}
+.sysrow:last-child{margin-bottom:0}
+.syslabel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;display:flex;justify-content:space-between;margin-bottom:3px}
+.syslabel span{color:var(--text);font-variant-numeric:tabular-nums}
+.systrack{height:5px;background:var(--card);border-radius:3px;overflow:hidden}
+.sysfill{height:100%;border-radius:3px;transition:width .6s ease}
+.sysfill.vram{background:linear-gradient(90deg,var(--accent),var(--cyan))}
+.sysfill.util{background:var(--green)}
+.sysfill.temp{background:var(--amber)}
+.sysfill.ram {background:var(--cyan)}
+.syscpu{font-size:10px;color:var(--muted);margin-top:6px}
+.syscpu span{color:var(--text)}
+
+/* ── DATASET ── */
+.ds-donut-row{display:flex;gap:12px;align-items:center;margin-bottom:9px}
+.ds-total-label{font-size:10px;color:var(--muted)}
+.ds-total-val{font-size:18px;font-weight:700;line-height:1.2}
+.ds-row{display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:1px solid var(--border)}
+.ds-row:last-child{border-bottom:none}
+.ds-sw{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.ds-name{flex:1;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ds-cnt{font-size:11px;color:var(--muted);width:50px;text-align:right;font-variant-numeric:tabular-nums}
+.ds-pct{font-size:10px;color:var(--muted);width:36px;text-align:right}
+
+/* ── LOG TERMINAL ── */
+.log-section{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.log-header{padding:7px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(13,17,23,.7)}
+.log-title{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.log-meta{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--muted)}
+.conn-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.conn-dot.live{background:var(--cyan);animation:pulse 2s infinite}
+.conn-dot.poll{background:var(--amber)}
+.conn-dot.offline{background:var(--red)}
+.log-terminal{
+  font-family:var(--mono);
+  font-size:11.5px;
+  line-height:1.65;
+  padding:10px 14px;
+  height:220px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  background:#060911;
+  color:#7a8fa0;
+  white-space:pre-wrap;
+  word-break:break-all;
+}
+.log-terminal::-webkit-scrollbar{width:3px}
+.log-terminal::-webkit-scrollbar-track{background:transparent}
+.log-terminal::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.log-line::before{content:'> ';color:var(--border2)}
+.log-loss{color:#34d399;font-weight:700}
+.log-step{color:#22d3ee}
+.log-etime{color:#7c6af7}
+.log-eta{color:#fbbf24}
+.log-err{color:#f87171}
+.log-warn{color:#fbbf24}
+.log-event{color:#a78bfa}
+.log-tqdm{color:#4a6080}
+.log-dim{color:#344455}
+.cursor{display:inline-block;width:7px;height:12px;background:var(--cyan);animation:pulse 1s infinite;vertical-align:middle;margin-left:2px}
+
+/* ── CONTROLS ── */
+.btn{display:block;width:100%;padding:7px 11px;border-radius:5px;border:1px solid;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-bottom:6px;text-align:left;transition:all .15s}
+.btn:last-child{margin-bottom:0}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-primary{background:rgba(124,106,247,.1);color:var(--accent);border-color:rgba(124,106,247,.28)}
+.btn-primary:hover:not(:disabled){background:rgba(124,106,247,.2);box-shadow:0 0 12px rgba(124,106,247,.12)}
+.btn-danger{background:rgba(248,113,113,.07);color:var(--red);border-color:rgba(248,113,113,.22)}
+.btn-danger:hover:not(:disabled){background:rgba(248,113,113,.14)}
+.btn-muted{background:transparent;color:var(--muted);border-color:var(--border)}
+.btn-muted:hover:not(:disabled){color:var(--text);border-color:var(--border2)}
+
+/* ── CHECKPOINTS ── */
+.ckpt-list{display:flex;flex-wrap:wrap;gap:5px}
+.ckpt-pill{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.18);color:#67e8f9;border-radius:4px;padding:3px 8px;font-size:10px}
+
+/* ── INFO GRID ── */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px}
+.iitem .k{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}
+.iitem .v{font-size:11px;font-weight:600;word-break:break-all}
+
+/* ── DB STATS ── */
+.dbstats{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.dbstat .k{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}
+.dbstat .v{font-size:13px;font-weight:700;color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    FORM ADV · TRAINING CONTROL
+  </div>
+  <div class="header-stats">
+    <div class="hstat">ELAPSED <strong id="h-elapsed">--:--:--</strong></div>
+    <div class="hstat">ETA <strong id="h-eta">--:--:--</strong></div>
+    <div class="hstat">RATE <strong id="h-rate">—</strong> step/s</div>
+    <div class="hstat">LR <strong id="h-lr">—</strong></div>
+  </div>
+  <div class="header-right">
+    <div class="status-badge idle" id="status-badge">
+      <div class="badge-dot" id="badge-dot"></div>
+      <span id="badge-text">CONNECTING</span>
+    </div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+</div>
+
+<!-- ALERT BANNER -->
+<div class="alert" id="alert"></div>
+
+<!-- PROGRESS -->
+<div class="progress-section" id="progress-section">
+  <div class="progress-header">
+    <span class="progress-label">Training Progress</span>
+    <span class="progress-pct" id="h-pct">0.0%</span>
+  </div>
+  <div class="bar-track">
+    <div class="bar-fill" id="bar-fill" style="width:0%">
+      <div class="bar-shimmer" id="bar-shimmer" style="display:none"></div>
+    </div>
+  </div>
+  <div class="progress-meta">
+    <div class="pmeta"><span class="k">Step</span><span class="v" id="p-step">—</span><span style="color:var(--border2)">/</span><span class="v" id="p-max">—</span></div>
+    <div class="pmeta"><span class="k">Epoch</span><span class="v" id="p-epoch">—</span></div>
+    <div class="pmeta"><span class="k">Loss</span><span class="v loss" id="p-loss">—</span></div>
+    <div class="pmeta"><span class="k">Best</span><span class="v loss" id="p-best">—</span></div>
+    <div class="pmeta"><span class="k">LR</span><span class="v lr" id="p-lr">—</span></div>
+  </div>
+</div>
+
+<!-- MAIN 3-COL GRID -->
+<div class="grid3">
+
+  <!-- Loss Chart -->
+  <div class="panel glow">
+    <div class="ptitle">Loss Curve <span class="ptitle-badge" id="loss-delta"></span></div>
+    <canvas id="lossChart" class="loss-canvas"></canvas>
+  </div>
+
+  <!-- System Stats -->
+  <div class="panel">
+    <div class="ptitle">System Status</div>
+    <div class="sysrow">
+      <div class="syslabel">GPU VRAM <span id="s-vram">—</span></div>
+      <div class="systrack"><div class="sysfill vram" id="s-vram-bar" style="width:0%"></div></div>
+    </div>
+    <div class="sysrow">
+      <div class="syslabel">GPU UTIL <span id="s-util">—</span></div>
+      <div class="systrack"><div class="sysfill util" id="s-util-bar" style="width:0%"></div></div>
+    </div>
+    <div class="sysrow">
+      <div class="syslabel">GPU TEMP <span id="s-temp">—</span></div>
+      <div class="systrack"><div class="sysfill temp" id="s-temp-bar" style="width:0%"></div></div>
+    </div>
+    <div class="sysrow">
+      <div class="syslabel">SYS RAM <span id="s-ram">—</span></div>
+      <div class="systrack"><div class="sysfill ram" id="s-ram-bar" style="width:0%"></div></div>
+    </div>
+    <div class="syscpu">CPU <span id="s-cpu">—</span>%</div>
+  </div>
+
+  <!-- Dataset -->
+  <div class="panel">
+    <div class="ptitle">Training Dataset</div>
+    <div class="ds-donut-row">
+      <canvas id="dsChart" width="72" height="72" style="flex-shrink:0"></canvas>
+      <div>
+        <div class="ds-total-label">Total Examples</div>
+        <div class="ds-total-val" id="ds-total">—</div>
+      </div>
+    </div>
+    <div id="ds-table"></div>
+    <div class="dbstats" id="db-stats"></div>
+  </div>
+
+</div><!-- /grid3 -->
+
+<!-- LOG TERMINAL -->
+<div class="log-section">
+  <div class="log-header">
+    <span class="log-title">Live Training Log</span>
+    <span class="log-meta">
+      <div class="conn-dot offline" id="conn-dot"></div>
+      <span id="conn-label">Connecting…</span>
+      <span style="color:var(--border2)">·</span>
+      <span id="last-updated">—</span>
+    </span>
+  </div>
+  <div class="log-terminal" id="log-terminal"><span style="color:var(--muted)">Waiting for dashboard…</span><span class="cursor"></span></div>
+</div>
+
+<!-- BOTTOM GRID -->
+<div class="grid-bottom">
+
+  <!-- Controls -->
+  <div class="panel">
+    <div class="ptitle">Controls</div>
+    <button class="btn btn-primary" id="btn-start" onclick="doStart()">▶ WARM RESUME</button>
+    <button class="btn btn-danger"  id="btn-stop"  onclick="doStop()">■ STOP</button>
+    <button class="btn btn-muted"               onclick="doRefresh()">↺ RECONNECT</button>
+  </div>
+
+  <!-- Checkpoints -->
+  <div class="panel">
+    <div class="ptitle">Saved Checkpoints</div>
+    <div class="ckpt-list" id="ckpt-list"><span style="color:var(--muted);font-size:11px">None yet</span></div>
+  </div>
+
+  <!-- Model config -->
+  <div class="panel">
+    <div class="ptitle">Model Config</div>
+    <div class="info-grid">
+      <div class="iitem"><div class="k">Base Model</div><div class="v">TinyLlama-1.1B</div></div>
+      <div class="iitem"><div class="k">LoRA Rank / α</div><div class="v">16 / 32</div></div>
+      <div class="iitem"><div class="k">Trainable Params</div><div class="v">12.6M (1.13%)</div></div>
+      <div class="iitem"><div class="k">Max Seq Length</div><div class="v">512 tokens</div></div>
+      <div class="iitem"><div class="k">Quantization</div><div class="v">4-bit NF4</div></div>
+      <div class="iitem"><div class="k">Optimizer</div><div class="v">AdamW 8-bit</div></div>
+      <div class="iitem"><div class="k">Batch × Accum</div><div class="v">1 × 8 = 8 eff.</div></div>
+      <div class="iitem"><div class="k">Scheduler</div><div class="v">Cosine + 100 warmup</div></div>
+    </div>
+  </div>
+
+</div><!-- /grid-bottom -->
+
+</div><!-- .page -->
+
+<script>
+const API = 'http://localhost:8000';
+const DS_COLORS = ['#7c6af7','#22d3ee','#34d399','#fbbf24','#f87171'];
+const DS_KEYS   = ['domain_records','qa_pairs','brochure_examples','holdings_13f','text2sql'];
+const DS_LBLS   = ['Domain Records','Q&A Pairs','Brochures','13F Holdings','Text-to-SQL'];
+
+let lossChart, dsChart;
+let sseSource = null, pollTimer = null;
+let etaTimer = null, elapsedTimer = null, clockTimer = null;
+let etaLeft = 0, elapsedBase = 0, elapsedAnchor = 0;
+let lastLogHash = '', connState = 'offline', bestLoss = null;
+
+// ── Charts ──────────────────────────────────────────────────────────────
+function initCharts() {
+  const lossCtx = document.getElementById('lossChart').getContext('2d');
+  lossChart = new Chart(lossCtx, {
+    type: 'line',
+    data: { labels:[], datasets:[{
+      label:'Loss', data:[],
+      borderColor:'#7c6af7', backgroundColor:'rgba(124,106,247,.05)',
+      borderWidth:1.5, fill:true, tension:0.35, pointRadius:0, pointHoverRadius:3,
+    }]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      animation:{duration:350},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#111822', borderColor:'#1a2535', borderWidth:1,
+          titleColor:'#445566', bodyColor:'#dde6f0',
+          callbacks:{label:c=>` ${c.parsed.y.toFixed(4)}`}
+        }
+      },
+      scales:{
+        x:{ticks:{color:'#445566',maxTicksLimit:6,font:{family:"'JetBrains Mono',monospace",size:10}},grid:{color:'#0d1117'}},
+        y:{ticks:{color:'#445566',font:{family:"'JetBrains Mono',monospace",size:10}},grid:{color:'#111822'},beginAtZero:false},
+      }
+    }
+  });
+
+  const dsCtx = document.getElementById('dsChart').getContext('2d');
+  dsChart = new Chart(dsCtx, {
+    type:'doughnut',
+    data:{labels:DS_LBLS, datasets:[{data:[1,1,1,1,1],backgroundColor:DS_COLORS,borderColor:'#0d1117',borderWidth:2}]},
+    options:{
+      responsive:false, maintainAspectRatio:false, cutout:'62%',
+      plugins:{
+        legend:{display:false},
+        tooltip:{backgroundColor:'#111822',borderColor:'#1a2535',borderWidth:1,callbacks:{label:c=>` ${c.label}: ${c.parsed.toLocaleString()}`}}
+      }
+    }
+  });
+}
+
+// ── Utilities ────────────────────────────────────────────────────────────
+const fmt     = n => n != null ? Number(n).toLocaleString() : '—';
+const fmtLoss = v => v != null ? Number(v).toFixed(4) : '—';
+const fmtLR   = v => v != null ? Number(v).toExponential(2) : '—';
+const fmtRate = v => v > 0 ? Number(v).toFixed(3) : '—';
+
+function fmtDur(s) {
+  if (!s || s <= 0) return '--:--:--';
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = Math.floor(s%60);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+// ── Timers ───────────────────────────────────────────────────────────────
+function startClock() {
+  if (clockTimer) return;
+  function tick() { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }
+  tick(); clockTimer = setInterval(tick, 1000);
+}
+
+function setETA(s) {
+  etaLeft = s || 0;
+  if (etaTimer) clearInterval(etaTimer);
+  document.getElementById('h-eta').textContent = fmtDur(etaLeft);
+  if (etaLeft > 0) {
+    etaTimer = setInterval(()=>{
+      if (etaLeft > 0) { etaLeft--; document.getElementById('h-eta').textContent = fmtDur(etaLeft); }
+    }, 1000);
+  }
+}
+
+function setElapsed(s) {
+  if (s == null) return;
+  elapsedBase = s; elapsedAnchor = Date.now();
+  if (elapsedTimer) clearInterval(elapsedTimer);
+  function tick() {
+    const total = elapsedBase + (Date.now() - elapsedAnchor) / 1000;
+    document.getElementById('h-elapsed').textContent = fmtDur(Math.floor(total));
+  }
+  tick(); elapsedTimer = setInterval(tick, 1000);
+}
+
+// ── Status badge ─────────────────────────────────────────────────────────
+function setStatus(state) {
+  const b = document.getElementById('status-badge');
+  const d = document.getElementById('badge-dot');
+  const t = document.getElementById('badge-text');
+  b.className = `status-badge ${state}`;
+  d.className = `badge-dot${['running','live'].includes(state) ? ' pulse' : ''}`;
+  t.textContent = {running:'TRAINING',idle:'IDLE',done:'COMPLETED',offline:'OFFLINE',live:'◉ LIVE'}[state] || state.toUpperCase();
+}
+
+// ── Connection indicator ──────────────────────────────────────────────────
+function setConn(state, label) {
+  connState = state;
+  document.getElementById('conn-dot').className = `conn-dot ${state}`;
+  document.getElementById('conn-label').textContent = label || state;
+}
+
+// ── Alert ────────────────────────────────────────────────────────────────
+function showAlert(msg, type) {
+  const el = document.getElementById('alert');
+  el.className = `alert ${type}`; el.textContent = msg; el.style.display = 'block';
+  setTimeout(()=>{ el.style.display='none'; }, 5000);
+}
+
+// ── Log colorization ─────────────────────────────────────────────────────
+function colorLine(raw) {
+  const s = raw.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  if (/error|traceback|exception/i.test(s)) return `<span class="log-err">${s}</span>`;
+  if (/userwarning|warning:/i.test(s))      return `<span class="log-warn">${s}</span>`;
+  if (/warm resume|saving|saved|completed|loaded|applying/i.test(s)) return `<span class="log-event">${s}</span>`;
+  if (/synthetic log/i.test(s))             return `<span class="log-dim">${s}</span>`;
+
+  // tqdm progress line
+  if (/s\/it|it\/s|\d+\/\d+/.test(s)) {
+    let l = s.replace(/(\d+)\/(\d+)/,'<span class="log-step">$1</span><span style="color:var(--border2)">/$2</span>');
+    l = l.replace(/\[([\d:]+)&lt;([\d:]+),/, '[<span class="log-etime">$1</span>&lt;<span class="log-eta">$2</span>,');
+    return `<span class="log-tqdm">${l}</span>`;
+  }
+
+  // loss dict line
+  if (/'loss'/.test(s)) {
+    return s.replace(/'loss':\s*([\d.]+)/g, "'loss': <span class=\"log-loss\">$1</span>");
+  }
+  return s;
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
+function render(data) {
+  const tr  = data.training;
+  const sys = data.system;
+  const gpu = sys.gpu;
+
+  // Status
+  if (tr.completed)   setStatus('done');
+  else if (tr.active) setStatus(connState === 'live' ? 'live' : 'running');
+  else                setStatus('idle');
+
+  // Shimmer only when active
+  document.getElementById('bar-shimmer').style.display = tr.active && !tr.completed ? 'block' : 'none';
+
+  // Progress
+  const pct = tr.pct_complete || 0;
+  document.getElementById('bar-fill').style.width = `${pct}%`;
+  document.getElementById('h-pct').textContent = `${pct.toFixed(1)}%`;
+  document.getElementById('p-step').textContent  = fmt(tr.current_step);
+  document.getElementById('p-max').textContent   = fmt(tr.max_steps);
+  document.getElementById('p-epoch').textContent = tr.current_epoch != null ? Number(tr.current_epoch).toFixed(3) : '—';
+  document.getElementById('p-loss').textContent  = fmtLoss(tr.current_loss);
+  document.getElementById('p-lr').textContent    = fmtLR(tr.learning_rate);
+  document.getElementById('h-lr').textContent    = fmtLR(tr.learning_rate);
+
+  // Track best loss
+  if (tr.current_loss != null && (bestLoss == null || tr.current_loss < bestLoss)) bestLoss = tr.current_loss;
+  document.getElementById('p-best').textContent = bestLoss != null ? bestLoss.toFixed(4) : '—';
+
+  // Header metrics
+  document.getElementById('h-rate').textContent = fmtRate(tr.steps_per_sec);
+  setETA(tr.eta_seconds);
+  setElapsed(tr.elapsed_seconds);
+
+  // Loss chart
+  const hist = tr.history || [];
+  if (hist.length) {
+    lossChart.data.labels = hist.map(h => h.step);
+    lossChart.data.datasets[0].data = hist.map(h => h.loss);
+    lossChart.update('none');
+    if (hist.length >= 2) {
+      const d = ((hist[hist.length-1].loss - hist[0].loss) / hist[0].loss * 100).toFixed(1);
+      document.getElementById('loss-delta').textContent = `${d}% from start`;
+    }
+  }
+
+  // Dataset
+  const meta  = data.dataset || {};
+  const brkdn = meta.breakdown || {};
+  const total = meta.total || 0;
+  if (total) {
+    document.getElementById('ds-total').textContent = fmt(total);
+    dsChart.data.datasets[0].data = DS_KEYS.map(k => brkdn[k] || 0);
+    dsChart.update('none');
+    document.getElementById('ds-table').innerHTML = DS_KEYS.map((k,i)=>{
+      const v = brkdn[k]||0, p = total?(v/total*100).toFixed(1):'0';
+      return `<div class="ds-row"><div class="ds-sw" style="background:${DS_COLORS[i]}"></div><div class="ds-name">${DS_LBLS[i]}</div><div class="ds-cnt">${v.toLocaleString()}</div><div class="ds-pct">${p}%</div></div>`;
+    }).join('');
+  }
+  const db = meta.db || {};
+  if (db.total_firms) {
+    document.getElementById('db-stats').innerHTML =
+      `<div class="dbstat"><div class="k">Firms</div><div class="v">${fmt(db.total_firms)}</div></div>` +
+      `<div class="dbstat"><div class="k">Disclosures</div><div class="v">${fmt(db.disclosures)}</div></div>` +
+      `<div class="dbstat"><div class="k">Brochures</div><div class="v">${fmt(db.brochures)}</div></div>` +
+      `<div class="dbstat"><div class="k">Firms w/ 13F</div><div class="v">${fmt(db.firms_with_13f)}</div></div>`;
+  }
+
+  // System
+  if (gpu.available) {
+    const vp = gpu.total_vram ? (gpu.used_vram/gpu.total_vram*100) : 0;
+    document.getElementById('s-vram').textContent = `${(gpu.used_vram/1024).toFixed(1)} / ${(gpu.total_vram/1024).toFixed(1)} GB`;
+    document.getElementById('s-vram-bar').style.width = `${vp.toFixed(0)}%`;
+    document.getElementById('s-util').textContent = `${gpu.gpu_util}%`;
+    document.getElementById('s-util-bar').style.width = `${gpu.gpu_util}%`;
+    document.getElementById('s-temp').textContent = `${gpu.gpu_temp}°C`;
+    document.getElementById('s-temp-bar').style.width = `${Math.min(gpu.gpu_temp,95)/95*100}%`;
+  }
+  const rp = sys.ram.total_mb ? (sys.ram.used_mb/sys.ram.total_mb*100) : 0;
+  document.getElementById('s-ram').textContent = `${(sys.ram.used_mb/1024).toFixed(1)} / ${(sys.ram.total_mb/1024).toFixed(1)} GB`;
+  document.getElementById('s-ram-bar').style.width = `${rp.toFixed(0)}%`;
+  document.getElementById('s-cpu').textContent = sys.cpu_percent;
+
+  // Checkpoints
+  const ckpts = data.checkpoints || [];
+  document.getElementById('ckpt-list').innerHTML = ckpts.length
+    ? ckpts.map(c=>`<div class="ckpt-pill">${c.name}</div>`).join('')
+    : '<span style="color:var(--muted);font-size:11px">None yet</span>';
+
+  // Log
+  const lines = data.log_tail || [];
+  const hash  = lines.slice(-3).join('|');
+  if (hash !== lastLogHash || connState === 'live') {
+    lastLogHash = hash;
+    const el = document.getElementById('log-terminal');
+    const html = lines.map(l=>`<span class="log-line">${colorLine(l)}</span>`).join('\n');
+    el.innerHTML = html + (tr.active ? '\n<span class="cursor"></span>' : '');
+    el.scrollTop = el.scrollHeight;
+  }
+
+  document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+}
+
+// ── SSE connection ────────────────────────────────────────────────────────
+function connectSSE() {
+  if (sseSource) { sseSource.close(); sseSource = null; }
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  setConn('poll', 'Connecting…');
+
+  try {
+    sseSource = new EventSource(`${API}/api/training/stream`);
+
+    sseSource.onopen = () => setConn('live', 'SSE · LIVE');
+
+    sseSource.onmessage = e => {
+      try {
+        const d = JSON.parse(e.data);
+        if (!d.error) { render(d); setConn('live', 'SSE · LIVE'); }
+      } catch(_) {}
+    };
+
+    sseSource.onerror = () => {
+      if (sseSource) { sseSource.close(); sseSource = null; }
+      setConn('poll', 'POLLING');
+      startPolling();
+    };
+  } catch(_) {
+    startPolling();
+  }
+}
+
+// ── Polling fallback ──────────────────────────────────────────────────────
+async function fetchOnce() {
+  try {
+    const r = await fetch(`${API}/api/training/details`);
+    if (!r.ok) throw new Error(r.status);
+    render(await r.json());
+    setConn('poll', 'POLLING');
+    return true;
+  } catch(e) {
+    setConn('offline', 'OFFLINE');
+    setStatus('offline');
+    document.getElementById('log-terminal').innerHTML =
+      `<span class="log-err">Cannot reach ${API}</span>\n` +
+      `<span class="log-line">Run: python dashboard/app.py --port 8000</span>\n` +
+      `<span class="cursor"></span>`;
+    return false;
+  }
+}
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  fetchOnce();
+  pollTimer = setInterval(async ()=>{
+    const ok = await fetchOnce();
+    if (ok && !sseSource) {
+      clearInterval(pollTimer); pollTimer = null;
+      setTimeout(connectSSE, 800);
+    }
+  }, 4000);
+}
+
+// ── Controls ──────────────────────────────────────────────────────────────
+function doRefresh() {
+  if (sseSource) { sseSource.close(); sseSource = null; }
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  connectSSE();
+}
+
+async function doStart() {
+  const btn = document.getElementById('btn-start');
+  btn.disabled = true; btn.textContent = 'STARTING…';
+  try {
+    const r = await fetch(`${API}/api/train/start`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({resume:true, no_merge:true, epochs:3, max_steps:-1, lr:2e-4, lora_rank:16})
+    });
+    const d = await r.json();
+    if (!r.ok) showAlert(`Failed: ${d.detail || 'unknown'}`, 'err');
+    else       { showAlert('Training started (warm resume)', 'ok'); setTimeout(fetchOnce, 1500); }
+  } catch(e) { showAlert(`Network error: ${e.message}`, 'err'); }
+  btn.disabled = false; btn.textContent = '▶ WARM RESUME';
+}
+
+async function doStop() {
+  if (!confirm('Stop training? Progress up to the last checkpoint will be saved.')) return;
+  const btn = document.getElementById('btn-stop');
+  btn.disabled = true;
+  try {
+    await fetch(`${API}/api/train/stop`, {method:'POST'});
+    showAlert('Stop signal sent', 'warn');
+    setTimeout(fetchOnce, 2000);
+  } catch(e) { showAlert(`Error: ${e.message}`, 'err'); }
+  btn.disabled = false;
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────
+initCharts();
+startClock();
+connectSSE();
+</script>
+</body>
+</html>
