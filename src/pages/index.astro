@@ -3,30 +3,22 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { execSync } from 'child_process';
 import SectorBadge from '@/components/telemetry/SectorBadge.astro';
+import LapTimer from '@/components/telemetry/LapTimer.astro';
 
-const projects = await getCollection('projects');
 const notes = await getCollection('field-notes');
 
-// Current Project - Most recently updated active project
-const activeProjects = projects
-  .filter(p => p.data.status === 'live' || p.data.status === 'brewing')
-  .sort((a, b) => {
-    const timeA = a.data.updatedAt?.valueOf() || a.data.startedAt?.valueOf() || 0;
-    const timeB = b.data.updatedAt?.valueOf() || b.data.startedAt?.valueOf() || 0;
-    return timeB - timeA;
-  });
-const featuredProject = activeProjects[0] || projects[0];
-
-// Latest Field Note (non-draft)
-const latestNote = notes
+// Published Field Notes, newest first — feeds the headline ticker and latest log
+const publishedNotes = notes
   .filter(n => !n.data.draft)
-  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())[0];
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const latestNote = publishedNotes[0];
+const tickerNotes = publishedNotes.slice(0, 8);
 
 const sectors = [
-  { id: '[G]', name: 'Garage', href: '/garage', label: 'Engineering Showcase', spec: `${projects.length} CHASSIS LOGGED` },
-  { id: '[FN]', name: 'Field Notes', href: '/field-notes', label: 'Capital & Technical Telemetry', spec: `${notes.length} LOGS DEPLOYED` },
-  { id: '[S]', name: 'Story', href: '/story', label: 'Biography & Ethos', spec: 'SPECIFICATION 1.0.0' },
-  { id: '[C]', name: 'Connect', href: '/connect', label: 'Parc Fermé & Feeds', spec: 'COMMS STACK ACTIVE' }
+  { id: '[G]', name: 'Garage', href: '/garage' },
+  { id: '[FN]', name: 'Field Notes', href: '/field-notes' },
+  { id: '[S]', name: 'Story', href: '/story' },
+  { id: '[C]', name: 'Connect', href: '/connect' }
 ];
 
 // Compile build-time Git hash
@@ -56,10 +48,20 @@ try {
         </div>
       </div>
       <div class="header-specs">
+        <LapTimer id="pitwall-lap-timer" isLive={true} />
+        <span class="h-divider">/</span>
         <span class="h-spec" id="scroll-percentage-display">[ 00% SCROLL ]</span>
         <span class="h-divider">/</span>
         <span class="h-spec monospace" id="header-telemetry-coords">25.6279° N</span>
       </div>
+      <nav class="header-nav" aria-label="Primary">
+        {sectors.map(s => (
+          <a href={s.href} class="header-nav-link">
+            <span class="nav-id">{s.id}</span>
+            <span class="nav-name">{s.name}</span>
+          </a>
+        ))}
+      </nav>
     </header>
 
     <!-- Main Typographic Intro -->
@@ -127,7 +129,7 @@ try {
                 </div>
                 <div class="telemetry-stat">
                   <span class="lbl">DISPLACEMENT</span>
-                  <span class="val">13,870 KM</span>
+                  <span class="val" id="story-telemetry-displacement">3,193 KM</span>
                 </div>
                 <div class="telemetry-stat" style="text-align: right;">
                   <span class="lbl">SCAN SPEED</span>
@@ -139,6 +141,30 @@ try {
         </div>
       </div>
     </section>
+
+    <!-- Field Notes headline ticker — a live timing feed of article titles -->
+    {tickerNotes.length > 0 && (
+      <section class="note-ticker-section" aria-label="Latest field note headlines">
+        <div class="ticker-shell">
+          <span class="ticker-tag monospace"><span class="ticker-tag-dot"></span>HEADLINES</span>
+          <div class="ticker-viewport">
+            <div class="ticker-track">
+              {[0, 1].map(copy => (
+                <div class:list={['ticker-group', { 'is-clone': copy === 1 }]} aria-hidden={copy === 1 ? 'true' : undefined}>
+                  {tickerNotes.map(n => (
+                    <a href={`/field-notes/${n.slug}`} class="ticker-item" tabindex={copy === 1 ? -1 : 0}>
+                      <span class="ticker-date monospace">{n.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase()}</span>
+                      <span class="ticker-title">{n.data.title}</span>
+                      <span class="ticker-sep" aria-hidden="true">●</span>
+                    </a>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
 
     <!-- Sector Divider -->
     <div class="sector-divider">
@@ -251,50 +277,7 @@ try {
 
     <!-- Sector Divider -->
     <div class="sector-divider">
-      <SectorBadge variant="sector3" label="SECTOR 3 // CHAMBERS" />
-      <span class="sector-divider-dash"></span>
-    </div>
-
-    <!-- Showcase Grid: Main Directories -->
-    <section class="showroom-grid-section">
-      <div class="section-label-row">
-        <span class="section-label">DIALS & DIRECTORIES</span>
-        <span class="section-spec monospace">4 ACTIVE CHAMBERS</span>
-      </div>
-      
-      <div class="showroom-grid">
-        {sectors.map(s => (
-          <a href={s.href} class="material-card sector-card">
-            <div class="sector-card-inner">
-              <div class="sector-top">
-                <span class="sector-id monospace">{s.id}</span>
-                <span class="arrow">→</span>
-              </div>
-              
-              <div class="sector-middle">
-                <h3 class="sector-title">{s.name}</h3>
-                <p class="sector-description">{s.label}</p>
-              </div>
-              <div class="sector-bottom">
-                <span class="sector-spec-val monospace">
-                  {s.id === '[G]' ? (
-                    <><span class="stat-roll" data-target={projects.length}>0</span> CHASSIS LOGGED</>
-                  ) : s.id === '[FN]' ? (
-                    <><span class="stat-roll" data-target={notes.length}>0</span> LOGS DEPLOYED</>
-                  ) : (
-                    s.spec
-                  )}
-                </span>
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- Sector Divider -->
-    <div class="sector-divider">
-      <SectorBadge variant="sector4" label="SECTOR 4 // METRICS" />
+      <SectorBadge variant="sector3" label="SECTOR 3 // METRICS" />
       <span class="sector-divider-dash"></span>
     </div>
 
@@ -310,7 +293,7 @@ try {
           <div class="log-card-inner">
             <div class="log-header">
               <span class="log-date monospace">{latestNote.data.publishedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-              <span class="log-reading-time monospace">{latestNote.data.readingTime.toUpperCase()} READ</span>
+              <span class="log-reading-time monospace">{latestNote.data.readingTime.toUpperCase().endsWith('READ') ? latestNote.data.readingTime.toUpperCase() : `${latestNote.data.readingTime.toUpperCase()} READ`}</span>
             </div>
             <h2 class="log-title scramble-header" data-text={latestNote.data.title}>
               <a href={`/field-notes/${latestNote.slug}`}>{latestNote.data.title}</a>
@@ -334,8 +317,8 @@ try {
       </div>
       <div class="footer-metrics monospace" style="font-size: 10px; color: var(--ink-tertiary); display: flex; gap: 1rem; flex-wrap: wrap;">
         <span>BUILD: <a href="https://github.com/CMNafi/cmnafi.github.io" target="_blank" class="standout-link" style="color: var(--accent); border-bottom: 1px dotted var(--accent-dim);">{commitSha}</a></span>
-        <span>LCP: 0.84s</span>
-        <span>WEIGHT: 87KB</span>
+        <span id="footer-lcp">LCP: --.--s</span>
+        <span id="footer-weight">WEIGHT: --KB</span>
         <span>TELEMETRY: <a href="/api/now.json" class="standout-link" style="color: var(--accent); border-bottom: 1px dotted var(--accent-dim);">[ /api/now ]</a></span>
       </div>
       <div class="footer-right">
@@ -509,10 +492,68 @@ try {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     border-bottom: 1px solid var(--titanium-border);
     padding-bottom: 1.5rem;
     position: relative;
     z-index: 10;
+  }
+
+  /* Primary navigation row — the former Sector 3 chambers, promoted to the top */
+  .header-nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: clamp(1.2rem, 3.5vw, 2.4rem);
+    padding-top: 1.2rem;
+  }
+
+  .header-nav-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-sand-gray);
+    position: relative;
+    transition: color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .header-nav-link .nav-id {
+    font-size: 0.62rem;
+    color: var(--ink-tertiary);
+    transition: color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .header-nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 100%;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-instrument);
+  }
+
+  .header-nav-link:hover,
+  .header-nav-link:focus-visible {
+    color: var(--text-warm-white);
+  }
+
+  .header-nav-link:hover .nav-id,
+  .header-nav-link:focus-visible .nav-id {
+    color: var(--accent);
+  }
+
+  .header-nav-link:hover::after,
+  .header-nav-link:focus-visible::after {
+    transform: scaleX(1);
   }
 
   .monogram {
@@ -525,7 +566,7 @@ try {
   }
 
   .m-serif {
-    font-family: "Fraunces", Georgia, serif;
+    font-family: var(--font-serif);
     font-size: 1.4rem;
     font-weight: 500;
     letter-spacing: -0.02em;
@@ -581,7 +622,7 @@ try {
   }
 
   .intro-headline {
-    font-family: "Fraunces", Georgia, serif;
+    font-family: var(--font-serif);
     font-size: clamp(2rem, 5.5vw, 3.8rem);
     font-weight: 500;
     line-height: 1.12;
@@ -612,7 +653,6 @@ try {
   /* Pedestal and general section layouts */
   .pedestal-section,
   .world-cup-section,
-  .showroom-grid-section,
   .latest-log-section {
     display: flex;
     flex-direction: column;
@@ -681,11 +721,25 @@ try {
     border: 1px solid var(--surface-line);
     border-radius: 16px;
     overflow: hidden;
-    transition: border-color var(--dur-base) var(--ease-instrument);
+    transition:
+      border-color var(--dur-base) var(--ease-instrument),
+      transform var(--dur-base) var(--ease-instrument),
+      box-shadow var(--dur-base) var(--ease-instrument);
   }
 
   .material-card:hover {
     border-color: var(--accent) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  a.material-card:focus-visible,
+  .milled-btn:focus-visible,
+  .milled-btn-secondary:focus-visible,
+  .standout-link:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: inherit;
   }
 
   /* CRT Signal Flicker on hover */
@@ -701,11 +755,11 @@ try {
     90% { opacity: 0.35; }
     100% { opacity: 1; }
   }
+  /* Single brief signal-lock flicker on hover entry — not a sustained strobe */
   .material-card:hover .monospace,
   .material-card:hover .status-text,
-  .material-card:hover .sector-spec-val,
   .material-card:hover .spec-label {
-    animation: crt-flicker 160ms steps(2) infinite;
+    animation: crt-flicker 240ms steps(2) 1;
   }
 
   /* Subtle micro-texture shine */
@@ -751,7 +805,7 @@ try {
   }
 
   .pedestal-title {
-    font-family: "Fraunces", Georgia, serif;
+    font-family: var(--font-serif);
     font-size: clamp(1.8rem, 3.5vw, 2.5rem);
     font-weight: 500;
     letter-spacing: -0.02em;
@@ -903,89 +957,8 @@ try {
   }
 
   .milled-btn:hover .arrow,
-  .milled-btn-secondary:hover .arrow,
-  .sector-card:hover .arrow {
+  .milled-btn-secondary:hover .arrow {
     transform: translateX(6px) !important;
-  }
-
-  /* Showroom Directory Grid Layout */
-  .showroom-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .sector-card {
-    padding: 2.2rem;
-    text-decoration: none;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .sector-card-inner {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 3.5rem;
-    position: relative;
-    z-index: 3;
-  }
-
-  .sector-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .sector-id {
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    color: var(--text-sand-gray);
-  }
-
-  .sector-card .arrow {
-    color: rgba(255, 255, 255, 0.2);
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    transition: color 0.2s ease, transform 0.2s ease;
-  }
-
-  .sector-card:hover .arrow {
-    color: var(--accent);
-  }
-
-  .sector-middle {
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-  }
-
-  .sector-title {
-    font-family: "Fraunces", Georgia, serif;
-    font-size: 1.6rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--text-warm-white);
-    margin: 0;
-  }
-
-  .sector-description {
-    font-size: 0.88rem;
-    line-height: 1.5;
-    color: var(--text-sand-gray);
-    margin: 0;
-  }
-
-  .sector-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.03);
-    padding-top: 1rem;
-  }
-
-  .sector-spec-val {
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.25);
   }
 
   /* Latest Telemetry Log Section Styling */
@@ -1015,7 +988,7 @@ try {
   }
 
   .log-title {
-    font-family: "Fraunces", Georgia, serif;
+    font-family: var(--font-serif);
     font-size: clamp(1.8rem, 3.8vw, 2.6rem);
     font-weight: 500;
     letter-spacing: -0.02em;
@@ -1216,7 +1189,7 @@ try {
 
   /* Inline Essay (Finance) - Amber / Gold Prestige */
   .inline-essay {
-    color: #e2ba74; /* Soft warm gold */
+    color: var(--status-warn); /* Soft warm gold */
     padding: 0 0.15rem;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -1228,7 +1201,7 @@ try {
     bottom: 2px;
     width: 100%;
     height: 1px;
-    background: #e2ba74;
+    background: var(--status-warn);
     transform: scaleX(0);
     transform-origin: left;
     transition: 
@@ -1246,7 +1219,7 @@ try {
 
   /* Inline Cricket (Cricket Essay) - Neon Turf Green */
   .inline-cricket {
-    color: #5af78e; /* Lime neon green */
+    color: var(--accent); /* Lime neon green */
     padding: 0 0.15rem;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -1258,7 +1231,7 @@ try {
     bottom: 2px;
     width: 100%;
     height: 1px;
-    background: #5af78e;
+    background: var(--accent);
     transform: scaleX(0);
     transform-origin: left;
     transition: 
@@ -1403,33 +1376,297 @@ try {
     border-color: var(--caia-accent-main) !important;
     color: var(--caia-accent-main) !important;
   }
+
+  /* --- SIGNATURE MOTION MOMENTS --- */
+
+  /* Header lap timer sizing */
+  .header-specs :global(.lap-timer) {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  /* Timing-beam: one accent light sweep across the hero on load */
+  .intro-section::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      transparent 49.2%,
+      var(--accent-dim) 49.7%,
+      var(--accent-glow) 50%,
+      var(--accent-dim) 50.3%,
+      transparent 50.8%,
+      transparent 100%);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+  }
+
+  .showroom-container.loaded .intro-section::after {
+    animation: timing-beam 1.5s var(--ease-mechanical) 0.4s both;
+  }
+
+  @keyframes timing-beam {
+    0%   { background-position: 100% 0; opacity: 0; }
+    12%  { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { background-position: 0% 0; opacity: 0; }
+  }
+
+  /* Scroll-reveal choreography — sections rise in, applied only when JS is live */
+  .js-reveal {
+    opacity: 0;
+  }
+
+  .js-reveal.is-revealed {
+    animation: section-rise var(--dur-slow) var(--ease-instrument) both;
+  }
+
+  @keyframes section-rise {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; }
+  }
+
+  /* Sector dividers draw their dash line left-to-right instead of rising */
+  .sector-divider.js-reveal.is-revealed {
+    animation-name: section-fade;
+  }
+
+  @keyframes section-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .sector-divider.js-reveal .sector-divider-dash {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 900ms var(--ease-mechanical) 120ms;
+  }
+
+  .sector-divider.js-reveal.is-revealed .sector-divider-dash {
+    transform: scaleX(1);
+  }
+
+  /* --- FIELD NOTES HEADLINE TICKER --- */
+  .note-ticker-section {
+    position: relative;
+    z-index: 5;
+    /* sit tight under the biography card, inside the container's section gap */
+    margin-top: clamp(-5rem, -6vw, -2.4rem);
+  }
+
+  .ticker-shell {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--surface-line);
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--surface-raised), var(--surface-base));
+    overflow: hidden;
+    transition: border-color var(--dur-base) var(--ease-instrument);
+  }
+
+  .ticker-shell:hover {
+    border-color: var(--accent);
+  }
+
+  .ticker-tag {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    border-right: 1px solid var(--surface-line);
+    background: rgba(255, 255, 255, 0.015);
+  }
+
+  .ticker-tag-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent-glow);
+    animation: live-pulse-glow 2s infinite;
+  }
+
+  .ticker-viewport {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 48s linear infinite;
+    will-change: transform;
+  }
+
+  .ticker-shell:hover .ticker-track,
+  .ticker-shell:focus-within .ticker-track {
+    animation-play-state: paused;
+  }
+
+  .ticker-group {
+    display: flex;
+  }
+
+  .ticker-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    padding: 0.9rem 0 0.9rem 2.2rem;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .ticker-date {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: var(--ink-tertiary);
+    transition: color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .ticker-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text-warm-white);
+    transition: color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .ticker-item:hover .ticker-title,
+  .ticker-item:focus-visible .ticker-title {
+    color: var(--accent);
+  }
+
+  .ticker-item:hover .ticker-date {
+    color: var(--text-sand-gray);
+  }
+
+  .ticker-sep {
+    font-size: 0.45rem;
+    color: var(--ink-tertiary);
+    margin-left: 2.2rem;
+    align-self: center;
+    opacity: 0.5;
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* Perimeter scan — a thin accent trace orbits the card border on hover */
+  @property --scan-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  .material-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(from var(--scan-angle),
+      transparent 0deg,
+      transparent 300deg,
+      var(--accent-dim) 330deg,
+      var(--accent) 358deg,
+      transparent 360deg);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-instrument);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .material-card:hover::after {
+    opacity: 1;
+    animation: border-scan 2.4s linear infinite;
+  }
+
+  @keyframes border-scan {
+    to { --scan-angle: 360deg; }
+  }
+
+  /* Countdown digits tick into place when they change */
+  .countdown-num.tick {
+    animation: digit-tick 320ms var(--ease-instrument);
+  }
+
+  @keyframes digit-tick {
+    from { transform: translateY(-8px); opacity: 0.2; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro-section::after,
+    .material-card::after {
+      display: none !important;
+    }
+
+    .js-reveal {
+      opacity: 1 !important;
+      animation: none !important;
+    }
+
+    .ticker-track {
+      animation: none !important;
+    }
+
+    .ticker-group.is-clone {
+      display: none !important;
+    }
+
+    .ticker-viewport {
+      overflow-x: auto;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .sector-divider.js-reveal .sector-divider-dash {
+      transform: none !important;
+      transition: none !important;
+    }
+
+    .countdown-num.tick {
+      animation: none !important;
+    }
+  }
 </style>
 
 <script>
-  import { rollupCounter } from '../scripts/counter';
   import { scrambleTo } from '../scripts/scramble';
 
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Canvas API cannot resolve CSS var() strings — resolve tokens once for canvas drawing
+  const rootStyles = getComputedStyle(document.documentElement);
+  const tokenAccent = rootStyles.getPropertyValue('--accent').trim() || '#7dd3a0';
+  const tokenInkPrimary = rootStyles.getPropertyValue('--ink-primary').trim() || '#f4ede4';
+  const canvasMono = '"JetBrains Mono", ui-monospace, monospace';
 
 
-  // Count up stats rollup on IntersectionObserver
-  function initStatsRollup() {
-    const rolls = document.querySelectorAll('.stat-roll');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target as HTMLElement;
-          const targetVal = parseInt(el.getAttribute('data-target') || '0', 10);
-          rollupCounter(el, targetVal, 1200);
-          observer.unobserve(el);
-        }
-      });
-    }, { threshold: 0.1 });
-
-    rolls.forEach(el => observer.observe(el));
-  }
 
   // Text Scramble on mount/observe
   function initScrambleHeaders() {
+    if (prefersReducedMotion) return; // headers already hold their final text
+
     // 1. Hero headline scramble
     const hero = document.getElementById('hero-headline');
     if (hero) {
@@ -1525,11 +1762,21 @@ try {
 
     // Checkpoints representing C M Nafi's journey
     const checkpoints = [
-      { name: 'DINAJPUR', year: '2000', label: 'Dinajpur, BD', x: 0.15, y: 0.70, coord: '25.62° N' },
-      { name: 'CHANGSHU', year: '2016', label: 'Changshu, CN', x: 0.40, y: 0.45, coord: '31.65° N' },
-      { name: 'DECORAH', year: '2018', label: 'Decorah, IA', x: 0.65, y: 0.65, coord: '43.30° N' },
-      { name: 'TAMPA', year: '2022', label: 'Tampa, FL', x: 0.88, y: 0.30, coord: '27.95° N' }
+      { name: 'DINAJPUR', year: '2000', label: 'Dinajpur, BD', x: 0.15, y: 0.70, coord: '25.62° N', lat: 25.6279, lon: 88.6332 },
+      { name: 'CHANGSHU', year: '2016', label: 'Changshu, CN', x: 0.40, y: 0.45, coord: '31.65° N', lat: 31.6538, lon: 120.7522 },
+      { name: 'DECORAH', year: '2018', label: 'Decorah, IA', x: 0.65, y: 0.65, coord: '43.30° N', lat: 43.3014, lon: -91.7857 },
+      { name: 'TAMPA', year: '2022', label: 'Tampa, FL', x: 0.88, y: 0.30, coord: '27.95° N', lat: 27.9506, lon: -82.4572 }
     ];
+
+    // Great-circle distance of each leg (haversine), shown while that sector is active
+    const toRad = (deg: number) => deg * Math.PI / 180;
+    const legKm = checkpoints.slice(1).map((pt, i) => {
+      const prev = checkpoints[i];
+      const dLat = toRad(pt.lat - prev.lat);
+      const dLon = toRad(pt.lon - prev.lon);
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(prev.lat)) * Math.cos(toRad(pt.lat)) * Math.sin(dLon / 2) ** 2;
+      return Math.round(2 * 6371 * Math.asin(Math.sqrt(a)));
+    });
 
     let t = 0;
 
@@ -1600,25 +1847,25 @@ try {
         const pulse = 1 + Math.sin(t * 10 + idx * 2) * 0.15;
 
         // Outer telemetry box / reticle
-        ctx.strokeStyle = idx === 3 ? 'var(--accent)' : 'rgba(255, 255, 255, 0.2)';
+        ctx.strokeStyle = idx === 3 ? tokenAccent : 'rgba(255, 255, 255, 0.2)';
         ctx.lineWidth = 0.8;
         ctx.beginPath();
         ctx.arc(px, py, 6 * pulse, 0, Math.PI * 2);
         ctx.stroke();
 
         // Inner solid core
-        ctx.fillStyle = idx === 3 ? 'var(--accent)' : 'rgba(255, 255, 255, 0.8)';
+        ctx.fillStyle = idx === 3 ? tokenAccent : 'rgba(255, 255, 255, 0.8)';
         ctx.beginPath();
         ctx.arc(px, py, 1.8, 0, Math.PI * 2);
         ctx.fill();
 
         // Checkpoint Label text
-        ctx.fillStyle = idx === 3 ? 'var(--text-warm-white)' : 'rgba(255, 255, 255, 0.5)';
-        ctx.font = '7.5px var(--font-mono), monospace';
+        ctx.fillStyle = idx === 3 ? tokenInkPrimary : 'rgba(255, 255, 255, 0.5)';
+        ctx.font = `7.5px ${canvasMono}`;
         ctx.fillText(pt.name, px - 20, py - 10);
-        
+
         ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-        ctx.font = '6px var(--font-mono), monospace';
+        ctx.font = `6px ${canvasMono}`;
         ctx.fillText(`${pt.year} // ${pt.coord}`, px - 20, py + 12);
       });
 
@@ -1655,7 +1902,7 @@ try {
       ctx.fill();
 
       // Core particle dot
-      ctx.fillStyle = 'var(--accent)';
+      ctx.fillStyle = tokenAccent;
       ctx.beginPath();
       ctx.arc(x, y, 2.5, 0, Math.PI * 2);
       ctx.fill();
@@ -1663,9 +1910,14 @@ try {
       // Update Telemetry panel labels
       const sectorEl = document.getElementById('story-telemetry-sector');
       const speedEl = document.getElementById('story-telemetry-speed');
-      
+      const displacementEl = document.getElementById('story-telemetry-displacement');
+
       if (sectorEl) {
         sectorEl.textContent = `${pStart.name} → ${pEnd.name}`;
+      }
+
+      if (displacementEl) {
+        displacementEl.textContent = `${legKm[segmentIndex].toLocaleString('en-US')} KM`;
       }
 
       if (speedEl && Math.random() < 0.02) {
@@ -1673,7 +1925,8 @@ try {
         speedEl.textContent = `MACH ${speedVal}`;
       }
 
-      animationId = requestAnimationFrame(draw);
+      // Reduced motion: render one static frame, never reschedule
+      if (!prefersReducedMotion) animationId = requestAnimationFrame(draw);
     }
 
     animationId = requestAnimationFrame(draw);
@@ -1697,9 +1950,9 @@ try {
     const sections = [
       { selector: '.intro-section', coord: '25.6279° N' },
       { selector: '.story-glimpse-section', coord: '31.6536° N' },
+      { selector: '.note-ticker-section', coord: '43.3036° N' },
       { selector: '.caia-corner-section', coord: '38.9072° N' },
       { selector: '.world-cup-section', coord: '40.7128° N' },
-      { selector: '.showroom-grid-section', coord: '43.3036° N' },
       { selector: '.latest-log-section', coord: '27.9506° N' },
       { selector: '.showroom-footer', coord: '00.0000° N' }
     ];
@@ -1729,7 +1982,11 @@ try {
 
       if (coordsEl && activeCoord !== currentCoord) {
         currentCoord = activeCoord;
-        scrambleTo(coordsEl, activeCoord, 400);
+        if (prefersReducedMotion) {
+          coordsEl.textContent = activeCoord;
+        } else {
+          scrambleTo(coordsEl, activeCoord, 400);
+        }
       }
     }
 
@@ -1851,7 +2108,7 @@ try {
 
       // Axis Labels
       ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-      ctx.font = '7px var(--font-mono), monospace';
+      ctx.font = `7px ${canvasMono}`;
       ctx.textAlign = 'right';
       ctx.fillText('RISK (σ)', width - paddingRight, height - paddingBottom + 12);
       ctx.textAlign = 'left';
@@ -1898,7 +2155,7 @@ try {
 
       // risk free rate text
       ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-      ctx.font = '6px var(--font-mono), monospace';
+      ctx.font = `6px ${canvasMono}`;
       ctx.fillText('Rf (5%)', paddingLeft - 30, rfY + 2);
 
       // 3. Asset Dots
@@ -1925,7 +2182,7 @@ try {
 
         // Label text
         ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-        ctx.font = '7px var(--font-mono), monospace';
+        ctx.font = `7px ${canvasMono}`;
         ctx.fillText(asset.name, px + 5, py + 2.5);
       });
 
@@ -1943,7 +2200,7 @@ try {
       ctx.fill();
 
       ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-      ctx.font = '6.5px var(--font-mono), monospace';
+      ctx.font = `6.5px ${canvasMono}`;
       ctx.fillText('PORTFOLIO M*', tangentX + 7, tangentY - 3);
 
       // Fluctuate display values slightly
@@ -1956,7 +2213,8 @@ try {
         sharpeEl.textContent = `SR = ${sharpeVal}`;
       }
 
-      animationId = requestAnimationFrame(draw);
+      // Reduced motion: render one static frame, never reschedule
+      if (!prefersReducedMotion) animationId = requestAnimationFrame(draw);
     }
 
     animationId = requestAnimationFrame(draw);
@@ -1983,6 +2241,17 @@ try {
     const m = mEl;
     const s = sEl;
 
+    // Tick a digit into place when its value changes
+    function setSeg(el: HTMLElement, val: string) {
+      if (el.textContent === val) return;
+      el.textContent = val;
+      if (!prefersReducedMotion) {
+        el.classList.remove('tick');
+        void el.offsetWidth;
+        el.classList.add('tick');
+      }
+    }
+
     function update() {
       const now = new Date().getTime();
       const diff = target - now;
@@ -2000,10 +2269,10 @@ try {
       const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-      d.textContent = String(days).padStart(2, '0');
-      h.textContent = String(hours).padStart(2, '0');
-      m.textContent = String(mins).padStart(2, '0');
-      s.textContent = String(secs).padStart(2, '0');
+      setSeg(d, String(days).padStart(2, '0'));
+      setSeg(h, String(hours).padStart(2, '0'));
+      setSeg(m, String(mins).padStart(2, '0'));
+      setSeg(s, String(secs).padStart(2, '0'));
     }
 
     update();
@@ -2077,7 +2346,8 @@ try {
         }
       }
 
-      animationId = requestAnimationFrame(draw);
+      // Reduced motion: render one static frame, never reschedule
+      if (!prefersReducedMotion) animationId = requestAnimationFrame(draw);
     }
 
     animationId = requestAnimationFrame(draw);
@@ -2086,6 +2356,70 @@ try {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', resize);
     };
+  }
+
+  // Scroll-reveal choreography for sections, dividers, and chamber cards
+  function initScrollReveal() {
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) return;
+
+    const targets = document.querySelectorAll(
+      '.sector-divider, .story-glimpse-section, .note-ticker-section, .caia-corner-section, .world-cup-section, .latest-log-section'
+    );
+
+    targets.forEach(el => el.classList.add('js-reveal'));
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    targets.forEach(el => observer.observe(el));
+  }
+
+  // Live build telemetry — measured, not hardcoded
+  function initFooterTelemetry() {
+    const lcpEl = document.getElementById('footer-lcp');
+    const weightEl = document.getElementById('footer-weight');
+
+    if (lcpEl && 'PerformanceObserver' in window) {
+      let lcpReported = false;
+      try {
+        const po = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          const last = entries[entries.length - 1];
+          if (last) {
+            lcpReported = true;
+            lcpEl.textContent = `LCP: ${(last.startTime / 1000).toFixed(2)}s`;
+          }
+        });
+        po.observe({ type: 'largest-contentful-paint', buffered: true });
+      } catch (e) {}
+
+      // LCP never fires for pages loaded in a hidden tab — fall back to FCP
+      setTimeout(() => {
+        if (lcpReported) return;
+        const fcp = performance.getEntriesByName('first-contentful-paint')[0];
+        if (fcp) lcpEl.textContent = `FCP: ${(fcp.startTime / 1000).toFixed(2)}s`;
+      }, 3000);
+    }
+
+    if (weightEl) {
+      const updateWeight = () => {
+        const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+        const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+        const total = resources.reduce((sum, r) => sum + (r.transferSize || 0), nav?.transferSize || 0);
+        if (total > 0) weightEl.textContent = `WEIGHT: ${Math.round(total / 1024)}KB`;
+      };
+      if (document.readyState === 'complete') {
+        setTimeout(updateWeight, 300);
+      } else {
+        window.addEventListener('load', () => setTimeout(updateWeight, 300), { once: true });
+      }
+    }
   }
 
   // Card mouseover radial gradient tracking
@@ -2110,7 +2444,8 @@ try {
     initScrollBehavior();
     initScrollCompass();
     initCardShine();
-    initStatsRollup();
+    initFooterTelemetry();
+    initScrollReveal();
     const cleanupWorldCup = initWorldCupCountdown();
     const cleanupStory = initStoryRouteCanvas();
     const cleanupCanvas = initTelemetryFlowCanvas();

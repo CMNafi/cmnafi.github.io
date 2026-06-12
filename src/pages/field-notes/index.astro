@@ -3,9 +3,10 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Flag from '@/components/telemetry/Flag.astro';
 import SectorBadge from '@/components/telemetry/SectorBadge.astro';
+import { siteConfig } from '@/config/site';
 
 const rawNotes = await getCollection('field-notes');
-const allNotes = rawNotes.filter(n => n.data.category !== 'Brewing');
+const allNotes = rawNotes.filter(n => n.data.category !== 'Brewing' && !n.data.draft);
 
 const categoryCounts = allNotes.reduce((acc, note) => {
   acc[note.data.category] = (acc[note.data.category] || 0) + 1;
@@ -35,9 +36,30 @@ const macroCount   = financeNotes.filter(n => n.data.subCategory === 'Macro').le
 const financeTotal = financeNotes.length;
 const booksCount   = allNotes.filter(n => n.data.category === 'Books').length;
 const cricketCount = allNotes.filter(n => n.data.category === 'Cricket').length;
+
+const latestNote = flatSortedNotes[0];
+const pageDescription = 'Long-form essays and research notes on finance, technology, books, and cricket — telemetry readouts from the race, by C M Nafi.';
+
+const collectionLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Field Notes',
+  url: new URL('/field-notes', siteConfig.siteUrl).toString(),
+  description: pageDescription,
+  author: { '@type': 'Person', name: siteConfig.author, url: siteConfig.siteUrl },
+  hasPart: flatSortedNotes.slice(0, 10).map(n => ({
+    '@type': 'BlogPosting',
+    headline: n.data.title,
+    url: new URL(`/field-notes/${n.slug}`, siteConfig.siteUrl).toString(),
+    datePublished: n.data.publishedAt.toISOString()
+  }))
+};
 ---
 
-<BaseLayout title="Field Notes" hideHeader={true}>
+<BaseLayout title="Field Notes" description={pageDescription} canonical="/field-notes" hideHeader={true}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(collectionLd)} />
+  </Fragment>
   
   <nav class="paddock-override-nav">
     <a href="/" class="return-wall">← PIT WALL</a>
@@ -66,6 +88,26 @@ const cricketCount = allNotes.filter(n => n.data.category === 'Cricket').length;
            ))}
         </div>
       </header>
+
+      <!-- Featured: latest transmission -->
+      {latestNote && (
+        <a href={`/field-notes/${latestNote.slug}`} class="featured-note">
+          <div class="featured-eyebrow">
+            <span class="featured-dot" aria-hidden="true"></span>
+            LATEST TRANSMISSION
+          </div>
+          <h2 class="featured-title">{latestNote.data.title}</h2>
+          <p class="featured-excerpt">{latestNote.data.description || latestNote.data.excerpt}</p>
+          <div class="featured-meta">
+            <time datetime={latestNote.data.publishedAt.toISOString()}>
+              {latestNote.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </time>
+            <span class="featured-sep">·</span>
+            <span>{latestNote.data.readingTime.toUpperCase()}</span>
+            <span class="featured-cta">READ THE REPORT →</span>
+          </div>
+        </a>
+      )}
 
       <!-- ════════════════════════════════════════════
            TOPIC TOPOLOGY MAP
@@ -203,7 +245,7 @@ const cricketCount = allNotes.filter(n => n.data.category === 'Cricket').length;
                   {top4.map((note, index) => (
                     <article class="note-row">
                       <div class="note-time">
-                        <span>{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</span>
+                        <time datetime={note.data.publishedAt.toISOString()}>{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</time>
                         <div class="timeline-node"><Flag color={index === 0 ? "green" : "checkered"} /></div>
                       </div>
                       <a href={`/field-notes/${note.slug}`} class="note-content">
@@ -231,7 +273,7 @@ const cricketCount = allNotes.filter(n => n.data.category === 'Cricket').length;
             {flatSortedNotes.map((note, index) => (
               <article class="note-row filtered-note" data-cat={slugify(note.data.category)} data-subcat={note.data.subCategory ? slugify(note.data.subCategory) : 'none'}>
                 <div class="note-time">
-                  <span>{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</span>
+                  <time datetime={note.data.publishedAt.toISOString()}>{note.data.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</time>
                   <div class="timeline-node">
                     <div class="timeline-flag-inject"></div>
                   </div>
@@ -390,6 +432,78 @@ const cricketCount = allNotes.filter(n => n.data.category === 'Cricket').length;
     max-width: 600px;
   }
 
+  /* FEATURED — latest transmission */
+  .featured-note {
+    display: block;
+    background: linear-gradient(180deg, var(--surface-raised), var(--surface-base));
+    border: 1px solid var(--surface-line);
+    border-radius: 12px;
+    padding: clamp(1.8rem, 4vw, 3rem);
+    margin-bottom: 4rem;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: border-color var(--dur-base) var(--ease-instrument),
+                transform var(--dur-base) var(--ease-instrument),
+                box-shadow var(--dur-base) var(--ease-instrument);
+  }
+  .featured-note:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  }
+  .featured-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+  .featured-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent-glow);
+  }
+  .featured-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--pitlane-white);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem 0;
+    text-wrap: balance;
+  }
+  .featured-excerpt {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 640px;
+    margin: 0 0 1.6rem 0;
+  }
+  .featured-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--ink-tertiary);
+    flex-wrap: wrap;
+  }
+  .featured-sep { opacity: 0.4; }
+  .featured-cta {
+    margin-left: auto;
+    color: var(--telemetry-green);
+    transition: color var(--dur-fast) var(--ease-mechanical);
+  }
+  .featured-note:hover .featured-cta { color: var(--pitlane-white); }
+
   /* CHIPS */
   .filter-chips {
     display: flex;
@@ -511,15 +625,18 @@ const cricketCount = allNotes.filter(n => n.data.category === 'Cricket').length;
 
   .note-content {
     display: block;
-    background: var(--carbon);
+    background: linear-gradient(180deg, var(--surface-raised), var(--surface-base));
     padding: 2rem;
     border: 1px solid var(--graphite);
-    border-radius: var(--radius-card);
-    transition: transform 0.2s, border-color 0.2s;
+    border-radius: 12px;
+    transition: transform var(--dur-base) var(--ease-instrument),
+                border-color var(--dur-base) var(--ease-instrument),
+                box-shadow var(--dur-base) var(--ease-instrument);
   }
   .note-content:hover {
-    transform: translateX(10px);
+    transform: translateX(8px);
     border-color: var(--warning-amber);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
   }
 
   .note-meta {

@@ -7,7 +7,8 @@
   --border: rgba(244, 244, 241, 0.12);
   --text: var(--pitlane-white);
   --muted: rgba(244, 244, 241, 0.5);
-  --accent: var(--telemetry-green, #7dd3a0);
+  /* --accent is owned by tokens.css — redefining it via --telemetry-green
+     creates a var() cycle that invalidates both properties site-wide */
   --accent-soft: var(--accent-dim, rgba(125, 211, 160, 0.1));
   --cool: var(--graphite);
   --shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
