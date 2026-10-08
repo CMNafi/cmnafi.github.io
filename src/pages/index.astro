@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectFeature from '@/components/telemetry/ProjectFeature.astro';
 import { getCollection } from 'astro:content';
 import { execSync } from 'child_process';
 import SectorBadge from '@/components/telemetry/SectorBadge.astro';
 import LapTimer from '@/components/telemetry/LapTimer.astro';
 
 const notes = await getCollection('field-notes');
+const featuredProject = (await getCollection('projects')).filter(p => p.data.featured && p.data.status === 'live').sort((a,b) => b.data.priority - a.data.priority)[0];
 
 // Published Field Notes, newest first — feeds the headline ticker and latest log
 const publishedNotes = notes
@@ -79,6 +81,8 @@ try {
         </p>
       </div>
     </section>
+
+    {featuredProject && <section class="homepage-projects" aria-label="Featured project"><ProjectFeature project={featuredProject} /><a class="all-projects-link" href="/garage/">Explore all projects →</a></section>}
 
     <!-- Sector Divider -->
     <div class="sector-divider">
@@ -2465,3 +2469,5 @@ try {
   // Make sure it runs safely on View Transitions
   document.addEventListener('astro:page-load', initAllWorldClassInteractions);
 </script>
+
+<style>.homepage-projects{margin:0 0 60px}.all-projects-link{display:block;text-align:right;margin-top:20px;font:12px var(--font-mono);color:var(--accent)}</style>

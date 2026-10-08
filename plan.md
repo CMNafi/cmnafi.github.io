@@ -115,6 +115,18 @@ Build these once in `src/components/telemetry/` and reuse:
 
 ## 4. The Garage — signature moment
 
+### October 2026 update: a growing project collection
+
+The Garage landing page is now an editorial project gallery: a featured experience,
+status filters, and a responsive collection. It uses the existing warm dark tokens
+and reusable telemetry components. The earlier animated garage concept below is
+retained as design history; it is not required for the gallery. The homepage
+features the highest-priority live project automatically. New entries use the
+existing `src/content/projects` collection. Self-contained experiences may live
+at `/projects/<slug>/` in `public`, keeping their own visual identity. The exact
+`/projects` route still redirects to `/garage`. See `docs/adding-projects.md`.
+
+
 This is the one thing the whole site is remembered for. Over-invest here.
 
 ### 4.1 Concept

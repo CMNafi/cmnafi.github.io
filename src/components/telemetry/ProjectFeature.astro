@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { project: CollectionEntry<'projects'>; }
+const { project } = Astro.props;
+---
+<a class="project-feature" href={project.data.liveUrl || `/garage/${project.slug}`} data-astro-reload>
+  <div class="feature-copy">
+    <span class="eyebrow">IN THE GARAGE / FEATURED EXPERIENCE</span>
+    <h2>{project.data.title}<span>↗</span></h2>
+    <p>{project.data.summary}</p>
+    <span class="feature-action">Explore the project <span aria-hidden="true">→</span></span>
+    <span class="feature-meta">{project.data.category} · {project.data.status}</span>
+  </div>
+  <div class="feature-art" aria-hidden="true">
+    {project.data.image ? <img src={project.data.image} alt="" loading="lazy" /> : <span class="feature-letter">{project.data.title.slice(0, 1)}</span>}
+  </div>
+</a>
+<style>
+.project-feature{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-raised);border:1px solid var(--surface-line);border-radius:var(--radius-card);overflow:hidden;transition:border-color var(--dur-base);text-decoration:none}.project-feature:hover{border-color:var(--accent)}.feature-copy{padding:clamp(28px,4vw,56px);display:flex;flex-direction:column;align-items:flex-start}.eyebrow,.feature-meta,.feature-action{font-family:var(--font-mono);font-size:11px;line-height:1.6;letter-spacing:.09em}.eyebrow{color:var(--accent)}h2{font:400 clamp(42px,5vw,72px)/1.1 var(--font-serif);letter-spacing:-.055em;margin:40px 0 20px;width:100%;display:flex;justify-content:space-between;gap:20px}h2 span{font:300 32px var(--font-body);color:var(--accent)}p{font:18px/1.7 var(--font-body);color:var(--ink-secondary);max-width:440px;margin:0 0 32px}.feature-action{color:var(--ink-primary);padding-bottom:8px;border-bottom:1px solid var(--accent);font-size:12px;letter-spacing:0}.feature-action span{margin-left:26px}.feature-meta{margin-top:auto;padding-top:36px;text-transform:uppercase;color:var(--ink-secondary)}.feature-art{display:grid;place-items:center;min-height:350px;border-left:1px solid var(--surface-line);background:var(--surface-base)}.feature-art img{width:100%;height:100%;object-fit:cover}.feature-letter{font:italic 180px var(--font-serif);color:var(--accent)}@media(max-width:700px){.project-feature{grid-template-columns:1fr}.feature-art{min-height:0;aspect-ratio:1.3;border-left:0;border-top:1px solid var(--surface-line)}h2{margin-top:28px}.feature-copy{padding:28px}}
+</style>
