@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 580" fill="none">
+<rect width="700" height="580" fill="#18241f"/>
+<g stroke="#7dd3a0" opacity=".14"><circle cx="350" cy="290" r="90"/><circle cx="350" cy="290" r="170"/><circle cx="350" cy="290" r="250"/><ellipse cx="350" cy="290" rx="95" ry="250"/><ellipse cx="350" cy="290" rx="195" ry="250"/><path d="M100 290h500M145 160h410M145 420h410M350 40v500"/></g>
+<g stroke="#7dd3a0" stroke-width="1.4"><path d="M165 185L350 290 525 155M350 290L520 411M350 290L160 406"/><circle cx="350" cy="290" r="47" fill="#18241f"/><circle cx="165" cy="185" r="6" fill="#7dd3a0"/><circle cx="525" cy="155" r="6" fill="#7dd3a0"/><circle cx="520" cy="411" r="6" fill="#7dd3a0"/><circle cx="160" cy="406" r="6" fill="#7dd3a0"/></g>
+<text x="350" y="307" text-anchor="middle" fill="#f4ede4" font-family="Georgia,serif" font-size="56" font-style="italic">w</text>
+<g fill="#a89c8b" font-family="monospace" font-size="11" letter-spacing="2"><text x="49" y="49">WORLDVIEW / AN ATLAS OF EVERYDAY CHOICES</text><text x="125" y="166">CULTURE</text><text x="477" y="134">CURIOSITY</text><text x="473" y="439">EVIDENCE</text><text x="118" y="435">CHOICE</text><text x="49" y="541">FOLLOW A QUESTION. FIND A CONNECTION.</text></g>
+</svg>
