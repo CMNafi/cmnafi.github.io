@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="560" viewBox="0 0 760 560" fill="none">
+  <title>Capital orbits — original editorial diagram</title>
+  <desc>An abstract brick red sun encircled by fine elliptical orbits and measured financial axes on a warm terracotta field.</desc>
+  <defs>
+    <clipPath id="frame"><rect width="760" height="560"/></clipPath>
+    <pattern id="ticks" width="24" height="8" patternUnits="userSpaceOnUse"><path d="M0 0v5" stroke="#233D34" stroke-opacity=".36"/></pattern>
+  </defs>
+  <g clip-path="url(#frame)">
+    <path fill="#EEDCD0" d="M0 0h760v560H0z"/>
+    <path d="M0 417H760M564 0v560" stroke="#29463B" stroke-opacity=".18" stroke-width=".8"/>
+    <path d="M46 33v494M714 33v494" stroke="#29463B" stroke-opacity=".16" stroke-width=".8"/>
+    <circle cx="413" cy="270" r="109" fill="#B64932"/>
+    <circle cx="413" cy="270" r="78" stroke="#EEDCD0" stroke-opacity=".28" stroke-width=".8"/>
+    <circle cx="413" cy="270" r="46" stroke="#EEDCD0" stroke-opacity=".28" stroke-width=".8"/>
+    <g transform="rotate(-31 413 270)" stroke="#233D34">
+      <ellipse cx="413" cy="270" rx="259" ry="143" stroke-width="1.2"/>
+      <ellipse cx="413" cy="270" rx="214" ry="117" stroke-width=".85"/>
+      <ellipse cx="413" cy="270" rx="169" ry="91" stroke-width=".85"/>
+      <path d="M99 270H727" stroke-opacity=".6" stroke-width=".8"/>
+      <path d="M413 91v358" stroke-opacity=".6" stroke-width=".8"/>
+      <path d="M154 265v10m45-10v10m45-10v10m338-10v10m45-10v10m45-10v10" stroke-width=".8"/>
+      <circle cx="638" cy="341" r="7" fill="#233D34" stroke="none"/>
+      <circle cx="413" cy="127" r="4" fill="#EEDCD0"/>
+      <circle cx="247" cy="254" r="4" fill="#233D34" stroke="none"/>
+    </g>
+    <path d="M96 110h77v56M646 423h-69v-51" stroke="#233D34" stroke-opacity=".5" stroke-width=".8"/>
+    <path d="M98 110h75M578 423h68" stroke="#233D34" stroke-width="2"/>
+    <circle cx="173" cy="166" r="3" fill="#233D34"/>
+    <circle cx="577" cy="372" r="3" fill="#233D34"/>
+    <path d="M93 495h575" stroke="#233D34" stroke-opacity=".45" stroke-width=".8"/>
+    <path d="M93 495h575v8H93z" fill="url(#ticks)"/>
+    <path d="M413 482v25" stroke="#233D34" stroke-width="1"/>
+    <g fill="#233D34" font-family="monospace" font-size="10" letter-spacing="1.5">
+      <text x="95" y="95">01</text>
+      <text x="646" y="442" text-anchor="end">03</text>
+      <text x="93" y="524">0</text>
+      <text x="405" y="524">50</text>
+      <text x="668" y="524" text-anchor="end">100</text>
+    </g>
+  </g>
+</svg>
