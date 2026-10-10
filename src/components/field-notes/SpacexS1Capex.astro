@@ -1,0 +1,50 @@
+---
+import ChartFrame from './ChartFrame.astro';
+
+// Capital expenditure by segment, USD billions, per the S-1.
+const X0 = 60;
+const FULL = 580;          // px for the FY2025 total
+const fy = [
+  { name: 'AI', v: 12.7, cls: 'c-warn' },
+  { name: 'CONNECTIVITY', v: 4.2, cls: 'c-acc' },
+  { name: 'SPACE', v: 3.8, cls: 'c-sec' }
+];
+const fyTotal = fy.reduce((s, d) => s + d.v, 0);       // 20.7
+const scale = FULL / fyTotal;
+let cursor = X0;
+const fyBars = fy.map((d) => {
+  const w = d.v * scale;
+  const bar = { ...d, x: cursor, w, pct: Math.round((d.v / fyTotal) * 100) };
+  cursor += w;
+  return bar;
+});
+
+// Q1 2026: $10.1B total, $7.7B of it in the AI segment. Same scale.
+const q1Total = 10.1;
+const q1Ai = 7.7;
+---
+<ChartFrame
+  eyebrow="FIG. 03 / CAPITAL EXPENDITURE"
+  title="$20.7 billion, sixty-one percent to AI"
+  sub="Capex by segment, USD billions. FY 2025 above, the first quarter of 2026 below, drawn to the same scale."
+  source="Source: SpaceX Form S-1. Q1 2026 split shown as AI vs. everything else; the filing figure for AI is $7.7B of $10.1B."
+  label="Stacked bar: of 20.7 billion dollars of 2025 capex, 12.7 went to AI, 4.2 to Connectivity and 3.8 to Space. Q1 2026 capex was 10.1 billion, 7.7 of it AI."
+>
+  <svg viewBox="0 0 700 214" xmlns="http://www.w3.org/2000/svg" role="img">
+    <text x={X0} y="22" font-size="11" letter-spacing="1">FY 2025, $20.7B TOTAL, 111% OF REVENUE</text>
+    {fyBars.map((b) => (
+      <>
+        <rect x={b.x} y="34" width={b.w} height="60" class={b.cls} opacity={b.name === 'AI' ? 0.9 : 1} />
+        <text x={b.x + b.w / 2} y="66" text-anchor="middle" font-size={b.name === 'AI' ? 20 : 15} font-weight="600" class="c-base">${b.v.toFixed(1)}B</text>
+        <text x={b.x + b.w / 2} y="83" text-anchor="middle" font-size="8.5" letter-spacing="1" font-weight="500" class="c-base">{b.name} {b.pct}%</text>
+      </>
+    ))}
+
+    <text x={X0} y="132" font-size="11" letter-spacing="1">Q1 2026 ALONE, $10.1B</text>
+    <rect x={X0} y="144" width={q1Ai * scale} height="30" class="c-warn" opacity="0.9" />
+    <rect x={X0 + q1Ai * scale} y="144" width={(q1Total - q1Ai) * scale} height="30" class="c-ter" />
+    <text x={X0 + (q1Ai * scale) / 2} y="164" text-anchor="middle" font-size="12" font-weight="600" class="c-base">$7.7B AI</text>
+    <text x={X0 + q1Ai * scale + ((q1Total - q1Ai) * scale) / 2} y="164" text-anchor="middle" font-size="10" class="c-ink">$2.4B</text>
+    <text x={X0} y="198" font-size="9" letter-spacing="1" class="c-ter">AT THIS PACE 2026 CAPEX RUNS TO ABOUT $40B, DOUBLE 2025</text>
+  </svg>
+</ChartFrame>

@@ -1,0 +1,48 @@
+---
+import ChartFrame from './ChartFrame.astro';
+
+// USD trillions. Listed companies: May 21, 2026 closing price times shares
+// outstanding, rounded. IPO rows are the valuation at the offer.
+const rows = [
+  { name: 'NVIDIA', v: 5.4 },
+  { name: 'ALPHABET', v: 4.7 },
+  { name: 'APPLE', v: 4.5 },
+  { name: 'MICROSOFT', v: 3.1 },
+  { name: 'AMAZON', v: 2.9 },
+  { name: 'BROADCOM', v: 2.0 },
+  { name: 'SPCX (TARGET)', v: 1.75, hero: true },
+  { name: 'META', v: 1.5 },
+  { name: 'TESLA', v: 1.4 },
+  { name: 'ARAMCO, 2019 IPO', v: 1.7, past: true },
+  { name: 'ALIBABA, 2014 IPO', v: 0.23, past: true }
+];
+const X0 = 170;
+const SCALE = 85;     // px per $1T
+const ROW = 26;
+const TOP = 22;
+const axis = [0, 1, 2, 3, 4, 5, 6];
+const axisY = TOP + rows.length * ROW + 10;
+---
+<ChartFrame
+  eyebrow="FIG. 04 / WHERE SPCX LISTS"
+  title="A top-ten market cap before the first trade"
+  sub="Targeted IPO valuation vs. selected market caps at the May 21, 2026 close, and two earlier record IPOs. USD trillions."
+  source="Sources: SpaceX Form S-1 and press reports for the target; closing prices May 21, 2026 times shares outstanding, rounded, for listed companies; valuation at the offer for the two historical IPOs."
+  label="Bar chart comparing SpaceX's 1.75 trillion dollar target valuation with the market caps of Nvidia, Alphabet, Apple, Microsoft, Amazon, Broadcom, Meta and Tesla, and the Aramco and Alibaba IPOs"
+>
+  <svg viewBox="0 0 700 346" xmlns="http://www.w3.org/2000/svg" role="img">
+    {axis.map((t) => (
+      <>
+        <line x1={X0 + t * SCALE} x2={X0 + t * SCALE} y1={TOP - 6} y2={axisY} class="k-line" stroke-width="1" stroke-dasharray={t === 0 ? undefined : '2,4'} />
+        <text x={X0 + t * SCALE} y={axisY + 16} text-anchor="middle" font-size="9.5" class="c-ter">${t}T</text>
+      </>
+    ))}
+    {rows.map((r, i) => (
+      <>
+        <rect x={X0} y={TOP + i * ROW} width={r.v * SCALE} height={r.hero ? 20 : 16} class={r.hero ? 'c-acc' : 'c-ter'} opacity={r.past ? 0.55 : 1} />
+        <text x={X0 - 10} y={TOP + i * ROW + 12} text-anchor="end" font-size="10" letter-spacing="0.8" font-weight={r.hero ? 600 : 400} class={r.hero ? 'c-acc' : 'c-sec'}>{r.name}</text>
+        <text x={X0 + r.v * SCALE + 8} y={TOP + i * ROW + 12} font-size={r.hero ? 12 : 10} font-weight={r.hero ? 600 : 500} class={r.hero ? 'c-acc' : 'c-ink'}>${r.v.toFixed(r.v < 1 || r.hero ? 2 : 1)}T</text>
+      </>
+    ))}
+  </svg>
+</ChartFrame>

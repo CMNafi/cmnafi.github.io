@@ -1,0 +1,79 @@
+---
+import ChartFrame from './ChartFrame.astro';
+
+// FY2025 segment results, USD billions, from the SpaceX S-1 filed May 20, 2026.
+// Order of values: revenue, segment Adjusted EBITDA, operating income.
+const groups = [
+  { name: 'CONNECTIVITY', note: 'STARLINK, 61% OF REVENUE', cx: 155, vals: [11.387, 7.168, 4.423] },
+  { name: 'SPACE', note: 'LAUNCH AND STARSHIP, 22%', cx: 350, vals: [4.086, 0.653, -0.657] },
+  { name: 'AI', note: 'XAI AND X, 17%', cx: 545, vals: [3.201, -1.237, -6.355] }
+];
+const S = 13;        // px per $1B
+const BASE = 200;    // y of the zero line
+const BW = 40;       // bar width
+const offsets = [-65, -20, 25];
+const ticks = [12, 8, 4, 0, -4];
+const fmt = (v: number) => `${v < 0 ? '−' : ''}$${Math.abs(v).toFixed(2)}`;
+
+const bars = groups.flatMap((g) =>
+  g.vals.map((v, i) => {
+    const h = Math.abs(v) * S;
+    const neg = v < 0;
+    const cls = neg ? 'c-warn' : i === 0 ? 'c-sec' : 'c-acc';
+    const opacity = neg ? (i === 1 ? 0.6 : 1) : i === 2 ? 0.5 : 1;
+    return {
+      x: g.cx + offsets[i],
+      y: neg ? BASE : BASE - h,
+      h,
+      cls,
+      opacity,
+      label: fmt(v),
+      ly: neg ? BASE + h + 14 : BASE - h - 7,
+      lcls: neg ? 'c-warn' : i === 0 ? 'c-ink' : 'c-acc'
+    };
+  })
+);
+---
+<ChartFrame
+  eyebrow="FIG. 01 / SEGMENT ECONOMICS"
+  title="Where the money came from, and where it went"
+  sub="FY 2025, USD billions. Revenue vs. segment Adjusted EBITDA vs. operating income."
+  source="Source: SpaceX Form S-1, filed May 20, 2026. Segments as reported."
+  label="Bar chart of FY2025 revenue, Adjusted EBITDA and operating income for SpaceX's Connectivity, Space and AI segments"
+>
+  <svg viewBox="0 0 700 372" xmlns="http://www.w3.org/2000/svg" role="img">
+    {ticks.map((t) => (
+      <>
+        <line x1="60" x2="680" y1={BASE - t * S} y2={BASE - t * S} class="k-line" stroke-width="1" stroke-dasharray={t === 0 ? undefined : '2,4'} />
+        <text x="50" y={BASE - t * S + 4} text-anchor="end" font-size="10">{t < 0 ? `−${Math.abs(t)}` : t}</text>
+      </>
+    ))}
+
+    {bars.map((b) => (
+      <>
+        <rect x={b.x} y={b.y} width={BW} height={b.h} class={b.cls} opacity={b.opacity} />
+        <text x={b.x + BW / 2} y={b.ly} text-anchor="middle" font-size="10" class={b.lcls}>{b.label}</text>
+      </>
+    ))}
+
+    {groups.map((g) => (
+      <>
+        <text x={g.cx} y="330" text-anchor="middle" font-size="11" letter-spacing="1.5" class="c-ink">{g.name}</text>
+        <text x={g.cx} y="346" text-anchor="middle" font-size="9" letter-spacing="1" class="c-ter">{g.note}</text>
+      </>
+    ))}
+
+    <g transform="translate(60, 6)">
+      <rect width="10" height="10" class="c-sec" />
+      <text x="16" y="9" font-size="9.5" letter-spacing="0.5">REVENUE</text>
+      <rect x="92" width="10" height="10" class="c-acc" />
+      <text x="108" y="9" font-size="9.5" letter-spacing="0.5">ADJ. EBITDA</text>
+      <rect x="206" width="10" height="10" class="c-acc" opacity="0.5" />
+      <text x="222" y="9" font-size="9.5" letter-spacing="0.5">OPERATING INCOME</text>
+      <rect x="356" width="10" height="10" class="c-warn" />
+      <text x="372" y="9" font-size="9.5" letter-spacing="0.5">LOSS</text>
+    </g>
+
+    <text x="18" y="200" font-size="9.5" letter-spacing="1" class="c-ter" transform="rotate(-90 18 200)" text-anchor="middle">USD BILLIONS</text>
+  </svg>
+</ChartFrame>

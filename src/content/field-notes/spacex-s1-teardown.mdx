@@ -1,0 +1,222 @@
+---
+title: "One Ticker, Three Businesses, 94 Times Revenue"
+description: "Reading the SpaceX S-1, two days after it landed. Starlink earns the money, Starship spends some of it, and an AI segment nobody expected to find on a rocket company's income statement spends the rest."
+publishedAt: 2026-05-22
+updatedAt: 2026-10-10
+category: Finance
+subCategory: Public Equities
+tags:
+  - finance
+  - IPO
+  - SpaceX
+  - Starlink
+  - xAI
+  - S-1
+excerpt: "SpaceX's S-1 is the first look at the company's financials. What it shows is three businesses under one ticker: one that prints cash, one that breaks even, and one that burns $6.4 billion."
+featured: false
+draft: false
+series: Deep Dives
+readingTime: "12 min read"
+seoTitle: "SpaceX S-1 Teardown: One Ticker, Three Businesses, 94x Revenue"
+seoDescription: "A data-driven read of the SpaceX S-1: segment economics for Starlink, launch and AI, falling ARPU, $20.7 billion of capex, the Anthropic compute contract, and what a $1.75 trillion valuation implies."
+---
+
+import WrapTable from '../../components/field-notes/WrapTable.astro';
+import StatStrip from '../../components/field-notes/StatStrip.astro';
+import SpacexS1Segments from '../../components/field-notes/SpacexS1Segments.astro';
+import SpacexS1Starlink from '../../components/field-notes/SpacexS1Starlink.astro';
+import SpacexS1Capex from '../../components/field-notes/SpacexS1Capex.astro';
+import SpacexS1Valuation from '../../components/field-notes/SpacexS1Valuation.astro';
+
+On May 20, 2026, after twenty-four years as a private company, SpaceX filed Form S-1 with the SEC. The document is the first time anyone outside the cap table has been allowed to read the financial statements of the company that owns Starlink, xAI, X, and the most-flown rocket in the world. What's inside is not one company. It's three, bolted together, sold under a single ticker, and priced at a number that would make it one of the ten most valuable companies on Earth before it trades a share.
+
+The ticker is **SPCX**, on Nasdaq and Nasdaq Texas. Goldman Sachs sits in the lead-left seat of a syndicate of more than twenty banks. The roadshow is reported to start June 4. First trade is expected June 12. The target valuation is **$1.75 trillion**, and there is real pricing chatter at $2 trillion.
+
+The numbers, finally on the record, look like this:
+
+<StatStrip items={[
+  { label: 'FY25 Revenue', value: '$18.7B', sub: '+33% YoY' },
+  { label: 'FY25 Net Loss', value: '−$4.94B', sub: 'vs +$791M in 2024', tone: 'down' },
+  { label: 'Adj. EBITDA', value: '$6.58B', sub: '35% margin', tone: 'up' },
+  { label: 'FY25 Capex', value: '$20.7B', sub: '111% of revenue' }
+]} />
+
+Revenue is up. Losses are accelerating. Capex exceeded revenue. The first quarter of 2026 produced a **$4.28 billion net loss on $4.69 billion in revenue**, which is close to a dollar lost for every dollar earned in a single quarter.
+
+None of this is a disaster. None of this is normal either. The reason it's a story instead of a wreck is in the segment data.
+
+## 01 / Three businesses, one income statement
+
+SpaceX now reports as three operating segments. They have almost nothing in common except a CEO.
+
+<SpacexS1Segments />
+
+The shape of that chart is the entire story.
+
+### Connectivity (Starlink)
+
+**$11.4B revenue. $4.4B operating income. $7.17B segment Adjusted EBITDA at a 63% margin.** Revenue grew 49.8% year over year. Segment EBITDA grew 86%. This is one of the most profitable satellite businesses ever built: a margin profile that looks like enterprise software, on hardware that has to be replaced every five years.
+
+### Space (Launch and Starship)
+
+**$4.09B revenue. $657M operating loss. $653M segment EBITDA.** The legacy launch business (NASA cargo, Department of Defense missions, commercial deployments) is profitable. The next-generation rocket program eats every dollar of that and then some. **About $3 billion of research and development in 2025 went to Starship.**
+
+### AI (xAI and X)
+
+**$3.20B revenue. $6.4B operating loss. Negative $1.24B segment EBITDA.** This is the segment that should not exist on a satellite company's income statement. It is here because in February 2026 SpaceX absorbed xAI (which had absorbed X in March 2025), and the 2025 numbers were retroactively recast to include both as common-control transactions.
+
+> **The one-line takeaway:** If you isolate Connectivity, you are looking at a $7B-EBITDA business growing at 50%. If you consolidate all three, you are looking at a $5B net loss and accelerating cash burn. SPCX is whichever number you find more persuasive on any given Tuesday.
+
+## 02 / The cash machine has a compression problem
+
+Starlink is the centerpiece of the IPO story. It's also the segment where the most uncomfortable trendline in the filing lives.
+
+The subscriber curve is one of the most aggressive in modern infrastructure history. From 2.3 million in 2023, to 4.4 million in 2024, to 8.9 million in 2025, to 10.3 million by the end of Q1 2026. That is a 97% compound annual growth rate from 2023 to 2025.
+
+Meanwhile, the average revenue per user is moving in the opposite direction.
+
+<SpacexS1Starlink />
+
+The story the company tells about this is volume, not pricing. International expansion into markets with lower purchasing power. Cheaper consumer tiers. Roam and mobility plans that bring more users at smaller checks. The S-1 says ARPU may keep declining as that mix continues to shift.
+
+For now, the math still works. **Volume is growing faster than price is falling**, so segment revenue compounded 50% in 2025. But at 94 times revenue, you are not just buying the present level. You are buying the slope of the unit economics over the next decade.
+
+One number cuts against the worry: **since 2023, zero enterprise customers contributing more than $750,000 in annual revenue have voluntarily discontinued service.** Maritime, aviation, government, and Starshield contracts are sticky. The consumer churn number is undisclosed.
+
+## 03 / The AI segment is consuming the balance sheet
+
+SpaceX spent **$20.7 billion on capital expenditures in 2025**. That is more than the company brought in. Q1 2026 capex alone was approximately **$10.1 billion**, meaning that if the pace holds, 2026 capex will exceed $40 billion, double the 2025 figure.
+
+Where it went:
+
+<SpacexS1Capex />
+
+$12.7 billion to AI infrastructure means GPU purchases, the build-out of the Colossus and Colossus II data centers in Memphis and neighboring Mississippi, power infrastructure, cooling, and the early work on what SpaceX calls "orbital compute satellites": AI inference clusters launched into orbit, with first deployment targeted for 2028.
+
+For comparison: Meta's full-year 2025 capex was about $72 billion. Microsoft's was around $80 billion. SpaceX, a satellite-and-rocket company twelve months ago, has joined that capex league. In Q1 2026 the AI segment alone spent more than three times what the rest of the company did.
+
+## 04 / The contract that makes the AI bet acceptable
+
+Buried in the material-contract disclosures: a cloud services agreement signed in May 2026 under which **Anthropic will pay SpaceX $1.25 billion per month** for capacity at Colossus, through May 2029.
+
+At full ramp, that is approximately **$45 billion in contracted revenue over 36 months**. That is roughly four times Starlink's entire 2025 revenue, from a single customer.
+
+The mechanics, as disclosed in the filing:
+
+<WrapTable>
+
+| Term | Detail |
+|---|---|
+| Monthly fee at full rate | $1.25B |
+| Contract length | Through May 2029 (about 36 months) |
+| Theoretical maximum value | About $45B |
+| Termination right | Either party, 90 days' notice |
+| Ramp | Reduced fee in May and June 2026 |
+| Minimum commitment | Not disclosed |
+| Gross margin on contract | Not disclosed |
+| Capacity split with xAI's own workloads | Not disclosed |
+
+</WrapTable>
+
+This is the load-bearing assumption in the bull case for the AI segment. If the deal holds and ramps as described, it converts SpaceX into a hyperscale AI compute provider whose largest customer is one of the leading frontier AI labs. The $12.7 billion in 2025 AI capex starts to look reasonable: a single contract more than three times larger than the capex it justifies.
+
+If the deal doesn't ramp, or if either party walks within the 90-day notice window, the AI segment's capex pile becomes the most expensive write-down in the IPO class of 2026.
+
+> **What's not in the S-1:** any disclosure of the gross margin, the minimum take-or-pay floor, or the capacity allocation between Anthropic and xAI's own training workloads. Funds underwriting the deal will be asking about all three on the roadshow.
+
+## 05 / A $28.5 trillion total addressable market
+
+The S-1 claims, in its own words, "the largest actionable total addressable market in human history." The breakdown:
+
+<WrapTable>
+
+| Segment | Claimed TAM | % of total |
+|---|---:|---:|
+| AI (infrastructure, enterprise applications, consumer subscriptions, advertising) | $26.5T | 93% |
+| Connectivity (Starlink Broadband and Starlink Mobile) | $1.6T | 6% |
+| Space (space-enabled solutions) | $370B | 1% |
+| **Total** | **$28.5T** | **100%** |
+
+</WrapTable>
+
+The AI TAM includes **$22.7 trillion in "enterprise applications"**, a single line item that accounts for four fifths of the whole claim. The Space and Connectivity TAMs, where SpaceX actually generates 83% of its revenue today, account for less than 7% of the total.
+
+The same filing also says, in its risk factors, that initiatives such as orbital AI compute:
+
+> "involve significant technical complexity and unproven technologies, and may not achieve commercial viability."
+
+Both statements are in the same document.
+
+## 06 / A controlled company
+
+This is not a traditional IPO from a control-rights perspective. Public shareholders are buying economic exposure, not influence.
+
+<WrapTable>
+
+| Term | Detail |
+|---|---|
+| Share structure | Class A (1 vote) / Class B (10 votes) |
+| Musk equity before the offering | About 42% |
+| Musk voting power before the offering | 85.1% |
+| Board control | Class B holders elect the majority for as long as Class B exists |
+| Nasdaq status | "Controlled company", exempt from independent-director requirements on compensation and nominating committees |
+| Musk share purchases in 2025 | $1.4B in additional shares, as reported by The Information |
+| Retail allocation | Up to 30% of the offering, roughly three times the mega-cap norm |
+| 5-for-1 stock split effective | May 4, 2026 |
+
+</WrapTable>
+
+The structure is identical in spirit to Google's 2004 dual-class listing and tighter than Meta's. Long-only institutional investors with governance mandates (public pension funds, sovereigns, certain insurance asset managers) will need to make a positive policy decision before they can hold the name at all.
+
+## 07 / What 94 times revenue actually buys
+
+A $1.75 trillion valuation would not make SpaceX the largest company in the market. It would make it the seventh or eighth, on day one, ahead of Meta and Tesla.
+
+<SpacexS1Valuation />
+
+The target implies the following multiples on disclosed financials:
+
+<WrapTable>
+
+| Metric | Value | Implied multiple |
+|---|---:|---:|
+| 2025 Revenue | $18.7B | 94x |
+| 2025 Adj. EBITDA | $6.6B | 265x |
+| 2025 GAAP Operating Income | −$2.6B | n/m |
+| Q1 2026 Revenue (annualized) | $18.8B | 93x |
+
+</WrapTable>
+
+For context: Nvidia, the AI comparison most often invoked, trades at a little over 20 times trailing revenue. The mature satellite communications industry trades at 2 to 4 times. Amazon at its 2021 peak was at roughly 4 times.
+
+A **94x revenue multiple** at IPO is pricing in not just continued Starlink growth, but the AI segment scaling into profitability, the Anthropic deal ramping, and a successful pivot to orbital compute as a distinct business line by 2028 to 2030.
+
+That is three substantial bets in sequence. Each is unproven on its own. The market is being asked to underwrite all three on the same day.
+
+## 08 / What you are actually buying
+
+When the bell rings on June 12, assuming the schedule holds, what you can buy under the ticker SPCX is a single security that bundles five distinct things:
+
+<WrapTable>
+
+| What | How to read it |
+|---|---|
+| **Starlink** | The world's most profitable satellite communications business. Growing at 50%. Compressing unit economics. Not the CEO's primary focus. |
+| **Launch and Starship** | A subsidized rocket monopoly. The legacy launch business is profitable; Starship eats the profit. Strategically essential, financially neutral. |
+| **xAI and Anthropic compute** | The single largest cash consumer in the company. The single largest customer can walk on 90 days. The single largest narrative driver in the multiple. |
+| **Governance** | A controlled-company structure with 85% voting power on about 42% of the economics. No public shareholder mandate to change anything. |
+| **The vision document** | Orbital data centers, a multiplanetary mission, Mars. The S-1 itself says key elements "may not achieve commercial viability." |
+
+</WrapTable>
+
+Each of these is a real asset. None of them is independently worth $1.75 trillion. Whether the package is worth that number, or $2 trillion as the more aggressive book-running chatter suggests, depends entirely on whether you believe the three businesses share enough strategic surface area to compound together, or whether they're a holding company being sold at a premium because the holding company has Elon Musk's name on it.
+
+The S-1 does not answer that question. It documents the bet. The market gets the next move.
+
+---
+
+**Sources.** Space Exploration Technologies Corp., [Form S-1 Registration Statement](https://www.sec.gov/Archives/edgar/data/1181412/000162828026036936/spaceexplorationtechnologi.htm), filed May 20, 2026 (SEC EDGAR). Figures cross-referenced with coverage of the filing from Fortune, SatNews, Vested Finance, Mostly Metrics, Tomasz Tunguz, and The Information.
+
+**Disclosure.** This is an analysis of public regulatory filings and not investment advice. Market caps and multiples reflect the close on May 21, 2026.
+
+*Written on May 22, 2026, before the offering priced. Everything here reflects the S-1 as first filed.*

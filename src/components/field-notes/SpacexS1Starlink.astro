@@ -1,0 +1,52 @@
+---
+import ChartFrame from './ChartFrame.astro';
+
+// Starlink individual subscribers (millions) and monthly ARPU (USD), per the S-1.
+const points = [
+  { label: '2023', x: 145, subs: 2.3, arpu: 99 },
+  { label: '2024', x: 305, subs: 4.4, arpu: 91 },
+  { label: '2025', x: 465, subs: 8.9, arpu: 81 },
+  { label: "Q1 '26", x: 625, subs: 10.3, arpu: 66 }
+];
+const BASE = 260;
+const SPAN = 240;
+const ySubs = (v: number) => BASE - (v / 12) * SPAN;
+const yArpu = (v: number) => BASE - (v / 120) * SPAN;
+const subsLine = points.map((p) => `${p.x},${ySubs(p.subs)}`).join(' ');
+const arpuLine = points.map((p) => `${p.x},${yArpu(p.arpu)}`).join(' ');
+const grid = [0, 1, 2, 3, 4];
+---
+<ChartFrame
+  eyebrow="FIG. 02 / STARLINK ECONOMICS"
+  title="Subscribers up. Revenue per user down."
+  sub="Starlink individual subscribers (millions) vs. average revenue per user (USD per month), 2023 to Q1 2026."
+  source="Source: SpaceX Form S-1. ARPU is monthly average revenue per individual subscriber."
+  label="Line chart: Starlink subscribers rose from 2.3 million in 2023 to 10.3 million in Q1 2026 while monthly ARPU fell from 99 to 66 dollars"
+>
+  <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img">
+    {grid.map((i) => (
+      <>
+        <line x1="80" x2="640" y1={BASE - i * 60} y2={BASE - i * 60} class="k-line" stroke-width="1" stroke-dasharray={i === 0 ? undefined : '2,4'} />
+        <text x="70" y={BASE - i * 60 + 4} text-anchor="end" font-size="10" class="c-acc">{i * 3}</text>
+        <text x="650" y={BASE - i * 60 + 4} font-size="10" class="c-warn">${i * 30}</text>
+      </>
+    ))}
+    <text x="22" y="140" font-size="9.5" letter-spacing="1" class="c-acc" text-anchor="middle" transform="rotate(-90 22 140)">SUBSCRIBERS (M)</text>
+    <text x="692" y="140" font-size="9.5" letter-spacing="1" class="c-warn" text-anchor="middle" transform="rotate(90 692 140)">ARPU (USD/MO)</text>
+
+    <polyline points={subsLine} class="nofill k-acc" stroke-width="2.5" />
+    <polyline points={arpuLine} class="nofill k-warn" stroke-width="2.5" stroke-dasharray="6,3" />
+
+    {points.map((p) => (
+      <>
+        <circle cx={p.x} cy={ySubs(p.subs)} r="5" class="c-acc" />
+        <text x={p.x} y={ySubs(p.subs) + (p.subs < 6 ? 20 : -10)} text-anchor="middle" font-size="10.5" font-weight="600" class="c-acc">{p.subs}M</text>
+        <circle cx={p.x} cy={yArpu(p.arpu)} r="5" class="c-warn" />
+        <text x={p.x} y={yArpu(p.arpu) + (p.subs < 6 ? -10 : 20)} text-anchor="middle" font-size="10.5" font-weight="600" class="c-warn">${p.arpu}</text>
+        <text x={p.x} y="282" text-anchor="middle" font-size="11" letter-spacing="1">{p.label}</text>
+      </>
+    ))}
+
+    <text x="540" y="250" font-size="9" letter-spacing="1" class="c-warn">−33% ARPU SINCE 2023</text>
+  </svg>
+</ChartFrame>

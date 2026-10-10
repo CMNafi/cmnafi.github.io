@@ -1,0 +1,547 @@
+---
+/**
+ * The Open Syllabus: a time-budget flow diagram plus a searchable channel
+ * directory. Everything is rendered at build time so the page reads fine
+ * with JavaScript off; the script only adds hover tracing and the filter.
+ * Colours come from src/styles/tokens.css. Tracks are told apart by
+ * position and label, and the accent marks whichever track is in focus.
+ */
+interface Channel { n: string; who: string; url: string; w: string; s: string; }
+interface Track { id: string; name: string; minutes: number; intro: string; channels: Channel[]; }
+
+const yt = (handle: string) => `https://www.youtube.com/@${handle}`;
+
+const TRACKS: Track[] = [
+  {
+    id: 'first-principles', name: 'First principles', minutes: 55,
+    intro: 'The stuff underneath everything else. These are the channels that make a concept feel obvious in retrospect, which is the only real test of an explanation.',
+    channels: [
+      { n: '3Blue1Brown', who: 'Grant Sanderson', url: yt('3blue1brown'),
+        w: 'Mathematics animated so precisely that the visual is the proof. Sanderson wrote his own animation engine, Manim, to do it.',
+        s: 'Essence of linear algebra, all 16 chapters' },
+      { n: 'Veritasium', who: 'Derek Muller', url: yt('veritasium'),
+        w: "Starts with what you are confident about, then dismantles it on camera. Muller's PhD was literally on why physics videos fail to teach.",
+        s: 'The Bizarre Behavior of Rotating Bodies' },
+      { n: 'Kurzgesagt', who: "Philipp Dettmer's Munich studio", url: yt('kurzgesagt'),
+        w: 'Ten minutes of motion design per big question, with a public sources document behind every video. One or two uploads a month, and it shows.',
+        s: 'The Fermi Paradox, parts one and two' },
+      { n: 'Steve Mould', who: 'Steve Mould', url: yt('SteveMould'),
+        w: 'Takes one small physical oddity and refuses to let go until the mechanism is exposed. The chain fountain has a named effect because of him.',
+        s: 'The Chain Fountain' },
+      { n: 'Numberphile', who: 'Brady Haran with working mathematicians', url: yt('numberphile'),
+        w: 'A camera, brown paper, and a mathematician who cannot hide their delight. The format has not changed in fifteen years because it works.',
+        s: "Graham's Number" },
+      { n: 'PBS Space Time', who: "Matt O'Dowd", url: yt('pbsspacetime'),
+        w: "The most demanding physics channel that still counts as popular science. O'Dowd is an actual astrophysicist and does not round the maths off.",
+        s: 'The black hole series, in order' },
+      { n: 'MinutePhysics', who: 'Henry Reich', url: yt('MinutePhysics'),
+        w: "Hand drawn, fast, and ruthlessly edited. Reich's special relativity series is the clearest introduction to spacetime diagrams anywhere.",
+        s: 'Special Relativity, chapter one' },
+      { n: 'Applied Science', who: 'Ben Krasnow', url: yt('AppliedScience'),
+        w: 'A garage that contains a scanning electron microscope Krasnow built himself. Science as fabrication rather than explanation.',
+        s: 'Homemade scanning electron microscope' },
+      { n: 'SciShow', who: "Hank Green's team", url: yt('SciShow'),
+        w: 'Several uploads a week across every discipline. Best used as a current awareness feed rather than a course.',
+        s: 'Anything from this month' },
+      { n: 'Mathologer', who: 'Burkard Polster', url: yt('Mathologer'),
+        w: 'Full proofs, delivered with visible glee, for results most channels only gesture at. Longer and harder than 3Blue1Brown, deliberately.',
+        s: "Visualising Ramanujan's sum" }
+    ]
+  },
+  {
+    id: 'how-built', name: 'How things get built', minutes: 45,
+    intro: 'Infrastructure, silicon, machines, and the reasons they fail. This track changes how a bridge, a dishwasher, or a fab looks to you permanently.',
+    channels: [
+      { n: 'Practical Engineering', who: 'Grady Hillhouse', url: yt('PracticalEngineeringChannel'),
+        w: 'A licensed civil engineer explaining dams, grids, and sewers with backyard scale models. The best public infrastructure teaching on the internet.',
+        s: 'Why dams fail' },
+      { n: 'Real Engineering', who: 'Brian McManus', url: yt('RealEngineering'),
+        w: 'Aerospace and materials, told through a single design decision and the constraint that forced it.',
+        s: 'The insane engineering of the A-10 Warthog' },
+      { n: 'Technology Connections', who: 'Alec Watson', url: yt('TechnologyConnections'),
+        w: 'Forty minutes on your dishwasher, and you will finish it convinced you were using the machine wrong. Which you were.',
+        s: 'The heat pump explainer' },
+      { n: 'Branch Education', who: 'Branch Education', url: yt('BranchEducation'),
+        w: '3D animation that walks you down to the transistor level of the device in your hand. Nothing else visualises chips this well.',
+        s: 'How a smartphone works, inside out' },
+      { n: 'Asianometry', who: 'Jon Y', url: yt('Asianometry'),
+        w: 'Semiconductor history and industrial policy, researched like a trade journal and delivered flat. Essential if you hold any tech exposure.',
+        s: 'The history of ASML and EUV lithography' },
+      { n: 'Stuff Made Here', who: 'Shane Wighton', url: yt('StuffMadeHere'),
+        w: 'Robotics and machining disguised as jokes. The engineering under the punchline is genuinely advanced.',
+        s: 'The basketball hoop that never misses' },
+      { n: 'Mustard', who: 'Mustard', url: yt('MustardChannel'),
+        w: 'Aviation and vehicle projects that almost happened, told as tight fifteen minute documentaries with beautiful CG.',
+        s: 'The Convair XFY Pogo' },
+      { n: 'Smarter Every Day', who: 'Destin Sandlin', url: yt('smartereveryday'),
+        w: 'An engineer with a high speed camera and an unusual willingness to be the subject of his own experiment.',
+        s: 'The Backwards Brain Bicycle' }
+    ]
+  },
+  {
+    id: 'money', name: 'Money and markets', minutes: 50,
+    intro: 'The track I use professionally. Finance YouTube is 95 percent noise, so this is deliberately short: teaching, company history, and evidence, with no price targets.',
+    channels: [
+      { n: 'Acquired', who: 'Ben Gilbert and David Rosenthal', url: yt('AcquiredFM'),
+        w: 'Three to four hour company histories, researched to a depth that embarrasses most business journalism. The TSMC and Nvidia episodes are references I still go back to.',
+        s: 'TSMC, then Nvidia parts one to three' },
+      { n: 'Aswath Damodaran', who: 'NYU Stern', url: yt('AswathDamodaranonValuation'),
+        w: 'His entire valuation, corporate finance, and investment philosophy courses, uploaded free. The valuation playlist is a full graduate class.',
+        s: 'Valuation, session one' },
+      { n: 'Patrick Boyle', who: 'Patrick Boyle', url: yt('PBoyle'),
+        w: "A former hedge fund manager who now teaches at King's College London, dismantling financial nonsense with a very dry face.",
+        s: 'Anything on the current blow-up' },
+      { n: 'Ben Felix', who: 'Ben Felix', url: yt('BenFelixCSI'),
+        w: 'Portfolio decisions argued from the academic literature, with citations on screen. The antidote to finance content designed to make you trade.',
+        s: 'Factor investing, and why you probably should not stock pick' },
+      { n: 'The Plain Bagel', who: 'Richard Coffin', url: yt('ThePlainBagel'),
+        w: 'A CFA charterholder explaining instruments and scams at the level a smart beginner actually needs.',
+        s: 'How options work' },
+      { n: 'Money and Macro', who: 'Joeri Schasfoort', url: yt('MoneyMacro'),
+        w: 'Macroeconomics from a working economist, with the models drawn out rather than asserted.',
+        s: 'How money is actually created' }
+    ]
+  },
+  {
+    id: 'past', name: 'The long past', minutes: 40,
+    intro: 'History that treats you as an adult. The best of these do what a good lecturer does: give you the shape of a century before the dates.',
+    channels: [
+      { n: 'Historia Civilis', who: 'Historia Civilis', url: yt('HistoriaCivilis'),
+        w: 'Roman politics rendered as coloured squares moving on a map, which sounds absurd and is the most gripping history on the platform.',
+        s: 'The Fall of the Roman Republic, in order' },
+      { n: 'Fall of Civilizations', who: 'Paul Cooper', url: 'https://www.youtube.com/c/FallofCivilizationsPodcast',
+        w: 'Two hour meditations on societies that ended, narrated with real literary control. Cooper reads the primary sources aloud and lets them land.',
+        s: 'The Bronze Age Collapse' },
+      { n: 'Kings and Generals', who: 'Kings and Generals', url: yt('KingsandGenerals'),
+        w: 'Animated military history covering campaigns that Anglophone history usually skips entirely, including a deep Mongol and Ottoman catalogue.',
+        s: 'The Mongol Invasions series' },
+      { n: 'OverSimplified', who: 'OverSimplified', url: yt('OverSimplified'),
+        w: 'Cartoon history that is funnier than it has any right to be and quietly accurate about causes. The gateway drug for anyone you are trying to convert.',
+        s: 'World War One' },
+      { n: 'The Great War', who: 'Jesse Alexander, after Indy Neidell', url: yt('TheGreatWar'),
+        w: 'The channel that covered 1914 to 1918 week by week, a century to the day behind, and then kept going into the aftermath.',
+        s: 'The week by week archive, starting July 1914' },
+      { n: 'Tasting History', who: 'Max Miller', url: yt('TastingHistory'),
+        w: 'Cooks a genuinely ancient recipe, then spends half the video on the world that ate it. Social history through the kitchen.',
+        s: 'Roman garum' }
+    ]
+  },
+  {
+    id: 'systems', name: 'Systems and cities', minutes: 30,
+    intro: 'Why the built world is arranged the way it is: borders, logistics, zoning, transit. The track that makes ordinary streets legible.',
+    channels: [
+      { n: 'CGP Grey', who: 'CGP Grey', url: yt('CGPGrey'),
+        w: 'Political and geographic systems compressed to their logic. Few channels explain why institutions behave the way they do this economically.',
+        s: 'The Rules for Rulers' },
+      { n: 'Not Just Bikes', who: 'Jason Slaughter', url: yt('NotJustBikes'),
+        w: 'A Canadian in Amsterdam explaining, with visible irritation, why North American streets feel the way they do. Opinionated by design.',
+        s: 'Stroads' },
+      { n: 'Johnny Harris', who: 'Johnny Harris', url: yt('johnnyharris'),
+        w: 'Maps and borders as reported journalism. Strong on the visual argument, so watch with your own scepticism switched on.',
+        s: 'The border series' },
+      { n: 'Wendover Productions', who: 'Sam Denby', url: yt('Wendoverproductions'),
+        w: 'Logistics, aviation economics, and supply chains. The best answer on YouTube to why anything costs what it costs to move.',
+        s: 'How airlines price seats' },
+      { n: 'City Beautiful', who: 'Dave Amos', url: yt('CityBeautiful'),
+        w: 'An actual urban planning academic on parking minimums, zoning, and density, without the culture war framing.',
+        s: 'The high cost of free parking' }
+    ]
+  },
+  {
+    id: 'craft', name: 'Craft and criticism', minutes: 30,
+    intro: 'How made things work on you. Film, music, and argument, taken apart by people who can also make the thing they are criticising.',
+    channels: [
+      { n: 'Every Frame a Painting', who: 'Tony Zhou and Taylor Ramos', url: yt('everyframeapainting'),
+        w: 'The original run, 28 videos made between 2014 and 2016, invented the modern video essay. Still the highest hit rate of anything in this list.',
+        s: 'Akira Kurosawa: Composing Movement' },
+      { n: 'Nerdwriter1', who: 'Evan Puschak', url: yt('Nerdwriter1'),
+        w: 'One artwork, one idea, six minutes. Puschak is at his best on a single painting or a single shot.',
+        s: 'How Donald Trump Answers a Question' },
+      { n: 'Adam Neely', who: 'Adam Neely', url: yt('AdamNeely'),
+        w: 'A working bassist with a Manhattan School of Music background, doing music theory that takes non-Western traditions seriously.',
+        s: 'The Girl from Ipanema is a far weirder song than you thought' },
+      { n: 'Lessons from the Screenplay', who: 'Michael Tucker', url: yt('LessonsfromtheScreenplay'),
+        w: 'Reads the actual script against the finished scene. The clearest teaching on structure and character available for free.',
+        s: 'Whiplash, and the drive for greatness' },
+      { n: 'Jacob Geller', who: 'Jacob Geller', url: yt('JacobGeller'),
+        w: 'Essays that start in a video game and end somewhere in architecture, art history, or grief. The most genuinely literary channel here.',
+        s: "Who's Afraid of Modern Art?" },
+      { n: 'Folding Ideas', who: 'Dan Olson', url: yt('FoldingIdeas'),
+        w: 'Long form media criticism with a forensic streak. Line Goes Up is the two hour crypto essay that moved public opinion.',
+        s: 'Line Goes Up' },
+      { n: 'LEMMiNO', who: 'LEMMiNO', url: yt('lemmino'),
+        w: 'Two or three documentaries a year, scored and edited by one person to a standard broadcast television rarely reaches.',
+        s: 'The Dyatlov Pass Case' }
+    ]
+  },
+  {
+    id: 'mind', name: 'Mind and meaning', minutes: 25,
+    intro: 'Philosophy and religion handled as subjects rather than as team sports. Useful precisely because the questions do not resolve.',
+    channels: [
+      { n: 'Academy of Ideas', who: 'Academy of Ideas', url: yt('academyofideas'),
+        w: 'Short introductions to Nietzsche, Jung, Dostoevsky, and the existentialists. Openly a point of view, so read alongside it.',
+        s: 'Introduction to Carl Jung' },
+      { n: "Let's Talk Religion", who: 'Filip Holm', url: yt('LetsTalkReligion'),
+        w: 'Deep, careful hours on Sufism, Islamic philosophy, and mysticism from someone with the academic training to do it properly.',
+        s: 'What is Sufism?' },
+      { n: 'ReligionForBreakfast', who: 'Andrew Henry', url: yt('ReligionForBreakfast'),
+        w: 'A religious studies PhD applying the academic method to traditions people usually only argue about.',
+        s: 'Who wrote the Gospels?' },
+      { n: 'Sisyphus 55', who: 'Sisyphus 55', url: yt('Sisyphus55'),
+        w: 'Absurdism, meaning, and mortality, delivered plainly and without a self help ending.',
+        s: 'Camus and the absurd' },
+      { n: 'Exurb1a', who: 'Exurb1a', url: yt('exurb1a'),
+        w: 'Consciousness and time as fiction rather than lecture. Uneven, occasionally extraordinary, entirely its own thing.',
+        s: '27' }
+    ]
+  },
+  {
+    id: 'lecture-hall', name: 'The lecture hall', minutes: 25,
+    intro: 'Full courses, uploaded by the institutions themselves. Slower and less charming than everything above, and the only part of this list that is structurally identical to paid tuition.',
+    channels: [
+      { n: 'MIT OpenCourseWare', who: 'MIT', url: yt('mitocw'),
+        w: "Complete lecture series with problem sets. Gilbert Strang's 18.06 is the single most valuable free course on the internet.",
+        s: '18.06 Linear Algebra, Gilbert Strang' },
+      { n: 'Yale Courses', who: 'Yale University', url: yt('YaleCourses'),
+        w: "Full semesters from Yale's open courses project, filmed in the room. Robert Shiller's Financial Markets lectures were recorded here before his Nobel.",
+        s: 'Financial Markets, Robert Shiller' },
+      { n: 'Stanford Online', who: 'Stanford University', url: yt('stanfordonline'),
+        w: 'Machine learning, medicine, and entrepreneurship lectures, including the Andrew Ng material that started the modern MOOC.',
+        s: 'CS229 Machine Learning' },
+      { n: 'CS50', who: 'David Malan, Harvard', url: yt('cs50'),
+        w: "Harvard's introduction to computer science, staged like a theatre production. The most infectious teaching in programming.",
+        s: 'CS50 lecture zero' },
+      { n: 'Khan Academy', who: 'Salman Khan', url: yt('khanacademy'),
+        w: 'The original, still the best repair kit for a gap in your maths from fifteen years ago. Start where you are actually shaky, not where you think you are.',
+        s: 'Whichever topic you quietly skipped' },
+      { n: 'Gresham College', who: 'Gresham College, London', url: yt('GreshamCollege'),
+        w: 'Free public lectures given in London since 1597 and uploaded in full. Genuinely unmatched depth per minute.',
+        s: 'Any professor of astronomy lecture' },
+      { n: 'CrashCourse', who: 'John and Hank Green', url: yt('crashcourse'),
+        w: 'Forty plus courses across the sciences and humanities, built as proper sequences. Best used to survey a field before committing.',
+        s: 'Astronomy, with Phil Plait' },
+      { n: 'TED-Ed', who: 'TED-Ed', url: yt('TEDEd'),
+        w: 'Five minute animated lessons written by teachers. The right length for a subject you are only mildly curious about.',
+        s: 'Any riddle, then any history lesson' }
+    ]
+  }
+];
+
+const PAYOFFS = [
+  { id: 'p1', name: 'Explain it to someone else' },
+  { id: 'p2', name: 'Read a filing without flinching' },
+  { id: 'p3', name: 'See the system behind the surface' },
+  { id: 'p4', name: 'Make better things' },
+  { id: 'p5', name: 'Change your mind on purpose' }
+];
+
+// [track, payoff, minutes]
+const LINKS: [string, string, number][] = [
+  ['first-principles', 'p1', 25], ['first-principles', 'p3', 20], ['first-principles', 'p5', 10],
+  ['how-built', 'p4', 20], ['how-built', 'p3', 15], ['how-built', 'p1', 10],
+  ['money', 'p2', 30], ['money', 'p3', 15], ['money', 'p1', 5],
+  ['past', 'p3', 20], ['past', 'p5', 12], ['past', 'p1', 8],
+  ['systems', 'p3', 18], ['systems', 'p5', 7], ['systems', 'p1', 5],
+  ['craft', 'p4', 18], ['craft', 'p1', 7], ['craft', 'p5', 5],
+  ['mind', 'p5', 18], ['mind', 'p1', 7],
+  ['lecture-hall', 'p2', 10], ['lecture-hall', 'p1', 10], ['lecture-hall', 'p4', 5]
+];
+
+/* ---------- flow diagram geometry, computed at build time ---------- */
+const W = 1000, H = 580, PAD = 30, GAP = 11, NW = 12;
+const X0 = 104, X1 = 352, X2 = 716;
+
+const totalMinutes = TRACKS.reduce((s, t) => s + t.minutes, 0);
+const totalChannels = TRACKS.reduce((s, t) => s + t.channels.length, 0);
+const k = (H - PAD * 2 - GAP * (TRACKS.length - 1)) / totalMinutes;
+
+const band = (x0: number, y0: number, x1: number, y1: number, h: number) => {
+  const mx = (x0 + x1) / 2;
+  return `M${x0},${y0} C${mx},${y0} ${mx},${y1} ${x1},${y1} L${x1},${y1 + h} C${mx},${y1 + h} ${mx},${y0 + h} ${x0},${y0 + h} Z`;
+};
+const spine = (x0: number, y0: number, x1: number, y1: number) => {
+  const mx = (x0 + x1) / 2;
+  return `M${x0},${y0} C${mx},${y0} ${mx},${y1} ${x1},${y1}`;
+};
+
+let y = PAD;
+const tpos: Record<string, { y: number; h: number; off: number }> = {};
+for (const t of TRACKS) {
+  tpos[t.id] = { y, h: t.minutes * k, off: 0 };
+  y += t.minutes * k + GAP;
+}
+
+const ptot: Record<string, number> = {};
+for (const p of PAYOFFS) ptot[p.id] = LINKS.filter((l) => l[1] === p.id).reduce((s, l) => s + l[2], 0);
+const h2 = totalMinutes * k + GAP * (PAYOFFS.length - 1);
+y = (H - h2) / 2;
+const ppos: Record<string, { y: number; h: number; off: number }> = {};
+for (const p of PAYOFFS) {
+  ppos[p.id] = { y, h: ptot[p.id] * k, off: 0 };
+  y += ptot[p.id] * k + GAP;
+}
+
+const srcH = totalMinutes * k;
+const srcY = (H - srcH) / 2;
+const ribbons: { d: string; track: string }[] = [];
+const sparks: string[] = [];
+
+let srcOff = 0;
+for (const t of TRACKS) {
+  const h = t.minutes * k;
+  ribbons.push({ d: band(X0 + NW, srcY + srcOff, X1, tpos[t.id].y, h), track: t.id });
+  sparks.push(spine(X0 + NW, srcY + srcOff + h / 2, X1, tpos[t.id].y + h / 2));
+  srcOff += h;
+}
+const order = PAYOFFS.map((p) => p.id);
+for (const t of TRACKS) {
+  const mine = LINKS.filter((l) => l[0] === t.id).sort((a, b) => order.indexOf(a[1]) - order.indexOf(b[1]));
+  for (const [, pid, mins] of mine) {
+    const h = mins * k;
+    const y0 = tpos[t.id].y + tpos[t.id].off;
+    const y1 = ppos[pid].y + ppos[pid].off;
+    ribbons.push({ d: band(X1 + NW, y0, X2, y1, h), track: t.id });
+    sparks.push(spine(X1 + NW, y0 + h / 2, X2, y1 + h / 2));
+    tpos[t.id].off += h;
+    ppos[pid].off += h;
+  }
+}
+---
+<div class="os" data-open-syllabus>
+  <section class="os-flow" aria-labelledby="os-flow-title">
+    <div class="os-flow-head">
+      <h2 id="os-flow-title">Where 300 minutes goes</h2>
+      <p>Five hours a week is roughly what a commute plus two evenings gets you. Hover a track to trace it. Click one to jump to its channels.</p>
+    </div>
+    <div class="os-scroll">
+      <svg class="os-sankey" viewBox={`0 0 ${W} ${H}`} role="img"
+        aria-label="Flow diagram splitting 300 minutes a week across eight learning tracks and into five outcomes">
+        <defs>
+          <clipPath id="os-reveal"><rect x="0" y="0" width={W} height={H} /></clipPath>
+        </defs>
+
+        <g clip-path="url(#os-reveal)">
+          {ribbons.map((r) => <path d={r.d} class="os-ribbon" data-track={r.track} />)}
+          {sparks.map((d) => <path d={d} class="os-spark" />)}
+        </g>
+
+        <text x="6" y={PAD - 12} class="os-colhead">the week you have</text>
+        <text x={X1} y={PAD - 12} class="os-colhead">eight tracks</text>
+        <text x={X2} y={PAD - 12} class="os-colhead">what it buys you</text>
+
+        <rect x={X0} y={srcY} width={NW} height={srcH} rx="2" class="os-node-src" />
+        <text x={X0 - 10} y={srcY + srcH / 2 - 3} text-anchor="end" class="os-label">300 minutes</text>
+        <text x={X0 - 10} y={srcY + srcH / 2 + 15} text-anchor="end" class="os-val">5 hrs / week</text>
+
+        {TRACKS.map((t) => (
+          <a href={`#${t.id}`} class="os-node" data-track={t.id} aria-label={`${t.name}, ${t.minutes} minutes a week`}>
+            <rect x={X1} y={tpos[t.id].y} width={NW} height={t.minutes * k} rx="2" class="os-node-track" />
+            <text x={X1 + NW + 9} y={tpos[t.id].y + (t.minutes * k) / 2 + 1} class="os-label">{t.name}</text>
+            <text x={X1 + NW + 9} y={tpos[t.id].y + (t.minutes * k) / 2 + 16} class="os-val">{t.minutes} min</text>
+          </a>
+        ))}
+
+        {PAYOFFS.map((p) => (
+          <g>
+            <rect x={X2} y={ppos[p.id].y} width={NW} height={ptot[p.id] * k} rx="2" class="os-node-src" />
+            <text x={X2 + NW + 10} y={ppos[p.id].y + (ptot[p.id] * k) / 2 + 5} class="os-label">{p.name}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  </section>
+
+  <div class="os-controls">
+    <label class="os-sr" for="os-q">Filter channels</label>
+    <input type="search" id="os-q" placeholder="Filter by channel, person, or subject" autocomplete="off" />
+    <span class="os-count" data-total={totalChannels}>{totalChannels} channels, eight tracks</span>
+  </div>
+
+  <div class="os-tracks">
+    {TRACKS.map((t) => (
+      <section class="os-track" id={t.id}>
+        <h3>{t.name}</h3>
+        <p class="os-budget">{t.minutes} minutes a week, {t.channels.length} channels</p>
+        <p class="os-intro">{t.intro}</p>
+        <div class="os-tower">
+          {t.channels.map((c) => (
+            <div class="os-row" data-hay={`${c.n} ${c.who} ${c.w} ${c.s} ${t.name}`.toLowerCase()}>
+              <div class="os-name">
+                <a href={c.url} target="_blank" rel="noopener">{c.n}</a>
+                <span class="os-who">{c.who}</span>
+              </div>
+              <div class="os-what">{c.w}</div>
+              <div class="os-start"><b>start with</b>{c.s}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+  <p class="os-empty" hidden>Nothing matches that. Clear the filter to see all {totalChannels} channels.</p>
+</div>
+
+<script>
+  function initOpenSyllabus() {
+    const root = document.querySelector<HTMLElement>('[data-open-syllabus]');
+    if (!root || root.dataset.bound) return;
+    root.dataset.bound = '1';
+
+    // Hover and keyboard focus trace one track through the diagram.
+    const svg = root.querySelector('.os-sankey');
+    const nodes = root.querySelectorAll<SVGAElement>('.os-node');
+    const ribbons = root.querySelectorAll<SVGPathElement>('.os-ribbon');
+    const trace = (id: string | null) => {
+      svg?.classList.toggle('dim', id !== null);
+      ribbons.forEach((r) => r.classList.toggle('on', id !== null && r.dataset.track === id));
+      nodes.forEach((n) => n.classList.toggle('off', id !== null && n.dataset.track !== id));
+    };
+    nodes.forEach((n) => {
+      const id = n.dataset.track || null;
+      n.addEventListener('mouseenter', () => trace(id));
+      n.addEventListener('mouseleave', () => trace(null));
+      n.addEventListener('focus', () => trace(id));
+      n.addEventListener('blur', () => trace(null));
+    });
+
+    // Filter the directory by channel, person, or subject.
+    const q = root.querySelector<HTMLInputElement>('#os-q');
+    const count = root.querySelector<HTMLElement>('.os-count');
+    const empty = root.querySelector<HTMLElement>('.os-empty');
+    const total = Number(count?.dataset.total || 0);
+    const run = () => {
+      const v = (q?.value || '').trim().toLowerCase();
+      let shown = 0;
+      root.querySelectorAll<HTMLElement>('.os-track').forEach((sec) => {
+        let any = false;
+        sec.querySelectorAll<HTMLElement>('.os-row').forEach((row) => {
+          const hit = !v || (row.dataset.hay || '').includes(v);
+          row.hidden = !hit;
+          if (hit) { any = true; shown++; }
+        });
+        sec.hidden = !any;
+      });
+      if (count) count.textContent = v ? `${shown} of ${total} channels` : `${total} channels, eight tracks`;
+      if (empty) empty.hidden = shown > 0;
+    };
+    q?.addEventListener('input', run);
+  }
+
+  document.addEventListener('astro:page-load', initOpenSyllabus);
+  initOpenSyllabus();
+</script>
+
+<style>
+  .os { margin: 3rem 0 1rem; }
+  .os-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ---------- flow diagram ---------- */
+  .os-flow {
+    width: min(1040px, calc(100vw - 2rem));
+    margin-left: 50%;
+    transform: translateX(-50%);
+    padding: 2rem 0 1rem;
+    border-top: 1px solid var(--surface-line);
+  }
+  .os-flow-head { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; align-items: flex-end; justify-content: space-between; }
+  .os-flow-head h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-transform: none;
+    color: var(--ink-primary);
+    margin: 0;
+    padding: 0;
+  }
+  .os-flow-head p { font-family: var(--font-body); font-size: 0.95rem; line-height: 1.5; color: var(--ink-secondary); max-width: 44ch; margin: 0; }
+  .os-scroll { overflow-x: auto; margin-top: 1.25rem; -webkit-overflow-scrolling: touch; }
+  .os-sankey { display: block; width: 100%; min-width: 860px; height: auto; }
+
+  .os-ribbon { fill: var(--ink-secondary); opacity: 0.2; transition: opacity var(--dur-fast) var(--ease-mechanical), fill var(--dur-fast) var(--ease-mechanical); }
+  .os-spark { fill: none; stroke: var(--ink-primary); stroke-width: 1; opacity: 0.14; pointer-events: none; }
+  .os-node-src { fill: var(--ink-tertiary); }
+  .os-node-track { fill: var(--ink-primary); transition: fill var(--dur-fast) var(--ease-mechanical); }
+  .os-label { font-family: var(--font-body); font-size: 14px; fill: var(--ink-primary); paint-order: stroke; stroke: var(--surface-base); stroke-width: 3px; stroke-linejoin: round; }
+  .os-val { font-family: var(--font-mono); font-size: 11px; fill: var(--ink-secondary); paint-order: stroke; stroke: var(--surface-base); stroke-width: 3px; stroke-linejoin: round; }
+  .os-colhead { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; fill: var(--ink-tertiary); }
+  .os-sankey .os-node { cursor: pointer; text-decoration: none; }
+  .os-sankey .os-node:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
+  .os-node:hover .os-node-track, .os-node:focus .os-node-track { fill: var(--accent); }
+
+  .os-sankey.dim .os-ribbon { opacity: 0.06; }
+  .os-sankey.dim .os-ribbon.on { opacity: 0.75; fill: var(--accent); }
+  .os-sankey.dim .os-spark { opacity: 0; }
+  .os-sankey.dim .os-node.off { opacity: 0.3; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .os-spark { stroke-dasharray: 3 26; animation: os-drift 4.6s linear infinite; }
+    @keyframes os-drift { to { stroke-dashoffset: -290; } }
+    #os-reveal rect { animation: os-wipe var(--dur-cinematic) var(--ease-instrument) both; }
+    @keyframes os-wipe { from { width: 0; } to { width: 1000px; } }
+  }
+
+  /* ---------- filter bar ---------- */
+  .os-controls {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: center;
+    padding: 0.8rem 0;
+    margin-top: 1.5rem;
+    background: var(--surface-base);
+    border-top: 1px solid var(--surface-line);
+    border-bottom: 1px solid var(--surface-line);
+  }
+  .os-controls input {
+    flex: 1 1 240px;
+    min-width: 0;
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-line);
+    border-radius: var(--radius-chip);
+    color: var(--ink-primary);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    padding: 0.55rem 0.75rem;
+  }
+  .os-controls input::placeholder { color: var(--ink-tertiary); }
+  .os-controls input:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+  .os-count { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; color: var(--ink-secondary); white-space: nowrap; }
+
+  /* ---------- directory ---------- */
+  .os-track { padding: 3rem 0 0.25rem; scroll-margin-top: 4.5rem; }
+  .os-track[hidden], .os-row[hidden] { display: none; }
+  .os-track h3 { font-family: var(--font-serif); font-size: clamp(1.5rem, 3vw, 1.9rem); letter-spacing: -0.015em; line-height: 1.1; color: var(--ink-primary); margin: 0 0 0.4rem; }
+  .os-track .os-budget { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-tertiary); margin: 0 0 0.6rem; }
+  .os-track .os-intro { font-size: 1rem; line-height: 1.6; color: var(--ink-secondary); margin: 0; max-width: 64ch; }
+  .os-tower { margin-top: 1.4rem; border-top: 1px solid var(--surface-line); }
+  .os-row {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) minmax(200px, 1.6fr) minmax(140px, 1fr);
+    gap: 1.1rem;
+    align-items: start;
+    padding: 0.95rem 0 0.95rem 0.9rem;
+    border-bottom: 1px solid var(--surface-line);
+    position: relative;
+    transition: background var(--dur-fast) var(--ease-mechanical);
+  }
+  .os-row::before { content: ''; position: absolute; left: 0; top: 0.9rem; bottom: 0.9rem; width: 2px; background: var(--surface-line); transition: background var(--dur-fast) var(--ease-mechanical); }
+  .os-row:hover { background: var(--surface-raised); }
+  .os-row:hover::before { background: var(--accent); }
+  .os-name { font-size: 1.02rem; line-height: 1.3; }
+  .os-name a { color: var(--ink-primary); text-decoration: underline; text-decoration-color: var(--accent-glow); text-underline-offset: 4px; }
+  .os-name a:hover { text-decoration-color: var(--accent); }
+  .os-who { display: block; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.04em; color: var(--ink-tertiary); margin-top: 0.3rem; }
+  .os-what { font-size: 0.95rem; line-height: 1.55; color: var(--ink-primary); opacity: 0.86; }
+  .os-start { font-size: 0.9rem; line-height: 1.5; color: var(--ink-secondary); }
+  .os-start b { display: block; font-family: var(--font-mono); font-size: 0.64rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-tertiary); margin-bottom: 0.2rem; }
+  .os-empty { padding: 2.5rem 0; color: var(--ink-secondary); }
+
+  @media (max-width: 720px) {
+    .os-row { grid-template-columns: 1fr; gap: 0.45rem; }
+    .os-start b { display: inline; margin-right: 0.5rem; }
+  }
+</style>
