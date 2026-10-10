@@ -93,7 +93,7 @@ const LINK_MAP = [
     url: '/blog/the-covered-call-playbook', label: 'The Covered Call Playbook' },
 
   { terms: ['SpaceX IPO', 'SpaceX S-1', 'Project Apex'],
-    url: '/blog/spacex-ipo', label: 'SpaceX IPO — Project Apex' },
+    url: '/blog/spacex-s1-teardown', label: 'SpaceX S-1 Teardown' },
 
   { terms: ['IPL franchise', 'Indian Premier League franchise', 'IPL valuation'],
     url: '/blog/blackstone-ipl-acquisition', label: 'IPL Franchise Finance' },
@@ -102,7 +102,7 @@ const LINK_MAP = [
 export function remarkAutoLink() {
   return (tree, file) => {
     // Get the current file's slug so we never link to self
-    const currentSlug = file.history?.[0]?.replace(/.*\/blog\//, '').replace(/\.mdx$/, '') ?? '';
+    const currentSlug = (file.history?.[0] ?? '').split(/[\\/]/).pop()?.replace(/\.mdx?$/, '') ?? '';
 
     // Track which terms have been linked already (first-occurrence-only rule)
     const linked = new Set();
@@ -118,9 +118,12 @@ export function remarkAutoLink() {
       const newChildren = [];
       let remaining = value;
 
-      for (const { terms, url, label } of LINK_MAP) {
+      for (const { terms, url: mappedUrl, label } of LINK_MAP) {
+        // Notes are served from /field-notes/; the map still uses the old /blog/ prefix
+        const url = mappedUrl.replace(/^\/blog\//, '/field-notes/');
+
         // Don't link to self
-        if (url.includes(currentSlug)) continue;
+        if (currentSlug && url.endsWith(`/${currentSlug}`)) continue;
 
         for (const term of terms) {
           if (linked.has(term)) continue;
