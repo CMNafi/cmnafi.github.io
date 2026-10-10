@@ -1,0 +1,87 @@
+---
+/**
+ * Shared frame for inline SVG figures inside field notes.
+ * Colours come from src/styles/tokens.css only. Charts use the utility
+ * classes below (c-* for fills, k-* for strokes) instead of hex values.
+ */
+interface Props {
+  eyebrow: string;
+  title: string;
+  sub?: string;
+  source?: string;
+  label?: string;
+}
+const { eyebrow, title, sub, source, label } = Astro.props;
+---
+<figure class="fn-chart" aria-label={label || title}>
+  <div class="fn-chart-eyebrow">{eyebrow}</div>
+  <div class="fn-chart-title">{title}</div>
+  {sub && <div class="fn-chart-sub">{sub}</div>}
+  <div class="fn-chart-body"><slot /></div>
+  {source && <div class="fn-chart-source">{source}</div>}
+</figure>
+
+<style is:global>
+  .fn-chart {
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-line);
+    border-radius: var(--radius-card);
+    padding: 1.75rem 1.5rem 1.25rem;
+    margin: 2.5rem 0;
+  }
+  .fn-chart-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .fn-chart-title {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    line-height: 1.25;
+    color: var(--ink-primary);
+    margin-bottom: 0.35rem;
+  }
+  .fn-chart-sub {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    color: var(--ink-secondary);
+    margin-bottom: 1.5rem;
+  }
+  .fn-chart-source {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    color: var(--ink-tertiary);
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--surface-line);
+  }
+  .fn-chart-body { overflow-x: auto; }
+  .fn-chart svg { display: block; width: 100%; height: auto; min-width: 560px; }
+  .fn-chart svg text { font-family: var(--font-mono); fill: var(--ink-secondary); }
+  .fn-chart svg .serif { font-family: var(--font-serif); }
+
+  /* fills */
+  .fn-chart svg .c-ink { fill: var(--ink-primary); }
+  .fn-chart svg .c-sec { fill: var(--ink-secondary); }
+  .fn-chart svg .c-ter { fill: var(--ink-tertiary); }
+  .fn-chart svg .c-acc { fill: var(--accent); }
+  .fn-chart svg .c-warn { fill: var(--status-warn); }
+  .fn-chart svg .c-base { fill: var(--surface-base); }
+  /* strokes */
+  .fn-chart svg .k-line { stroke: var(--surface-line); }
+  .fn-chart svg .k-acc { stroke: var(--accent); }
+  .fn-chart svg .k-warn { stroke: var(--status-warn); }
+  .fn-chart svg .nofill { fill: none; }
+
+  @media (max-width: 640px) {
+    .fn-chart { padding: 1.25rem 1rem 1rem; }
+    .fn-chart-title { font-size: 1.2rem; }
+  }
+</style>

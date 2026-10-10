@@ -1,0 +1,74 @@
+---
+/**
+ * Row of headline figures for the top of a data-led field note.
+ * tone: 'up' renders in the accent, 'down' in the warning amber.
+ */
+interface Stat {
+  label: string;
+  value: string;
+  sub?: string;
+  tone?: 'up' | 'down';
+}
+interface Props {
+  items: Stat[];
+}
+const { items } = Astro.props;
+---
+<div class="stat-strip" role="list">
+  {items.map((s) => (
+    <div class="stat" role="listitem">
+      <div class="stat-label">{s.label}</div>
+      <div class={`stat-value ${s.tone || ''}`}>{s.value}</div>
+      {s.sub && <div class="stat-sub">{s.sub}</div>}
+    </div>
+  ))}
+</div>
+
+<style>
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--surface-line);
+    border-bottom: 1px solid var(--surface-line);
+    margin: 2rem 0 2.5rem;
+  }
+  .stat {
+    padding: 1.1rem 1rem 1.1rem 0;
+    border-right: 1px solid var(--surface-line);
+    padding-left: 1rem;
+  }
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: none; }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+    margin-bottom: 0.6rem;
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.7rem;
+    line-height: 1;
+    color: var(--ink-primary);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .stat-value.up { color: var(--accent); }
+  .stat-value.down { color: var(--status-warn); }
+  .stat-sub {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-secondary);
+    margin-top: 0.55rem;
+  }
+  @media (max-width: 640px) {
+    .stat-strip { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2) { border-right: none; }
+    .stat:nth-child(3) { padding-left: 0; }
+    .stat:nth-child(n + 3) { border-top: 1px solid var(--surface-line); }
+    .stat-value { font-size: 1.45rem; }
+  }
+</style>
