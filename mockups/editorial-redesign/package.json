@@ -1,0 +1,8 @@
+{
+  "name": "cmnafi-editorial-mockups",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local mockups of the cmnafi.com journal, Era, and Bookmarks.",
+  "scripts": { "start": "node server.mjs", "dev": "node server.mjs", "check": "node --check dist/app.js" },
+  "engines": { "node": ">=18" }
+}

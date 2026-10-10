@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="480" viewBox="0 0 760 480" fill="none">
+  <title>Regulatory systems — original editorial data diagram</title>
+  <desc>A quiet pale blue green data architecture diagram with measured columns, circular nodes and fine technical connectors.</desc>
+  <defs>
+    <clipPath id="frame"><rect width="760" height="480"/></clipPath>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".65" fill="#31544A" fill-opacity=".18"/></pattern>
+  </defs>
+  <g clip-path="url(#frame)">
+    <path fill="#DDE8E3" d="M0 0h760v480H0z"/>
+    <path d="M66 46h628v384H66z" fill="url(#dots)"/>
+    <path d="M112 368h536M112 368V101" stroke="#31544A" stroke-opacity=".4" stroke-width=".8"/>
+    <path d="M106 126h12m-12 60h12m-12 60h12m-12 60h12M173 362v12m100-12v12m100-12v12m100-12v12m100-12v12" stroke="#31544A" stroke-opacity=".45" stroke-width=".8"/>
+    <g stroke="#31544A" stroke-width="1">
+      <path d="M174 240h61v128h-61z" fill="#BDCFC6"/>
+      <path d="M274 198h61v170h-61z" fill="#CFDCD4"/>
+      <path d="M374 152h61v216h-61z" fill="#7B9A8D"/>
+      <path d="M474 102h61v266h-61z" fill="#C2D2C9"/>
+      <path d="M574 181h61v187h-61z" fill="#D3DFD7"/>
+    </g>
+    <g stroke="#31544A" stroke-width=".65" stroke-opacity=".53">
+      <path d="M174 262h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61M274 218h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61M374 174h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61M474 124h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61M574 202h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61m-61 22h61"/>
+    </g>
+    <path d="M204 218V153h100v-24h100V84h100" stroke="#31544A" stroke-width="1.4"/>
+    <path d="M504 84h100v74M304 129V83H164" stroke="#31544A" stroke-width=".8"/>
+    <g fill="#DDE8E3" stroke="#31544A" stroke-width="1.3">
+      <circle cx="204" cy="218" r="8"/>
+      <circle cx="304" cy="129" r="8"/>
+      <circle cx="404" cy="84" r="8"/>
+      <circle cx="604" cy="158" r="8"/>
+    </g>
+    <circle cx="504" cy="84" r="9" fill="#31544A"/>
+    <circle cx="504" cy="84" r="16" stroke="#31544A" stroke-width=".7"/>
+    <path d="M148 409h491M148 403v12M639 403v12M374 398v22" stroke="#31544A" stroke-opacity=".5" stroke-width=".8"/>
+    <path d="M681 105v263M676 105h10m-10 263h10" stroke="#31544A" stroke-opacity=".35" stroke-width=".8"/>
+    <g fill="#31544A" font-family="monospace" font-size="10" letter-spacing="1.4">
+      <text x="146" y="76">01</text>
+      <text x="196" y="394">02</text>
+      <text x="296" y="394">03</text>
+      <text x="396" y="394">04</text>
+      <text x="496" y="394">05</text>
+      <text x="596" y="394">06</text>
+    </g>
+  </g>
+</svg>

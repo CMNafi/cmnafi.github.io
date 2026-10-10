@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="480" viewBox="0 0 760 480" fill="none">
+  <title>Worldview — original editorial globe study</title>
+  <desc>A warm yellow globe with fine forest green meridians, a simplified landmass and measured cartographic lines.</desc>
+  <defs>
+    <clipPath id="frame"><rect width="760" height="480"/></clipPath>
+    <clipPath id="globe"><circle cx="407" cy="229" r="167"/></clipPath>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0v32" stroke="#34473B" stroke-opacity=".11" stroke-width=".7"/></pattern>
+  </defs>
+  <g clip-path="url(#frame)">
+    <path fill="#E8E4BC" d="M0 0h760v480H0z"/>
+    <path d="M71 41h621v399H71z" fill="url(#grid)"/>
+    <circle cx="407" cy="229" r="167" fill="#DDDDB1"/>
+    <g clip-path="url(#globe)">
+      <path d="M263 129l25-25 30 2 22-14 37 12 5 17 26 8-6 23-25 2-13 26-25 11-9 30-21 15-18-12-14-31-23-16-7-19 11-15zM359 236l22-7 28 17 14 34-8 24-19 21-10 36-17-16-9-31-16-21-1-30 9-11zM458 95l24 7 27-2 30 16 12 18-19 13-21-4-10 12-21-11-15 10-21-21zM440 165l23-6 18 10 28-7 19 10 21 1 21 22-4 22-29 7-7 22-31-4-20-19-16 10-20-18-8-30zM532 296l27-5 20 14-3 22-24 7-29-13z" fill="#788568" fill-opacity=".57"/>
+      <g stroke="#304D3C" stroke-width=".8" stroke-opacity=".66">
+        <ellipse cx="407" cy="229" rx="51" ry="167"/>
+        <ellipse cx="407" cy="229" rx="111" ry="167"/>
+        <path d="M240 229h334M257 157c92 38 209 38 300 0M257 301c92-38 209-38 300 0M293 106c66 22 161 22 228 0M293 352c66-22 161-22 228 0M407 62v334"/>
+      </g>
+      <path d="M245 263c51-119 164-177 322-108" stroke="#304D3C" stroke-width="1.8"/>
+      <path d="M253 281c59-86 175-123 307-99" stroke="#304D3C" stroke-width=".8" stroke-dasharray="3 5"/>
+    </g>
+    <circle cx="407" cy="229" r="167" stroke="#304D3C" stroke-width="1.3"/>
+    <path d="M407 39v23M407 396v23M217 229h23M574 229h23" stroke="#304D3C" stroke-width="1"/>
+    <circle cx="407" cy="229" r="186" stroke="#304D3C" stroke-opacity=".35" stroke-width=".8" stroke-dasharray="1 7"/>
+    <circle cx="352" cy="149" r="5" fill="#B96942" stroke="#E8E4BC" stroke-width="2"/>
+    <circle cx="484" cy="132" r="4" fill="#304D3C" stroke="#E8E4BC" stroke-width="2"/>
+    <path d="M352 149l-26-60H183M484 132l58-58h83" stroke="#304D3C" stroke-width=".8"/>
+    <path d="M126 364h69M126 364v-27M626 357h-44M626 357v-44" stroke="#304D3C" stroke-opacity=".5" stroke-width=".8"/>
+    <g fill="#304D3C" font-family="monospace" font-size="10" letter-spacing="1.4">
+      <text x="183" y="80">01</text>
+      <text x="625" y="65" text-anchor="end">02</text>
+      <text x="125" y="386">00°</text>
+      <text x="626" y="378" text-anchor="end">90°</text>
+    </g>
+  </g>
+</svg>

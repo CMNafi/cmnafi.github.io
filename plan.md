@@ -7,7 +7,7 @@
 
 ---
 
-## 0. The one-sentence vision
+## October 10, 2026 — editorial redesign mockup\n\nThe user requested a redesigned blog, an Era hub at `/era` for companies, projects, businesses and ideas, and a Bookmarks page featuring open-source projects. CAIA Corner and the World Cup portal move off the redesigned front page into Era, while their existing routes remain available.\n\nThis branch adds an isolated, runnable prototype in `mockups/editorial-redesign/` for desktop Codex handoff. The prototype may explore a warm paper palette, its own type and CSS, and a local theme control outside the production token/component rules below. These are mockup choices, not changes to the deployed brand. The existing Astro source and deployment configuration remain unchanged. Update this charter and the production design documents when the final visual system is integrated.\n\nRun the mockup with `npm start` from its folder. See `HANDOFF.md` there for desktop execution, verification limits, source paths, and integration guidance.\n\n---\n\n## 0. The one-sentence vision
 
 A paddock-quality personal site where every project is a **car in the garage still
 being built**, every blog post is a **telemetry readout worth syndicating**, and
