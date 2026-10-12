@@ -472,3 +472,8 @@ Anything else: just ship it. Don't touch the charter for tweaks.
 ---
 
 *Last updated: 2026-04-17. Version 1.0.*
+
+
+## October 12, 2026 — technology history side page
+
+Add `/technology-history/` as a separate connected archive, reachable through a simple navigation link. Preserve the existing homepage, biography, project promotions, and shared layout. The atlas uses the established design tokens and `src/components/telemetry/HistoryMap.astro`. Stable company, person, and product IDs and sourced edges support future connections. Articles remain in Field Notes with category `Technology History` and `historyNodes` references. Do not feature the atlas on the homepage yet.

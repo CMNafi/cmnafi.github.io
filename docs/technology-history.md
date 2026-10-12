@@ -1,6 +1,6 @@
 # Writing technology history
 
-The homepage leads to `/technology-history/`. CAIA, World Cup, and ADV are accessible through `/garage/`; their existing routes remain available.
+Technology history is a separate page at `/technology-history/`, reached through a navigation link. The existing homepage and biography are preserved; the atlas is not showcased on the homepage.
 
 Articles use the existing `src/content/field-notes/` collection, so they appear in Field Notes and the history reading room. Create an MDX file with the usual article fields plus:
 
