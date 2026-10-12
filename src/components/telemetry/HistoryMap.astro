@@ -1,0 +1,58 @@
+---
+import { historyNodes, historyEdges } from '@/data/technology-history';
+const initial = historyNodes.find(n => n.id === 'transistor')!;
+---
+<section class="history-map" aria-label="Technology history connection map" data-history-map data-nodes={JSON.stringify(historyNodes)} data-edges={JSON.stringify(historyEdges)}>
+  <div class="map-top"><span>CONNECTION ATLAS / 001</span><span>1947 → SOLID-STATE ELECTRONICS</span></div>
+  <div class="map-stage">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      {historyEdges.map(edge => { const a = historyNodes.find(n => n.id === edge.from)!; const b = historyNodes.find(n => n.id === edge.to)!; return <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} data-from={a.id} data-to={b.id} />; })}
+    </svg>
+    {historyNodes.map(node => <button type="button" class:list={['map-node', node.kind]} style={`--x:${node.x}%;--y:${node.y}%`} data-node={node.id} aria-pressed={node.id === initial.id}><span class="node-dot" aria-hidden="true"></span><small>{node.kind} / {node.year}</small><span>{node.name}</span></button>)}
+  </div>
+  <div class="map-bottom"><span>○ COMPANY</span><span>◇ PERSON</span><span>□ PRODUCT</span><span class="map-hint">Select a node to follow its connections.</span></div>
+  <div class="node-detail" aria-live="polite" aria-atomic="true">
+    <div><span class="detail-kind">{initial.kind} / {initial.year}</span><h3 class="detail-title">{initial.name}</h3><p class="detail-summary">{initial.summary}</p><a class="detail-source" href={initial.source} target="_blank" rel="noopener noreferrer">Read the source ↗</a></div>
+    <div><h4>Connected to</h4><ul class="detail-connections">{historyEdges.filter(e => e.from === initial.id || e.to === initial.id).map(e => <li>{historyNodes.find(n => n.id === (e.from === initial.id ? e.to : e.from))!.name} <small>{e.from === initial.id ? e.label : `→ ${e.label} ${initial.name}`}</small></li>)}</ul></div>
+  </div>
+  <noscript><p>Selecting nodes requires JavaScript. All relationships are listed below.</p><ul>{historyEdges.map(e => <li>{historyNodes.find(n=>n.id===e.from)!.name} — {e.label} — {historyNodes.find(n=>n.id===e.to)!.name}</li>)}</ul></noscript>
+</section>
+<style>
+  .history-map{border:1px solid var(--surface-line);background:var(--surface-raised);border-radius:var(--radius-card);overflow:hidden}.map-top,.map-bottom{display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between;padding:18px 24px;font:10px var(--font-mono);letter-spacing:.08em;color:var(--ink-secondary)}.map-top{border-bottom:1px solid var(--surface-line)}.map-stage{height:440px;position:relative;background-image:radial-gradient(var(--surface-line) 1px,transparent 1px);background-size:22px 22px}.map-stage svg{position:absolute;width:100%;height:100%}.map-stage line{stroke:var(--ink-tertiary);stroke-width:1;vector-effect:non-scaling-stroke;opacity:.5}.map-stage line.active{stroke:var(--accent);opacity:1}.map-node{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:9px;width:180px;border:0;background:var(--surface-raised);color:var(--ink-primary);font:16px var(--font-serif);padding:12px;cursor:pointer}.map-node small{font:9px var(--font-mono);text-transform:uppercase;color:var(--ink-secondary)}.node-dot{height:12px;width:12px;border:1px solid var(--accent);border-radius:50%;background:var(--surface-base)}.person .node-dot{border-radius:0;transform:rotate(45deg)}.product .node-dot{border-radius:2px}.map-node[aria-pressed=true] .node-dot{background:var(--accent);box-shadow:0 0 20px var(--accent-dim)}.map-node[aria-pressed=true],.map-node:hover{color:var(--accent)}.map-node:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.map-bottom{justify-content:flex-start;border-top:1px solid var(--surface-line)}.map-hint{margin-left:auto}.node-detail{padding:30px;display:grid;grid-template-columns:1fr 1fr;gap:40px;border-top:1px solid var(--surface-line)}.detail-kind,.detail-source,h4{font:10px var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}h3{font:30px var(--font-serif);margin:12px 0}.detail-summary{color:var(--ink-secondary);line-height:1.75;font-size:15px}.detail-connections{padding:0;list-style:none}.detail-connections li{padding:9px 0;border-bottom:1px solid var(--surface-line);font-size:14px}.detail-connections small{display:block;color:var(--ink-secondary);font:10px/1.7 var(--font-mono)}noscript{display:block;padding:24px}@media(max-width:650px){.map-stage{height:360px}.map-node{width:110px;font-size:13px;padding:8px}.map-node small{font-size:8px}.map-top{font-size:9px}.node-detail{grid-template-columns:1fr;padding:22px;gap:20px}.map-hint{width:100%;margin-left:0}}
+</style>
+<script>
+  function initHistoryMaps() {
+    document.querySelectorAll<HTMLElement>('[data-history-map]').forEach(root => {
+      if (root.dataset.ready) return;
+      root.dataset.ready = 'true';
+      const nodes: import('@/data/technology-history').HistoryNode[] = JSON.parse(root.dataset.nodes!);
+      const edges: typeof import('@/data/technology-history').historyEdges = JSON.parse(root.dataset.edges!);
+      const select = (id: string) => {
+        const node = nodes.find(n => n.id === id)!;
+        root.querySelectorAll<HTMLButtonElement>('[data-node]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.node === id)));
+        root.querySelectorAll<SVGLineElement>('line').forEach(line => line.classList.toggle('active', line.dataset.from === id || line.dataset.to === id));
+        root.querySelector('.detail-kind')!.textContent = `${node.kind} / ${node.year}`;
+        root.querySelector('.detail-title')!.textContent = node.name;
+        root.querySelector('.detail-summary')!.textContent = node.summary;
+        root.querySelector<HTMLAnchorElement>('.detail-source')!.href = node.source;
+        const list = root.querySelector('.detail-connections')!;
+        list.replaceChildren();
+        edges.filter(e => e.from === id || e.to === id).forEach(edge => {
+          const other = nodes.find(n => n.id === (edge.from === id ? edge.to : edge.from))!;
+          const li = document.createElement('li');
+          const button = document.createElement('button');
+          button.type = 'button'; button.textContent = other.name;
+          button.style.cssText = 'background:none;border:0;color:var(--accent);padding:4px 0;cursor:pointer;font:inherit;text-align:left';
+          button.addEventListener('click', () => select(other.id));
+          const label = document.createElement('small');
+          label.textContent = `${nodes.find(n=>n.id===edge.from)!.name} ${edge.label} ${nodes.find(n=>n.id===edge.to)!.name}`;
+          li.append(button, label); list.append(li);
+        });
+      };
+      root.querySelectorAll<HTMLButtonElement>('[data-node]').forEach(button => button.addEventListener('click', () => select(button.dataset.node!)));
+      select('transistor');
+    });
+  }
+  initHistoryMaps();
+  document.addEventListener('astro:page-load', initHistoryMaps);
+</script>

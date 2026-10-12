@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import { historyNodes } from '../data/technology-history';
 
 const fieldNotes = defineCollection({
   type: 'content',
@@ -7,7 +8,8 @@ const fieldNotes = defineCollection({
     description: z.string(),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
-    category: z.enum(['Books', 'Finance', 'Cricket', 'Brewing']),
+    category: z.enum(['Books', 'Finance', 'Cricket', 'Brewing', 'Technology History']),
+    historyNodes: z.array(z.string().refine(id => historyNodes.some(node => node.id === id), 'Unknown technology history node ID')).default([]),
     subCategory: z.enum(['Venture Capital', 'Private Equity', 'Public Equities', 'Macro', 'General']).optional(),
     tags: z.array(z.string()).default([]),
     coverImage: z.string().optional(),

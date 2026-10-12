@@ -27,7 +27,7 @@ const {
 const pageTitle = title === siteConfig.title ? title : `${title} - ${siteConfig.title}`;
 const canonicalUrl = canonical ? new URL(canonical, siteConfig.siteUrl).toString() : Astro.url.toString();
 const imageUrl = new URL(image, siteConfig.siteUrl).toString();
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
 // Dynamic Git hash and build timestamp compilation
 let commitSha = 'unknown';
@@ -108,7 +108,8 @@ const buildDate = new Date().toISOString();
           </nav>
         </header>
       )}
-      <main>
+      <a class="skip-link" href="#main-content">Skip to content</a>
+      <main id="main-content">
         <slot />
       </main>
       <Footer />
@@ -127,6 +128,8 @@ const buildDate = new Date().toISOString();
     </div>
 
     <style is:global>
+      .skip-link { position: absolute; top: -80px; left: 16px; padding: 12px; background: var(--surface-raised); color: var(--accent); z-index: 1000; }
+      .skip-link:focus { top: 12px; }
       /* Primary Navigation Layout & Timer */
       .nav-container {
         display: flex;
@@ -147,8 +150,8 @@ const buildDate = new Date().toISOString();
 
       /* Jony Ive-style Elegant Page Transitions */
       .page-shell {
-        opacity: 0;
-        transform: scale(1.01);
+        opacity: 1;
+        transform: none;
         transform-origin: center 10vh;
         transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1), transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
         will-change: opacity, transform;

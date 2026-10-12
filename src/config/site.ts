@@ -1,11 +1,12 @@
 export const siteConfig = {
   title: 'C M Nafi',
-  description: 'A personal website about the places that shaped me, the books I keep nearby, and the cricket matches I still replay.',
+  description: 'Technology history, engineering, finance, and essays on the people and systems shaping our world.',
   author: 'C M Nafi',
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',
   nav: [
     { id: 'pit-wall', label: 'Pit Wall', href: '/' },
+    { id: 'history', label: 'Technology History', href: '/technology-history' },
     { id: 'garage', label: 'Garage', href: '/garage' },
     { id: 'field-notes', label: 'Field Notes', href: '/field-notes' },
     { id: 'story', label: 'Story', href: '/story' },
@@ -18,6 +19,7 @@ export const siteConfig = {
   ],
   footerLinks: [
     { label: 'Pit Wall', href: '/' },
+    { label: 'Technology History', href: '/technology-history' },
     { label: 'Garage', href: '/garage' },
     { label: 'Field Notes', href: '/field-notes' },
     { label: 'Story', href: '/story' },
