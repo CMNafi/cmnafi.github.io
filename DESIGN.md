@@ -1,20 +1,7 @@
-# Design System
+# Editorial design system
 
-See Section 3 of PLAN.md for complete aesthetic direction.
+Warm dark ground (#120f0d), cream ink (#f4ede4), hairlines (#2a2520), muted ink (#a89c8b), green (#7dd3a0) for active states. Fraunces for display/body, JetBrains Mono for labels and figures. The three self-hosted Latin font subsets include real italic. Shared scale lives in editorial.css.
 
-## Aesthetic Direction
-**Editorial F1 telemetry.** Not the cartoony broadcast graphics. Think the printed race-weekend brief: serious typography, precise numbers, generous space, sparing but decisive color. Carbon-fiber textures used *once* as accent, not wallpaper.
+Use thin dividers, generous homepage spacing, compact ruled lists on index pages, and 700px reading columns. One header, one footer, plain language, keyboard focus and reduced-motion support. CAIA has a cream paper reading theme; Worldview keeps its product theme.
 
-## Rules
-- **No Inter. No Space Grotesk. No purple-on-white gradients.** Those are the tells of generic AI output.
-- **Monospace everywhere numbers appear** — lap times, dates, versions, coords.
-- **Racing red = live only.** Never decorative. Seeing red means something is currently happening.
-- **Carbon-fiber texture reserved** for the single garage hero background. Nowhere else.
-
-## Signature Components
-Reuse these primitives from `src/components/telemetry/`:
-- `<LapTimer />` — the `00:00.000` counter in the nav corner.
-- `<SectorBadge variant="p1" />` — the P1/P2/P3 chips.
-- `<TelemetryGrid />` — the 4-col data strip (Updated · Status · Stack · Link).
-- `<StatusDot state="live | brewing | parked" />` — green/amber/grey dot with subtle pulse on "live."
-- `<Flag color="checkered | yellow | red" />` — used in post headers.
+The homepage circuit is a symbolic route, not a geographic map. Its stops and periods come from the existing Story and journey data. No unsourced distance figure is displayed. Technology History is not a homepage feature.

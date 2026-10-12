@@ -1,0 +1,5 @@
+---
+import {formatDate,readingTime} from '@/config/editorial';
+const {note}=Astro.props;
+---
+<a class="note-row" href={`/field-notes/${note.slug}/`} data-note-row data-title={note.data.title.toLowerCase()} data-category={note.data.category} data-subcategory={note.data.subCategory||''}><time datetime={note.data.publishedAt.toISOString()}>{formatDate(note.data.publishedAt)}</time><span class="row-title">{note.data.title}</span><span class="row-meta">{note.data.category}</span><span class="row-meta read-time">{readingTime(note.data.readingTime)}</span><span class="row-arrow" aria-hidden="true">↗</span></a>

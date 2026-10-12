@@ -13,3 +13,6 @@
 - No analytics dashboard in-app. Plausible or Fathom, embedded, done.
 - No e-commerce, no gated content, no "consulting" CTA until you have something specific to sell.
 - No AI chat widget. The tools are in `/garage`, the writing is in `/field-notes`. That's the product.
+
+
+CAIA is the deliberate paper-theme exception for study reading; Worldview retains its existing independent product theme. Neither adds a theme toggle.

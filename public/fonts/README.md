@@ -1,0 +1,1 @@
+Fonts supplied in the user-provided homepage reference: Fraunces (roman and italic) and JetBrains Mono, originally served by Google Fonts. Both families use the SIL Open Font License. Latin web subsets; system fallbacks cover other scripts.

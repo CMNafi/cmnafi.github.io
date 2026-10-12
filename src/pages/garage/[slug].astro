@@ -1,61 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import TelemetryGrid from '@/components/telemetry/TelemetryGrid.astro';
-import SectorBadge from '@/components/telemetry/SectorBadge.astro';
-
-export async function getStaticPaths() {
-  const projects = await getCollection('projects');
-  return projects.map(project => ({
-    params: { slug: project.slug },
-    props: { project },
-  }));
-}
-
-const { project } = Astro.props;
-const { Content } = await project.render();
+import {getCollection} from 'astro:content';import BaseLayout from '@/layouts/BaseLayout.astro';import ProjectGlyph from '@/components/ProjectGlyph.astro';import {projectUrl,isProject,formatDate} from '@/config/editorial';
+export async function getStaticPaths(){return(await getCollection('projects')).map(project=>({params:{slug:project.slug},props:{project}}))}
+const {project}=Astro.props;
+const {Content}=await project.render();
+const url=projectUrl(project);
+const related=(await getCollection('projects')).filter(p=>isProject(p)&&p.slug!==project.slug).slice(0,2);
 ---
-<BaseLayout title={project.data.title}>
-  <div class="garage-detail">
-    <nav class="paddock-override-nav">
-      <a href="/garage" class="return-wall">← GARAGE LOGIC</a>
-      <div class="nav-title">{project.data.status.toUpperCase()} DEPLOYMENT</div>
-    </nav>
-    <article class="paddock-article">
-      <header class="article-header">
-        <SectorBadge variant={project.data.status === 'live' ? 'p1' : 'p3'} label={project.data.status} />
-        <h1>{project.data.title}</h1>
-        <p class="summary">{project.data.summary}</p>
-        <div class="telemetry-bar">
-          <TelemetryGrid 
-              updated={(project.data.updatedAt || project.data.startedAt)?.toLocaleDateString() || '--'}
-              status={project.data.status as any}
-              stack={project.data.stack?.join(', ') || 'N/A'}
-              link={project.data.liveUrl || project.data.repoUrl}
-              linkLabel={project.data.liveUrl ? "OPEN PROD →" : "GITHUB →"}
-            />
-        </div>
-      </header>
-      <div class="prose">
-        <Content />
-      </div>
-    </article>
-  </div>
-</BaseLayout>
-
-<style>
-  .paddock-override-nav { display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono); }
-  .return-wall { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
-  .nav-title { color: var(--pitlane-white); font-size: 11px; letter-spacing: 0.15em; }
-  .garage-detail { min-height: 100vh; background: var(--paddock-black); }
-  .paddock-article { max-width: 850px; margin: 0 auto; padding: 2rem 2rem 6rem; }
-  .article-header { border-bottom: 1px solid var(--carbon); padding-bottom: 3rem; margin-bottom: 3rem; }
-  .article-header h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); margin: 1.5rem 0 1rem; color: var(--pitlane-white); line-height: 1.1; }
-  .summary { font-family: var(--font-body); font-size: 1.25rem; color: var(--muted); margin-bottom: 3rem; line-height: 1.6; max-width: 650px; }
-  .prose { font-family: var(--font-body); font-size: 1.15rem; line-height: 1.8; color: var(--text); }
-  .prose :global(h2) { font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4rem; margin-bottom: 1.5rem; color: var(--warning-amber); border-bottom: 1px solid var(--graphite); padding-bottom: 0.5rem; }
-  .prose :global(h3) { font-family: var(--font-display); font-size: 1.8rem; margin-top: 3rem; margin-bottom: 1rem; color: var(--pitlane-white); }
-  .prose :global(p) { margin-bottom: 1.5rem; }
-  .prose :global(ul) { margin-bottom: 1.5rem; padding-left: 1.5rem; }
-  .prose :global(li) { margin-bottom: 0.5rem; }
-</style>
+<BaseLayout title={project.data.title} description={project.data.description}><div class="reading-shell"><nav class="breadcrumbs"><a href="/garage/">← Garage</a><span>{project.data.status} / {project.data.category}</span></nav><header><h1>{project.data.title}</h1><p class="standfirst">{project.data.summary}</p>{url&&url.replace(/\/$/,'')!==`/garage/${project.slug}`?<a class="action" href={url} data-astro-reload>Open project ↗</a>:<span class="meta">{project.data.status==='live'?'Project overview':'Not public yet'}</span>}<p class="meta">{formatDate(project.data.updatedAt||project.data.startedAt)} · {project.data.stack.join(' / ')}</p></header><div class="reading-body"><ProjectGlyph slug={project.slug}/><section><h2>The problem</h2><p>{project.data.problem}</p></section><section><h2>What I built</h2><p>{project.data.solution}</p></section><section><h2>Who it is for</h2><p>{project.data.whoItsFor}</p></section>{project.data.keyFeatures.length>0&&<section><h2>Key features</h2><ul>{project.data.keyFeatures.map(f=><li>{f}</li>)}</ul></section>}{project.data.roadmap.length>0&&<section><h2>What is next</h2><ul>{project.data.roadmap.map(f=><li>{f}</li>)}</ul></section>}<div class="project-original"><Content/></div><h2>Keep exploring</h2>{related.map(p=><p><a href={`/garage/${p.slug}/`}>{p.data.title} →</a></p>)}<a class="text-link" href="/field-notes/">Read the field notes →</a></div></div></BaseLayout>

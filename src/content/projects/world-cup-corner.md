@@ -1,12 +1,12 @@
 ---
 title: "World Cup 2026 Corner"
-summary: "The smart fan's home for the 2026 FIFA World Cup, featuring verified data and interactive predictions."
-description: "A comprehensive, publication-grade companion for the 2026 World Cup across USA, Canada, and Mexico. Includes 104-match tracking, an interactive bracket simulator, and 48 deep-dive team profiles."
-status: "live"
+summary: "An archived World Cup 2026 research project with team profiles, stored fixtures, and prediction tools."
+description: "An archive of pre-tournament research and interactive predictions. Stored projections and fixtures are not tournament results."
+status: "parked"
 category: "web app"
 stack: ["Astro", "TypeScript", "CSS", "Vanilla JS"]
 liveUrl: "/world-cup-2026"
-featured: true
+featured: false
 priority: 1
 startedAt: 2026-05-04
 problem: "Traditional sports sites offer overwhelming ad-heavy experiences and generic data dumps for the World Cup. Fans need a clean, opinionated, and highly interactive companion."

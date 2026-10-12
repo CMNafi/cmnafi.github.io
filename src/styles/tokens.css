@@ -7,7 +7,7 @@
   /* Ink */
   --ink-primary:         #f4ede4;   /* body + headlines */
   --ink-secondary:       #a89c8b;   /* labels, captions */
-  --ink-tertiary:        #6a6055;   /* metadata, footnotes */
+  --ink-tertiary:        #a09586;   /* metadata, footnotes */
 
   /* Accent — sector-2 green, single accent in the whole system */
   --accent:              #7dd3a0;
@@ -19,11 +19,11 @@
   --status-warn:         #e8b86a;
 
   /* Type */
-  --font-serif:          "PP Editorial New", "GT Sectra", "Fraunces", Georgia, serif;
-  --font-mono:           "JetBrains Mono", "Berkeley Mono", ui-monospace, monospace;
-  --font-body:           "Söhne", "Fraunces", Georgia, serif;
+  --font-serif:          "Fraunces", Georgia, serif;
+  --font-mono:           "JetBrains Mono", ui-monospace, monospace;
+  --font-body:           "Fraunces", Georgia, serif;
   --radius-chip:         2px;
-  --radius-card:         4px;
+  --radius-card:         2px;
 
   /* Motion */
   --ease-instrument:     cubic-bezier(0.16, 1, 0.3, 1);   /* settle, no bounce */

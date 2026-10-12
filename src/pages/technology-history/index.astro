@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HistoryMap from '@/components/telemetry/HistoryMap.astro';
+import { getCollection } from 'astro:content';
+import { historyNodes } from '@/data/technology-history';
+const articles = (await getCollection('field-notes')).filter(n => !n.data.draft && n.data.category === 'Technology History').sort((a,b)=>b.data.publishedAt.valueOf()-a.data.publishedAt.valueOf());
+---
+<BaseLayout title="Technology History" description="Following the people, companies, and products that shaped technology. An evolving atlas of connections and essays." canonical="/technology-history/">
+  <div class="history-shell">
+    <header><span class="eyebrow">TECHNOLOGY HISTORY / A CONNECTED ARCHIVE</span><h1>Nothing is invented<br /><em>in isolation.</em></h1><p>The people behind the products. The companies behind the people. I’m tracing the connections that made technology what it is — one story at a time.</p></header>
+    <div class="atlas-heading"><h2>Follow the connections</h2><p>Start with Bell Labs and the transistor. Select a node to explore its relationships and sources.</p></div>
+    <HistoryMap />
+    <section class="articles" aria-labelledby="articles-title"><span class="eyebrow">THE READING ROOM</span><h2 id="articles-title">Stories behind the nodes</h2>
+      {articles.length ? articles.map(article=><article><span class="eyebrow">{article.data.publishedAt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span><h3><a href={`/field-notes/${article.slug}/`}>{article.data.title} →</a></h3><p>{article.data.excerpt}</p><div class="tags">{article.data.historyNodes.map(id=><a href={`#node-${id}`}>{historyNodes.find(n=>n.id===id)?.name ?? id}</a>)}</div></article>) : <div class="empty"><p>The map is taking shape. The first essays are still to come.</p><span>For now, explore the connections above or read my <a href="/field-notes/">other field notes →</a></span></div>}
+    </section>
+    <section class="node-index"><h2>Inside the atlas</h2><div>{historyNodes.map(node=><article id={`node-${node.id}`}><span class="eyebrow">{node.kind} / {node.year}</span><h3>{node.name}</h3><p>{node.summary}</p><a href={node.source} target="_blank" rel="noopener noreferrer">Source ↗</a>{articles.filter(a=>a.data.historyNodes.includes(node.id)).map(a=><p><a href={`/field-notes/${a.slug}/`}>{a.data.title} →</a></p>)}</article>)}</div></section>
+  </div>
+</BaseLayout>
+<style>
+  .history-shell{max-width:1120px;margin:auto;padding:65px 24px 90px}.eyebrow{font:12px var(--font-mono);letter-spacing:.12em;color:var(--accent);text-transform:uppercase}h1{font:400 clamp(48px,7vw,88px)/1.05 var(--font-serif);letter-spacing:-.05em;margin:28px 0}h1 em{color:var(--accent);font-weight:400}header>p{max-width:620px;font-size:19px;line-height:1.8;color:var(--ink-secondary)}.atlas-heading{margin:70px 0 24px;display:flex;align-items:end;justify-content:space-between;gap:30px}h2{font:400 32px var(--font-serif);letter-spacing:-.03em}.atlas-heading p{max-width:420px;font-size:14px;color:var(--ink-secondary);line-height:1.7}.articles,.node-index{margin-top:80px}.articles article{padding:30px 0;border-top:1px solid var(--surface-line)}h3{font:400 26px var(--font-serif);margin:15px 0}p{line-height:1.75;color:var(--ink-secondary)}.empty{border:1px solid var(--surface-line);padding:30px}.empty p{font-size:23px;margin-top:0}.empty span{font-size:14px;color:var(--ink-secondary)}a{color:var(--accent)}.node-index>div{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.node-index article{padding:24px;border:1px solid var(--surface-line);scroll-margin-top:30px}.node-index p{font-size:14px}.node-index a,.tags{font:12px var(--font-mono)}.tags{display:flex;gap:15px;flex-wrap:wrap}@media(max-width:700px){.history-shell{padding-top:35px}.atlas-heading{display:block;margin-top:45px}.node-index>div{grid-template-columns:1fr}.articles,.node-index{margin-top:50px}}
+</style>

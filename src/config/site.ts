@@ -1,11 +1,11 @@
 export const siteConfig = {
   title: 'C M Nafi',
-  description: 'A personal website about the places that shaped me, the books I keep nearby, and the cricket matches I still replay.',
+  description: 'C M Nafi writes about capital, technology, and cricket, and builds tools for understanding the systems behind them.',
   author: 'C M Nafi',
-  siteUrl: 'https://cmnafi.com',
+  siteUrl: 'https://www.cmnafi.com',
   email: 'nafi@cmnafi.com',
   nav: [
-    { id: 'pit-wall', label: 'Pit Wall', href: '/' },
+    { id: 'pit-wall', label: 'Home', href: '/' },
     { id: 'garage', label: 'Garage', href: '/garage' },
     { id: 'field-notes', label: 'Field Notes', href: '/field-notes' },
     { id: 'story', label: 'Story', href: '/story' },
@@ -17,10 +17,11 @@ export const siteConfig = {
     { label: 'Email', href: 'mailto:nafi@cmnafi.com' }
   ],
   footerLinks: [
-    { label: 'Pit Wall', href: '/' },
+    { label: 'Home', href: '/' },
     { label: 'Garage', href: '/garage' },
     { label: 'Field Notes', href: '/field-notes' },
     { label: 'Story', href: '/story' },
+    { label: 'Technology History', href: '/technology-history' },
     { label: 'Connect', href: '/connect' }
   ]
 } as const;

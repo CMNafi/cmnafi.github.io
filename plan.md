@@ -472,3 +472,13 @@ Anything else: just ship it. Don't touch the charter for tweaks.
 ---
 
 *Last updated: 2026-04-17. Version 1.0.*
+
+
+## October 12, 2026 — technology history side page
+
+Add `/technology-history/` as a separate connected archive, reachable through a simple navigation link. Preserve the existing homepage, biography, and shared layout, except remove the CAIA telemetry promotion from the homepage. Keep CAIA on its existing back pages, linked from the Garage. The atlas uses the established design tokens and `src/components/telemetry/HistoryMap.astro`. Stable company, person, and product IDs and sourced edges support future connections. Articles remain in Field Notes with category `Technology History` and `historyNodes` references. Do not feature the atlas on the homepage yet.
+
+
+## October 12, 2026 — Editorial redesign
+
+The supplied homepage HTML and prompt pack guide this pass: warm dark ground, cream Fraunces type, JetBrains Mono labels, hairline divisions, and restrained green active states. Use one shared site header/footer and plain navigation. Homepage: a life-route circuit, concise field-note index, selected tools, a short story introduction, and email. CAIA and World Cup remain back-page sections. Technology History remains a side page, linked through navigation rather than a front-page feature. Preserve essay text and biography wording. CAIA uses a paper reading theme. Worldview keeps its independent product appearance with a consistent way home. Do not fabricate scores, dates, statistics, or review progress. This pass changes design and navigation, not historical research or tournament results.

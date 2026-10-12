@@ -1,38 +1,25 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import TelemetryGrid from '@/components/telemetry/TelemetryGrid.astro';
 import SectorBadge from '@/components/telemetry/SectorBadge.astro';
 
-const updated = "2026-04-17";
+
 ---
 
-<BaseLayout title="My Story">
-  <nav class="paddock-override-nav">
-    <a href="/" class="return-wall">← PIT WALL</a>
-    <div class="nav-title">DRIVER BIOGRAPHY</div>
-  </nav>
+<BaseLayout title="Story" description="From Dinajpur to Tampa: C M Nafi on engineering, institutional finance, education, and life outside work.">
+  
 
-  <main class="story-viewport">
+  <div class="story-viewport">
     <article class="paddock-article">
       
       <header class="recruiter-strip">
         <h1 class="driver-name">C M Nafi</h1>
         <p class="driver-subtitle">Solutions Engineer · Finance & Data Infrastructure</p>
         
-        <div class="t-wrap">
-          <TelemetryGrid 
-            updated={updated}
-            status="Open to conversations"
-            stack="3+ years in institutional finance"
-            link="#"
-          />
-        </div>
-        
         <div class="filter-chips">
           <a href="/resume.pdf" target="_blank" class="chip">DOWNLOAD RÉSUMÉ → PDF</a>
           <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" class="chip">LINKEDIN ↗</a>
           <a href="mailto:nafi@cmnafi.com" class="chip">EMAIL</a>
-          <a href="#" class="chip">BOOK 20 MIN ↗</a>
+          
         </div>
       </header>
 
@@ -43,7 +30,7 @@ const updated = "2026-04-17";
         </div>
 
         <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="p2" label="QUALIFYING ROUND" /></div>
+          <div class="section-badge"><SectorBadge variant="p2" label="EARLY YEARS" /></div>
           <h3>Bangladesh → China → Iowa → Tampa</h3>
           <p>I grew up in <strong>Dinajpur, Bangladesh</strong>, in a household that treated reading as the default answer to boredom. At sixteen I left on a full scholarship to <strong>UWC Changshu (China)</strong>, moving to a country where I didn't speak the language and learning most of what I know about self-reliance in the space of two years.</p>
           <p>University took me to <strong>Luther College in Decorah, Iowa</strong> — a town of eight thousand people where winter teaches you patience and a small campus teaches you that depth beats breadth if you let it. I majored in <strong>Data Science</strong> and minored in <strong>Computer Science</strong>, and graduated <strong>2022</strong>.</p>
@@ -52,7 +39,7 @@ const updated = "2026-04-17";
         </div>
 
         <div class="story-section career-section">
-          <div class="section-badge"><SectorBadge variant="p3" label="THE RACE" /></div>
+          <div class="section-badge"><SectorBadge variant="p3" label="WORK" /></div>
           
           <div class="brew-card stint-card" id="stint-dasseti">
             <div class="brew-meta">
@@ -106,13 +93,13 @@ const updated = "2026-04-17";
         </div>
 
         <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="p1" label="CURRENT LAP" /></div>
+          <div class="section-badge"><SectorBadge variant="p1" label="NOW" /></div>
           <p>Day job is Dasseti. Outside that, I'm building a set of <strong>public finance data tools</strong> at <a href="/garage">cmnafi.com/garage</a> — most notably the ADV Screener, a 13F Data Finder, and a manager intelligence dashboard that ties entity resolution, regulatory filings, and narrative summarization together. They're works in progress on purpose.</p>
           <p>I also write <strong>one or two Field Notes a week</strong> on <a href="/field-notes">cmnafi.com/field-notes</a> covering the corners of institutional finance, venture capital, and market structure that I find most worth explaining. The writing and the tools feed each other — every post surfaces something worth turning into a tool, and every tool surfaces something worth writing about.</p>
         </div>
 
         <div class="story-section telemetry-grid-stint">
-          <div class="section-badge"><SectorBadge variant="p2" label="THE SPECS" /></div>
+          <div class="section-badge"><SectorBadge variant="p2" label="SKILLS" /></div>
           <div class="spec-grid">
             <div class="spec-col">
               <h4>Languages & frameworks</h4>
@@ -149,19 +136,19 @@ const updated = "2026-04-17";
         </div>
 
         <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="sector1" label="THE PADDOCK" /></div>
+          <div class="section-badge"><SectorBadge variant="sector1" label="OUTSIDE WORK" /></div>
           <p>I play <strong>competitive cricket</strong> on the weekends — currently turning out for <strong>Tampa Bengals</strong> in the Tampa league. Five-wicket hauls and narrow chases show up on the blog with surprising regularity.</p>
           <p>I follow <strong>Formula 1</strong> the way some people follow theology — I can tell you which team's pit wall is worth listening to on radio and which corner at Suzuka decides a season. I read a book a month, mostly non-fiction, and occasionally a novel that makes me feel underprepared.</p>
           <p>If we ever talk, there's a non-trivial chance it drifts into one of these.</p>
         </div>
 
         <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="sector2" label="PIT BOX" /></div>
+          <div class="section-badge"><SectorBadge variant="sector2" label="CONVERSATIONS" /></div>
           <ul class="contact-list">
             <li>✉️ <strong>Email</strong> — <a href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a> · replies within two business days.</li>
             <li>💼 <strong>LinkedIn</strong> — <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank">linkedin.com/in/cm-nafi</a></li>
             <li>💻 <strong>GitHub</strong> — <a href="https://github.com/CMNafi" target="_blank">github.com/CMNafi</a></li>
-            <li>📅 <strong>20-minute intro call</strong> — <a href="#">Book Meeting</a></li>
+            <li>📅 <strong>20-minute intro call</strong> — <a href="mailto:nafi@cmnafi.com?subject=20-minute%20intro%20call">Book Meeting</a></li>
           </ul>
           <br/>
           <p><strong>I'm most useful in conversations about:</strong> institutional finance data infrastructure, tools for allocators and due-diligence teams, solutions engineering at finance-adjacent SaaS, and technical writing for finance audiences.</p>
@@ -170,7 +157,7 @@ const updated = "2026-04-17";
 
       </div>
     </article>
-  </main>
+  </div>
 </BaseLayout>
 
 <style>
