@@ -2,18 +2,11 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Fielding Style Playbook" hideHeader={true}>
+<BaseLayout title="Fielding Style Playbook" description="Explore cricket fielding styles and their tactical trade-offs.">
   <div class="captains-detail-viewport">
     
     <!-- Header Navigation -->
-    <nav class="paddock-override-nav">
-      <a href="/garage" class="return-wall">← GARAGE COMMAND</a>
-      <div class="nav-title">GARAGE LABS // FIELDING STYLE EXPLORER</div>
-      <div class="telemetry-pill">
-        <span class="pulse-dot"></span>
-        <span class="pill-label">PLAYBOOK SCAN ACTIVE</span>
-      </div>
-    </nav>
+    <nav class="section-nav tool-bridge" aria-label="Cricket tools"><a href="/garage/">← Garage</a><a href="/garage/captains-view/">Captains View</a><a href="/garage/style-fielding/">Fielding Style Playbook</a></nav>
 
     <!-- Page Title & Overview Intro -->
     <header class="playbook-intro-header">
@@ -251,7 +244,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .return-wall {
     color: var(--ink-secondary, #9da29e);
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.15em;
     text-decoration: none;
     transition: color 0.2s;
@@ -260,7 +253,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: var(--accent, #7dd3a0);
   }
   .nav-title {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.15em;
     color: var(--ink-primary, #f5edf4);
     font-weight: 600;
@@ -273,7 +266,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border: 1px solid rgba(125, 211, 160, 0.2);
     padding: 0.35rem 0.6rem;
     border-radius: 99px;
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 0.05em;
   }
   .pulse-dot {
@@ -387,7 +380,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border-radius: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 800;
     display: flex;
     align-items: center;
@@ -441,7 +434,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     padding: 0.1rem 0.35rem;
     border-radius: 4px;
     color: #f5edf4;
-    font-size: 8px;
+    font-size: 12px;
     font-weight: bold;
     white-space: nowrap;
     pointer-events: none;
@@ -490,7 +483,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     height: 24px;
     background: rgba(255, 45, 85, 0.8);
     border-color: #ffffff;
-    font-size: 8px;
+    font-size: 12px;
     color: #ffffff;
     font-weight: bold;
     box-shadow: 0 0 10px #ff2d55;
@@ -506,7 +499,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border: 1px solid var(--surface-line, rgba(255,255,255,0.06));
     padding: 0.8rem 1.25rem;
     border-radius: 6px;
-    font-size: 11px;
+    font-size: 12px;
     font-family: var(--font-mono), monospace;
   }
   .hud-legend {
@@ -557,7 +550,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .panel-section-title {
     font-family: var(--font-mono), monospace;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--ink-tertiary, #6c726e);
     letter-spacing: 0.15em;
@@ -578,7 +571,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .control-label {
     font-family: var(--font-mono), monospace;
-    font-size: 10px;
+    font-size: 12px;
     color: var(--ink-secondary, #9da29e);
     letter-spacing: 0.05em;
   }
@@ -590,7 +583,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     padding: 0.5rem 0.8rem;
     color: var(--ink-secondary, #9da29e);
     font-family: var(--font-mono), monospace;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
     cursor: pointer;
     display: flex;
@@ -614,7 +607,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: #0c0f0d;
     padding: 0.1rem 0.3rem;
     border-radius: 3px;
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 800;
   }
   .active-state .toggle-badge {
@@ -643,7 +636,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     background: var(--accent, #7dd3a0);
     color: #0c0f0d;
     font-family: var(--font-mono), monospace;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 800;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
@@ -674,13 +667,13 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .strip-label {
     font-family: var(--font-mono), monospace;
-    font-size: 8px;
+    font-size: 12px;
     color: var(--ink-tertiary, #6c726e);
     letter-spacing: 0.05em;
     margin-bottom: 0.15rem;
   }
   .strip-val {
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--accent, #7dd3a0);
   }
@@ -691,7 +684,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .section-sub-title {
     font-family: var(--font-mono), monospace;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--ink-tertiary, #6c726e);
     letter-spacing: 0.1em;
@@ -724,7 +717,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     justify-content: space-between;
     align-items: center;
     color: var(--ink-secondary, #9da29e);
-    font-size: 9px;
+    font-size: 12px;
     cursor: pointer;
     text-align: left;
     transition: all 0.2s;
@@ -773,7 +766,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
   .timeline-card-title {
     font-family: var(--font-mono), monospace;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--ink-tertiary, #6c726e);
     letter-spacing: 0.15em;
@@ -816,7 +809,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .step-title {
     font-family: var(--font-mono), monospace;
-    font-size: 9px;
+    font-size: 12px;
     font-weight: bold;
     letter-spacing: 0.05em;
   }
@@ -876,7 +869,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
     font-family: var(--font-mono), monospace;
-    font-size: 9px;
+    font-size: 12px;
     color: #ffffff;
     pointer-events: none;
     z-index: 1000;

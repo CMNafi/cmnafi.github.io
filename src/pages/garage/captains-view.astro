@@ -2,18 +2,11 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Captains View" hideHeader={true}>
+<BaseLayout title="Captains View" description="Build and explore cricket field placements for different match situations.">
   <div class="captains-detail-viewport">
     
     <!-- Header Navigation -->
-    <nav class="paddock-override-nav">
-      <a href="/garage" class="return-wall">← GARAGE COMMAND</a>
-      <div class="nav-title">CAPTAINS VIEW // FIELDING STRATEGIST</div>
-      <div class="telemetry-pill">
-        <span class="pulse-dot"></span>
-        <span class="pill-label">RADAR SCAN ACTIVE</span>
-      </div>
-    </nav>
+    <nav class="section-nav tool-bridge" aria-label="Cricket tools"><a href="/garage/">← Garage</a><a href="/garage/captains-view/">Captains View</a><a href="/garage/style-fielding/">Fielding Style Playbook</a></nav>
 
     <!-- Wizard Step Progress Bar -->
     <div class="wizard-progress-bar">
@@ -200,29 +193,29 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
             <div class="metrics-grid" style="grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.6rem;">
               <div class="metric-group">
                 <label for="team-name-input">MY TEAM NAME</label>
-                <input type="text" id="team-name-input" class="player-name-input" style="height: 32px; background: var(--surface-base); border: 1px solid var(--surface-line); color: var(--ink-primary); font-family: var(--font-mono); font-size: 10px; padding: 0.2rem 0.5rem; border-radius: 4px;" placeholder="e.g. India" value="My Team" />
+                <input type="text" id="team-name-input" class="player-name-input" style="height: 32px; background: var(--surface-base); border: 1px solid var(--surface-line); color: var(--ink-primary); font-family: var(--font-mono); font-size: 12px; padding: 0.2rem 0.5rem; border-radius: 4px;" placeholder="e.g. India" value="My Team" />
               </div>
               <div class="metric-group">
                 <label for="game-name-input">GAME / OPPONENT</label>
-                <input type="text" id="game-name-input" class="player-name-input" style="height: 32px; background: var(--surface-base); border: 1px solid var(--surface-line); color: var(--ink-primary); font-family: var(--font-mono); font-size: 10px; padding: 0.2rem 0.5rem; border-radius: 4px;" placeholder="e.g. vs Australia" value="Match 1" />
+                <input type="text" id="game-name-input" class="player-name-input" style="height: 32px; background: var(--surface-base); border: 1px solid var(--surface-line); color: var(--ink-primary); font-family: var(--font-mono); font-size: 12px; padding: 0.2rem 0.5rem; border-radius: 4px;" placeholder="e.g. vs Australia" value="Match 1" />
               </div>
             </div>
             
             <div class="save-load-controls" style="display: flex; flex-direction: column; gap: 0.5rem;">
               <div style="display: flex; gap: 0.5rem;">
-                <button id="save-strategy-btn" class="hud-action-btn btn-primary" style="flex: 1; justify-content: center; height: 32px; font-size: 10px;">
+                <button id="save-strategy-btn" class="hud-action-btn btn-primary" style="flex: 1; justify-content: center; height: 32px; font-size: 12px;">
                   💾 SAVE CURRENT STRATEGY
                 </button>
               </div>
               
               <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <select id="saved-strategies-select" class="minimal-select" style="flex: 2; height: 32px; background: var(--surface-base); border: 1px solid var(--surface-line); color: var(--ink-primary); font-family: var(--font-mono); font-size: 10px;">
+                <select id="saved-strategies-select" class="minimal-select" style="flex: 2; height: 32px; background: var(--surface-base); border: 1px solid var(--surface-line); color: var(--ink-primary); font-family: var(--font-mono); font-size: 12px;">
                   <option value="">-- No Saved Strategies --</option>
                 </select>
-                <button id="load-strategy-btn" class="hud-action-btn" style="flex: 1; justify-content: center; height: 32px; font-size: 10px; border-color: rgba(46, 204, 113, 0.4); color: #2ecc71;">
+                <button id="load-strategy-btn" class="hud-action-btn" style="flex: 1; justify-content: center; height: 32px; font-size: 12px; border-color: rgba(46, 204, 113, 0.4); color: #2ecc71;">
                   📂 LOAD
                 </button>
-                <button id="delete-strategy-btn" class="hud-action-btn" style="flex: 0.5; justify-content: center; height: 32px; font-size: 10px; border-color: rgba(231, 76, 60, 0.4); color: #e74c3c;">
+                <button id="delete-strategy-btn" class="hud-action-btn" style="flex: 0.5; justify-content: center; height: 32px; font-size: 12px; border-color: rgba(231, 76, 60, 0.4); color: #e74c3c;">
                   🗑️
                 </button>
               </div>
@@ -232,10 +225,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
           <!-- Strategy Playbook Guide Card -->
           <div class="dashboard-card strategy-playbook-card">
             <div class="strategy-header-row" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem;">
-              <span id="playbook-stage-tag" class="strategy-tag" style="background: var(--accent); color: #0c0f0d; font-family: var(--font-mono); font-size: 9px; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 3px; letter-spacing: 0.05em;">STAGE 1</span>
-              <h3 id="playbook-strategy-title" class="strategy-main-title" style="font-size: 11px; font-weight: bold; color: #ffffff; margin: 0;">THE CLASSIC SLIP ATTACK</h3>
+              <span id="playbook-stage-tag" class="strategy-tag" style="background: var(--accent); color: #0c0f0d; font-family: var(--font-mono); font-size: 12px; font-weight: 800; padding: 0.15rem 0.4rem; border-radius: 3px; letter-spacing: 0.05em;">STAGE 1</span>
+              <h3 id="playbook-strategy-title" class="strategy-main-title" style="font-size: 12px; font-weight: bold; color: #ffffff; margin: 0;">THE CLASSIC SLIP ATTACK</h3>
             </div>
-            <div id="playbook-strategy-phase" style="font-family: var(--font-mono); font-size: 9px; color: var(--accent); margin-bottom: 0.5rem; letter-spacing: 0.05em;">PHASE: POWERPLAY (OVERS 1-6)</div>
+            <div id="playbook-strategy-phase" style="font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin-bottom: 0.5rem; letter-spacing: 0.05em;">PHASE: POWERPLAY (OVERS 1-6)</div>
             <p id="playbook-strategy-explanation" style="font-size: 9.5px; color: var(--ink-secondary); line-height: 1.4; margin: 0;">
               In the initial powerplay phase, restrictions limit the defense to a maximum of 2 fielders outside the 30-yard circle. Capturing early wickets is key. In this ultra-aggressive layout, the captain deploys 3 slips, a gully, and a silly point, leaving the outfield completely unprotected. It applies maximum psychological pressure and locks down catching angles near the bat.
             </p>
@@ -247,7 +240,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
               <h2 class="card-title">OVER FLIP ECONOMY</h2>
               <button id="toggle-flip-btn" class="mini-feature-btn">SHOW</button>
             </div>
-            <p style="font-size: 9px; color: var(--ink-tertiary); margin: 0 0 0.55rem; line-height: 1.4;">
+            <p style="font-size: 12px; color: var(--ink-tertiary); margin: 0 0 0.55rem; line-height: 1.4;">
               Distance each fielder covers when bowling end swaps. Minimize heavy runners.
             </p>
             <div class="economy-stats-strip">
@@ -265,7 +258,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
             </div>
             <!-- Bowler Protection Guard -->
             <div style="margin-top: 0.65rem; border-top: 1px solid rgba(125,211,160,0.1); padding-top: 0.55rem;">
-              <div style="font-family: var(--font-mono); font-size: 9px; color: var(--ink-secondary); letter-spacing: 0.06em; margin-bottom: 0.4rem;">BOWLER GUARD POSITIONS</div>
+              <div style="font-family: var(--font-mono); font-size: 12px; color: var(--ink-secondary); letter-spacing: 0.06em; margin-bottom: 0.4rem;">BOWLER GUARD POSITIONS</div>
               <div class="bowler-guard-strip" id="bowler-guard-strip">
                 <span class="guard-pos-pill" data-pos="fine_leg">FL</span>
                 <span class="guard-pos-pill" data-pos="third_man">TM</span>
@@ -518,7 +511,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .return-wall {
     color: var(--ink-secondary);
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.15em;
     text-decoration: none;
     transition: color 0.2s;
@@ -527,7 +520,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: var(--accent);
   }
   .nav-title {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.15em;
     color: var(--ink-primary);
     font-weight: 600;
@@ -540,7 +533,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border: 1px solid var(--accent-dim);
     padding: 0.35rem 0.6rem;
     border-radius: 99px;
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 0.05em;
   }
   .pulse-dot {
@@ -577,7 +570,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     align-items: center;
     gap: 0.5rem;
     color: var(--ink-tertiary);
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.05em;
     transition: all 0.3s ease;
     padding: 0.25rem 0.5rem;
@@ -594,7 +587,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: var(--ink-secondary);
     padding: 0.15rem 0.45rem;
     border-radius: 3px;
-    font-size: 9px;
+    font-size: 12px;
     font-weight: bold;
     transition: all 0.3s;
   }
@@ -664,7 +657,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     margin-bottom: 0.4rem;
   }
   .wizard-subtitle {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--ink-tertiary);
     letter-spacing: 0.02em;
     margin: 0;
@@ -692,7 +685,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .section-card-title {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 0.1em;
     color: var(--ink-secondary);
     margin-top: 0;
@@ -716,7 +709,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border-radius: 4px;
     color: var(--ink-tertiary);
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
     padding: 0.5rem 0;
     cursor: pointer;
@@ -763,12 +756,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .strat-title {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: bold;
     color: #fff;
   }
   .strat-desc {
-    font-size: 9px;
+    font-size: 12px;
     color: var(--ink-tertiary);
     margin: 0;
     line-height: 1.3;
@@ -781,7 +774,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: #fff;
     padding: 0.4rem 0.6rem;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     outline: none;
     transition: border-color 0.2s;
   }
@@ -800,7 +793,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .input-wrap label {
     font-family: var(--font-mono);
-    font-size: 8px;
+    font-size: 12px;
     color: var(--ink-tertiary);
     font-weight: bold;
   }
@@ -823,7 +816,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border: none;
     color: var(--ink-tertiary);
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     font-weight: bold;
     cursor: pointer;
     transition: color 0.2s;
@@ -842,7 +835,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .bulk-info {
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     color: var(--ink-tertiary);
     margin-top: 0;
     margin-bottom: 0.4rem;
@@ -854,7 +847,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border-radius: 4px;
     color: #fff;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     padding: 0.4rem;
     resize: none;
     outline: none;
@@ -893,7 +886,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .card-index-label {
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     color: var(--accent);
     opacity: 0.6;
     font-weight: 700;
@@ -905,7 +898,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: #fff;
     padding: 0.3rem 0.5rem;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     outline: none;
     transition: all 0.2s;
   }
@@ -924,7 +917,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border-radius: 4px;
     color: var(--ink-secondary);
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 700;
     padding: 0.3rem 0;
     cursor: pointer;
@@ -1025,7 +1018,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .card-title {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 0.15em;
     color: var(--ink-secondary);
     margin: 0 0 1rem 0;
@@ -1047,7 +1040,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .metric-group label {
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     letter-spacing: 0.08em;
     color: var(--ink-tertiary);
     font-weight: bold;
@@ -1059,7 +1052,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: var(--ink-primary);
     padding: 0.5rem;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     outline: none;
     transition: border-color 0.2s;
   }
@@ -1074,7 +1067,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: var(--ink-secondary);
     padding: 0.5rem;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
     display: flex;
@@ -1112,7 +1105,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: var(--ink-secondary);
     padding: 0.15rem 0.3rem;
     border-radius: 2px;
-    font-size: 9px;
+    font-size: 12px;
     font-weight: bold;
     transition: all 0.2s;
   }
@@ -1123,7 +1116,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
   .squad-counter {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 0.05em;
     color: var(--accent);
     font-weight: bold;
@@ -1169,7 +1162,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
   .roster-index {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     color: var(--ink-tertiary);
     font-weight: bold;
     min-width: 14px;
@@ -1178,7 +1171,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .position-telemetry-badge {
     margin-left: auto;
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     letter-spacing: 0.02em;
     color: var(--accent);
     background: rgba(125, 211, 160, 0.06);
@@ -1208,7 +1201,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border: none;
     color: var(--ink-tertiary);
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     letter-spacing: 0.05em;
     cursor: pointer;
     font-weight: bold;
@@ -1223,7 +1216,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     flex: 1;
     padding: 0.6rem;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.4;
     overflow-y: auto;
   }
@@ -1242,7 +1235,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .compact-tip {
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     color: var(--ink-tertiary);
     margin: 0 0 0.5rem 0;
     line-height: 1.3;
@@ -1278,7 +1271,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     padding: 0.75rem 2rem;
     border-radius: 4px;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.05em;
     z-index: 50;
@@ -1309,7 +1302,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     padding: 0.6rem 1.5rem;
     border-radius: 4px;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.05em;
     z-index: 60;
@@ -1340,7 +1333,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border-radius: 2px;
     cursor: pointer;
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     font-weight: bold;
     transition: all 0.15s;
   }
@@ -1400,7 +1393,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     justify-content: center;
     align-items: center;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     color: #120f0d;
     cursor: grab;
@@ -1509,7 +1502,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     transform: translate(-50%, -100%) translateY(0);
   }
   .tooltip-name {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     color: #fff;
     letter-spacing: 0.02em;
@@ -1520,7 +1513,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     gap: 0.4rem;
   }
   .tooltip-role {
-    font-size: 8px;
+    font-size: 12px;
     padding: 0.1rem 0.3rem;
     border-radius: 2px;
     font-weight: bold;
@@ -1539,7 +1532,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: #e74c3c;
   }
   .tooltip-position {
-    font-size: 9px;
+    font-size: 12px;
     color: var(--ink-secondary);
   }
 
@@ -1553,7 +1546,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     justify-content: space-between;
     align-items: center;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     color: var(--ink-secondary);
   }
   
@@ -1564,7 +1557,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border-radius: 4px;
     padding: 0.4rem 0.8rem;
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
     display: flex;
@@ -1586,7 +1579,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 9px;
+    font-size: 12px;
     letter-spacing: 0.05em;
   }
   .legend-dot {
@@ -1603,7 +1596,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .mono-value {
     color: var(--ink-primary);
-    font-size: 11px;
+    font-size: 12px;
   }
   #outside-circle-count.count-warn {
     color: #f28b82;
@@ -1714,7 +1707,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .position-slot:not(.slot-occupied):hover {
     width: 32px;
     height: 32px;
-    font-size: 9px;
+    font-size: 12px;
     color: #ff2d55;
     border: 1.5px solid #ff2d55;
     background: rgba(255, 45, 85, 0.25);
@@ -1727,7 +1720,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .cricket-turf-field.has-selection .position-slot:not(.slot-occupied) {
     width: 28px;
     height: 28px;
-    font-size: 9px;
+    font-size: 12px;
     color: #ff2d55;
     border: 1.5px dashed #ff2d55;
     background: rgba(255, 45, 85, 0.12);
@@ -1774,7 +1767,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .position-slot.slot-active-assign {
     width: 34px !important;
     height: 34px !important;
-    font-size: 10px !important;
+    font-size: 12px !important;
     font-weight: 800 !important;
     color: #ffffff !important;
     background: #ff2d55 !important;
@@ -1811,7 +1804,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     align-items: center;
     gap: 0.5rem;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--ink-secondary);
     letter-spacing: 0.05em;
@@ -1848,7 +1841,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     justify-content: center;
     align-items: center;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     background: rgba(25, 28, 26, 0.6);
     border: 2px solid var(--surface-line);
@@ -1881,7 +1874,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border: 1px solid var(--surface-line);
     color: var(--ink-primary);
     font-family: var(--font-mono);
-    font-size: 8px;
+    font-size: 12px;
     padding: 0.1rem 0.35rem;
     border-radius: 2px;
     white-space: nowrap;
@@ -1911,7 +1904,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     gap: 0.25rem;
     min-width: 140px;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 12px;
     max-height: 200px;
     overflow-y: auto;
   }
@@ -1919,7 +1912,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     display: none;
   }
   .assign-menu-title {
-    font-size: 9px;
+    font-size: 12px;
     color: var(--ink-tertiary);
     border-bottom: 1px solid var(--surface-line);
     padding: 0.25rem 0.5rem;
@@ -1972,7 +1965,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
   .timeline-card-title {
     font-family: var(--font-mono), monospace;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--ink-tertiary);
     letter-spacing: 0.15em;
@@ -2015,7 +2008,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .step-title {
     font-family: var(--font-mono), monospace;
-    font-size: 9px;
+    font-size: 12px;
     font-weight: bold;
     letter-spacing: 0.05em;
   }
@@ -2094,7 +2087,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .section-card-title {
     color: var(--ink-primary) !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
     opacity: 0.85;
   }
 
@@ -2113,7 +2106,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .strat-desc {
     color: var(--ink-secondary) !important;
-    font-size: 10px !important;
+    font-size: 12px !important;
     line-height: 1.45;
   }
 
@@ -2129,14 +2122,14 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .card-index-label {
     color: var(--accent) !important;
     opacity: 0.8;
-    font-size: 9px !important;
+    font-size: 12px !important;
   }
 
   /* Input labels — much brighter */
   .input-wrap label,
   .metric-group label {
     color: var(--ink-secondary) !important;
-    font-size: 9px !important;
+    font-size: 12px !important;
   }
 
   /* Step 2 sidebar — lighter, easier to read */
@@ -2149,7 +2142,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .card-title {
     color: var(--ink-secondary) !important;
-    font-size: 10px !important;
+    font-size: 12px !important;
     border-bottom-color: rgba(125,211,160,0.15) !important;
     letter-spacing: 0.12em !important;
   }
@@ -2163,7 +2156,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .roster-index {
     color: var(--ink-secondary) !important;
-    font-size: 10px !important;
+    font-size: 12px !important;
   }
   .position-telemetry-badge {
     background: rgba(125,211,160,0.1) !important;
@@ -2177,7 +2170,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .compact-tip {
     color: var(--ink-secondary) !important;
-    font-size: 10px !important;
+    font-size: 12px !important;
   }
 
   /* Terminal: slightly brighter */
@@ -2187,7 +2180,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .circle-telemetry {
     color: var(--ink-secondary) !important;
-    font-size: 10px !important;
+    font-size: 12px !important;
   }
 
   /* Field sandbox: richer green atmosphere */
@@ -2210,7 +2203,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     gap: 0.75rem !important;
   }
   .legend-item {
-    font-size: 9px !important;
+    font-size: 12px !important;
     color: var(--ink-secondary) !important;
   }
 
@@ -2233,7 +2226,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .bench-title {
     color: var(--ink-secondary) !important;
-    font-size: 10px !important;
+    font-size: 12px !important;
   }
 
   /* Timeline footer */
@@ -2246,7 +2239,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .step-title {
     color: var(--ink-secondary);
-    font-size: 10px !important;
+    font-size: 12px !important;
   }
   .timeline-label.active .step-title {
     color: var(--accent) !important;
@@ -2258,10 +2251,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: var(--ink-primary) !important;
   }
   #playbook-strategy-phase {
-    font-size: 10px !important;
+    font-size: 12px !important;
   }
   #playbook-strategy-explanation {
-    font-size: 10px !important;
+    font-size: 12px !important;
     color: var(--ink-secondary) !important;
     line-height: 1.5;
   }
@@ -2290,7 +2283,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border: 1px solid var(--surface-line);
     color: var(--ink-tertiary);
     font-family: var(--font-mono);
-    font-size: 8px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.06em;
     padding: 0.2rem 0.5rem;
@@ -2323,7 +2316,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .econ-chip-label {
     font-family: var(--font-mono);
-    font-size: 7px;
+    font-size: 12px;
     letter-spacing: 0.1em;
     color: var(--ink-tertiary);
     text-transform: uppercase;
@@ -2379,7 +2372,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .flip-dist {
     font-family: var(--font-mono);
-    font-size: 8px;
+    font-size: 12px;
     font-weight: 700;
     text-align: right;
   }
@@ -2418,7 +2411,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .bs-abbr {
     font-family: var(--font-mono);
-    font-size: 8px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--ink-tertiary);
     letter-spacing: 0.05em;
@@ -2447,7 +2440,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .guard-strip-label {
     font-family: var(--font-mono);
-    font-size: 8px;
+    font-size: 12px;
     letter-spacing: 0.1em;
     color: var(--status-warn);
     opacity: 0.7;
@@ -2460,7 +2453,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
   .guard-pos-pill {
     font-family: var(--font-mono);
-    font-size: 8px;
+    font-size: 12px;
     padding: 0.15rem 0.4rem;
     border-radius: 2px;
     border: 1px solid;

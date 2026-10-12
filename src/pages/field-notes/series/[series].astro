@@ -1,0 +1,9 @@
+---
+import {getCollection} from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import NoteRow from '@/components/NoteRow.astro';
+import {isPublicNote,categorySlug} from '@/config/editorial';
+export async function getStaticPaths(){const all=(await getCollection('field-notes')).filter(isPublicNote);return [...new Set(all.map(n=>n.data.series).filter(Boolean))].map(series=>({params:{series:categorySlug(series!)},props:{series,notes:all.filter(n=>n.data.series===series).sort((a,b)=>b.data.publishedAt.valueOf()-a.data.publishedAt.valueOf())}}));}
+const {series,notes}=Astro.props;
+---
+<BaseLayout title={series} description={`Read ${series}, a series of field notes by C M Nafi.`}><div class="page-container"><header class="page-masthead"><a class="text-link" href="/field-notes/">← Field Notes</a><h1>{series}</h1><p class="meta">{notes.length} notes in this series</p></header>{notes.map(note=><NoteRow note={note}/>)}</div></BaseLayout>

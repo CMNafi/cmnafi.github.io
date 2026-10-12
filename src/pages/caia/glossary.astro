@@ -7,7 +7,7 @@ import CaiaLayout from '../../layouts/CaiaLayout.astro';
     <p style="font-size: 1.2em; color: var(--caia-highlight);">A–Z searchable terms and definitions for the CAIA curriculum.</p>
   </header>
 
-  <section>
+  <label class="meta" for="glossary-search">Find a term</label><input id="glossary-search" class="search-input" type="search" placeholder="Search definitions…" style="width:100%;margin-bottom:24px"/><p id="glossary-count" class="meta" aria-live="polite"></p><section>
     <div style="background: var(--caia-card); border: 1px solid var(--caia-border); padding: 2rem; border-radius: 4px;">
       <dl style="margin: 0; display: flex; flex-direction: column; gap: 1.5rem;">
         
@@ -55,3 +55,5 @@ import CaiaLayout from '../../layouts/CaiaLayout.astro';
     </div>
   </section>
 </CaiaLayout>
+
+<script>function glossary(){const input=document.querySelector<HTMLInputElement>('#glossary-search');if(!input||input.dataset.ready)return;input.dataset.ready='true';const terms=[...document.querySelectorAll<HTMLElement>('.caia-main dl>div')];const filter=()=>{let count=0;terms.forEach(t=>{t.hidden=!t.textContent?.toLowerCase().includes(input.value.toLowerCase().trim());if(!t.hidden)count++});document.querySelector('#glossary-count')!.textContent=`${count} ${count===1?'term':'terms'}`;};input.addEventListener('input',filter);filter();}glossary();document.addEventListener('astro:page-load',glossary);</script>

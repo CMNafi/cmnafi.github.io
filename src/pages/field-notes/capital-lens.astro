@@ -1,0 +1,4 @@
+---
+import {getCollection} from 'astro:content';import BaseLayout from '@/layouts/BaseLayout.astro';import NoteRow from '@/components/NoteRow.astro';const notes=(await getCollection('field-notes')).filter(n=>!n.data.draft&&(n.data.series==='Capital Lens'||n.slug.startsWith('capital-lens-'))).sort((a,b)=>b.data.publishedAt.valueOf()-a.data.publishedAt.valueOf());
+---
+<BaseLayout title="Capital Lens" description="Essays on capital flows, companies, and the financial systems behind them."><div class="page-container"><header class="page-masthead"><a class="text-link" href="/field-notes/">← Field Notes</a><h1>Capital Lens</h1><p class="lead">Following the money. A series on the businesses and systems behind it.</p></header>{notes.map(note=><NoteRow note={note}/>)}</div></BaseLayout>
