@@ -7,6 +7,7 @@ export const siteConfig = {
   nav: [
     { id: 'pit-wall', label: 'Home', href: '/' },
     { id: 'garage', label: 'Garage', href: '/garage' },
+    { id: 'play', label: 'Play', href: '/play' },
     { id: 'field-notes', label: 'Field Notes', href: '/field-notes' },
     { id: 'story', label: 'Story', href: '/story' },
     { id: 'connect', label: 'Connect', href: '/connect' }
@@ -19,6 +20,7 @@ export const siteConfig = {
   footerLinks: [
     { label: 'Home', href: '/' },
     { label: 'Garage', href: '/garage' },
+    { label: 'Play', href: '/play' },
     { label: 'Field Notes', href: '/field-notes' },
     { label: 'Story', href: '/story' },
     { label: 'Connect', href: '/connect' }

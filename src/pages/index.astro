@@ -1,69 +1,56 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import LapTimer from '@/components/telemetry/LapTimer.astro';
 import { getCollection } from 'astro:content';
 
-// Copy on this page follows STORY.md. Ground truth: Nafi, Land O' Lakes, Florida, Solutions Engineer at Dasseti.
+// Copy follows STORY.md. Ground truth: Nafi, Land O' Lakes, Florida, Solutions Engineer at Dasseti.
+// Layout rule for this page: one idea above the fold, then a quiet index. Resist adding sections.
 
 const notes = (await getCollection('field-notes'))
   .filter((n) => !n.data.draft)
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
-const [leadNote, ...olderNotes] = notes;
-const recentNotes = olderNotes.slice(0, 5);
+const latestNotes = notes.slice(0, 5);
 
-const projects = (await getCollection('projects')).sort((a, b) => b.data.priority - a.data.priority);
-const liveProjects = projects.filter((p) => p.data.status === 'live');
-const tileProjects = liveProjects.slice(0, 3);
-const alsoLive = liveProjects.slice(3);
-const brewing = projects.filter(
-  (p) => p.data.status === 'brewing' && !['homepage', 'more-tools-brewing'].includes(p.slug)
-);
-const projectHref = (p: (typeof projects)[number]) =>
-  p.data.status === 'live' && p.data.liveUrl ? p.data.liveUrl : `/garage/${p.slug}`;
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.status === 'live')
+  .sort((a, b) => b.data.priority - a.data.priority)
+  .slice(0, 3);
+
+// One-line descriptions for the homepage list; anything not listed falls back to the project summary
+const taglines: Record<string, string> = {
+  worldview: 'An atlas of everyday choices, and the evidence behind them.',
+  'form-adv-data-finder': "An investment adviser's filings, joined into one profile.",
+  'style-fielding': 'Cricket fielding plans for every phase of a match.',
+  'captains-view': 'A tactical cricket fielding planner.'
+};
+
+const building = [
+  ...projects.map((p) => ({
+    title: p.data.title,
+    line: taglines[p.slug] ?? p.data.summary,
+    href: p.data.liveUrl ?? `/garage/${p.slug}`
+  })),
+  { title: 'CAIA Corner', line: 'A study hub for alternative investments.', href: '/caia' }
+];
+
+const route = ['Dinajpur', 'Rangpur', 'Changshu', 'Decorah', 'Rochester', 'Wilmington', "Land O' Lakes"];
 
 const nav = [
-  { label: 'Journey', href: '#journey' },
-  { label: 'Start Here', href: '#start-here' },
-  { label: 'Field Notes', href: '#field-notes' },
-  { label: 'Garage', href: '#garage' },
+  { label: 'Field Notes', href: '/field-notes' },
+  { label: 'Garage', href: '/garage' },
+  { label: 'Play', href: '/play' },
   { label: 'Story', href: '/story' },
-  { label: 'Sitemap', href: '/sitemap' },
   { label: 'Connect', href: '/connect' }
 ];
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric', timeZone: 'UTC' });
-const shortRead = (rt: string) => rt.replace(/\s*read$/i, '');
 
-// One lap of the story. Positions are % of the track box (viewBox 50 20 1040 548).
-const turns = [
-  { no: '01', name: 'Dinajpur', place: 'Dinajpur, Bangladesh', when: 'Childhood', x: 5.58, y: 87.23, side: 'below',
-    what: 'A house where reading was the default answer to boredom. The one room where I was never new.' },
-  { no: '02', name: 'Rangpur', place: 'Rangpur, Bangladesh', when: 'Age 12', x: 5.19, y: 62.04, side: 'right',
-    what: 'Left home for military school. Sixty-six kilometres away, and a very long way from home.' },
-  { no: '03', name: 'Changshu', place: 'Changshu, China', when: '2016 · Age 16', x: 16.92, y: 14.6, side: 'above',
-    what: 'UWC on a full scholarship. A new country, a language I didn’t speak, classmates from 100+ countries.' },
-  { no: '04', name: 'Decorah', place: 'Decorah, Iowa', when: 'Aug 2018 to May 2022', x: 61.54, y: 8.76, side: 'above',
-    what: 'Data Science at Luther College (GPA 3.5). Applied to Blackstone; the interview invitation said BlackRock.' },
-  { no: '05', name: 'Rochester', place: 'Rochester, Minnesota', when: '2021 to 2022', x: 64.04, y: 33.58, side: 'left',
-    what: 'Mayo Clinic, as an AI intern. Messy clinical data, and my first job that was mostly translation.' },
-  { no: '06', name: 'Wilmington', place: 'Wilmington, Delaware', when: '2022 to 2023', x: 80.96, y: 49.64, side: 'left',
-    what: 'BlackRock, after SkyBridge. A trillion dollars is a spreadsheet problem, a risk problem and a storytelling problem.' },
-  { no: '07', name: "Land O' Lakes", place: 'Florida', when: 'Now', x: 51.92, y: 78.83, side: 'right',
-    what: 'Solutions engineer at Dasseti, working remotely. Translating between investment teams and their software.' }
-];
-const currentTurn = turns[turns.length - 1];
-
-const trackPath =
-  'M330,520 C310,520 207,524 170,520 C133,516 131,519 108,498 C85,477 83,468 82,440 C81,412 93,389 104,360 C115,331 170,193 190,150 C210,107 205,115 226,100 C247,85 247,87 286,82 C325,77 442,73 460,72 C478,71 609,61 640,60 C671,59 672,55 690,68 C708,81 707,83 708,108 C709,133 692,134 694,160 C696,186 696,189 716,204 C736,219 750,215 770,218 C790,221 818,217 836,222 C854,227 865,232 876,246 C887,260 894,265 892,292 C890,319 889,321 870,336 C851,351 848,350 820,350 C792,350 726,341 700,338 C674,335 651,327 628,330 C605,333 599,333 584,352 C569,371 571,377 572,400 C573,423 587,426 590,452 C593,478 595,478 582,496 C569,514 562,513 540,518 C518,523 491,520 470,520 C449,520 350,520 330,520Z';
-
-// Search dataset for Cmd+K search dialog
+// Search dataset for the Cmd+K dialog
 const searchPayload = notes.map((n) => ({
   title: n.data.title,
   slug: n.slug,
   category: n.data.category,
-  excerpt: n.data.excerpt || n.data.description || '',
-  readingTime: shortRead(n.data.readingTime || '5 min')
+  excerpt: n.data.excerpt || n.data.description || ''
 }));
 ---
 
@@ -72,312 +59,108 @@ const searchPayload = notes.map((n) => ({
   description="Solutions Engineer at Dasseti, living in Land O' Lakes, Florida. I grew up in Dinajpur, Bangladesh, left home at twelve, and translate between investment teams and software."
   hideHeader={true}
 >
-  <div id="top" class="home">
-    <!-- Sticky minimal navigation with smooth scroll anchors and Cmd+K search trigger -->
-    <header class="home-sticky-header">
-      <div class="wrap nav-inner">
-        <a class="wordmark" href="#top" aria-label="C M Nafi Home">C M Nafi</a>
-        
-        <nav class="home-nav" aria-label="Primary Navigation">
-          {nav.map((item) => (
-            <a class="nav-link" href={item.href}>{item.label}</a>
-          ))}
-        </nav>
-
-        <div class="nav-actions">
-          <button
-            type="button"
-            id="cmd-k-trigger"
-            class="cmd-k-btn"
-            aria-label="Open search dialog (Press Command plus K)"
-          >
-            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <span class="cmd-k-text">Search</span>
-            <kbd class="kbd-pill">⌘K</kbd>
-          </button>
-
-          <div class="lap" aria-hidden="true">
-            <span class="pulse-dot"></span>
-            <LapTimer id="home-lap-timer" isLive={true} />
-          </div>
-        </div>
-      </div>
+  <div class="home">
+    <header class="top wrap">
+      <a class="wordmark" href="/">C M Nafi</a>
+      <nav class="top-nav" aria-label="Primary">
+        {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+      <button type="button" id="cmd-k-trigger" class="search-btn" aria-label="Search field notes (Ctrl or Command + K)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7.5"></circle>
+          <line x1="21" y1="21" x2="16.5" y2="16.5"></line>
+        </svg>
+      </button>
     </header>
 
-    <!-- Hero / Opening section -->
-    <section class="opening wrap" aria-labelledby="opening-title">
-      <h1 id="opening-title" class="opening-title">
-        <span class="rise" style="animation-delay: 0.05s">Learn the room.</span>
-        <span class="rise" style="animation-delay: 0.18s">Then <em>translate.</em></span>
+    <section class="intro wrap-narrow" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="intro-title">
+        <span class="rise">Learn the room.</span>
+        <span class="rise" style="animation-delay: 0.12s">Then <em>translate.</em></span>
       </h1>
 
-      <div class="opening-copy">
-        <p class="opening-lede rise" style="animation-delay: 0.35s">
-          I'm Nafi. I grew up in Dinajpur, Bangladesh, left home at twelve for military school, and have been learning new rooms ever since. Today I live in Land O' Lakes, Florida and work remotely as a Solutions Engineer at <a href="/story#dasseti">Dasseti</a>, translating between investment teams and their due-diligence software.
-        </p>
-        <p class="opening-quiet rise" style="animation-delay: 0.45s">
-          Before that: BlackRock, SkyBridge, Mayo Clinic. Studied Data Science at Luther College (GPA 3.5). On this site I write about how capital moves, build small tools I wanted, and write up match notes from Florida cricket.
-        </p>
-        <div class="opening-actions rise" style="animation-delay: 0.55s">
-          <a class="btn" href="#start-here">Start here <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></a>
-          <a class="txt-link" href="/story">Read the story <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></a>
-          <a class="txt-link" href="#field-notes">Field notes <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></a>
-        </div>
-      </div>
-
-      <!-- Dinajpur to Florida Journey Visual -->
-      <figure id="journey" class="lap-map" aria-labelledby="lap-caption-title">
-        <div class="lap-head">
-          <span id="lap-caption-title">One lap · Dinajpur to Florida</span>
-          <span>16,240 km · seven stops</span>
-        </div>
-
-        <div class="track-box">
-          <svg viewBox="50 20 1040 548" aria-hidden="true" class="track-svg">
-            <path d={trackPath} class="track-bed"></path>
-            <path d={trackPath} class="track-line"></path>
-            <line x1="330" y1="505" x2="330" y2="535" class="start-line"></line>
-            <g class="lap-dot" style={`offset-path: path('${trackPath}')`}>
-              <circle cx="0" cy="0" r="17" class="lap-dot-halo"></circle>
-              <circle cx="0" cy="0" r="6.5" class="lap-dot-core"></circle>
-            </g>
-          </svg>
-
-          <span class="sf-label" aria-hidden="true">S/F</span>
-
-          {turns.map((t, i) => (
-            <button
-              type="button"
-              class:list={['turn', 'rise', `label-${t.side}`, { 'is-current': t === currentTurn }]}
-              style={`left: ${t.x}%; top: ${t.y}%; animation-delay: ${1.0 + i * 0.1}s`}
-              aria-label={`Stop ${t.no}, ${t.place}`}
-              aria-pressed={t === currentTurn ? 'true' : 'false'}
-              data-no={t.no}
-              data-place={t.place}
-              data-when={t.when}
-              data-what={t.what}
-            >
-              <span class="ring"></span>
-              <span class="turn-label">{t.no} <span class="turn-name">{t.name}</span></span>
-            </button>
-          ))}
-        </div>
-
-        <figcaption class="lap-caption" aria-live="polite">
-          <span class="cap-no">Stop <span data-cap="no">{currentTurn.no}</span> of 07</span>
-          <span class="cap-place" data-cap="place">{currentTurn.place}</span>
-          <span class="cap-when" data-cap="when">{currentTurn.when}</span>
-          <span class="cap-what" data-cap="what">{currentTurn.what}</span>
-        </figcaption>
-      </figure>
-    </section>
-
-    <!-- Start Here: Guided Onboarding Path for First-Time Visitors -->
-    <section id="start-here" class="sector wrap start-here-section" aria-labelledby="start-here-title">
-      <div class="sector-head">
-        <div class="sector-name">
-          <span class="sector-no">Start Here</span>
-          <h2 id="start-here-title">Orientation</h2>
-        </div>
-        <span>First time visiting? Three ways in</span>
-      </div>
-
-      <p class="sector-intro">
-        If you are new here, these three paths give you the clearest sense of how I think and what I build.
+      <p class="intro-lede rise" style="animation-delay: 0.3s">
+        I'm Nafi, a solutions engineer at Dasseti. I left home at twelve for military school in Bangladesh and have
+        been the newest person in the room ever since. These days I live in Florida and translate between investment
+        teams and the software they run due diligence on.
       </p>
 
-      <div class="start-grid">
-        <a class="start-card" href="/story">
-          <div class="start-badge">01 · The Narrative</div>
-          <h3 class="start-title">The newest person in the room</h3>
-          <p class="start-desc">
-            Nine chapters across Bangladesh, China, Iowa, Delaware, and Florida. Leaving home at twelve, learning to listen before speaking, and turning translation into a career.
-          </p>
-          <span class="start-link">Read the story <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></span>
-        </a>
-
-        <a class="start-card" href="/field-notes/blackstone-vs-blackrock">
-          <div class="start-badge">02 · The Flagship Essay</div>
-          <h3 class="start-title">Blackstone vs. BlackRock</h3>
-          <p class="start-desc">
-            A job application mix-up in Iowa that opened up modern finance: how two titans with nearly identical roots evolved into completely different market powerhouses.
-          </p>
-          <span class="start-link">Read the note <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></span>
-        </a>
-
-        <a class="start-card" href="/caia">
-          <div class="start-badge">03 · The Study Hub</div>
-          <h3 class="start-title">CAIA Corner & Garage Tools</h3>
-          <p class="start-desc">
-            An open study curriculum for alternative investments, alongside interactive regulatory data extractors and tactical cricket simulators built to solve real gaps.
-          </p>
-          <span class="start-link">Explore the tools <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></span>
-        </a>
-      </div>
-    </section>
-
-    <!-- Sector 1: Field Notes -->
-    {leadNote && (
-      <section id="field-notes" class="sector wrap" aria-labelledby="notes-title">
-        <div class="sector-head">
-          <div class="sector-name">
-            <span class="sector-no">Sector 1</span>
-            <h2 id="notes-title">Field Notes</h2>
-          </div>
-          <span>{notes.length} published essays</span>
-        </div>
-
-        <p class="sector-intro">Every big number has a story behind it. These are the ones I went and found.</p>
-
-        <a class="feature" href={`/field-notes/${leadNote.slug}`}>
-          <span class="meta">Latest · {leadNote.data.category} · {shortRead(leadNote.data.readingTime)} · {formatDate(leadNote.data.publishedAt)}</span>
-          <h3 class="feature-title">{leadNote.data.title}</h3>
-          <p class="feature-excerpt">{leadNote.data.excerpt || leadNote.data.description}</p>
-          <span class="read-link">Read the note <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></span>
-        </a>
-
-        <div class="rows">
-          {recentNotes.map((n) => (
-            <a class="row" href={`/field-notes/${n.slug}`}>
-              <span class="row-date">{formatDate(n.data.publishedAt)}</span>
-              <span class="row-title">{n.data.title}</span>
-              <span class="row-meta">
-                <span>{n.data.category}</span>
-                <span>{shortRead(n.data.readingTime)}</span>
-                <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg>
-              </span>
-            </a>
-          ))}
-        </div>
-
-        <a class="txt-link more" href="/field-notes">All {notes.length} field notes <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></a>
-      </section>
-    )}
-
-    <!-- Sector 2: Garage -->
-    <section id="garage" class="sector wrap" aria-labelledby="garage-title">
-      <div class="sector-head">
-        <div class="sector-name">
-          <span class="sector-no">Sector 2</span>
-          <h2 id="garage-title">Garage</h2>
-        </div>
-        <span>Tools I wanted, so I built them</span>
-      </div>
-
-      <p class="sector-intro">
-        I am not a software engineer. I build these tools the same way I do the day job: describe exactly what should exist, then keep going until it does.
-      </p>
-
-      <div class="tiles">
-        {tileProjects.map((p) => (
-          <a class="tile" href={projectHref(p)}>
-            <span class="tile-meta"><span class="dot live"></span><span class="tile-status">Live</span><span>{p.data.category}</span></span>
-            <h3 class="tile-title">{p.data.title}</h3>
-            <p>{p.data.summary}</p>
-            <span class="read-link">Open <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></span>
-          </a>
+      <p class="route rise" style="animation-delay: 0.4s">
+        {route.map((place, i) => (
+          <>
+            <span>{place}</span>
+            {i < route.length - 1 && <span class="route-sep" aria-hidden="true">→</span>}
+          </>
         ))}
-        <a class="tile" href="/caia">
-          <span class="tile-meta"><span class="dot live"></span><span class="tile-status">Live</span><span>Study hub</span></span>
-          <h3 class="tile-title">CAIA Corner</h3>
-          <p>An exam-aligned study hub for alternative investments: hedge funds, private equity, private debt and real assets.</p>
-          <span class="read-link">Open <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></span>
-        </a>
-      </div>
-
-      {(alsoLive.length > 0 || brewing.length > 0) && (
-        <div class="also">
-          <span class="also-label">Also in the garage</span>
-          {alsoLive.length > 0 && (
-            <span class="also-item"><span class="dot live"></span>Live: {alsoLive.map((p) => p.data.title).join(', ')}</span>
-          )}
-          {brewing.length > 0 && (
-            <span class="also-item"><span class="dot brewing"></span>Brewing: {brewing.map((p) => p.data.title).join(', ')}</span>
-          )}
-        </div>
-      )}
-
-      <a class="txt-link more" href="/garage">The whole garage <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></a>
-    </section>
-
-    <!-- Sector 3: Story -->
-    <section id="story" class="sector wrap" aria-labelledby="story-title">
-      <div class="sector-head">
-        <div class="sector-name">
-          <span class="sector-no">Sector 3</span>
-          <h2 id="story-title">Story</h2>
-        </div>
-        <span>Bangladesh · China · United States</span>
-      </div>
-
-      <p class="story-para">
-        Grew up in <em>Dinajpur</em>. Left home at twelve for military school in <em>Rangpur</em>, and at sixteen for
-        <em>Changshu</em>, on a full scholarship, without the language. Studied data science in <em>Decorah</em>, a town
-        of eight thousand. Learned at <em>BlackRock</em> that a trillion dollars is a storytelling problem. Now in
-        <em>Land O' Lakes, Florida</em>, translating for a living.
       </p>
 
-      <a class="txt-link more" href="/story">Read all nine chapters <svg class="arr" width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4"></path></svg></a>
-    </section>
-
-    <!-- Contact & Footer -->
-    <section id="contact" class="hello wrap" aria-labelledby="hello-title">
-      <h2 id="hello-title" class="hello-label">Open to conversations</h2>
-      <a class="hello-email" href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a>
-      <p class="hello-note">
-        Especially about due diligence, allocator workflows, and how investment teams actually adopt software.
-      </p>
-      <div class="hello-links">
-        <a class="nav-link" href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-        <a class="nav-link" href="https://github.com/CMNafi" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-        <a class="nav-link" href="/connect">Connect</a>
-        <a class="nav-link" href="/sitemap">Sitemap</a>
+      <div class="intro-actions rise" style="animation-delay: 0.5s">
+        <a class="btn" href="/story">Read the story <span class="arr" aria-hidden="true">→</span></a>
+        <a class="quiet-link" href="/field-notes">Field notes <span class="arr" aria-hidden="true">→</span></a>
       </div>
     </section>
 
-    <!-- Floating Back to Top Button -->
-    <button id="back-to-top" class="back-to-top" aria-label="Back to top of page" title="Back to top">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 19V5M5 12l7-7 7 7"></path>
-      </svg>
-      <span class="sr-only">Back to top</span>
-    </button>
+    <div class="index wrap-narrow">
+      <section class="block" aria-labelledby="writing-title">
+        <h2 id="writing-title" class="block-label">Writing</h2>
+        <div class="block-body">
+          <ul class="list">
+            {latestNotes.map((n) => (
+              <li>
+                <a class="item" href={`/field-notes/${n.slug}`}>
+                  <span class="item-date">{formatDate(n.data.publishedAt)}</span>
+                  <span class="item-title">{n.data.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a class="more" href="/field-notes">All {notes.length} field notes <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+      </section>
 
-    <!-- Cmd+K Search Modal Dialog -->
-    <dialog id="cmd-k-modal" class="search-modal" aria-labelledby="modal-search-label">
-      <div class="search-modal-backdrop" id="modal-backdrop"></div>
-      <div class="search-dialog-box" role="document">
-        <div class="search-bar-header">
-          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
+      <section class="block" aria-labelledby="building-title">
+        <h2 id="building-title" class="block-label">Building</h2>
+        <div class="block-body">
+          <ul class="list">
+            {building.map((b) => (
+              <li>
+                <a class="item item-project" href={b.href}>
+                  <span class="item-title">{b.title}</span>
+                  <span class="item-line">{b.line}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a class="more" href="/garage">The whole garage <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <section class="block" aria-labelledby="hello-title">
+        <h2 id="hello-title" class="block-label">Say hello</h2>
+        <div class="block-body">
+          <p class="hello">
+            Happy to talk about due diligence, allocator workflows, or a close finish in cricket.
+            <a href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a>
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <dialog id="cmd-k-modal" class="search-modal" aria-label="Search field notes">
+      <div class="search-box">
+        <div class="search-head">
           <input
             type="search"
             id="cmd-k-input"
-            class="search-input"
-            placeholder="Search field notes by title, topic, or keyword..."
+            class="search-field"
+            placeholder="Search field notes"
             aria-label="Search field notes"
             autocomplete="off"
             spellcheck="false"
           />
-          <button type="button" id="cmd-k-close" class="close-btn" aria-label="Close search dialog">
-            <kbd class="esc-pill">Esc</kbd>
-          </button>
+          <button type="button" id="cmd-k-close" class="search-close" aria-label="Close search">Esc</button>
         </div>
-
-        <div id="search-results-list" class="search-results" role="listbox" aria-label="Search suggestions">
-          <!-- Filled dynamically by JavaScript -->
-        </div>
-
-        <div class="search-modal-footer">
-          <span>Navigate with <kbd>↑</kbd> <kbd>↓</kbd></span>
-          <span>Open with <kbd>↵</kbd></span>
-          <span>Close with <kbd>Esc</kbd></span>
-        </div>
+        <div id="search-results-list" class="search-results" role="listbox" aria-label="Results"></div>
       </div>
     </dialog>
 
@@ -386,28 +169,24 @@ const searchPayload = notes.map((n) => ({
 </BaseLayout>
 
 <style>
-  html {
-    scroll-behavior: smooth;
-  }
-
   .home {
     --ink-quiet: #8f8475;
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
-    container-type: inline-size;
     background: var(--surface-base);
     color: var(--ink-primary);
     font-family: var(--font-serif);
-    overflow-x: clip;
-    min-height: 100vh;
   }
 
-  .wrap {
-    max-width: 1360px;
+  .wrap,
+  .wrap-narrow {
     margin: 0 auto;
     box-sizing: border-box;
-    padding-left: clamp(16px, 4cqw, 56px);
-    padding-right: clamp(16px, 4cqw, 56px);
+    padding-left: clamp(16px, 5vw, 48px);
+    padding-right: clamp(16px, 5vw, 48px);
   }
+
+  .wrap { max-width: 1200px; }
+  .wrap-narrow { max-width: 1040px; }
 
   .home a { color: var(--ink-primary); text-decoration: none; }
 
@@ -417,206 +196,94 @@ const searchPayload = notes.map((n) => ({
     border-radius: 2px;
   }
 
-  /* Shared monospace label voice */
-  .home-nav,
-  .lap,
+  /* Header */
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 8px 28px;
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+
+  .wordmark { font-size: 20px; letter-spacing: -0.01em; margin-right: auto; }
+
+  .top-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px; }
+
+  .top-nav a,
+  .block-label,
+  .item-date,
+  .route,
   .btn,
-  .txt-link,
-  .read-link,
-  .start-link,
-  .lap-head,
-  .sf-label,
-  .turn-label,
-  .cap-no,
-  .cap-when,
-  .sector-head,
-  .meta,
-  .row-date,
-  .row-meta,
-  .tile-meta,
-  .start-badge,
-  .also,
-  .hello-label,
-  .hello-links,
-  .cmd-k-btn,
-  .search-modal-footer {
+  .quiet-link,
+  .more {
     font-family: var(--font-mono);
-    letter-spacing: 0.14em;
+    font-size: 12px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
-  /* Sticky Header */
-  .home-sticky-header {
-    position: sticky;
-    top: 0;
-    z-index: 60;
-    background: rgba(14, 14, 15, 0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    transition: background var(--dur-fast), border-color var(--dur-fast);
-  }
-
-  .nav-inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px 24px;
-    padding-top: 14px;
-    padding-bottom: 14px;
-  }
-
-  .wordmark {
-    font-size: 20px;
-    letter-spacing: -0.01em;
-    font-weight: 400;
-  }
-
-  .home-nav {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0 clamp(14px, 2cqw, 28px);
-    font-size: 11px;
-  }
-
-  .nav-link {
+  .top-nav a {
     color: var(--ink-secondary) !important;
-    padding: 8px 0;
+    padding: 10px 0;
     transition: color var(--dur-fast);
   }
-  .nav-link:hover { color: var(--ink-primary) !important; }
 
-  .nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+  .top-nav a:hover { color: var(--ink-primary) !important; }
 
-  /* Cmd+K trigger button */
-  .cmd-k-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--ink-secondary);
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all var(--dur-fast);
-  }
-
-  .cmd-k-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--ink-primary);
-    border-color: var(--accent);
-  }
-
-  .cmd-k-text {
-    font-family: var(--font-sans);
-    text-transform: none;
-    letter-spacing: normal;
-  }
-
-  .kbd-pill, .esc-pill {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 3px;
-    padding: 1px 5px;
-    font-size: 9px;
-    font-family: var(--font-mono);
-    color: var(--ink-primary);
-  }
-
-  .lap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    color: var(--ink-secondary);
-  }
-
-  .lap :global(.lap-timer) {
-    background: none;
-    border: 0;
-    padding: 0;
-    font-size: 11px;
-    color: var(--ink-primary);
-    min-width: 72px;
-  }
-
-  .pulse-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  /* Hero Section */
-  .opening {
+  .search-btn {
     display: grid;
-    grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
-    grid-template-areas:
-      'title title'
-      'copy  map';
-    gap: clamp(32px, 4cqw, 56px) clamp(32px, 4cqw, 72px);
-    align-items: start;
-    padding-top: clamp(36px, 5cqw, 72px);
-    padding-bottom: clamp(64px, 8cqw, 112px);
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-left: -8px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink-secondary);
+    cursor: pointer;
+    transition: color var(--dur-fast);
   }
 
-  .opening-title {
-    grid-area: title;
-    margin: 0;
-    font-size: clamp(48px, 8.8cqw, 130px);
+  .search-btn:hover { color: var(--ink-primary); }
+
+  /* Hero */
+  .intro {
+    padding-top: clamp(56px, 12vh, 140px);
+    padding-bottom: clamp(72px, 12vh, 140px);
+  }
+
+  .intro-title {
+    margin: 0 0 clamp(28px, 4vw, 44px);
+    font-size: clamp(46px, 8vw, 104px);
     font-weight: 300;
-    line-height: 0.95;
+    line-height: 0.98;
     letter-spacing: -0.045em;
   }
 
-  .opening-title span { display: block; }
-  .opening-title em { font-style: italic; padding-right: 0.05em; color: var(--accent); }
+  .intro-title span { display: block; }
+  .intro-title em { font-style: italic; color: var(--accent); padding-right: 0.04em; }
 
-  .opening-copy {
-    grid-area: copy;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-top: 8px;
-  }
-
-  .opening-lede {
-    margin: 0;
-    font-size: clamp(19px, 1.5cqw, 22px);
+  .intro-lede {
+    margin: 0 0 28px;
+    max-width: 34em;
+    font-size: clamp(19px, 1.9vw, 23px);
     line-height: 1.55;
-    color: var(--ink-primary);
+    color: var(--ink-secondary);
     text-wrap: pretty;
   }
 
-  .opening-lede a {
-    text-decoration: underline !important;
-    text-decoration-color: var(--accent) !important;
-    text-underline-offset: 4px;
-  }
-
-  .opening-quiet {
-    margin: 0;
-    font-size: 16px;
-    line-height: 1.55;
-    color: var(--ink-secondary);
-  }
-
-  .opening-actions {
+  .route {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 10px 24px;
-    margin-top: 12px;
+    gap: 6px 10px;
+    margin: 0 0 40px;
+    font-size: 11px;
+    color: var(--ink-quiet);
   }
+
+  .route-sep { color: var(--ink-tertiary); }
+
+  .intro-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; }
 
   .btn {
     display: inline-flex;
@@ -627,878 +294,260 @@ const searchPayload = notes.map((n) => ({
     border-radius: 2px;
     background: var(--ink-primary);
     color: var(--surface-base) !important;
-    font-size: 12px;
     font-weight: 500;
-    letter-spacing: 0.1em;
-    transition: background var(--dur-fast), transform var(--dur-fast);
+    transition: background var(--dur-fast);
   }
 
-  .btn:hover {
-    background: #ffffff;
-    transform: translateY(-1px);
+  .btn:hover { background: #ffffff; }
+
+  .quiet-link { color: var(--ink-secondary) !important; transition: color var(--dur-fast); }
+  .quiet-link:hover { color: var(--ink-primary) !important; }
+
+  .arr { display: inline-block; transition: transform 0.3s var(--ease); }
+  .btn:hover .arr,
+  .quiet-link:hover .arr,
+  .more:hover .arr { transform: translateX(5px); }
+
+  /* Index: label column + content column */
+  .index { padding-bottom: clamp(72px, 10vh, 120px); }
+
+  .block {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 16px 40px;
+    padding: 40px 0;
+    border-top: 1px solid var(--surface-line);
   }
 
-  .txt-link {
+  .block-label { margin: 0; padding-top: 6px; font-weight: 400; color: var(--ink-quiet); }
+
+  .list { list-style: none; margin: 0; padding: 0; }
+
+  .item {
+    display: flex;
+    align-items: baseline;
+    gap: 6px 28px;
+    padding: 12px 0;
+  }
+
+  .item-date { flex: 0 0 120px; font-size: 11px; color: var(--ink-quiet); }
+
+  .item-title {
+    font-size: clamp(19px, 1.8vw, 22px);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    transition: color var(--dur-fast);
+  }
+
+  .item:hover .item-title { color: var(--accent); }
+
+  .item-project { flex-direction: column; gap: 4px; }
+  .item-line { font-size: 16px; line-height: 1.5; color: var(--ink-secondary); }
+
+  .more {
     display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 48px;
-    font-size: 12px;
-    letter-spacing: 0.1em;
+    gap: 10px;
+    margin-top: 16px;
+    font-size: 11px;
     color: var(--ink-secondary) !important;
     transition: color var(--dur-fast);
   }
 
-  .txt-link:hover { color: var(--accent) !important; }
+  .more:hover { color: var(--ink-primary) !important; }
 
-  .arr {
+  .hello { margin: 0; max-width: 34em; font-size: 20px; line-height: 1.55; color: var(--ink-secondary); }
+
+  .hello a {
     display: inline-block;
-    flex: none;
-    transition: transform 0.32s var(--ease), color var(--dur-fast);
-  }
-
-  .btn:hover .arr,
-  .txt-link:hover .arr,
-  .row:hover .arr,
-  .tile:hover .arr,
-  .feature:hover .arr,
-  .start-card:hover .arr {
-    transform: translateX(6px);
-  }
-
-  .row:hover .arr,
-  .tile:hover .arr,
-  .feature:hover .arr,
-  .start-card:hover .arr {
-    color: var(--accent);
-  }
-
-  /* Lap Map */
-  .lap-map {
-    grid-area: map;
-    margin: 0;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .lap-head {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 4px 20px;
-    font-size: 11px;
-    color: var(--ink-quiet);
-  }
-
-  .track-box {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1040 / 548;
-    container-type: inline-size;
-  }
-
-  .track-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-
-  .track-bed {
-    fill: none;
-    stroke: var(--ink-primary);
-    stroke-opacity: 0.07;
-    stroke-width: 30;
-    stroke-linejoin: round;
-  }
-
-  .track-line {
-    fill: none;
-    stroke: var(--ink-primary);
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 2280;
-    animation: draw 2.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
-  }
-
-  .start-line {
-    stroke: var(--accent);
-    stroke-width: 2.5;
-  }
-
-  .lap-dot {
-    offset-rotate: 0deg;
-    animation: lap 28s linear 2.4s infinite both;
-  }
-  .lap-dot-halo { fill: var(--accent); fill-opacity: 0.16; }
-  .lap-dot-core { fill: var(--accent); }
-
-  .sf-label {
-    position: absolute;
-    left: 26.92%;
-    top: 95.6%;
-    transform: translateX(-50%);
-    font-size: 10px;
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  .turn {
-    position: absolute;
-    width: 44px;
-    height: 44px;
-    margin: -22px 0 0 -22px;
-    padding: 0;
-    border: 0;
-    background: none;
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-  }
-
-  .ring {
-    width: 11px;
-    height: 11px;
-    box-sizing: border-box;
-    border-radius: 50%;
-    border: 1.5px solid var(--ink-primary);
-    background: var(--surface-base);
-    transition: transform var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
-  }
-
-  .turn:hover .ring,
-  .turn:focus-visible .ring,
-  .turn[aria-pressed='true'] .ring {
-    background: var(--accent);
-    border-color: var(--accent);
-    transform: scale(1.4);
-  }
-
-  .turn-label {
-    position: absolute;
-    display: flex;
-    gap: 8px;
-    white-space: nowrap;
-    font-size: 11px;
     color: var(--ink-primary);
+    text-decoration: underline !important;
+    text-decoration-color: var(--accent) !important;
+    text-underline-offset: 5px;
   }
 
-  .turn-name { color: var(--ink-secondary); transition: color var(--dur-fast); }
 
-  .turn:hover .turn-name,
-  .turn:focus-visible .turn-name,
-  .turn[aria-pressed='true'] .turn-name { color: var(--ink-primary); }
-
-  .label-below .turn-label { top: 46px; left: 6px; }
-  .label-above .turn-label { bottom: 40px; left: 6px; }
-  .label-right .turn-label { left: 38px; top: 50%; transform: translateY(-50%); }
-  .label-left .turn-label { right: 38px; top: 50%; transform: translateY(-50%); }
-
-  .lap-caption {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 6px 20px;
-    padding-top: 18px;
-    border-top: 1px solid var(--surface-line);
-    min-height: 84px;
-  }
-
-  .cap-no { font-size: 11px; color: var(--accent); }
-  .cap-place { font-size: 22px; letter-spacing: -0.01em; }
-  .cap-when { font-size: 11px; color: var(--ink-quiet); }
-  .cap-what { flex: 1 1 100%; font-size: 16px; line-height: 1.5; color: var(--ink-secondary); }
-
-  /* Start Here: First-Timer Onboarding Path */
-  .start-here-section {
-    background: linear-gradient(180deg, rgba(217, 119, 54, 0.03) 0%, transparent 100%);
-    border-radius: 4px;
-  }
-
-  .start-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 28px;
-    margin-top: clamp(32px, 3.5cqw, 48px);
-  }
-
-  .start-card {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 28px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--surface-line);
-    border-radius: 4px;
-    transition: transform 0.28s var(--ease), border-color 0.28s var(--ease), background 0.28s var(--ease);
-  }
-
-  .start-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(217, 119, 54, 0.4);
-    background: rgba(255, 255, 255, 0.04);
-  }
-
-  .start-badge {
-    font-size: 11px;
-    color: var(--accent);
-  }
-
-  .start-title {
-    margin: 0;
-    font-size: clamp(22px, 2cqw, 26px);
-    font-weight: 350;
-    line-height: 1.15;
-    letter-spacing: -0.015em;
-  }
-
-  .start-desc {
-    margin: 0;
-    flex: 1;
-    font-size: 15px;
-    line-height: 1.55;
-    color: var(--ink-secondary);
-  }
-
-  .start-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: var(--ink-primary);
-    padding-top: 8px;
-  }
-
-  /* Sectors General */
-  .sector {
-    padding-top: clamp(56px, 7cqw, 96px);
-    padding-bottom: clamp(56px, 7cqw, 96px);
-  }
-
-  .sector-head {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 8px 24px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--surface-line);
-    font-size: 12px;
-    color: var(--ink-quiet);
-  }
-
-  .sector-name { display: flex; align-items: baseline; gap: 20px; }
-  .sector-no { color: var(--accent); }
-  .sector-name h2 { margin: 0; font: inherit; letter-spacing: inherit; color: var(--ink-primary); }
-
-  .sector-intro {
-    margin: clamp(28px, 3.5cqw, 48px) 0 0;
-    max-width: 34em;
-    font-size: clamp(22px, 2.4cqw, 32px);
-    font-weight: 300;
-    line-height: 1.3;
-    letter-spacing: -0.015em;
-    color: var(--ink-secondary);
-    text-wrap: pretty;
-  }
-
-  .read-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-  }
-  .more { margin-top: 24px; }
-
-  /* Field Notes Feature & Rows */
-  .feature {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: clamp(36px, 4cqw, 60px) 0;
-    border-bottom: 1px solid var(--surface-line);
-  }
-
-  .meta { font-size: 12px; color: var(--ink-quiet); }
-
-  .feature-title {
-    margin: 0;
-    max-width: 20em;
-    font-size: clamp(34px, 5cqw, 72px);
-    font-weight: 300;
-    line-height: 1.05;
-    letter-spacing: -0.035em;
-    text-wrap: balance;
-    transition: transform 0.32s var(--ease);
-  }
-
-  .feature:hover .feature-title { transform: translateX(8px); }
-
-  .feature-excerpt {
-    margin: 0;
-    max-width: 38em;
-    font-size: clamp(17px, 1.4cqw, 20px);
-    line-height: 1.55;
-    color: var(--ink-secondary);
-  }
-
-  .rows { display: flex; flex-direction: column; }
-
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 6px 32px;
-    padding: 22px 0;
-    border-bottom: 1px solid var(--surface-line);
-  }
-
-  .row-date { flex: 0 0 120px; font-size: 12px; letter-spacing: 0.1em; color: var(--ink-quiet); }
-
-  .row-title {
-    flex: 1 1 420px;
-    min-width: 0;
-    font-size: clamp(20px, 2cqw, 26px);
-    font-weight: 350;
-    line-height: 1.25;
-    letter-spacing: -0.015em;
-    transition: transform 0.32s var(--ease);
-  }
-
-  .row:hover .row-title { transform: translateX(10px); }
-
-  .row-meta {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    color: var(--ink-quiet);
-  }
-
-  /* Garage Tiles */
-  .tiles {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    column-gap: 36px;
-    row-gap: 24px;
-    margin-top: clamp(28px, 3cqw, 40px);
-  }
-
-  .tile {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 28px 0 40px;
-    border-top: 1px solid var(--surface-line);
-  }
-
-  .tile-meta { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--ink-quiet); }
-  .tile-status { color: var(--ink-primary); }
-
-  .tile-title {
-    margin: 0;
-    font-size: clamp(26px, 2.4cqw, 34px);
-    font-weight: 300;
-    line-height: 1.1;
-    letter-spacing: -0.025em;
-    transition: transform 0.32s var(--ease);
-  }
-
-  .tile:hover .tile-title { transform: translateX(8px); }
-  .tile p { margin: 0; flex: 1; font-size: 16px; line-height: 1.5; color: var(--ink-secondary); }
-
-  .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
-  .dot.live { background: var(--accent); }
-  .dot.brewing { background: var(--status-warn); }
-
-  .also {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px 32px;
-    padding-top: 22px;
-    border-top: 1px solid var(--surface-line);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: none;
-    color: var(--ink-secondary);
-  }
-
-  .also-label { letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-quiet); }
-  .also-item { display: flex; align-items: center; gap: 10px; }
-
-  /* Story Paragraph */
-  .story-para {
-    margin: clamp(36px, 4.5cqw, 64px) 0 0;
-    max-width: 1080px;
-    font-size: clamp(26px, 3.6cqw, 48px);
-    font-weight: 300;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    text-wrap: pretty;
-  }
-
-  .story-para em { font-style: italic; color: var(--ink-primary); }
-
-  /* Contact / Hello */
-  .hello {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-top: clamp(64px, 8cqw, 112px);
-    padding-bottom: clamp(64px, 8cqw, 112px);
-    border-top: 1px solid var(--surface-line);
-  }
-
-  .hello-label { margin: 0; font-size: 12px; font-weight: 400; color: var(--accent); }
-
-  .hello-email {
-    align-self: flex-start;
-    max-width: 100%;
-    font-size: clamp(32px, 7.5cqw, 108px);
-    font-weight: 300;
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    overflow-wrap: anywhere;
-    transition: color var(--dur-fast);
-  }
-
-  .hello-email:hover { color: var(--accent) !important; }
-  .hello-note { margin: 0; max-width: 36em; font-size: 17px; line-height: 1.55; color: var(--ink-secondary); }
-  .hello-links { display: flex; flex-wrap: wrap; gap: 0 32px; font-size: 12px; letter-spacing: 0.1em; }
-
-  /* Back to Top Button */
-  .back-to-top {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    z-index: 50;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(22, 22, 24, 0.9);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: var(--ink-primary);
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(12px);
-    transition: opacity 0.25s var(--ease), visibility 0.25s, transform 0.25s var(--ease), background 0.2s, border-color 0.2s;
-  }
-
-  .back-to-top.is-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-
-  .back-to-top:hover {
-    background: var(--ink-primary);
-    color: var(--surface-base);
-    border-color: var(--ink-primary);
-  }
-
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-  }
-
-  /* Cmd+K Search Modal */
+  /* Search dialog */
   .search-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    margin: 0;
+    width: min(600px, calc(100vw - 32px));
+    margin: clamp(56px, 14vh, 140px) auto auto;
     padding: 0;
-    background: transparent;
-    border: 0;
-    display: none;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: clamp(60px, 12vh, 120px);
+    border: 1px solid var(--surface-line);
+    border-radius: 6px;
+    background: var(--surface-raised);
+    color: var(--ink-primary);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
   }
 
-  .search-modal[open] {
-    display: flex;
-  }
+  .search-modal::backdrop { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px); }
 
-  .search-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 1;
-  }
-
-  .search-dialog-box {
-    position: relative;
-    z-index: 2;
-    width: min(640px, 92vw);
-    background: #151518;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 8px;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    max-height: min(560px, 78vh);
-    animation: modalPop 0.22s var(--ease) both;
-  }
-
-  @keyframes modalPop {
-    from { opacity: 0; transform: scale(0.97) translateY(-8px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-
-  .search-bar-header {
+  .search-head {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    background: #19191d;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--surface-line);
   }
 
-  .search-icon {
-    color: var(--ink-quiet);
-    flex: none;
-  }
-
-  .search-input {
+  .search-field {
     flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--ink-primary);
-    font-family: var(--font-sans);
-    font-size: 16px;
+    border: 0;
     outline: none;
-  }
-
-  .search-input::placeholder {
-    color: var(--ink-quiet);
-    font-family: var(--font-serif);
-  }
-
-  .close-btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-  }
-
-  .search-results {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .search-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 12px 14px;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: background var(--dur-fast);
-  }
-
-  .search-item:hover,
-  .search-item.is-selected {
-    background: rgba(217, 119, 54, 0.12);
-  }
-
-  .search-item-top {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .search-item-title {
-    font-size: 16px;
-    font-weight: 400;
+    background: none;
     color: var(--ink-primary);
+    font-family: var(--font-serif);
+    font-size: 18px;
   }
 
-  .search-item-badge {
+  .search-field::placeholder { color: var(--ink-quiet); }
+
+  .search-close {
+    border: 1px solid var(--surface-line);
+    border-radius: 3px;
+    padding: 2px 6px;
+    background: none;
+    color: var(--ink-secondary);
     font-family: var(--font-mono);
     font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
+    cursor: pointer;
   }
 
-  .search-item-desc {
-    font-size: 13px;
-    line-height: 1.4;
-    color: var(--ink-secondary);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .search-results { max-height: min(420px, 60vh); overflow-y: auto; padding: 8px; }
+
+  .search-results :global(.search-item) {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 4px;
+    color: var(--ink-primary);
+    text-decoration: none;
   }
 
-  .search-empty {
-    padding: 48px 24px;
-    text-align: center;
-    color: var(--ink-quiet);
-    font-size: 14px;
-  }
+  .search-results :global(.search-item:hover),
+  .search-results :global(.search-item.is-selected) { background: var(--accent-dim); }
 
-  .search-modal-footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 16px;
-    padding: 10px 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    background: #121214;
+  .search-results :global(.search-item-title) { display: block; font-size: 16px; }
+
+  .search-results :global(.search-item-meta) {
+    display: block;
+    margin-top: 2px;
+    font-family: var(--font-mono);
     font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--ink-quiet);
   }
 
-  .search-modal-footer kbd {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 3px;
-    padding: 1px 4px;
+  .search-results :global(.search-empty) { padding: 32px 12px; text-align: center; color: var(--ink-quiet); }
+
+  /* Motion */
+  .rise { animation: rise 0.9s var(--ease) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  /* Small screens: nav drops to its own row, search stays beside the name */
+  @media (max-width: 640px) {
+    .top { display: grid; grid-template-columns: 1fr auto; padding-bottom: 12px; }
+    .search-btn { margin-left: 0; margin-right: -8px; }
+    .top-nav { grid-column: 1 / -1; grid-row: 2; gap: 4px 22px; }
   }
 
-  /* Motion & Animations */
-  .rise { animation: rise 1.1s var(--ease) both; }
-
-  @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-  @keyframes draw { from { stroke-dashoffset: 2280; } to { stroke-dashoffset: 0; } }
-  @keyframes lap { from { offset-distance: 0%; } to { offset-distance: 100%; } }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-
-  /* Responsive Breakpoints */
-  @container (max-width: 1100px) {
-    .opening {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-areas: 'title' 'copy' 'map';
-    }
-    .opening-copy { max-width: 640px; }
-  }
-
-  @container (max-width: 1180px) {
-    .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .start-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-
-  @container (max-width: 860px) {
-    .home-nav { order: 3; flex-basis: 100%; justify-content: flex-start; }
-    .nav-actions { margin-left: auto; }
-  }
-
-  @container (max-width: 680px) {
-    .start-grid { grid-template-columns: minmax(0, 1fr); }
-  }
-
-  @container (max-width: 560px) {
-    .row-date { flex-basis: 100%; }
-    .tiles { grid-template-columns: minmax(0, 1fr); }
-  }
-
-  @container (max-width: 480px) {
-    .turn-name { display: none; }
+  /* Small screens: labels sit above their lists */
+  @media (max-width: 720px) {
+    .block { grid-template-columns: minmax(0, 1fr); padding: 32px 0; }
+    .block-label { padding-top: 0; }
+    .item { flex-wrap: wrap; }
+    .item-date { flex-basis: 100%; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .track-line,
-    .lap-dot,
-    .rise,
-    .pulse-dot { animation: none; }
-    html { scroll-behavior: auto; }
+    .rise { animation: none; }
   }
 </style>
 
 <script>
-  function setupHomepage() {
-    // 1. Lap map interaction
-    const turns = document.querySelectorAll<HTMLButtonElement>('.turn');
-    const fields = {
-      no: document.querySelector<HTMLElement>('[data-cap="no"]'),
-      place: document.querySelector<HTMLElement>('[data-cap="place"]'),
-      when: document.querySelector<HTMLElement>('[data-cap="when"]'),
-      what: document.querySelector<HTMLElement>('[data-cap="what"]')
+  type Note = { title: string; slug: string; category: string; excerpt: string };
+
+  const escapeHtml = (s: string) =>
+    s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
+
+  let shortcutBound = false;
+
+  function setupSearch() {
+    const modal = document.getElementById('cmd-k-modal') as HTMLDialogElement | null;
+    const trigger = document.getElementById('cmd-k-trigger');
+    const close = document.getElementById('cmd-k-close');
+    const input = document.getElementById('cmd-k-input') as HTMLInputElement | null;
+    const results = document.getElementById('search-results-list');
+    const data = document.getElementById('search-notes-data');
+    if (!modal || !input || !results || modal.dataset.ready) return;
+    modal.dataset.ready = 'true';
+
+    let notes: Note[] = [];
+    try {
+      notes = JSON.parse(data?.textContent || '[]');
+    } catch {
+      notes = [];
+    }
+
+    const render = (query: string) => {
+      const q = query.trim().toLowerCase();
+      const found = q
+        ? notes.filter((n) => `${n.title} ${n.category} ${n.excerpt}`.toLowerCase().includes(q)).slice(0, 8)
+        : notes.slice(0, 6);
+
+      results.innerHTML = found.length
+        ? found
+            .map(
+              (n, i) =>
+                `<a href="/field-notes/${n.slug}" class="search-item${i === 0 ? ' is-selected' : ''}" role="option">` +
+                `<span class="search-item-title">${escapeHtml(n.title)}</span>` +
+                `<span class="search-item-meta">${escapeHtml(n.category)}</span></a>`
+            )
+            .join('')
+        : `<div class="search-empty">Nothing for “${escapeHtml(query)}”.</div>`;
     };
 
-    const select = (turn: HTMLButtonElement) => {
-      turns.forEach((t) => t.setAttribute('aria-pressed', String(t === turn)));
-      (Object.keys(fields) as (keyof typeof fields)[]).forEach((key) => {
-        const el = fields[key];
-        if (el) el.textContent = turn.dataset[key] ?? '';
-      });
+    const open = () => {
+      input.value = '';
+      render('');
+      modal.showModal();
+      input.focus();
     };
 
-    turns.forEach((turn) => {
-      turn.addEventListener('mouseenter', () => select(turn));
-      turn.addEventListener('focus', () => select(turn));
-      turn.addEventListener('click', () => select(turn));
+    trigger?.addEventListener('click', open);
+    close?.addEventListener('click', () => modal.close());
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.close(); // click on the backdrop
     });
 
-    // 2. Back to top button
-    const backToTopBtn = document.getElementById('back-to-top');
-    if (backToTopBtn) {
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 400) {
-          backToTopBtn.classList.add('is-visible');
-        } else {
-          backToTopBtn.classList.remove('is-visible');
-        }
-      }, { passive: true });
-
-      backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    }
-
-    // 3. Cmd+K Search Modal
-    const searchModal = document.getElementById('cmd-k-modal') as HTMLDialogElement | null;
-    const searchTrigger = document.getElementById('cmd-k-trigger');
-    const searchClose = document.getElementById('cmd-k-close');
-    const searchBackdrop = document.getElementById('modal-backdrop');
-    const searchInput = document.getElementById('cmd-k-input') as HTMLInputElement | null;
-    const searchResults = document.getElementById('search-results-list');
-    const searchDataScript = document.getElementById('search-notes-data');
-
-    let allNotes: Array<{ title: string; slug: string; category: string; excerpt: string; readingTime: string }> = [];
-    if (searchDataScript && searchDataScript.textContent) {
-      try {
-        allNotes = JSON.parse(searchDataScript.textContent);
-      } catch (e) {
-        console.error('Failed to parse search notes payload', e);
-      }
-    }
-
-    function openSearch() {
-      if (!searchModal) return;
-      searchModal.showModal();
-      document.body.style.overflow = 'hidden';
-      if (searchInput) {
-        searchInput.value = '';
-        searchInput.focus();
-        renderResults('');
-      }
-    }
-
-    function closeSearch() {
-      if (!searchModal) return;
-      searchModal.close();
-      document.body.style.overflow = '';
-    }
-
-    function renderResults(query: string) {
-      if (!searchResults) return;
-      const cleanQ = query.trim().toLowerCase();
-      const filtered = cleanQ === ''
-        ? allNotes.slice(0, 6)
-        : allNotes.filter((n) =>
-            n.title.toLowerCase().includes(cleanQ) ||
-            n.category.toLowerCase().includes(cleanQ) ||
-            n.excerpt.toLowerCase().includes(cleanQ)
-          ).slice(0, 10);
-
-      if (filtered.length === 0) {
-        searchResults.innerHTML = `<div class="search-empty">No notes found for "${query}". Try searching for BlackRock, VC, cricket, or portfolio.</div>`;
-        return;
-      }
-
-      searchResults.innerHTML = filtered.map((item, idx) => `
-        <a href="/field-notes/${item.slug}" class="search-item ${idx === 0 ? 'is-selected' : ''}" role="option" tabindex="0">
-          <div class="search-item-top">
-            <span class="search-item-title">${item.title}</span>
-            <span class="search-item-badge">${item.category}</span>
-          </div>
-          ${item.excerpt ? `<div class="search-item-desc">${item.excerpt}</div>` : ''}
-        </a>
-      `).join('');
-    }
-
-    if (searchTrigger) {
-      searchTrigger.addEventListener('click', openSearch);
-    }
-
-    if (searchClose) {
-      searchClose.addEventListener('click', closeSearch);
-    }
-
-    if (searchBackdrop) {
-      searchBackdrop.addEventListener('click', closeSearch);
-    }
-
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        renderResults((e.target as HTMLInputElement).value);
-      });
-
-      searchInput.addEventListener('keydown', (e) => {
-        if (!searchResults) return;
-        const items = Array.from(searchResults.querySelectorAll<HTMLAnchorElement>('.search-item'));
-        const activeIndex = items.findIndex((el) => el.classList.contains('is-selected'));
-
-        if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          const nextIndex = (activeIndex + 1) % items.length;
-          items.forEach((it, i) => it.classList.toggle('is-selected', i === nextIndex));
-          items[nextIndex]?.scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          const prevIndex = (activeIndex - 1 + items.length) % items.length;
-          items.forEach((it, i) => it.classList.toggle('is-selected', i === prevIndex));
-          items[prevIndex]?.scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'Enter') {
-          if (activeIndex >= 0 && items[activeIndex]) {
-            e.preventDefault();
-            items[activeIndex].click();
-          }
-        }
-      });
-    }
-
-    // Global keyboard listener for Cmd+K and Ctrl+K
-    window.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    input.addEventListener('input', () => render(input.value));
+    input.addEventListener('keydown', (e) => {
+      const items = Array.from(results.querySelectorAll<HTMLAnchorElement>('.search-item'));
+      if (!items.length) return;
+      const current = items.findIndex((el) => el.classList.contains('is-selected'));
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
-        if (searchModal?.open) {
-          closeSearch();
-        } else {
-          openSearch();
-        }
-      } else if (e.key === 'Escape' && searchModal?.open) {
-        closeSearch();
+        const next = (current + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+        items.forEach((el, i) => el.classList.toggle('is-selected', i === next));
+        items[next].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter' && current >= 0) {
+        e.preventDefault();
+        items[current].click();
       }
     });
+
+    // One global shortcut listener for the whole session, even across page transitions
+    if (!shortcutBound) {
+      shortcutBound = true;
+      window.addEventListener('keydown', (e) => {
+        if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== 'k') return;
+        const dialog = document.getElementById('cmd-k-modal') as HTMLDialogElement | null;
+        const opener = document.getElementById('cmd-k-trigger');
+        if (!dialog || !opener) return;
+        e.preventDefault();
+        if (dialog.open) dialog.close();
+        else opener.click();
+      });
+    }
   }
 
-  document.addEventListener('astro:page-load', setupHomepage);
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setupHomepage();
-  }
+  document.addEventListener('astro:page-load', setupSearch);
 </script>

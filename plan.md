@@ -35,12 +35,13 @@ pipeline. No design system doc. No reusable telemetry primitives.
 
 ## 2. Information architecture (final)
 
-Five pages, no more. Everything else is a sub-route.
+Six main sections. Everything else is a sub-route. The October 2026 Play brief adds a sports corner that is also listed in Garage.
 
 | Route | F1 metaphor | What lives here |
 |---|---|---|
 | `/` | **Pit Wall**, the strategist's view | Hero, current lap (what's shipping now), top 3 "sectors" as cards, latest post, signature garage peek |
 | `/garage` | **The Garage** (replaces `/projects` + `/brewing`) | The **brewing animation** is the hero. Every project is a car on a lift. Click → detail page. |
+| `/play` | **Off the clock** | FPL, Formula 1, cricket, predictions, and a rivalry board. Existing Garage routes remain stable. |
 | `/field-notes` | **Telemetry log** | Blog. Posts render as race-weekend reports. |
 | `/story` | **Driver bio** | The human story, interests, cricket, books, sports. |
 | `/connect` | **Parc fermé** | Contact, socials, feeds. |

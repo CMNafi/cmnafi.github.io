@@ -1,0 +1,20 @@
+---
+import PlayLayout from '@/components/telemetry/PlayLayout.astro';
+import { getF1 } from '@/lib/play/f1';
+import { formatTime, formatNumber } from '@/lib/play/fetch';
+import { fixtureTime } from '@/lib/play/cricket';
+const f1 = await getF1();
+---
+<PlayLayout title="Race Center" number="02" eyebrow={`FORMULA 1 / ${f1.year}`} description="The next lights out, the season so far, and an excuse to keep Sunday free.">
+  <p class="play-stamp">Last updated: <time datetime={f1.updatedAt ?? undefined}>{formatTime(f1.updatedAt)}</time>.</p>
+  {f1.stale && <p class="play-note">Data may be stale. {f1.unavailable ? 'The race feed is unavailable. The calendar will return after a successful refresh.' : 'Showing the most recent available snapshot.'}</p>}
+  <section class="play-card"><span class="play-eyebrow">Next lights out</span><h2>{f1.nextRace ? f1.nextRaceName : f1.unavailable ? 'Waiting for the calendar' : 'No upcoming race listed'}</h2><p>{f1.nextRace ? fixtureTime(f1.nextRace.date_start) : 'I will pick this up when the next race is on the calendar.'}</p><div class="play-countdown" id="race-countdown" data-start={f1.nextRace?.date_start ?? ''}>Checking the clock</div><a class="play-link" href="/play/predict">Make a podium prediction →</a></section>
+  <section class="play-section" aria-labelledby="timing-title"><span class="play-eyebrow">During the session</span><h2 id="timing-title">Trackside timing</h2><p id="f1-timing-status" class="play-note" aria-live="polite">Timing checks for an active session when this page opens. Live data is subject to OpenF1 access limits.</p><div class="play-table-wrap" id="f1-timing-wrap" hidden><table class="play-table"><thead><tr><th>Position</th><th>Driver</th><th class="numeric">Gap to leader</th></tr></thead><tbody id="f1-timing-body"></tbody></table></div><p class="play-stamp">Historical data is free. OpenF1 currently requires a subscription for real-time timing. This page never labels older positions as live. <a href="https://openf1.org/docs/" target="_blank" rel="noopener noreferrer">Data source ↗</a></p></section>
+  <div class="play-grid"><section><h2>Driver standings</h2>{f1.driverStandings.length ? <div class="play-table-wrap"><table class="play-table"><thead><tr><th>Pos</th><th>Driver</th><th class="numeric">Points</th></tr></thead><tbody>{f1.driverStandings.map(row => <tr><td class="numeric">{row.position_current}</td><td>{f1.drivers.find(d => d.driver_number === row.driver_number)?.full_name ?? `Driver ${row.driver_number}`}</td><td class="numeric">{formatNumber(row.points_current)}</td></tr>)}</tbody></table></div> : <p class="play-empty">Championship standings are not available from the current snapshot.</p>}</section><section><h2>Constructor standings</h2>{f1.constructorStandings.length ? <div class="play-table-wrap"><table class="play-table"><thead><tr><th>Pos</th><th>Constructor</th><th class="numeric">Points</th></tr></thead><tbody>{f1.constructorStandings.map(row => <tr><td class="numeric">{row.position_current}</td><td>{row.team_name}</td><td class="numeric">{formatNumber(row.points_current)}</td></tr>)}</tbody></table></div> : <p class="play-empty">Constructor standings will appear after a successful refresh.</p>}</section></div>
+  <section class="play-section"><span class="play-eyebrow">{f1.year} season</span><h2>The calendar</h2>{f1.calendar.length ? <ol class="play-calendar">{f1.calendar.map((meeting, i) => <li class:list={{past: Date.parse(meeting.date_end) < Date.now()}}><span class="index">{String(i + 1).padStart(2,'0')}</span><span>{meeting.meeting_name}<small>{meeting.circuit_short_name}, {meeting.country_name}</small></span><time datetime={meeting.date_start}>{new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(meeting.date_start))}</time></li>)}</ol> : <p class="play-empty">No calendar data available. No example races are presented as real fixtures.</p>}</section>
+</PlayLayout>
+<script>
+  import { initF1Page } from '@/scripts/play-sports';
+  document.addEventListener('astro:page-load', initF1Page);
+  initF1Page();
+</script>

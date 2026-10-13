@@ -1,0 +1,33 @@
+---
+import PlayLayout from '@/components/telemetry/PlayLayout.astro';
+import { getF1 } from '@/lib/play/f1';
+import { myFixtures, fixtureTime } from '@/lib/play/cricket';
+const f1 = await getF1();
+const upcoming = myFixtures.filter(f => Date.parse(f.startsAt) > Date.now());
+const fixtures = myFixtures.map(f => ({ ...f, kind: 'cricket' }));
+const payload = { race: f1.nextRace ? { id: String(f1.nextRace.session_key), startsAt: f1.nextRace.date_start, name: f1.nextRaceName } : null,
+  drivers: f1.drivers.map(d => ({ id: String(d.driver_number), name: d.full_name })), fixtures,
+  results: [...f1.results.map(r => ({kind:'f1',eventId:r.id,picks:r.podium})), ...myFixtures.filter(f => f.winner && [f.home,f.opponent].includes(f.winner)).map(f => ({kind:'cricket',eventId:f.id,picks:[f.winner]}))] };
+---
+<PlayLayout title="Make a call" number="04" eyebrow="PREDICTIONS / NO STAKES" description="A podium, a match winner, and a record of how sure I was before anything happened.">
+  <p class="play-note">This is a local game. Names, picks, and the leaderboard stay in this browser. They are not shared with other visitors or synced across devices.</p>
+  {f1.stale && <p class="play-note">F1 data may be stale. Calendar and result updates depend on the most recent successful feed refresh. Unavailable results stay pending.</p>}
+  <div class="play-field play-card"><label for="prediction-name">Your name on this device</label><input id="prediction-name" maxlength="40" placeholder="A name for the leaderboard" autocomplete="nickname" /><p class="play-muted">Friends can take turns on the same device. Use the same name to revise your own picks before the start.</p></div>
+  <div class="play-grid play-section">
+    <form class="play-card" id="f1-prediction-form"><span class="play-eyebrow">Game 01 / Formula 1</span><h2>The podium call</h2><p>{f1.nextRace ? `${f1.nextRaceName}. ${fixtureTime(f1.nextRace.date_start)}.` : 'The next race will appear when the calendar feed is available.'}</p>
+      {[1,2,3].map(place => <div class="play-field"><label for={`podium-${place}`}>{place === 1 ? 'First' : place === 2 ? 'Second' : 'Third'} place</label><select id={`podium-${place}`} name={`podium-${place}`} required disabled={!f1.nextRace || !f1.drivers.length}><option value="">Choose a driver</option>{f1.drivers.map(driver => <option value={String(driver.driver_number)}>{driver.full_name}</option>)}</select></div>)}
+      <button class="play-button" type="submit" disabled={!f1.nextRace || !f1.drivers.length}>Save podium</button><p class="play-form-status" id="f1-pick-status" role="status">{!f1.drivers.length ? 'Driver feed unavailable. I will not invent a starting grid.' : ''}</p>
+    </form>
+    <form class="play-card" id="cricket-prediction-form"><span class="play-eyebrow">Game 02 / Club cricket</span><h2>Pick the winner</h2><p>My upcoming fixtures. Home bias is allowed; hindsight is not.</p><div class="play-field"><label for="cricket-fixture">Match</label><select id="cricket-fixture" required disabled={!upcoming.length}><option value="">Choose a fixture</option>{upcoming.map(f => <option value={f.id}>{f.home} vs {f.opponent}, {fixtureTime(f.startsAt)}</option>)}</select></div><div class="play-field"><label for="cricket-winner">Your winner</label><select id="cricket-winner" required disabled><option value="">Choose a match first</option></select></div><button class="play-button" type="submit" disabled={!upcoming.length}>Save winner</button><p class="play-form-status" id="cricket-pick-status" role="status">{upcoming.length ? '' : 'No future fixtures recorded yet.'}</p></form>
+  </div>
+  <section class="play-section"><span class="play-eyebrow">How scoring works</span><h2>Keep it simple.</h2><p class="play-muted">F1: 25 points for the correct winner, 18 for the correct second-place driver, and 15 for the correct third-place driver. Each driver must appear once. A correct driver in the wrong position earns zero. Cricket: 10 points for the correct match winner. Picks lock at the scheduled start. Draws, ties, abandoned games, and missing results remain unscored.</p><p class="play-muted">F1 scores update after the next site refresh brings in the official session classification through OpenF1. Club cricket scores update when I record the winner. These are casual local scores, not a verified competition.</p></section>
+  <section class="play-section"><h2>This device's leaderboard</h2><div class="play-table-wrap"><table class="play-table"><thead><tr><th>Name</th><th class="numeric">Points</th><th class="numeric">Scored</th><th class="numeric">Pending</th></tr></thead><tbody id="prediction-leaderboard"></tbody></table></div><p class="play-stamp" id="prediction-empty">No predictions saved on this device yet.</p></section>
+  <section class="play-section"><h2>The picks on record</h2><div id="saved-predictions" class="play-grid"></div></section>
+  <noscript><p class="play-note">Enable JavaScript to save predictions and see your local leaderboard.</p></noscript>
+  <script is:inline id="prediction-data" type="application/json" set:html={JSON.stringify(payload).replace(/</g, '\\u003c')} />
+</PlayLayout>
+<script>
+  import { initPredictions } from '@/scripts/play-predictions';
+  document.addEventListener('astro:page-load', initPredictions);
+  initPredictions();
+</script>

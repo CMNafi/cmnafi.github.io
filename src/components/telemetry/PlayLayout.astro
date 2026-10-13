@@ -1,0 +1,28 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { playLinks } from '@/data/play-config';
+import '@/styles/play.css';
+interface Props { title: string; description: string; number?: string; eyebrow?: string }
+const { title, description, eyebrow = 'A LITTLE SKIN IN THE GAME' } = Astro.props;
+const current = Astro.url.pathname.replace(/\/$/, '');
+---
+<BaseLayout title={`${title} | Play`} description={description} hideHeader={true}>
+  <header class="play-site-header">
+    <a class="play-wordmark" href="/">C M Nafi</a>
+    <nav aria-label="Primary navigation">
+      <a href="/field-notes">Field Notes</a><a href="/garage">Garage</a><a href="/play" aria-current="page">Play</a><a href="/story">Story</a><a href="/connect">Connect</a>
+    </nav>
+  </header>
+  <div class="play-shell">
+    <div class="play-topline"><a href="/garage">Garage /</a><a href="/play" aria-current={current === '/play' ? 'page' : undefined}>Play</a><span>Off the clock</span></div>
+    <header class="play-heading">
+      <div><span class="play-eyebrow">{eyebrow}</span><h1>{title}<span class="play-period">.</span></h1><p>{description}</p></div>
+    </header>
+    <nav class="play-nav" aria-label="Play sections">
+      <a href="/play" aria-current={current === '/play' ? 'page' : undefined}>The lineup</a>
+      {playLinks.map(link => <a href={link.href} aria-current={current === link.href ? 'page' : undefined}>{link.short}</a>)}
+    </nav>
+    <slot />
+    <footer class="play-foot"><span>Made for following along, not for betting.</span><a href="/garage">Back to the Garage ↗</a></footer>
+  </div>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import PlayLayout from '@/components/telemetry/PlayLayout.astro';
+import { playLinks } from '@/data/play-config';
+---
+<PlayLayout title="A little play" description="The games I follow, the teams I turn up for, and the occasional prediction that probably deserved more thought.">
+  <section aria-labelledby="lineup-title">
+    <div class="play-section-head"><div><span class="play-eyebrow">The lineup</span><h2 id="lineup-title">Follow along. Make a call.</h2></div><span class="play-stamp">05 corners of the same obsession</span></div>
+    <div class="play-grid">
+      {playLinks.map(link => <a href={link.href} class="play-card play-card-link">
+        <div class="play-card-top"><span>{link.number} / {link.short}</span><span aria-hidden="true">↗</span></div>
+        <h3>{link.title}</h3><p>{link.description}</p>
+      </a>)}
+    </div>
+  </section>
+  <p class="play-stamp">FPL and season data refresh twice a day. Cricket scores check in while the Cricket Hub is open. Predictions stay on your device.</p>
+</PlayLayout>

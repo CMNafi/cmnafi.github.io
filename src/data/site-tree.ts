@@ -48,6 +48,7 @@ export const siteBranches: SiteBranch[] = [
     description: 'The tools I keep building because I have run into the friction myself.',
     nodes: [
       { label: 'Garage', href: '/garage', description: 'The main shelf for product ideas, tools, and working prototypes.' },
+      { label: 'Play', href: '/play', description: 'FPL, Formula 1, cricket, and small prediction games.', kind: 'secondary' },
       { label: 'ADV Screener', href: '/garage/adv-screener', description: 'Screening Form ADV filings across investment advisers.', kind: 'secondary' },
       { label: 'Manager Search', href: '/garage/manager-search', description: 'A finance research tool built around a workflow I wanted to move faster.', kind: 'secondary' }
     ]

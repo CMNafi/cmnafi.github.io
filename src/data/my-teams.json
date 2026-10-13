@@ -1,0 +1,19 @@
+[
+  {
+    "id": "bengal-tigers", "name": "Bengal Tigers", "place": "Tampa",
+    "league": "Tampa Premier League, Titan Cup XIII Leather Ball, Division II",
+    "note": "Also playing the PowerPlay Box Cricket League. Indoor fixtures start at 9:00 PM Eastern.",
+    "latestResult": null,
+    "fixtures": [
+      { "id": "box-20261012", "opponent": "Super Kings", "startsAt": "2026-10-12T21:00:00-04:00", "competition": "PowerPlay Box Cricket League", "winner": null },
+      { "id": "box-20261013", "opponent": "Guts & Glory", "startsAt": "2026-10-13T21:00:00-04:00", "competition": "PowerPlay Box Cricket League", "winner": null },
+      { "id": "box-20261017", "opponent": "Powerplay X1", "startsAt": "2026-10-17T21:00:00-04:00", "competition": "PowerPlay Box Cricket League", "winner": null },
+      { "id": "box-20261020", "opponent": "Guts & Glory", "startsAt": "2026-10-20T21:00:00-04:00", "competition": "PowerPlay Box Cricket League", "winner": null },
+      { "id": "box-20261022", "opponent": "Super Kings", "startsAt": "2026-10-22T21:00:00-04:00", "competition": "PowerPlay Box Cricket League", "winner": null }
+    ]
+  },
+  { "id": "orlando-bengal-tigers", "name": "Orlando Bengal Tigers CC", "place": "Orlando", "league": "Florida Cricket Conference, Championship division", "note": "Five championships, and counting.", "latestResult": { "date": "2026-09-27", "text": "Beat Elite CC by 27 runs to win the club's fifth championship." }, "fixtures": [] },
+  { "id": "floridians", "name": "Floridians", "place": "Florida", "league": "Florida West Coast Winter League 2026-27, Group A", "note": "October 11, 2026 to February 20, 2027. Matches start at 10:00 AM Eastern. Opponents and fixture dates to follow.", "latestResult": null, "fixtures": [] },
+  { "id": "blaze-hawks", "name": "Blaze Hawks", "place": "Central Florida", "league": "Central Florida Cricket League Season 13, Group C", "note": "Fixtures to be announced.", "latestResult": null, "fixtures": [] },
+  { "id": "swat", "name": "SWAT", "place": "Tampa", "league": "TPL Tennis Ball Cricket Championship, Plate division", "note": "Fixtures to follow when the league publishes them.", "latestResult": null, "fixtures": [] }
+]

@@ -1,0 +1,19 @@
+---
+import PlayLayout from '@/components/telemetry/PlayLayout.astro';
+import { myTeams, myFixtures, nextFixture, fixtureTime } from '@/lib/play/cricket';
+const upcoming = myFixtures.filter(f => Date.parse(f.startsAt) > Date.now());
+---
+<PlayLayout title="Cricket Hub" number="03" eyebrow="AROUND THE WORLD / CLOSE TO HOME" description="The scores I check, and the teams I get to be part of. Different grounds, same game.">
+  <section aria-labelledby="scores-title"><div class="play-section-head"><div><span class="play-eyebrow">Around the grounds</span><h2 id="scores-title">Scores & fixtures</h2></div><span class="play-stamp" id="cricket-updated">Checking the scoreboards</span></div><p id="cricket-status" class="play-note" aria-live="polite">Looking for cricket matches. The score feed is unofficial and can be unavailable.</p><div class="play-grid" id="cricket-scores"></div><noscript><p class="play-empty">Live scores need JavaScript. My teams and fixtures are available below.</p></noscript></section>
+  <section class="play-section" aria-labelledby="my-teams-title"><span class="play-eyebrow">My teams</span><h2 id="my-teams-title">The grounds closer to home.</h2><div class="play-grid">{myTeams.map(team => {
+    const next = nextFixture(team);
+    return <article class="play-card"><div class="play-card-top"><span>{team.place}</span><span>Club cricket</span></div><h3>{team.name}</h3><p>{team.league}</p><p><strong>Next fixture:</strong> {next ? `vs ${next.opponent}` : 'To be announced.'}{next && <><br /><time datetime={next.startsAt}>{fixtureTime(next.startsAt)}</time><br /><small>{next.competition}</small></>}</p><p><strong>Latest result:</strong> {team.latestResult?.text ?? 'No result recorded yet.'}</p><p>{team.note}</p></article>;
+  })}</div></section>
+  <section class="play-section"><div class="play-section-head"><h2>Next on my calendar</h2><a href="/play/predict">Pick a winner →</a></div>{upcoming.length ? <ul class="play-fixtures">{upcoming.map(f => <li>{f.home} vs {f.opponent}<time datetime={f.startsAt}>{fixtureTime(f.startsAt)}</time><small>{f.competition}</small></li>)}</ul> : <p class="play-empty">No upcoming club fixtures recorded. I will add the next schedule when it is confirmed.</p>}</section>
+  <p class="play-stamp">Club fixtures and results are my own records. Times are Eastern, including daylight saving. International scores come from ESPN's unofficial cricket feed.</p>
+</PlayLayout>
+<script>
+  import { initCricketPage } from '@/scripts/play-sports';
+  document.addEventListener('astro:page-load', initCricketPage);
+  initCricketPage();
+</script>

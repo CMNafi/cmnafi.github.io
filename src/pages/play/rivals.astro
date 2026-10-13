@@ -1,0 +1,15 @@
+---
+import PlayLayout from '@/components/telemetry/PlayLayout.astro';
+import { getRivals } from '@/lib/play/fpl';
+import { formatNumber, formatTime } from '@/lib/play/fetch';
+const rivals = await getRivals();
+const stamps = rivals.filter(r => r.configured).map(r => r.updatedAt).filter((s): s is string => !!s).sort();
+---
+<PlayLayout title="Rivalry Board" number="05" eyebrow="FPL / FRIENDLY COMPETITION" description="A small table for friends. Enough perspective to celebrate a good week and survive a bad one.">
+  <p class="play-stamp">Last updated: <time datetime={stamps[0]}>{formatTime(stamps[0] ?? null)}</time>.</p>
+  {rivals.some(r => r.stale) && <p class="play-note">Data may be stale. Unavailable numbers are left blank rather than guessed.</p>}
+  {rivals.some(r => !r.configured) && <p class="play-note">The friend row is a placeholder. I will add names and FPL entry IDs before the rivalry really starts.</p>}
+  <div class="play-table-wrap"><table class="play-table"><caption>Sorted by total points. Overall rank is the global FPL rank.</caption><thead><tr><th>Place</th><th>Manager</th><th class="numeric">GW points</th><th class="numeric">Total</th><th class="numeric">Overall rank</th></tr></thead><tbody>{rivals.map((rival, i) => <tr><td class="numeric">{rival.configured && typeof rival.entry.data.summary_overall_points === 'number' ? i + 1 : 'TBA'}</td><td>{rival.displayName}<small>{rival.entry.data.name ?? (rival.configured ? 'Feed unavailable' : 'Entry ID to add')}</small></td><td class="numeric">{formatNumber(rival.entry.data.summary_event_points)}</td><td class="numeric">{formatNumber(rival.entry.data.summary_overall_points)}</td><td class="numeric">{formatNumber(rival.entry.data.summary_overall_rank)}</td></tr>)}</tbody></table></div>
+  <section class="play-section"><span class="play-eyebrow">The talking points</span><h2>A little context</h2><div class="play-grid">{rivals.filter(r => r.configured).map(rival => <article class="play-card"><h3>{rival.displayName}</h3><p><strong>Biggest rank swing:</strong> {rival.swing === null ? 'Waiting for two gameweeks.' : `${formatNumber(Math.abs(rival.swing))} places ${rival.swing >= 0 ? 'up' : 'down'}.`}</p><p><strong>Lowest captain return:</strong> {rival.worstCaptain ? `${rival.worstCaptain.name}, ${rival.worstCaptain.points} points in GW ${rival.worstCaptain.gw}, including the multiplier.` : 'No completed captain data available.'}</p><p><strong>Chips used:</strong> {rival.history.unavailable ? 'Unavailable' : rival.history.data.chips.length}.</p></article>)}</div></section>
+  <p class="play-stamp">Rank swing compares consecutive gameweeks. Captain returns use the original captain and actual multiplier in completed gameweeks; vice-captain substitutions are not counted as a captain choice.</p>
+</PlayLayout>

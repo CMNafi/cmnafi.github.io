@@ -1,0 +1,27 @@
+---
+import PlayLayout from '@/components/telemetry/PlayLayout.astro';
+import { getMyFpl } from '@/lib/play/fpl';
+import { formatNumber, formatTime } from '@/lib/play/fetch';
+const season = await getMyFpl();
+const entry = season.entry.data;
+const history: Record<string, any>[] = season.history.data.current ?? [];
+const chips: Record<string, any>[] = season.history.data.chips ?? [];
+---
+<PlayLayout title="My FPL Season" number="01" eyebrow="FANTASY PREMIER LEAGUE" description="One squad. Thirty-eight gameweeks. Plenty of chances to second-guess a captain.">
+  <p class="play-stamp">Last updated: <time datetime={season.updatedAt ?? undefined}>{formatTime(season.updatedAt)}</time>. Entry {season.entryId ?? 'not configured'}.</p>
+  {season.stale && <p class="play-note">Data may be stale. {season.entry.unavailable ? 'The FPL feed is unavailable right now. My team will appear after a successful refresh.' : 'Showing the most recent data available.'}</p>}
+  <div class="play-section-head"><h2>{entry.name ?? 'Waiting for my squad'}</h2><a class="play-link" href={`https://fantasy.premierleague.com/entry/${season.entryId}/`} target="_blank" rel="noopener noreferrer">Official FPL page ↗</a></div>
+  <div class="play-stats">
+    <div class="play-stat"><span class="label">Gameweek {season.gw || 'TBA'}</span><span class="value">{formatNumber(entry.summary_event_points)}</span></div>
+    <div class="play-stat"><span class="label">Overall rank</span><span class="value">{formatNumber(entry.summary_overall_rank)}</span></div>
+    <div class="play-stat"><span class="label">Total points</span><span class="value">{formatNumber(entry.summary_overall_points)}</span></div>
+    <div class="play-stat"><span class="label">Chips used</span><span class="value">{chips.length}</span></div>
+  </div>
+  <section class="play-section"><span class="play-eyebrow">The selection</span><h2>My squad</h2>
+    {season.squad.length ? <div class="play-table-wrap"><table class="play-table"><caption>Gameweek {season.gw}. Points before captain multipliers.</caption><thead><tr><th>Player</th><th>Role</th><th class="numeric">GW points</th></tr></thead><tbody>
+      {season.squad.map(player => <tr><td>{player.name}<small>{player.team}{player.position > 11 ? ' / Bench' : ''}</small></td><td>{player.is_captain ? 'Captain' : player.is_vice_captain ? 'Vice captain' : player.position > 11 ? 'Substitute' : 'Starting XI'}{player.multiplier === 3 && <span class="play-chip">Triple captain</span>}</td><td class="numeric">{formatNumber(player.points)}</td></tr>)}
+    </tbody></table></div> : <div class="play-empty">No published picks available yet. FPL releases picks after the gameweek deadline.</div>}
+  </section>
+  <div class="play-grid"><section class="play-card"><span class="play-eyebrow">The extras</span><h2>Chips played</h2>{chips.length ? chips.map(chip => <span class="play-chip">{chip.name} / GW {chip.event}</span>) : <p>{season.history.unavailable ? 'Chip history is not available.' : 'No chips played yet.'}</p>}<p>Remaining availability follows the current FPL rules and is shown on my official team page.</p></section><section class="play-card"><span class="play-eyebrow">The company</span><h2>Better with friends</h2><p>Rank swings, questionable captains, and a small table to keep us honest.</p><a class="play-link" href="/play/rivals">Open the rivalry board →</a></section></div>
+  <section class="play-section"><h2>Gameweek log</h2>{history.length ? <div class="play-table-wrap"><table class="play-table"><thead><tr><th>GW</th><th class="numeric">Points</th><th class="numeric">Total</th><th class="numeric">Overall rank</th></tr></thead><tbody>{[...history].reverse().map(week => <tr><td class="numeric">{week.event}</td><td class="numeric">{formatNumber(week.points)}</td><td class="numeric">{formatNumber(week.total_points)}</td><td class="numeric">{formatNumber(week.overall_rank)}</td></tr>)}</tbody></table></div> : <p class="play-empty">The season log will appear when the feed is available.</p>}</section>
+</PlayLayout>
