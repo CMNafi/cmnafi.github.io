@@ -10,7 +10,10 @@
     "import:form-adv": "node scripts/import-form-adv-sec.mjs",
     "publish:site": "npm run build && node scripts/publish-site.mjs",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "agent:seo": "node scripts/seo-ai-agent.mjs",
+    "agent:analytics": "node scripts/analytics-agent.mjs",
+    "agent:apply-winners": "node scripts/analytics-agent.mjs --apply-winners"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

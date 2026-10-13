@@ -1,0 +1,480 @@
+[
+  {
+    "url": "https://www.cmnafi.com/",
+    "loadTimeMs": 4117,
+    "consoleMessages": [
+      {
+        "type": "log-error",
+        "text": "Failed to load resource: the server responded with a status of 404 ()"
+      }
+    ],
+    "failedRequests": [
+      {
+        "url": "4F9D77D3E28F0BBFD71F092D5732AB6E",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      },
+      {
+        "url": "14032.39",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Fetch"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/field-notes/",
+    "loadTimeMs": 4110,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "AF9F49F9ED727351F907E9FBC6070F6A",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/field-notes/openai-cap-table/",
+    "loadTimeMs": 4065,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "81E4D9FA3FF6DD13C660A853F10BA874",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      },
+      {
+        "url": "43332.42",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Fetch"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 377,
+      "winWidth": 377,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/field-notes/blackstone-vs-blackrock/",
+    "loadTimeMs": 4821,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "D78D9DDAE29E5EB8C54A16BABC322A7C",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 377,
+      "winWidth": 377,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/field-notes/the-streetcar-conspiracy/",
+    "loadTimeMs": 4054,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "96662C0CEB9C5E72CB6C9FEF70A6D413",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 377,
+      "winWidth": 377,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/garage/",
+    "loadTimeMs": 4063,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "0901B5D898D7567466D1ABFAEEB05E2B",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      },
+      {
+        "url": "45400.37",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Fetch"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/garage/adv-screener/",
+    "loadTimeMs": 4064,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "82C78FD15A28A55580DD84DBF4A882F9",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/garage/manager-search/",
+    "loadTimeMs": 4060,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "635B787D76F65DE5D77D67F8BA580623",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/garage/worldview/",
+    "loadTimeMs": 4071,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "637B1A0BD85BCA3CABDC27B755D4FA35",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/caia/",
+    "loadTimeMs": 4065,
+    "consoleMessages": [
+      {
+        "type": "log-error",
+        "text": "Failed to find a valid digest in the 'integrity' attribute for resource 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css' with computed SHA-384 integrity 'GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn'. The resource has been blocked."
+      },
+      {
+        "type": "log-error",
+        "text": "Failed to find a valid digest in the 'integrity' attribute for resource 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js' with computed SHA-384 integrity '+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05'. The resource has been blocked."
+      },
+      {
+        "type": "log-error",
+        "text": "Failed to find a valid digest in the 'integrity' attribute for resource 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js' with computed SHA-384 integrity 'cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx'. The resource has been blocked."
+      }
+    ],
+    "failedRequests": [
+      {
+        "url": "4D38D65BCBAD6E280FA6764529FE2464",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/caia/level-1/",
+    "loadTimeMs": 4059,
+    "consoleMessages": [
+      {
+        "type": "log-error",
+        "text": "Failed to find a valid digest in the 'integrity' attribute for resource 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css' with computed SHA-384 integrity 'GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn'. The resource has been blocked."
+      },
+      {
+        "type": "log-error",
+        "text": "Failed to find a valid digest in the 'integrity' attribute for resource 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js' with computed SHA-384 integrity '+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05'. The resource has been blocked."
+      },
+      {
+        "type": "log-error",
+        "text": "Failed to find a valid digest in the 'integrity' attribute for resource 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js' with computed SHA-384 integrity 'cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx'. The resource has been blocked."
+      }
+    ],
+    "failedRequests": [
+      {
+        "url": "5BD853F19764697BD5A12FAD991BFA28",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/caia/formulas/",
+    "loadTimeMs": 4075,
+    "consoleMessages": [
+      {
+        "type": "log-error",
+        "text": "Failed to find a valid digest in the 'integrity' attribute for resource 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css' with computed SHA-384 integrity 'GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn'. The resource has been blocked."
+      },
+      {
+        "type": "log-error",
+        "text": "Failed to find a valid digest in the 'integrity' attribute for resource 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js' with computed SHA-384 integrity '+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05'. The resource has been blocked."
+      },
+      {
+        "type": "log-error",
+        "text": "Failed to find a valid digest in the 'integrity' attribute for resource 'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js' with computed SHA-384 integrity 'cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx'. The resource has been blocked."
+      }
+    ],
+    "failedRequests": [
+      {
+        "url": "971E7D0568F1914E0E0726441BA26BB4",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/world-cup-2026/",
+    "loadTimeMs": 4054,
+    "consoleMessages": [
+      {
+        "type": "log-error",
+        "text": "Failed to load resource: the server responded with a status of 404 ()"
+      }
+    ],
+    "failedRequests": [
+      {
+        "url": "60D8685DEE3F77A4EF50B35D2EE7A522",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 421,
+      "winWidth": 375,
+      "hasOverflow": true,
+      "overflowingElements": [
+        {
+          "tag": "DIV",
+          "selector": "div",
+          "right": 421,
+          "width": 405
+        },
+        {
+          "tag": "HEADER",
+          "selector": "header",
+          "right": 421,
+          "width": 405
+        },
+        {
+          "tag": "H1",
+          "selector": "h1",
+          "right": 421,
+          "width": 405
+        },
+        {
+          "tag": "P",
+          "selector": "p",
+          "right": 421,
+          "width": 405
+        },
+        {
+          "tag": "SECTION",
+          "selector": "section",
+          "right": 421,
+          "width": 405
+        },
+        {
+          "tag": "H2",
+          "selector": "h2",
+          "right": 421,
+          "width": 405
+        },
+        {
+          "tag": "DIV",
+          "selector": "div",
+          "right": 421,
+          "width": 405
+        },
+        {
+          "tag": "DIV",
+          "selector": ".wc-score-strip.wc-card",
+          "right": 421,
+          "width": 405
+        }
+      ]
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/world-cup-2026/matches/",
+    "loadTimeMs": 4065,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "550606505FFED953E7AAEADF518FF880",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 428,
+      "winWidth": 375,
+      "hasOverflow": true,
+      "overflowingElements": [
+        {
+          "tag": "DIV",
+          "selector": "div",
+          "right": 398,
+          "width": 135
+        },
+        {
+          "tag": "DIV",
+          "selector": ".wc-flag-chip",
+          "right": 398,
+          "width": 111
+        },
+        {
+          "tag": "SPAN",
+          "selector": "span",
+          "right": 398,
+          "width": 92
+        },
+        {
+          "tag": "DIV",
+          "selector": "div",
+          "right": 382,
+          "width": 132
+        },
+        {
+          "tag": "DIV",
+          "selector": ".wc-flag-chip",
+          "right": 382,
+          "width": 108
+        },
+        {
+          "tag": "SPAN",
+          "selector": "span",
+          "right": 382,
+          "width": 80
+        },
+        {
+          "tag": "DIV",
+          "selector": "div",
+          "right": 428,
+          "width": 135
+        },
+        {
+          "tag": "DIV",
+          "selector": ".wc-flag-chip",
+          "right": 428,
+          "width": 111
+        }
+      ]
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/story/",
+    "loadTimeMs": 4067,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "1C94F7D27F3AA63E97A8DFCBA60D357B",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      },
+      {
+        "url": "29752.37",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Fetch"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/connect/",
+    "loadTimeMs": 4074,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "1B71F67F97C4489ED562F15E27F0A70C",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 375,
+      "winWidth": 375,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  },
+  {
+    "url": "https://www.cmnafi.com/brewing/",
+    "loadTimeMs": 4239,
+    "consoleMessages": [],
+    "failedRequests": [
+      {
+        "url": "276BEC57637BF9E7C25B04B2D50ECA96",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Document"
+      },
+      {
+        "url": "34820.37",
+        "errorText": "net::ERR_ABORTED",
+        "type": "Fetch"
+      }
+    ],
+    "layoutCheck": {
+      "docWidth": 377,
+      "winWidth": 377,
+      "hasOverflow": false,
+      "overflowingElements": []
+    }
+  }
+]

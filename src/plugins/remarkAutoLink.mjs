@@ -42,10 +42,10 @@ const LINK_MAP = [
     url: '/field-notes/blackstone-vs-blackrock', label: 'Blackstone vs. BlackRock' },
 
   { terms: ['Blackstone'],
-    url: '/field-notes/blackstone-ipl-acquisition', label: 'Blackstone — Capital Lens' },
+    url: '/field-notes/blackstone-ipl-acquisition', label: 'Blackstone: Capital Lens' },
 
   { terms: ['BlackRock', 'BlackRock earnings', 'BlackRock Q1'],
-    url: '/field-notes/blackstone-vs-blackrock', label: 'BlackRock — Capital Lens' },
+    url: '/field-notes/blackstone-vs-blackrock', label: 'BlackRock: Capital Lens' },
 
   { terms: ['CVC Capital Partners', 'CVC Capital', 'Global Sport Group', 'GSG'],
     url: '/field-notes/cvc-capital-sports', label: 'CVC Capital Sports Deep Dive' },
@@ -54,7 +54,7 @@ const LINK_MAP = [
     url: '/field-notes/liberty-media-sports', label: 'Liberty Media Deep Dive' },
 
   { terms: ['Formula One', 'Formula 1', 'F1 ownership', 'F1 media rights'],
-    url: '/field-notes/cvc-capital-sports', label: 'F1 — CVC & Liberty' },
+    url: '/field-notes/cvc-capital-sports', label: 'F1: CVC & Liberty' },
 
   { terms: ['Apollo Global', 'Apollo Sports Capital', 'Atlético de Madrid'],
     url: '/field-notes/apollo-global-management-sports', label: 'Apollo Global Management' },
@@ -84,7 +84,7 @@ const LINK_MAP = [
     url: '/field-notes/canva-vs-figma', label: 'Canva vs. Figma' },
 
   { terms: ['Dutch Bros', 'Dutch Bros Coffee'],
-    url: '/field-notes/dutch-bros', label: 'Dutch Bros — Capital Lens' },
+    url: '/field-notes/dutch-bros', label: 'Dutch Bros: Capital Lens' },
 
   { terms: ['earnings volatility', 'post-earnings implied move', 'earnings swing'],
     url: '/field-notes/capital-lens-earnings-swings', label: 'The Earnings Volatility Trade' },
@@ -93,7 +93,7 @@ const LINK_MAP = [
     url: '/field-notes/the-covered-call-playbook', label: 'The Covered Call Playbook' },
 
   { terms: ['SpaceX IPO', 'SpaceX S-1', 'Project Apex'],
-    url: '/field-notes/spacex-s1-teardown', label: 'SpaceX IPO — Project Apex' },
+    url: '/field-notes/spacex-s1-teardown', label: 'SpaceX IPO: Project Apex' },
 
   { terms: ['IPL franchise', 'Indian Premier League franchise', 'IPL valuation'],
     url: '/field-notes/blackstone-ipl-acquisition', label: 'IPL Franchise Finance' },

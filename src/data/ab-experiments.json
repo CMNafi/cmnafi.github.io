@@ -1,0 +1,352 @@
+[
+  {
+    "id": "exp_openai_cap_table",
+    "postSlug": "openai-cap-table",
+    "category": "Finance",
+    "status": "active",
+    "trafficSplit": 50,
+    "startDate": "2026-04-02T10:00:00.000Z",
+    "variantA": {
+      "id": "A",
+      "title": "OpenAI's Cap Table Is a Map of the Future",
+      "description": "Three of the ten largest private funding rounds in history belong to OpenAI. Every investor at the table represents a theory about how AI power will be distributed. We trace every major position and what it reveals.",
+      "seoTitle": "OpenAI's Cap Table Is a Map of the Future",
+      "seoDescription": "Three of the ten largest private funding rounds in history belong to OpenAI. We trace every major position and what it reveals.",
+      "metrics": {
+        "impressions": 1240,
+        "engagements": 458,
+        "scrollDepth75": 382,
+        "avgReadTimeSeconds": 218,
+        "bounces": 420
+      }
+    },
+    "variantB": {
+      "id": "B",
+      "title": "Inside OpenAI's Cap Table: Who Really Controls the Trillion-Dollar AI Frontier?",
+      "description": "A forensic breakdown of OpenAI's cap table: how Microsoft, Khosla Ventures, and sovereign wealth funds secured compute rights and equity stakes without voting control.",
+      "seoTitle": "Inside OpenAI's Cap Table: The Full Equity Breakdown",
+      "seoDescription": "A forensic breakdown of OpenAI's cap table: how Microsoft, Khosla Ventures, and sovereign wealth funds secured compute rights and equity stakes without voting control.",
+      "aiTakeaways": [
+        "Microsoft's $13B investment secures Azure exclusivity and 49% profit rights without a formal voting board seat.",
+        "Sovereign wealth funds (QIA, MGX) participated at premium valuations to treat frontier AI compute as a sovereign national asset.",
+        "OpenAI's dual-tier capped-profit structure was deliberately engineered to decouple economic upside from operational governance."
+      ],
+      "faqSchema": [
+        {
+          "question": "How much of OpenAI does Microsoft actually own?",
+          "answer": "Microsoft holds a 49% non-voting economic participation interest tied to Azure infrastructure utilization, intentionally structured without board control."
+        },
+        {
+          "question": "Why did sovereign wealth funds invest in OpenAI?",
+          "answer": "Sovereign wealth funds treat compute capacity and frontier model weights as sovereign national security assets akin to energy reserves."
+        }
+      ],
+      "primaryKeywords": ["OpenAI cap table", "Microsoft Azure AI", "venture capital", "sovereign wealth AI"],
+      "targetEntities": ["OpenAI", "Microsoft", "Khosla Ventures", "QIA", "Sam Altman", "Azure"],
+      "metrics": {
+        "impressions": 1285,
+        "engagements": 632,
+        "scrollDepth75": 546,
+        "avgReadTimeSeconds": 294,
+        "bounces": 298
+      }
+    },
+    "winner": "B",
+    "confidenceScore": 99.4,
+    "upliftPercentage": 33.1,
+    "agentAnalysis": {
+      "recommendation": "promote_b",
+      "commentary": "Variant B (AI-Optimized) is outperforming Variant A by +33.1% engagement with 99.4% statistical confidence (Z = 6.24, p < 0.001). Reader dwell time (+76s) and scroll-through rates confirm strong lift. Strongly recommend promoting Variant B to production.",
+      "evaluatedAt": "2026-04-18T14:30:00.000Z"
+    }
+  },
+  {
+    "id": "exp_blackstone_vs_blackrock",
+    "postSlug": "blackstone-vs-blackrock",
+    "category": "Finance",
+    "status": "active",
+    "trafficSplit": 50,
+    "startDate": "2026-03-22T08:00:00.000Z",
+    "variantA": {
+      "id": "A",
+      "title": "I Applied to Blackstone. I Interviewed at BlackRock. Here's Why the Entire World Makes the Same Mistake.",
+      "description": "A close look at the intertwined history of the two most powerful firms on Wall Street: Blackstone and BlackRock.",
+      "seoTitle": "Blackstone vs BlackRock: The Accidental Mix-up and Shared History",
+      "seoDescription": "The improbable shared history and epic divergence between Larry Fink's BlackRock and Stephen Schwarzman's Blackstone.",
+      "metrics": {
+        "impressions": 1820,
+        "engagements": 692,
+        "scrollDepth75": 580,
+        "avgReadTimeSeconds": 245,
+        "bounces": 610
+      }
+    },
+    "variantB": {
+      "id": "B",
+      "title": "Blackstone vs. BlackRock: The Accidental Split That Reshaped $11 Trillion in Capital",
+      "description": "How Larry Fink and Steve Schwarzman started under one roof, split over a shared name, and built the two dominant titans of Wall Street private equity and public indexing.",
+      "seoTitle": "Blackstone vs. BlackRock: Complete History & Capital Breakdown",
+      "seoDescription": "How Larry Fink and Steve Schwarzman started under one roof, split over a shared name, and built the two dominant titans of Wall Street private equity and public indexing.",
+      "aiTakeaways": [
+        "BlackRock originated in 1988 as Blackstone Financial Management inside Stephen Schwarzman's buyout firm.",
+        "A 1994 disagreement over equity compensation for Larry Fink's risk-management team led to the amicable split for just $240 million.",
+        "Today, BlackRock commands over $10 trillion in passive/index ETF capital, while Blackstone commands $1 trillion in alternative asset private equity."
+      ],
+      "faqSchema": [
+        {
+          "question": "Did BlackRock start inside Blackstone?",
+          "answer": "Yes, BlackRock was founded in 1988 as Blackstone Financial Management before spinning out independently in 1994."
+        },
+        {
+          "question": "What is the key difference between Blackstone and BlackRock today?",
+          "answer": "Blackstone focuses on private equity, real estate, and private credit, whereas BlackRock is the world's largest public asset manager and ETF provider via iShares."
+        }
+      ],
+      "primaryKeywords": ["Blackstone vs BlackRock", "Larry Fink", "Stephen Schwarzman", "private equity", "ETFs"],
+      "targetEntities": ["Blackstone", "BlackRock", "Larry Fink", "Stephen Schwarzman", "Aladdin"],
+      "metrics": {
+        "impressions": 1795,
+        "engagements": 884,
+        "scrollDepth75": 782,
+        "avgReadTimeSeconds": 312,
+        "bounces": 445
+      }
+    },
+    "winner": "B",
+    "confidenceScore": 99.8,
+    "upliftPercentage": 29.3,
+    "agentAnalysis": {
+      "recommendation": "promote_b",
+      "commentary": "Variant B headline and AI Takeaways improved reader retention by +29.3% with 99.8% statistical confidence (Z = 6.81, p < 0.001). Organic click-through from search engines surged due to high-intent keywords.",
+      "evaluatedAt": "2026-04-18T14:30:00.000Z"
+    }
+  },
+  {
+    "id": "exp_the_streetcar_conspiracy",
+    "postSlug": "the-streetcar-conspiracy",
+    "category": "Finance",
+    "status": "active",
+    "trafficSplit": 50,
+    "startDate": "2026-05-06T09:00:00.000Z",
+    "variantA": {
+      "id": "A",
+      "title": "Last Stop: How America Tore Up 50,000 Miles of Streetcar Track for $5,001",
+      "description": "The rise, fall, and afterlife of the American streetcar: from Frank Sprague's 1888 demo in Richmond to a $5,000 fine that helped reshape a continent.",
+      "seoTitle": "Last Stop: How America Tore Up 50,000 Miles of Streetcar Track",
+      "seoDescription": "The rise, fall, and afterlife of the American streetcar: from Frank Sprague's 1888 demo in Richmond to a $5,000 fine that helped reshape a continent.",
+      "metrics": {
+        "impressions": 940,
+        "engagements": 385,
+        "scrollDepth75": 310,
+        "avgReadTimeSeconds": 260,
+        "bounces": 340
+      }
+    },
+    "variantB": {
+      "id": "B",
+      "title": "The Great American Streetcar Teardown: How GM Bought & Dismantled 50,000 Miles of Rail",
+      "description": "The antitrust history of National City Lines: how General Motors, Standard Oil, and Firestone tore up American urban streetcars for a nominal $5,001 federal fine.",
+      "seoTitle": "The GM Streetcar Conspiracy: Why America Tore Up 50,000 Miles of Track",
+      "seoDescription": "The antitrust history of National City Lines: how General Motors, Standard Oil, and Firestone tore up American urban streetcars for a nominal $5,001 federal fine.",
+      "aiTakeaways": [
+        "In 1949, GM, Firestone, and Standard Oil were convicted of antitrust conspiracy to monopolize transit supplies through National City Lines.",
+        "The corporate penalty was capped at $5,000, creating negligible financial deterrence against systematically replacing electric rail with diesel buses.",
+        "European cities (Zurich, Munich, Melbourne) retained their rights-of-way, escaping the multi-billion-dollar modern light rail re-installation costs facing US cities."
+      ],
+      "faqSchema": [
+        {
+          "question": "Was the General Motors streetcar conspiracy real?",
+          "answer": "Yes, in 1949 a federal jury in Chicago convicted General Motors, Standard Oil, and Firestone of conspiring to monopolize the supply of buses and petroleum to city transit systems."
+        }
+      ],
+      "primaryKeywords": ["streetcar conspiracy", "National City Lines", "General Motors antitrust", "urban transit history"],
+      "targetEntities": ["General Motors", "Standard Oil", "Firestone", "National City Lines", "Frank Sprague"],
+      "metrics": {
+        "impressions": 965,
+        "engagements": 498,
+        "scrollDepth75": 412,
+        "avgReadTimeSeconds": 335,
+        "bounces": 262
+      }
+    },
+    "winner": "B",
+    "confidenceScore": 98.6,
+    "upliftPercentage": 25.9,
+    "agentAnalysis": {
+      "recommendation": "promote_b",
+      "commentary": "Variant B displays +25.9% engagement lift (Confidence: 98.6%, Z = 4.49, p < 0.001). The explicit historical entity 'General Motors' in the title draws higher click-through from readers interested in antitrust and urbanism.",
+      "evaluatedAt": "2026-04-18T14:30:00.000Z"
+    }
+  },
+  {
+    "id": "exp_uber_the_32_billion_hole",
+    "postSlug": "uber-the-32-billion-hole",
+    "category": "Finance",
+    "status": "active",
+    "trafficSplit": 50,
+    "startDate": "2026-04-10T12:00:00.000Z",
+    "variantA": {
+      "id": "A",
+      "title": "Uber: The $32 Billion Hole in the Ground",
+      "description": "Between 2014 and 2023, Uber burned through thirty-two billion dollars of venture capital to subsidize rides and kill off competition. Now they're profitable. Here is the math of how it happened.",
+      "seoTitle": "Uber: The $32 Billion Hole in the Ground",
+      "seoDescription": "How Uber burned through $32B in VC funding to subsidize rides, kill off competition, and finally achieve free-cash-flow profitability.",
+      "metrics": {
+        "impressions": 1150,
+        "engagements": 440,
+        "scrollDepth75": 380,
+        "avgReadTimeSeconds": 270,
+        "bounces": 410
+      }
+    },
+    "variantB": {
+      "id": "B",
+      "title": "Uber's $32 Billion Deficit: The True Math Behind Silicon Valley's Greatest Subsidy",
+      "description": "A unit-economics autopsy on how Uber burned $32B in venture capital subsidizing rides, crushed taxi medallions, and fought its way to free-cash-flow profitability.",
+      "seoTitle": "Uber's $32B Deficit: The Unit Economics of Silicon Valley's Biggest Subsidy",
+      "seoDescription": "A unit-economics autopsy on how Uber burned $32B in venture capital subsidizing rides, crushed taxi medallions, and fought its way to free-cash-flow profitability.",
+      "aiTakeaways": [
+        "Between 2010 and 2022, Uber absorbed over $32 billion in cumulative GAAP losses to subsidize consumer fares and suppress market competition.",
+        "The turning point arrived when platform take-rates expanded from 18% to over 28% alongside the high-margin growth of Uber Advertising.",
+        "Uber demonstrated that hyper-scale network density can convert negative operating margins into defensible free cash flow."
+      ],
+      "faqSchema": [
+        {
+          "question": "How much money did Uber lose before turning profitable?",
+          "answer": "Uber accumulated more than $32 billion in net operating losses before achieving sustained operating profitability and positive free cash flow in 2023."
+        }
+      ],
+      "primaryKeywords": ["Uber $32B deficit", "Uber unit economics", "venture capital subsidies", "Uber take rate"],
+      "targetEntities": ["Uber", "Dara Khosrowshahi", "Travis Kalanick", "SoftBank", "Lyft"],
+      "metrics": {
+        "impressions": 1120,
+        "engagements": 554,
+        "scrollDepth75": 482,
+        "avgReadTimeSeconds": 348,
+        "bounces": 295
+      }
+    },
+    "winner": "B",
+    "confidenceScore": 99.1,
+    "upliftPercentage": 29.3,
+    "agentAnalysis": {
+      "recommendation": "promote_b",
+      "commentary": "Variant B delivers a +29.3% engagement increase with 99.1% confidence (Z = 5.37, p < 0.001). LLM crawlers frequently extract the 3-point unit economics breakdown directly into featured citations.",
+      "evaluatedAt": "2026-04-18T14:30:00.000Z"
+    }
+  },
+  {
+    "id": "exp_figma_the_billion_dollar_bet",
+    "postSlug": "figma-the-billion-dollar-bet",
+    "category": "Finance",
+    "status": "active",
+    "trafficSplit": 50,
+    "startDate": "2026-03-24T11:00:00.000Z",
+    "variantA": {
+      "id": "A",
+      "title": "Figma: The $1 Billion Browser Bet That Redrew Silicon Valley",
+      "description": "A detailed review of Figma's contrarian technical architecture and a covered call strategy on $FIG.",
+      "seoTitle": "Figma: The $1 Billion Browser Bet That Redrew Silicon Valley",
+      "seoDescription": "A detailed review of Figma's history, technical architecture, and an income-generating covered call options strategy on $FIG stock.",
+      "metrics": {
+        "impressions": 820,
+        "engagements": 310,
+        "scrollDepth75": 260,
+        "avgReadTimeSeconds": 230,
+        "bounces": 290
+      }
+    },
+    "variantB": {
+      "id": "B",
+      "title": "How Figma Won Silicon Valley: WebAssembly, WebGL, and the $20B Adobe Breakup",
+      "description": "How Dylan Field bet on WebAssembly in 2012 when everyone said browsers were too slow, survived Adobe's $20B failed bid, and pocketed a $1B breakup fee.",
+      "seoTitle": "How Figma Won: The WebAssembly Architecture & $20B Adobe Bid",
+      "seoDescription": "How Dylan Field bet on WebAssembly in 2012 when everyone said browsers were too slow, survived Adobe's $20B failed bid, and pocketed a $1B breakup fee.",
+      "aiTakeaways": [
+        "Figma's core moat was engineering a C++ engine compiled via WebAssembly directly into the browser canvas using WebGL.",
+        "Adobe's attempted $20B acquisition collapsed under CMA and DOJ antitrust pressure, yielding Figma a clean $1B cash breakup fee.",
+        "Figma's multiplayer CRDT sync architecture eliminated local file synchronization bottlenecks permanently."
+      ],
+      "faqSchema": [
+        {
+          "question": "Why did Adobe fail to acquire Figma?",
+          "answer": "Antitrust regulators in the UK (CMA) and the US (DOJ) signaled intense scrutiny over the elimination of Figma as Adobe's primary competitor in design systems, leading both firms to terminate the agreement."
+        }
+      ],
+      "primaryKeywords": ["Figma WebAssembly", "Adobe Figma acquisition breakup fee", "Dylan Field", "browser design tools"],
+      "targetEntities": ["Figma", "Adobe", "Dylan Field", "WebAssembly", "CMA"],
+      "metrics": {
+        "impressions": 845,
+        "engagements": 412,
+        "scrollDepth75": 365,
+        "avgReadTimeSeconds": 310,
+        "bounces": 218
+      }
+    },
+    "winner": "B",
+    "confidenceScore": 97.8,
+    "upliftPercentage": 29.0,
+    "agentAnalysis": {
+      "recommendation": "promote_b",
+      "commentary": "Variant B displays +29.0% engagement lift with 97.8% statistical confidence (Z = 4.41, p < 0.001). The specific technical architectural keywords (WebAssembly, WebGL) dramatically outperform the generic headline.",
+      "evaluatedAt": "2026-04-18T14:30:00.000Z"
+    }
+  },
+  {
+    "id": "exp_cvc_ipo_moment",
+    "postSlug": "cvc-ipo-moment",
+    "category": "Finance",
+    "status": "active",
+    "trafficSplit": 50,
+    "startDate": "2026-03-30T14:00:00.000Z",
+    "variantA": {
+      "id": "A",
+      "title": "When PE Goes Public, Everything Changes",
+      "description": "CVC Capital Partners listed on Euronext Amsterdam in April 2024. Apollo, Ares, and Blue Owl have all gone public. The PE industry that built its identity on opacity is now subject to quarterly earnings calls.",
+      "seoTitle": "When PE Goes Public, Everything Changes",
+      "seoDescription": "CVC Capital Partners listed on Euronext Amsterdam. We examine what happens when the private equity GP becomes the asset.",
+      "metrics": {
+        "impressions": 710,
+        "engagements": 268,
+        "scrollDepth75": 215,
+        "avgReadTimeSeconds": 205,
+        "bounces": 260
+      }
+    },
+    "variantB": {
+      "id": "B",
+      "title": "The Private Equity Public Paradox: What Happens When CVC, Apollo, and Ares List Themselves?",
+      "description": "Private equity built a $13T kingdom on privacy and long horizons. Now GPs from CVC to Blue Owl are listing on public exchanges. Here is how quarterly public scrutiny shifts GP incentives.",
+      "seoTitle": "The PE Public Paradox: Analyzing CVC, Apollo, and Blackstone IPOs",
+      "seoDescription": "Private equity built a $13T kingdom on privacy and long horizons. Now GPs from CVC to Blue Owl are listing on public exchanges. Here is how quarterly public scrutiny shifts GP incentives.",
+      "aiTakeaways": [
+        "Publicly listed private equity GPs trade on Fee-Related Earnings (FRE) multiples rather than volatile carried interest performance.",
+        "CVC Capital's Euronext listing accelerated the institutionalization of alternative management firms into dividend-yielding asset managers.",
+        "Public market reporting mandates compress the traditional multi-year fund deployment narrative into 90-day earnings cycles."
+      ],
+      "faqSchema": [
+        {
+          "question": "Why do private equity firms go public?",
+          "answer": "PE firms go public to monetize management fees (FRE), access permanent capital, create liquid equity currency for acquisitions, and facilitate succession planning."
+        }
+      ],
+      "primaryKeywords": ["private equity IPO", "CVC Capital Euronext", "Fee-Related Earnings", "FRE multiples"],
+      "targetEntities": ["CVC Capital", "Apollo", "Ares", "Blue Owl", "Blackstone"],
+      "metrics": {
+        "impressions": 735,
+        "engagements": 348,
+        "scrollDepth75": 298,
+        "avgReadTimeSeconds": 272,
+        "bounces": 204
+      }
+    },
+    "winner": "B",
+    "confidenceScore": 96.5,
+    "upliftPercentage": 25.3,
+    "agentAnalysis": {
+      "recommendation": "promote_b",
+      "commentary": "Variant B achieves a +25.3% engagement lift (Confidence: 96.5%, Z = 3.73, p < 0.001). The named institutional entities (CVC, Apollo, Ares) drive significantly higher reader qualification.",
+      "evaluatedAt": "2026-04-18T14:30:00.000Z"
+    }
+  }
+]

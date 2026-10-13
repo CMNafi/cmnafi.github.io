@@ -11,6 +11,7 @@ export default defineConfig({
     remarkPlugins: [remarkAutoLink]
   },
   redirects: {
+    '/blog': '/field-notes',
     '/projects': '/garage',
     '/projects/field-notes': '/field-notes'
   }

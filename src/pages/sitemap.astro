@@ -1,0 +1,353 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const notes = (await getCollection('field-notes'))
+  .filter((n) => !n.data.draft && n.data.category !== 'Brewing')
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => b.data.priority - a.data.priority || a.data.title.localeCompare(b.data.title));
+
+const chapters = (await getCollection('journey'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const financeNotes = notes.filter((n) => n.data.category === 'Finance');
+const booksNotes = notes.filter((n) => n.data.category === 'Books');
+const cricketNotes = notes.filter((n) => n.data.category === 'Cricket');
+
+const liveProjects = projects.filter((p) => p.data.status === 'live');
+const brewingProjects = projects.filter((p) => p.data.status === 'brewing');
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric', timeZone: 'UTC' });
+---
+
+<BaseLayout
+  title="Sitemap"
+  description="Complete index of all pages, field notes, garage tools, and story chapters on cmnafi.com."
+>
+  <div class="sitemap-page">
+    <nav class="breadcrumb-trail" aria-label="Breadcrumbs">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep">/</li>
+        <li class="breadcrumb-current" aria-current="page">Sitemap</li>
+      </ol>
+    </nav>
+
+    <header class="sitemap-header">
+      <span class="sitemap-eyebrow">Index of all pages</span>
+      <h1>Site Architecture</h1>
+      <p class="sitemap-lede">
+        Every section, project, story chapter, and all {notes.length} published field notes. Reachable in one click.
+      </p>
+    </header>
+
+    <div class="sitemap-grid">
+      <section class="sitemap-block" aria-labelledby="core-pages-title">
+        <h2 id="core-pages-title">Core Pages</h2>
+        <ul class="sitemap-list">
+          <li>
+            <a href="/">Home</a>
+            <span class="meta-desc">Overview, hero, journey lap, featured notes, and contact.</span>
+          </li>
+          <li>
+            <a href="/#start-here">Start Here</a>
+            <span class="meta-desc">Curated entry path for first-time visitors.</span>
+          </li>
+          <li>
+            <a href="/story">Story</a>
+            <span class="meta-desc">Nine chapters: Dinajpur, Rangpur, China, Iowa, and solutions engineering.</span>
+          </li>
+          <li>
+            <a href="/field-notes">Field Notes</a>
+            <span class="meta-desc">All {notes.length} essays on capital, data, cricket, and books.</span>
+          </li>
+          <li>
+            <a href="/garage">Garage</a>
+            <span class="meta-desc">Interactive tools, data finders, and side experiments.</span>
+          </li>
+          <li>
+            <a href="/connect">Connect</a>
+            <span class="meta-desc">Direct email, LinkedIn, and conversation channels.</span>
+          </li>
+          <li>
+            <a href="/caia">CAIA Corner</a>
+            <span class="meta-desc">Study hub for alternative investments: hedge funds, PE, private debt, real assets.</span>
+          </li>
+          <li>
+            <a href="/world-cup-2026">World Cup 2026</a>
+            <span class="meta-desc">Schedules, groups, teams, and tournament analytics.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="sitemap-block" aria-labelledby="story-chapters-title">
+        <h2 id="story-chapters-title">The Story: Nine Chapters</h2>
+        <ol class="sitemap-numbered-list">
+          {chapters.map((ch) => (
+            <li>
+              <a href={`/story#${ch.slug}`}>
+                <span class="chap-num">Chapter {ch.data.order}:</span> {ch.data.theme}
+              </a>
+              <span class="meta-desc">{ch.data.place} · {ch.data.period}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="sitemap-block" aria-labelledby="garage-tools-title">
+        <h2 id="garage-tools-title">Garage Tools ({projects.length})</h2>
+        <div class="sitemap-subgroup">
+          <h3>Live Tools</h3>
+          <ul class="sitemap-list">
+            {liveProjects.map((p) => (
+              <li>
+                <a href={p.data.liveUrl || `/garage/${p.slug}`}>{p.data.title}</a>
+                <span class="meta-desc">{p.data.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {brewingProjects.length > 0 && (
+          <div class="sitemap-subgroup">
+            <h3>In Development</h3>
+            <ul class="sitemap-list">
+              {brewingProjects.map((p) => (
+                <li>
+                  <a href={`/garage/${p.slug}`}>{p.data.title}</a>
+                  <span class="meta-desc">{p.data.summary}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+
+      <section class="sitemap-block sitemap-block-wide" aria-labelledby="field-notes-all-title">
+        <h2 id="field-notes-all-title">Field Notes Archive ({notes.length} Posts)</h2>
+
+        <div class="notes-columns">
+          <div class="notes-col">
+            <h3>Finance & Allocator Notes ({financeNotes.length})</h3>
+            <ul class="sitemap-list compact">
+              {financeNotes.map((n) => (
+                <li>
+                  <a href={`/field-notes/${n.slug}`}>{n.data.title}</a>
+                  <span class="meta-desc">{n.data.subCategory} · {formatDate(n.data.publishedAt)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="notes-col">
+            <h3>Books & Essays ({booksNotes.length})</h3>
+            <ul class="sitemap-list compact">
+              {booksNotes.map((n) => (
+                <li>
+                  <a href={`/field-notes/${n.slug}`}>{n.data.title}</a>
+                  <span class="meta-desc">{n.data.readingTime} · {formatDate(n.data.publishedAt)}</span>
+                </li>
+              ))}
+            </ul>
+
+            <h3 style="margin-top: 2rem;">Cricket Notes ({cricketNotes.length})</h3>
+            <ul class="sitemap-list compact">
+              {cricketNotes.map((n) => (
+                <li>
+                  <a href={`/field-notes/${n.slug}`}>{n.data.title}</a>
+                  <span class="meta-desc">{formatDate(n.data.publishedAt)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .sitemap-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 6rem;
+    font-family: var(--font-serif);
+    color: var(--ink-primary);
+  }
+
+  .breadcrumb-trail {
+    margin-bottom: 2rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .breadcrumb-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .breadcrumb-list a {
+    color: var(--ink-secondary);
+    text-decoration: none;
+  }
+
+  .breadcrumb-list a:hover {
+    color: var(--accent);
+  }
+
+  .breadcrumb-sep {
+    color: var(--ink-tertiary);
+  }
+
+  .breadcrumb-current {
+    color: var(--accent);
+  }
+
+  .sitemap-header {
+    border-bottom: 1px solid var(--surface-line);
+    padding-bottom: 2rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .sitemap-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .sitemap-header h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin: 0 0 1rem;
+    letter-spacing: -0.03em;
+  }
+
+  .sitemap-lede {
+    font-size: 1.25rem;
+    color: var(--ink-secondary);
+    max-width: 40em;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .sitemap-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3.5rem 3rem;
+  }
+
+  .sitemap-block-wide {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--surface-line);
+    padding-top: 3rem;
+  }
+
+  .sitemap-block h2 {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--surface-line);
+  }
+
+  .sitemap-block h3 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-secondary);
+    margin: 1.25rem 0 0.75rem;
+  }
+
+  .sitemap-list,
+  .sitemap-numbered-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .sitemap-numbered-list {
+    counter-reset: chapter-counter;
+  }
+
+  .sitemap-list li,
+  .sitemap-numbered-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sitemap-list a,
+  .sitemap-numbered-list a {
+    font-size: 1.1rem;
+    color: var(--ink-primary);
+    text-decoration: none;
+    transition: color var(--dur-fast);
+  }
+
+  .sitemap-list a:hover,
+  .sitemap-numbered-list a:hover {
+    color: var(--accent);
+  }
+
+  .chap-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  .meta-desc {
+    font-size: 0.9rem;
+    color: var(--ink-secondary);
+    line-height: 1.45;
+  }
+
+  .notes-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem;
+  }
+
+  .compact {
+    gap: 0.85rem;
+  }
+
+  .compact a {
+    font-size: 1rem;
+  }
+
+  .compact .meta-desc {
+    font-size: 0.82rem;
+  }
+
+  @media (max-width: 820px) {
+    .sitemap-grid,
+    .notes-columns {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .sitemap-block-wide {
+      grid-column: auto;
+    }
+  }
+</style>

@@ -1393,7 +1393,7 @@
             
             // Build Table Rows
             tableBody.innerHTML = holdings.map(h => {
-                const option = h.put_call ? `<span class="put-call-badge">${h.put_call}</span>` : '—';
+                const option = h.put_call ? `<span class="put-call-badge">${h.put_call}</span>` : ', ';
                 return `
                     <tr>
                         <td>

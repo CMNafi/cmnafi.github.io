@@ -30,26 +30,26 @@ export const siteBranches: SiteBranch[] = [
   },
   {
     id: 'timeline',
-    label: 'Timeline',
-    href: '/blog',
-    eyebrow: 'Timeline',
-    description: 'The running archive for my cricket writing and the books I have kept notes on.',
+    label: 'Field Notes',
+    href: '/field-notes',
+    eyebrow: 'Field Notes',
+    description: 'The running archive for how capital moves, cricket writing, and books.',
     nodes: [
-      { label: 'Timeline', href: '/blog', description: 'Everything I still want public, gathered into one readable stream.' },
-      { label: 'Interests', href: '/interests', description: 'The same archive split into books and cricket.', kind: 'secondary' },
-      { label: 'TBD', href: '/tbd', description: 'The rougher sections that are not ready to sit beside the core pages yet.', kind: 'secondary' }
+      { label: 'Field Notes', href: '/field-notes', description: 'Everything gathered into one readable stream.' },
+      { label: 'Interests', href: '/interests', description: 'The same archive split into topics.', kind: 'secondary' },
+      { label: 'Now', href: '/now', description: 'What I am working on right now.', kind: 'secondary' }
     ]
   },
   {
     id: 'projects',
-    label: 'Projects',
-    href: '/projects',
-    eyebrow: 'Projects',
+    label: 'Garage',
+    href: '/garage',
+    eyebrow: 'Garage',
     description: 'The tools I keep building because I have run into the friction myself.',
     nodes: [
-      { label: 'Projects', href: '/projects', description: 'The main shelf for product ideas, tools, and working prototypes.' },
-      { label: 'Apps', href: '/apps', description: 'The projects that already have a more direct interface or demo.', kind: 'secondary' },
-      { label: 'Manager Search', href: '/apps/manager-search', description: 'A finance research tool built around a workflow I wanted to move faster.', kind: 'secondary' }
+      { label: 'Garage', href: '/garage', description: 'The main shelf for product ideas, tools, and working prototypes.' },
+      { label: 'ADV Screener', href: '/garage/adv-screener', description: 'Screening Form ADV filings across investment advisers.', kind: 'secondary' },
+      { label: 'Manager Search', href: '/garage/manager-search', description: 'A finance research tool built around a workflow I wanted to move faster.', kind: 'secondary' }
     ]
   },
   {

@@ -38,7 +38,7 @@ const booksCount   = allNotes.filter(n => n.data.category === 'Books').length;
 const cricketCount = allNotes.filter(n => n.data.category === 'Cricket').length;
 
 const latestNote = flatSortedNotes[0];
-const pageDescription = 'Long-form essays and research notes on finance, technology, books, and cricket — telemetry readouts from the race, by C M Nafi.';
+const pageDescription = 'Long-form essays and research notes on finance, technology, books, and cricket: telemetry readouts from the race, by C M Nafi.';
 
 const collectionLd = {
   '@context': 'https://schema.org',
@@ -111,7 +111,7 @@ const collectionLd = {
 
       <!-- ════════════════════════════════════════════
            TOPIC TOPOLOGY MAP
-           Static mind-map — categories branch from the
+           Static mind-map: categories branch from the
            root, sub-topics branch from categories.
            Connector lines are SVG; nodes are HTML.
       ════════════════════════════════════════════ -->
@@ -432,7 +432,7 @@ const collectionLd = {
     max-width: 600px;
   }
 
-  /* FEATURED — latest transmission */
+  /* FEATURED: latest transmission */
   .featured-note {
     display: block;
     background: linear-gradient(180deg, var(--surface-raised), var(--surface-base));

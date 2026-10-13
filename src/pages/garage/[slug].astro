@@ -17,9 +17,15 @@ const { Content } = await project.render();
 ---
 <BaseLayout title={project.data.title}>
   <div class="garage-detail">
-    <nav class="paddock-override-nav">
-      <a href="/garage" class="return-wall">← GARAGE LOGIC</a>
-      <div class="nav-title">{project.data.status.toUpperCase()} DEPLOYMENT</div>
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <ol class="breadcrumb-trail">
+        <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep">/</li>
+        <li><a href="/garage">Garage</a></li>
+        <li class="breadcrumb-sep">/</li>
+        <li class="breadcrumb-current" aria-current="page">{project.data.title}</li>
+      </ol>
+      <a href="/garage" class="return-link">← All Garage Tools</a>
     </nav>
     <article class="paddock-article">
       <header class="article-header">
@@ -44,10 +50,42 @@ const { Content } = await project.render();
 </BaseLayout>
 
 <style>
-  .paddock-override-nav { display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono); }
-  .return-wall { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
-  .nav-title { color: var(--pitlane-white); font-size: 11px; letter-spacing: 0.15em; }
-  .garage-detail { min-height: 100vh; background: var(--paddock-black); }
+  .breadcrumb-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    font-family: var(--font-mono);
+    border-bottom: 1px solid var(--surface-line);
+    flex-wrap: wrap;
+  }
+  .breadcrumb-trail {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+  }
+  .breadcrumb-trail a { color: var(--ink-secondary); text-decoration: none; }
+  .breadcrumb-trail a:hover { color: var(--accent); }
+  .breadcrumb-sep { color: var(--ink-tertiary); }
+  .breadcrumb-current { color: var(--ink-primary); }
+  .return-link {
+    color: var(--ink-secondary);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .return-link:hover { color: var(--accent); }
+
+  .garage-detail { min-height: 100vh; background: var(--surface-base); }
   .paddock-article { max-width: 850px; margin: 0 auto; padding: 2rem 2rem 6rem; }
   .article-header { border-bottom: 1px solid var(--carbon); padding-bottom: 3rem; margin-bottom: 3rem; }
   .article-header h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); margin: 1.5rem 0 1rem; color: var(--pitlane-white); line-height: 1.1; }

@@ -1,1 +1,0 @@
-import{s as o}from"./scramble.DNW1jBUO.js";function r(){const t=document.getElementById("error-title");if(t){const e=t.getAttribute("data-text")||t.textContent||"";o(t,e,900)}}document.addEventListener("astro:page-load",r);

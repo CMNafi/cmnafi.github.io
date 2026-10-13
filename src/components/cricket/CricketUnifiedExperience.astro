@@ -92,7 +92,7 @@ const archiveLinks = [
           </div>
 
           {mappedPosts.map(({ post, left, top }) => (
-            <a class="cricket-ground__node" href={`/blog/${post.slug}`} style={`left:${left}%; top:${top}%;`}>
+            <a class="cricket-ground__node" href={`/field-notes/${post.slug}`} style={`left:${left}%; top:${top}%;`}>
               <span class="cricket-ground__dot"></span>
               <span class="cricket-ground__tooltip">
                 <strong>{post.data.title}</strong>
@@ -107,11 +107,11 @@ const archiveLinks = [
           <div class="panel cricket-simple-field__lead">
             <p class="eyebrow">Story layer</p>
             <h3>Recent match writing stays connected to the field.</h3>
-            <p>The blog is still where the full story lives. This page now gives those stories the right context instead of burying them.</p>
+            <p>Field notes are still where the full story lives. This page now gives those stories the right context instead of burying them.</p>
           </div>
           <div class="cricket-simple-field__stories">
             {recentStories.map((story) => (
-              <a class="panel cricket-simple-field__story-card" href={`/blog/${story.slug}`}>
+              <a class="panel cricket-simple-field__story-card" href={`/field-notes/${story.slug}`}>
                 <span class="eyebrow">{formatDate(story.data.publishedAt)}</span>
                 <strong>{story.data.title}</strong>
                 <p>{story.data.description}</p>
@@ -262,7 +262,7 @@ const archiveLinks = [
                   <td>${game.wickets ?? '-'}</td>
                   <td>${game.catches ?? 0}</td>
                   <td>${game.distanceDrivenMiles !== null ? `${formatValue(game.distanceDrivenMiles, 1)} mi` : '-'}</td>
-                  <td>${game.storySlug ? `<a href="/blog/${game.storySlug}">Open</a>` : '<span class="cricket-log-table__muted">None</span>'}</td>
+                  <td>${game.storySlug ? `<a href="/field-notes/${game.storySlug}">Open</a>` : '<span class="cricket-log-table__muted">None</span>'}</td>
                 </tr>
                 <tr class="cricket-log-table__detail-row">
                   <td colspan="8">

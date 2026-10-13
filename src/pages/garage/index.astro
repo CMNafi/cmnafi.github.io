@@ -7,7 +7,7 @@ const projects = (await getCollection('projects')).sort((a,b) => b.data.priority
 const featured = projects.find(p => p.data.featured && p.data.status === 'live');
 const filters = ['all', 'live', 'brewing', 'parked'];
 ---
-<BaseLayout title="The Garage — Projects & experiments" description="A growing collection of interactive experiences, research tools, and experiments by C M Nafi. Explore Worldview and see what is taking shape next.">
+<BaseLayout title="The Garage. Projects & experiments" description="A growing collection of interactive experiences, research tools, and experiments by C M Nafi. Explore Worldview and see what is taking shape next.">
   <div class="collection-shell">
     <header class="collection-intro">
       <div><SectorBadge variant="p1" label="THE GARAGE / INDEPENDENT PROJECTS" /><h1>Curiosity,<br />made <em>tangible.</em></h1></div>

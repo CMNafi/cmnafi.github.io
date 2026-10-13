@@ -1,0 +1,284 @@
+---
+// src/components/telemetry/AbExperimentEngine.astro
+// Real-time client-side A/B Testing & GA4 Telemetry Dispatcher
+import experiments from '@/data/ab-experiments.json';
+
+interface Props {
+  currentSlug?: string;
+}
+
+const { currentSlug = '' } = Astro.props;
+---
+
+<script id="cm-ab-experiments-data" type="application/json" set:html={JSON.stringify(experiments)} />
+
+<script is:inline>
+(function() {
+  const dataEl = document.getElementById('cm-ab-experiments-data');
+  if (!dataEl) return;
+
+  let experiments = [];
+  try {
+    experiments = JSON.parse(dataEl.textContent || '[]');
+  } catch (e) {
+    return;
+  }
+
+  // Derive current slug from pathname: e.g. /field-notes/openai-cap-table -> openai-cap-table
+  const path = window.location.pathname.replace(/\/+$/, '');
+  const pathParts = path.split('/');
+  const currentSlug = pathParts[pathParts.length - 1];
+
+  if (!currentSlug) return;
+
+  const exp = experiments.find(e => e.postSlug === currentSlug && e.status === 'active');
+  if (!exp) return;
+
+  // Determine or retrieve sticky variant assignment
+  const storageKey = 'cm_ab_' + currentSlug;
+  let variantId = localStorage.getItem(storageKey);
+
+  // Allow URL override for testing: e.g. ?ab_variant=B or ?ab_variant=A
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramOverride = urlParams.get('ab_variant');
+  if (paramOverride === 'A' || paramOverride === 'B') {
+    variantId = paramOverride;
+    localStorage.setItem(storageKey, variantId);
+  }
+
+  if (!variantId || (variantId !== 'A' && variantId !== 'B')) {
+    // 50/50 split
+    const splitRatio = exp.trafficSplit || 50;
+    variantId = Math.random() * 100 < splitRatio ? 'B' : 'A';
+    localStorage.setItem(storageKey, variantId);
+  }
+
+  const activeVariant = variantId === 'B' ? exp.variantB : exp.variantA;
+
+  // Update Page Metadata and Content if Variant B
+  if (variantId === 'B') {
+    if (activeVariant.title) {
+      document.title = activeVariant.title + ', C M Nafi';
+      
+      // Update H1 headline
+      const h1 = document.querySelector('h1') || document.querySelector('.cl-hero h1');
+      if (h1) {
+        h1.innerHTML = activeVariant.title;
+      }
+    }
+
+    if (activeVariant.description) {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', activeVariant.description);
+
+      const summaryP = document.querySelector('.summary') || document.querySelector('.cl-deck');
+      if (summaryP) {
+        summaryP.textContent = activeVariant.description;
+      }
+    }
+
+    // Inject AI Takeaways Block if present
+    if (activeVariant.aiTakeaways && activeVariant.aiTakeaways.length > 0) {
+      const existingBox = document.getElementById('ai-takeaways-card');
+      if (!existingBox) {
+        const prose = document.querySelector('.prose') || document.querySelector('.cl-body-col') || document.querySelector('article');
+        if (prose) {
+          const aiCard = document.createElement('div');
+          aiCard.id = 'ai-takeaways-card';
+          aiCard.className = 'ai-takeaways-card telemetry-card';
+          aiCard.setAttribute('data-nosnippet', 'false');
+          aiCard.innerHTML = `
+            <div class="ai-takeaways-header">
+              <span class="ai-indicator-dot"></span>
+              <span class="ai-header-title">EXECUTIVE AI TAKEAWAYS // LLM CITATION READY</span>
+              <span class="ai-pill">VARIANT B</span>
+            </div>
+            <ul class="ai-takeaways-list">
+              ${activeVariant.aiTakeaways.map(t => `<li><span class="takeaway-bullet">›</span> <span>${t}</span></li>`).join('')}
+            </ul>
+          `;
+          prose.insertBefore(aiCard, prose.firstChild);
+        }
+      }
+    }
+
+    // Inject FAQ Schema into Head if present
+    if (activeVariant.faqSchema && activeVariant.faqSchema.length > 0) {
+      const faqScript = document.createElement('script');
+      faqScript.type = 'application/ld+json';
+      faqScript.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': activeVariant.faqSchema.map(item => ({
+          '@type': 'Question',
+          'name': item.question,
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': item.answer
+          }
+        }))
+      });
+      document.head.appendChild(faqScript);
+    }
+  }
+
+  // Google Analytics GA4 Event Dispatcher
+  function sendGaEvent(eventName, params) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, params);
+    }
+    // Also record in local telemetry cache for Admin Dashboard real-time view
+    try {
+      const telemetryKey = 'cm_telemetry_events';
+      const history = JSON.parse(localStorage.getItem(telemetryKey) || '[]');
+      history.push({
+        event: eventName,
+        params,
+        timestamp: new Date().toISOString()
+      });
+      if (history.length > 200) history.shift();
+      localStorage.setItem(telemetryKey, JSON.stringify(history));
+    } catch (e) {}
+  }
+
+  // 1. Dispatch exposure impression
+  sendGaEvent('ab_experiment_impression', {
+    experiment_id: exp.id,
+    variant_id: variantId,
+    post_slug: currentSlug,
+    page_title: activeVariant.title || document.title,
+    send_to: 'G-W7QGKS85CP'
+  });
+
+  // 2. Track Engagement: Scroll Depth & Dwell Time
+  let maxScroll = 0;
+  let scrollTriggered75 = false;
+  let dwellTriggered = false;
+
+  function checkScroll() {
+    const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollH <= 0) return;
+    const pct = Math.round((window.scrollY / scrollH) * 100);
+    if (pct > maxScroll) maxScroll = pct;
+
+    if (maxScroll >= 75 && !scrollTriggered75) {
+      scrollTriggered75 = true;
+      sendGaEvent('ab_experiment_engagement', {
+        experiment_id: exp.id,
+        variant_id: variantId,
+        post_slug: currentSlug,
+        engagement_type: 'scroll_75_percent',
+        send_to: 'G-W7QGKS85CP'
+      });
+    }
+  }
+
+  window.addEventListener('scroll', checkScroll, { passive: true });
+
+  // Dwell timer (after 45s of active reading)
+  setTimeout(function() {
+    if (!document.hidden) {
+      dwellTriggered = true;
+      sendGaEvent('ab_experiment_engagement', {
+        experiment_id: exp.id,
+        variant_id: variantId,
+        post_slug: currentSlug,
+        engagement_type: 'dwell_45s',
+        send_to: 'G-W7QGKS85CP'
+      });
+    }
+  }, 45000);
+
+  // Global window inspection method for admin testing
+  window.__cm_ab_get_state = function() {
+    return { experiment: exp, currentVariant: variantId, data: activeVariant };
+  };
+  window.__cm_ab_set_variant = function(newVar) {
+    if (newVar === 'A' || newVar === 'B') {
+      localStorage.setItem(storageKey, newVar);
+      window.location.reload();
+    }
+  };
+})();
+</script>
+
+<style is:global>
+  /* AI Takeaways Card Styling (F1 Telemetry & Capital Lens harmonious design) */
+  .ai-takeaways-card {
+    background: rgba(18, 22, 28, 0.95);
+    border: 1px solid rgba(0, 230, 118, 0.28);
+    border-left: 4px solid #00e676;
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin: 28px 0 34px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(0, 230, 118, 0.08);
+    backdrop-filter: blur(8px);
+  }
+
+  .ai-takeaways-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: 'JetBrains Mono', 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #00e676;
+  }
+
+  .ai-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00e676;
+    box-shadow: 0 0 8px #00e676;
+    animation: pulseDot 2s infinite ease-in-out;
+  }
+
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .ai-header-title {
+    font-weight: 600;
+  }
+
+  .ai-pill {
+    background: rgba(0, 230, 118, 0.15);
+    color: #00e676;
+    border: 1px solid rgba(0, 230, 118, 0.35);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 9px;
+    margin-left: auto;
+  }
+
+  .ai-takeaways-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ai-takeaways-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e2e8f0;
+  }
+
+  .takeaway-bullet {
+    color: #00e676;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+</style>

@@ -1,17 +1,17 @@
 [
   {
-    "title": "Blog",
-    "slug": "/blog",
+    "title": "Field Notes",
+    "slug": "/field-notes",
     "description": "Everything I have published, from match stories to book notes to the occasional personal essay.",
-    "category": "Blog",
+    "category": "Field Notes",
     "status": "live",
     "icon": "\u2726",
     "visibility": true,
     "order": 1
   },
   {
-    "title": "Projects",
-    "slug": "/projects",
+    "title": "Garage",
+    "slug": "/garage",
     "description": "The finance and research tools I started building because the existing workflows kept annoying me.",
     "category": "Projects",
     "status": "live",

@@ -33,7 +33,7 @@ Everything else on the site is the same habit pointed somewhere new:
   "engineering systems," "shipping code," or list programming languages as his
   skills. He builds the Garage tools with AI coding tools, and the honest framing
   is the strong one: *the skill is describing exactly what should exist.*
-- **Based:** New York. Works remotely.
+- **Based:** Land O' Lakes, Florida. Works remotely.
 
 ## 3. The arc (nine chapters)
 
@@ -44,12 +44,12 @@ Source of truth: `src/content/journey/*.mdx`, rendered on `/story`.
 | 01 | Dinajpur, Bangladesh | Childhood | A house where reading was the answer to boredom | The one room where he wasn't new |
 | 02 | Rangpur, Bangladesh | Age 12 | Twelve, and on my own clock | Rangpur Cadet College. 66 km from home, a long way away |
 | 03 | Changshu, China | 2016, age 16 | A country, and a language, I didn't know | UWC on full scholarship, 100+ nationalities |
-| 04 | Decorah, Iowa | 2018 to 2022 | Eight thousand people and a long winter | Data Science + CS minor; the Blackstone/BlackRock mix-up |
+| 04 | Decorah, Iowa | Aug 2018 to May 2022 | Eight thousand people and a long winter | Luther College, B.A. Data Science, GPA 3.5; Blackstone/BlackRock mix-up |
 | 05 | Rochester, Minnesota | 2021 to 2022 | Where the stakes were real | Mayo Clinic. "Messy data is the job" |
 | 06 | New York | 2021 to 2022 | Data that can move a decision | SkyBridge. "Narrative is translation" |
 | 07 | Wilmington, Delaware | 2022 to 2023 | A trillion dollars is a storytelling problem | BlackRock, Data & AI |
 | 08 | Remote | 2023 to now | The pattern gets a job title | Dasseti, solutions engineer |
-| 09 | New York | Now | Numbers, tools, and matches | Field Notes, Garage, cricket |
+| 09 | Land O' Lakes, Florida | Now | Numbers, tools, and matches | Field Notes, Garage, cricket |
 
 ## 4. Voice
 
@@ -102,8 +102,9 @@ Use only these. If a claim isn't here or in his own writing, don't publish it.
   storytelling problem all at once."
 - **Dasseti:** Solutions Engineer, 2023 to present, remote. Due diligence
   software for investors.
-- **Based:** New York, works remotely. Previously Tampa, FL.
-- **Cricket:** all-rounder, right-arm fast. Tampa leagues (TB Bengal Tigers,
+- **Based:** Land O' Lakes, Florida, works remotely.
+- **Languages:** Bengali (native), English (fluent), Hindi (proficient).
+- **Cricket:** all-rounder, right-arm fast. Florida leagues (TB Bengal Tigers,
   SWAT, St Pete Shields). Match reports in Field Notes.
 - **Also:** follows Formula 1 closely; reads about a book a month, mostly
   non-fiction; runs CAIA Corner, a study hub for alternative investments.
@@ -118,5 +119,3 @@ Use only these. If a claim isn't here or in his own writing, don't publish it.
 - Field Note `blackstone-vs-blackrock` says "I got the job" in the intro and
   "I did not get the job" in Part I. The story copy avoids stating the outcome
   of that first interview.
-- Is cricket still weekly in New York, or a Tampa-era chapter? Current copy
-  treats Tampa cricket as past.

@@ -1,4 +1,4 @@
-const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!<>-_\/[]{}—=+*^?#________';
+const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!<>-_\/[]{}~=+*^?#________';
 
 export function scrambleTo(el: HTMLElement, targetText: string, duration = 600) {
   if (!el) return;

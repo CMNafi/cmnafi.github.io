@@ -1,9 +1,9 @@
-# cmnafi.com — Master Plan
+# cmnafi.com: Master Plan
 
 > **This file is the charter.** Drop it in the repo root. Every Claude Code
 > session reads it. If a future change contradicts this doc, update this doc
 > first, then do the change. That is the single biggest lever for token efficiency
-> — you never re-explain the vision.
+>, you never re-explain the vision.
 
 ---
 
@@ -21,10 +21,10 @@ the results.
 **Stack:** Astro + TypeScript + MDX, deployed at cmnafi.com.
 **IA already drafted:** Home (P1/P2/P3, Sector 1/2/3), Story, Interests, Projects,
 Field Notes, Connect, Brewing.
-**Content state:** 6 tracked projects, 4 featured, 2 live — the rest "brewing."
+**Content state:** 6 tracked projects, 4 featured, 2 live: the rest "brewing."
 Blog scaffold exists as "Field Notes."
 **F1 language already seeded:** "Follow my line," sector cards, lap timer shell,
-"Restart Sequence," telemetry times. Good bones. The interpretation is flat —
+"Restart Sequence," telemetry times. Good bones. The interpretation is flat, 
 text says F1, the visuals do not.
 
 **Gap:** the F1 metaphor is written, not *felt*. The projects page is a list
@@ -39,7 +39,7 @@ Five pages, no more. Everything else is a sub-route.
 
 | Route | F1 metaphor | What lives here |
 |---|---|---|
-| `/` | **Pit Wall** — the strategist's view | Hero, current lap (what's shipping now), top 3 "sectors" as cards, latest post, signature garage peek |
+| `/` | **Pit Wall**, the strategist's view | Hero, current lap (what's shipping now), top 3 "sectors" as cards, latest post, signature garage peek |
 | `/garage` | **The Garage** (replaces `/projects` + `/brewing`) | The **brewing animation** is the hero. Every project is a car on a lift. Click → detail page. |
 | `/field-notes` | **Telemetry log** | Blog. Posts render as race-weekend reports. |
 | `/story` | **Driver bio** | The human story, interests, cricket, books, sports. |
@@ -47,7 +47,7 @@ Five pages, no more. Everything else is a sub-route.
 
 `/interests` folds into `/story`. `/brewing` becomes `/garage`. `/projects`
 redirects to `/garage`. One navigation bar, same across every page, with the
-lap-time counter running live in the corner — that's the through-line.
+lap-time counter running live in the corner: that's the through-line.
 
 ---
 
@@ -64,7 +64,7 @@ wallpaper.
 
 ```css
 :root {
-  /* Palette — lock it, never add */
+  /* Palette: lock it, never add */
   --paddock-black:   #0A0B0D;   /* page base */
   --carbon:          #14161B;   /* surface 1 */
   --graphite:        #1F232B;   /* surface 2 */
@@ -74,7 +74,7 @@ wallpaper.
   --racing-red:      #E10600;   /* live, attention */
   --violet-flag:     #7F5AF0;   /* personal best */
 
-  /* Typography — two fonts, both distinctive */
+  /* Typography: two fonts, both distinctive */
   --font-display: "PP Editorial New", "GT Sectra", Georgia, serif;
   --font-mono:    "JetBrains Mono", "Berkeley Mono", ui-monospace, monospace;
   --font-body:    "Söhne", "Fraunces", Georgia, serif;
@@ -84,7 +84,7 @@ wallpaper.
   --radius-chip: 2px;    /* tight, technical */
   --radius-card: 4px;
 
-  /* Motion — easing modeled on acceleration curves */
+  /* Motion: easing modeled on acceleration curves */
   --ease-launch:   cubic-bezier(.2, .8, .2, 1);      /* out of pitlane */
   --ease-tire:     cubic-bezier(.6, .04, .98, .335); /* braking */
   --ease-downforce: cubic-bezier(.4, 0, .2, 1);      /* neutral */
@@ -94,7 +94,7 @@ wallpaper.
 Rules that keep this from drifting:
 - **No Inter. No Space Grotesk. No purple-on-white gradients.** Those are the
   tells of generic AI output.
-- **Monospace everywhere numbers appear** — lap times, dates, versions, coords.
+- **Monospace everywhere numbers appear**, lap times, dates, versions, coords.
 - **Racing red = live only.** Never decorative. Seeing red means something is
   currently happening.
 - **Carbon-fiber texture reserved** for the single garage hero background.
@@ -104,16 +104,16 @@ Rules that keep this from drifting:
 
 Build these once in `src/components/telemetry/` and reuse:
 
-- `<LapTimer />` — the `00:00.000` counter in the nav corner.
-- `<SectorBadge variant="p1" />` — the P1/P2/P3 chips.
-- `<TelemetryGrid />` — the 4-col data strip (Updated · Status · Stack · Link).
-- `<StatusDot state="live | brewing | parked" />` — green/amber/grey dot with
+- `<LapTimer />`, the `00:00.000` counter in the nav corner.
+- `<SectorBadge variant="p1" />`, the P1/P2/P3 chips.
+- `<TelemetryGrid />`, the 4-col data strip (Updated · Status · Stack · Link).
+- `<StatusDot state="live | brewing | parked" />`, green/amber/grey dot with
   subtle pulse on "live."
-- `<Flag color="checkered | yellow | red" />` — used in post headers.
+- `<Flag color="checkered | yellow | red" />`, used in post headers.
 
 ---
 
-## 4. The Garage — signature moment
+## 4. The Garage: signature moment
 
 ### October 2026 update: a growing project collection
 
@@ -251,7 +251,7 @@ config later if you ever want to.
 
 ## 6. gbrain as your content corpus
 
-gbrain is your searchable knowledge base — the place where *drafts, research,
+gbrain is your searchable knowledge base: the place where *drafts, research,
 notes, and published posts all live together as markdown*.
 
 ### 6.1 Setup
@@ -284,7 +284,7 @@ build time only. Keeps cost at ~$25/mo Supabase + trivial OpenAI embed spend.
 
 ---
 
-## 7. gstack — your "team"
+## 7. gstack: your "team"
 
 Install once:
 ```bash
@@ -327,14 +327,14 @@ Use /browse for all web browsing. Skills available:
 ### 7.2 Token discipline
 
 1. **PLAN.md is your context budget saver.** Every session starts by reading
-   it — no re-explanation.
+   it: no re-explanation.
 2. **Use `/autoplan` instead of chaining reviews manually.** It runs CEO →
    design → eng in one pass and only surfaces decisions.
 3. **Use Haiku for boring transforms** (syndication, summaries, tag
    generation). Sonnet for building. Opus only for architecture questions.
 4. **Batch.** Don't open a new session for each tweak. One session, multiple
    `/ship`s.
-5. **Prefer `/learn`** — store conventions once so they're not re-derived.
+5. **Prefer `/learn`**, store conventions once so they're not re-derived.
    Example: `/learn "telemetry components live in src/components/telemetry/
    and always use tokens.css vars"`.
 
@@ -387,42 +387,42 @@ cmnafi.com/
 
 ---
 
-## 9. Execution plan — the first four sprints
+## 9. Execution plan: the first four sprints
 
 Each sprint is one or two sessions. Shortest path to a site you're proud of.
 
-### Sprint 0 — Lock the charter (today, 1 hour)
+### Sprint 0: Lock the charter (today, 1 hour)
 - Drop `PLAN.md`, `CLAUDE.md`, `DESIGN.md`, `ETHOS.md` into repo.
 - Install gstack globally.
 - Install gbrain, point at `src/content/`.
 - Commit. Ship to main. This is the foundation.
 
-### Sprint 1 — Design system & tokens (1 session)
+### Sprint 1: Design system & tokens (1 session)
 - Create `src/styles/tokens.css` from §3.2.
 - Build the five `<telemetry/>` primitives.
 - Replace all loose colors and fonts in existing pages with tokens.
 - `/design-review` on current homepage to catch drift.
 
-### Sprint 2 — The garage animation (2–3 sessions, the big one)
+### Sprint 2: The garage animation (2–3 sessions, the big one)
 - `/design-shotgun` → pick variant → `/design-html`.
 - Wire up project content collection to the chassis build-state.
 - Add reduced-motion fallback.
 - `/qa` the animation on mobile, low-end, slow 3G.
 - Budget check: < 80KB, 60fps.
 
-### Sprint 3 — Blog + syndication (1 session)
+### Sprint 3: Blog + syndication (1 session)
 - Content collection + one example Field Note migrated.
 - `scripts/syndicate.ts` with Haiku calls, PR generation.
 - Connect Typefully (or Buffer). Store API key in GH secrets.
 - Dry-run on one post; verify X/LinkedIn/Bluesky drafts look clean.
 
-### Sprint 4 — Pit Wall (homepage) (1 session)
+### Sprint 4: Pit Wall (homepage) (1 session)
 - Redesign `/` around the tokens and components.
 - Hero: current lap (what's shipping this week), garage peek, latest Field
   Note, one "sector" call to action.
 - `/design-review` → `/qa` → `/ship` → `/land-and-deploy` → `/canary`.
 
-### Ongoing — weekly
+### Ongoing: weekly
 - Friday: `/retro` across all work this week.
 - One Field Note shipped per week, minimum.
 - Move one project from brewing → live per month.

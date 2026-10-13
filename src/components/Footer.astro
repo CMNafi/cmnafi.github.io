@@ -12,7 +12,7 @@ const lastUpdated = new Intl.DateTimeFormat('en-US', {
   <div class="footer-inner">
     <div class="footer-brand">
       <a class="footer-title" href="/">C M Nafi</a>
-      <span class="footer-copy">Solutions engineer in New York. Learn the room, then translate.</span>
+      <span class="footer-copy">Solutions engineer in Land O' Lakes, Florida. Learn the room, then translate.</span>
     </div>
     
     <div class="footer-actions">
@@ -23,11 +23,13 @@ const lastUpdated = new Intl.DateTimeFormat('en-US', {
       </nav>
       <div class="footer-links">
         <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+        <a href="/sitemap">Sitemap</a>
         {siteConfig.socialLinks.map((link) => (
           <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
             {link.label}
           </a>
         ))}
+        <a href="/admin" style="color: rgba(0, 230, 118, 0.7);" title="Admin Telemetry Cockpit">Telemetry ↗</a>
       </div>
     </div>
     

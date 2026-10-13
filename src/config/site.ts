@@ -1,6 +1,6 @@
 export const siteConfig = {
   title: 'C M Nafi',
-  description: 'Solutions engineer in New York. I left home at twelve and have been learning new rooms ever since. Field notes on how capital moves, small tools, and cricket.',
+  description: "Solutions engineer living in Land O' Lakes, Florida. I left home at twelve and have been learning new rooms ever since. Field notes on how capital moves, small tools, and cricket.",
   author: 'C M Nafi',
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',

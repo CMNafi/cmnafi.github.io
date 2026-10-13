@@ -115,4 +115,4 @@ squad:
 
 The defending champions arrive looking to secure back-to-back titles in what is almost certainly Lionel Messi's final World Cup appearance. 
 
-Scaloni’s pragmatic, highly organized 4-4-2 seamlessly shifts into a 4-3-3. The system is built entirely around providing an impenetrable defensive and midfield bedrock (led by Romero and Enzo Fernandez) so that the attackers are insulated and free to produce moments of magic.
+Scaloni’s pragmatic, highly organized 4-4-2 smoothly shifts into a 4-3-3. The system is built entirely around providing an impenetrable defensive and midfield bedrock (led by Romero and Enzo Fernandez) so that the attackers are insulated and free to produce moments of magic.

@@ -19,10 +19,10 @@ const iconSizes = {
   lg: '32px'
 }
 ---
-<div class="wc-flag-chip" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-  <div style={`width: ${iconSizes[size]}; height: ${iconSizes[size]}; background: var(--wc-border); border-radius: 2px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: var(--wc-muted);`}>
+<div class="wc-flag-chip" style="display: inline-flex; align-items: center; gap: 0.4rem; max-width: 100%; min-width: 0;">
+  <div style={`width: ${iconSizes[size]}; height: ${iconSizes[size]}; flex-shrink: 0; background: var(--wc-border); border-radius: 2px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 0.6em; color: var(--wc-muted);`}>
     <!-- SVG Flag placeholder -->
     {teamCode}
   </div>
-  <span style={`font-weight: 600; ${sizeStyles[size]}`}>{teamName}</span>
+  <span style={`font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ${sizeStyles[size]}`}>{teamName}</span>
 </div>

@@ -9,12 +9,12 @@
   --ink-secondary:       #a89c8b;   /* labels, captions */
   --ink-tertiary:        #6a6055;   /* metadata, footnotes */
 
-  /* Accent — sector-2 green, single accent in the whole system */
+  /* Accent: sector-2 green, single accent in the whole system */
   --accent:              #7dd3a0;
   --accent-dim:          #7dd3a033; /* 20% alpha for backgrounds */
   --accent-glow:         #7dd3a066; /* 40% alpha for halos */
 
-  /* Status — live / recording / warning */
+  /* Status: live / recording / warning */
   --status-live:         var(--accent);
   --status-warn:         #e8b86a;
 

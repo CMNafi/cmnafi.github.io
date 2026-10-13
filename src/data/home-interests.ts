@@ -21,9 +21,9 @@ export const homeInterestLanes: HomeInterestLane[] = [
     href: `/interests#${section.id}`
   })),
   {
-    title: 'Blog archive',
+    title: 'Field notes archive',
     description: 'Every post in one searchable place, with filters for category and tags.',
-    href: '/blog'
+    href: '/field-notes'
   }
 ];
 
@@ -33,13 +33,13 @@ export const homeInterestTimeline: HomeInterestTimelineEntry[] = [
     category: 'On the cricket field',
     title: 'SWAT vs Tampa Telugu Titans',
     summary: 'A match where 54 runs and 5 wickets mattered, but the team made the day special.',
-    href: '/blog/one-of-those-days-swat-vs-tampa-telugu-titans'
+    href: '/field-notes/one-of-those-days-swat-vs-tampa-telugu-titans'
   },
   {
     date: '2025-05-18',
     category: 'On the cricket field',
     title: 'Bengals vs TPCC',
     summary: 'A chase at Evans Park where 78 off 47 helped the Bengals win by 8 wickets.',
-    href: '/blog/78-off-47-bengals-vs-tpcc'
+    href: '/field-notes/78-off-47-bengals-vs-tpcc'
   }
 ];

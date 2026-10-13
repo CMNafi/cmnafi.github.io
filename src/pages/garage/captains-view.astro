@@ -253,11 +253,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
             <div class="economy-stats-strip">
               <div class="economy-chip">
                 <span class="econ-chip-label">TOTAL MOVE</span>
-                <span class="econ-chip-value" id="flip-total-run">—</span>
+                <span class="econ-chip-value" id="flip-total-run">, </span>
               </div>
               <div class="economy-chip">
                 <span class="econ-chip-label">HEAVY SPRINTS</span>
-                <span class="econ-chip-value" id="flip-sprint-count">—</span>
+                <span class="econ-chip-value" id="flip-sprint-count">, </span>
               </div>
             </div>
             <div class="flip-breakdown" id="flip-breakdown-list">
@@ -2068,7 +2068,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
 
   /* ═══════════════════════════════════════════════════════════════
-     VISUAL OVERHAUL — better contrast, lighter feel, readability
+     VISUAL OVERHAUL: better contrast, lighter feel, readability
   ═══════════════════════════════════════════════════════════════ */
 
   /* Step 1: warmer, slightly lighter gradient */
@@ -2098,7 +2098,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     opacity: 0.85;
   }
 
-  /* Strategy cards — more contrast and structure */
+  /* Strategy cards: more contrast and structure */
   .strategy-card {
     border-color: rgba(255,255,255,0.1) !important;
     background: rgba(0,0,0,0.3) !important;
@@ -2117,7 +2117,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     line-height: 1.45;
   }
 
-  /* Player config cards — more visible borders */
+  /* Player config cards: more visible borders */
   .player-config-card {
     border-color: rgba(255,255,255,0.1) !important;
     background: rgba(255,255,255,0.03) !important;
@@ -2132,14 +2132,14 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     font-size: 9px !important;
   }
 
-  /* Input labels — much brighter */
+  /* Input labels: much brighter */
   .input-wrap label,
   .metric-group label {
     color: var(--ink-secondary) !important;
     font-size: 9px !important;
   }
 
-  /* Step 2 sidebar — lighter, easier to read */
+  /* Step 2 sidebar: lighter, easier to read */
   .command-dashboard {
     background: #141f16 !important;
   }
@@ -2154,7 +2154,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     letter-spacing: 0.12em !important;
   }
 
-  /* Roster rows — alternating + better contrast */
+  /* Roster rows: alternating + better contrast */
   .roster-flex-item {
     border-bottom-color: rgba(255,255,255,0.05) !important;
   }
@@ -2195,7 +2195,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     background: linear-gradient(160deg, #0d2010 0%, #091608 100%) !important;
   }
 
-  /* HUD bar — more structured */
+  /* HUD bar: more structured */
   .field-controls-hud {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -2574,7 +2574,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
         isPowerplay: false,
         batterHandedness: 'LHB',
         positions: ['wk', 'bowler', 'slip1', 'point', 'cover', 'mid_off', 'mid_on', 'mid_wicket', 'square_leg', 'deep_cover', 'deep_mid_wicket'],
-        explanation: 'A side change in the batter (LHB strike) triggers an instant horizontal mirror transition about the vertical pitch axis (x = 50). This visually showcases mirroring: the off-side fielders (Point, Cover, Deep Cover) glide seamlessly to the opposite side to form the LHB off-side ring, while the slip catcher slides to the left-hand slip angle, neutralizing the change of strike.'
+        explanation: 'A side change in the batter (LHB strike) triggers an instant horizontal mirror transition about the vertical pitch axis (x = 50). This visually showcases mirroring: the off-side fielders (Point, Cover, Deep Cover) glide smoothly to the opposite side to form the LHB off-side ring, while the slip catcher slides to the left-hand slip angle, neutralizing the change of strike.'
       },
       4: {
         title: 'DEATH OVERS SHIELD',
@@ -4015,7 +4015,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
         const pos = fieldingPositions.find(p => p.id === player.positionId);
         if (!pos) return;
         const dist = calcFlipDist(player.positionId);
-        if (dist < 3) return; // negligible — near y=50
+        if (dist < 3) return; // negligible: near y=50
         const toY = 100 - pos.y;
         const color = dist > 35 ? '#e55555' : dist > 18 ? '#e8b86a' : '#7dd3a0';
         const markerId = dist > 35 ? 'arrow-red' : dist > 18 ? 'arrow-amber' : 'arrow-green';

@@ -15,27 +15,97 @@ interface Props {
 
 const { homeTeam, homeCode, awayTeam, awayCode, homeScore, awayScore, status, timeInfo } = Astro.props;
 ---
-<div class="wc-score-strip wc-card" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; margin-bottom: 0.5rem;">
-  
-  <div style="flex: 1; display: flex; justify-content: flex-end; padding-right: 1.5rem;">
+<div class="wc-score-strip wc-card">
+  <div class="team-side team-home">
     <TeamFlagChip teamName={homeTeam} teamCode={homeCode} size="md" />
   </div>
 
-  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+  <div class="score-center">
     {status === 'preview' ? (
-      <div class="wc-mono" style="font-size: 0.9em; color: var(--wc-muted);">{timeInfo}</div>
+      <div class="wc-mono time-preview">{timeInfo}</div>
     ) : (
-      <div class="wc-mono" style="font-size: 1.5rem; font-weight: 700; color: var(--wc-ink); letter-spacing: 0.1em;">
+      <div class="wc-mono score-values">
         {homeScore} - {awayScore}
       </div>
     )}
     
-    {status === 'live' && <div style="color: var(--wc-accent); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-top: 4px;" class="live-pulse">{timeInfo}</div>}
-    {status === 'FT' && <div style="color: var(--wc-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-top: 4px;">FT</div>}
+    {status === 'live' && <div class="live-pulse live-tag">{timeInfo}</div>}
+    {status === 'FT' && <div class="ft-tag">FT</div>}
   </div>
 
-  <div style="flex: 1; display: flex; justify-content: flex-start; padding-left: 1.5rem;">
+  <div class="team-side team-away">
     <TeamFlagChip teamName={awayTeam} teamCode={awayCode} size="md" />
   </div>
-
 </div>
+
+<style>
+  .wc-score-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 0.5rem;
+  }
+  .team-side {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+  }
+  .team-home {
+    justify-content: flex-end;
+    text-align: right;
+  }
+  .team-away {
+    justify-content: flex-start;
+    text-align: left;
+  }
+  .score-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 85px;
+    text-align: center;
+  }
+  .time-preview {
+    font-size: 0.78rem;
+    color: var(--wc-muted);
+    white-space: nowrap;
+  }
+  .score-values {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--wc-ink);
+    letter-spacing: 0.08em;
+  }
+  .live-tag {
+    color: var(--wc-accent);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .ft-tag {
+    color: var(--wc-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  @media (max-width: 480px) {
+    .wc-score-strip {
+      padding: 0.65rem 0.5rem;
+      gap: 0.25rem;
+    }
+    .score-center {
+      min-width: 72px;
+    }
+    .time-preview {
+      font-size: 0.7rem;
+    }
+  }
+</style>

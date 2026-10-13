@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-// The nine chapters live in src/content/journey — STORY.md is the source of truth for what they say
+// The nine chapters live in src/content/journey. STORY.md is the source of truth for what they say
 const chapters = (await getCollection('journey')).sort((a, b) => a.data.order - b.data.order);
 const rendered = await Promise.all(
   chapters.map(async (chapter) => ({ chapter, Content: (await chapter.render()).Content }))
@@ -13,12 +13,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
 const record = [
   { org: 'Dasseti', role: 'Solutions Engineer', when: '2023 to now', where: 'Remote' },
   { org: 'BlackRock', role: 'Analyst, Data and AI', when: '2022 to 2023', where: 'Wilmington, DE' },
-  { org: 'SkyBridge', role: 'Data Scientist', when: '2021 to 2022', where: '' },
+  { org: 'SkyBridge', role: 'Data Scientist', when: '2021 to 2022', where: 'New York, NY' },
   { org: 'Mayo Clinic', role: 'AI Intern', when: '2021 to 2022', where: 'Rochester, MN' }
 ];
 
 const education = [
-  { org: 'Luther College', role: 'B.A. Data Science, Computer Science minor', when: '2022', where: 'Decorah, IA' },
+  { org: 'Luther College', role: 'B.A. Data Science, Computer Science minor, GPA 3.5', when: 'Aug 2018 to May 2022', where: 'Decorah, IA' },
   { org: 'UWC Changshu', role: 'IB Diploma, full scholarship', when: '2016 to 2018', where: 'Changshu, China' }
 ];
 
@@ -46,9 +46,10 @@ const certifications = [
 
       <dl class="facts">
         <div><dt>Now</dt><dd>Solutions Engineer, Dasseti</dd></div>
-        <div><dt>Based</dt><dd>New York, working remotely</dd></div>
+        <div><dt>Based</dt><dd>Land O' Lakes, Florida, working remotely</dd></div>
         <div><dt>Before</dt><dd>BlackRock, SkyBridge, Mayo Clinic</dd></div>
-        <div><dt>Studied</dt><dd>Data Science, Luther College</dd></div>
+        <div><dt>Studied</dt><dd>Data Science, Luther College (GPA 3.5)</dd></div>
+        <div><dt>Languages</dt><dd>Bengali (native), English (fluent), Hindi (proficient)</dd></div>
       </dl>
 
       <div class="head-links">
@@ -61,7 +62,7 @@ const certifications = [
     <section class="short-version" aria-labelledby="short-version-title">
       <h2 id="short-version-title" class="label">The short version</h2>
       <p>
-        I'm a solutions engineer at Dasseti, based in New York and working remotely. I grew up in Bangladesh,
+        I'm a solutions engineer at Dasseti, living in Land O' Lakes, Florida and working remotely. I grew up in Bangladesh,
         left home at twelve for military school, and at sixteen moved to China on a full scholarship to a
         United World College, without speaking the language. I studied data science in an Iowa town of eight
         thousand, then worked at Mayo Clinic, SkyBridge and BlackRock.

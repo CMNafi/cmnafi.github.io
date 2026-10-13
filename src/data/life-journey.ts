@@ -37,11 +37,11 @@ export const journeySegments: TimelineSegment[] = [
       {
         id: 'rangpur',
         title: 'Rangpur Cadet College',
-        subtitle: 'Military school — discipline and independence',
+        subtitle: 'Military school: discipline and independence',
         location: 'Rangpur, Bangladesh',
         period: 'Age 12',
         description:
-          "Left home at age 12 for military school — a disciplined start that forged the self-reliance carried ever since. Distance from home, repetition, discipline, and self-command shaped a harder but more independent character.",
+          "Left home at age 12 for military school: a disciplined start that forged the self-reliance carried ever since. Distance from home, repetition, discipline, and self-command shaped a harder but more independent character.",
         highlights: ['Self-reliance', 'Discipline', 'Leadership training'],
         tags: ['Military', 'Discipline']
       },
@@ -60,14 +60,14 @@ export const journeySegments: TimelineSegment[] = [
       {
         id: 'decorah',
         title: 'Luther College',
-        subtitle: 'Data Science major, Computer Science minor',
+        subtitle: 'B.A. Data Science, Computer Science minor',
         location: 'Decorah, Iowa, USA',
-        period: 'College years',
+        period: 'Aug 2018 to May 2022',
         description:
-          'Fully leaned into the intersection of logic and creativity. Graduated with a major in Data Science and a minor in Computer Science, focusing senior research on the power of high-density data to solve real-world problems.',
-        highlights: ['Data Science', 'Computer Science', 'Senior research'],
+          'Graduated with a B.A. in Data Science (GPA 3.5) and a minor in Computer Science. Focused on statistical learning, data pipelines, and decision-ready analysis.',
+        highlights: ['B.A. Data Science', 'GPA 3.5', 'Decorah, Iowa'],
         href: 'https://www.luther.edu/',
-        tags: ['Data Science', 'CS', 'Research']
+        tags: ['Data Science', 'Statistics', 'Research']
       }
     ]
   },
@@ -77,40 +77,28 @@ export const journeySegments: TimelineSegment[] = [
     icon: 'briefcase',
     items: [
       {
-        id: 'research',
-        title: 'Research & Data Products',
-        subtitle: 'Building tools from data',
-        location: 'Remote & On-site',
-        period: 'Post-college',
+        id: 'dasseti',
+        title: 'Solutions Engineer',
+        subtitle: 'Dasseti',
+        location: "Land O' Lakes, Florida (Remote)",
+        period: '2023 to Present',
         description:
-          'Channeled academic training into real-world research workflows — building tools, automations, and data products that bridge the gap between raw information and actionable intelligence.',
-        highlights: ['Data pipelines', 'Automation', 'Research tooling'],
-        href: '/projects',
-        tags: ['Research', 'Data']
+          'Solutions Engineer translating between investment teams and their due-diligence software. Previously worked at BlackRock (Wilmington, DE), SkyBridge (New York, NY), and Mayo Clinic (Rochester, MN).',
+        highlights: ['Dasseti', 'Due Diligence Software', 'Solutions Engineering'],
+        href: '/story',
+        tags: ['Fintech', 'Due Diligence', 'Solutions Engineering']
       },
       {
-        id: 'fintech',
-        title: 'Financial Intelligence',
-        subtitle: 'Institutional finance and strategy',
-        location: 'Tampa, Florida',
-        period: 'Present',
-        description:
-          'The current chapter brings together research, strategy, institutional finance, and product work into a clearer public-facing direction. Data is only as valuable as the narrative it helps uncover.',
-        highlights: ['Fintech', 'Strategy', 'Product systems'],
-        href: '/brewing',
-        tags: ['Finance', 'Product']
-      },
-      {
-        id: 'public-work',
-        title: 'Writing & Public Work',
-        subtitle: 'Building in public',
-        location: 'Tampa, Florida',
+        id: 'writing',
+        title: 'Field Notes & Research',
+        subtitle: 'Long-form capital research',
+        location: "Land O' Lakes, Florida",
         period: 'Ongoing',
         description:
-          'Writing, products, adventures, and public-facing tools now sit in the same frame as the work itself. Building with a calmer, more confident sense of direction.',
-        highlights: ['Blog & essays', 'Open-source tools', 'Public presence'],
-        href: '/blog',
-        tags: ['Writing', 'Open Source']
+          'Writing, research, and analysis on how capital moves: Form ADV universes, corporate venture, and institutional market structure.',
+        highlights: ['Field notes & essays', 'Open-source tools', 'Public presence'],
+        href: '/field-notes',
+        tags: ['Writing', 'Research']
       }
     ]
   }
@@ -146,14 +134,14 @@ export const lifeJourneyDestinations: LifeJourneyDestination[] = [
     description: 'Ideas in motion, active experiments, and the work that is still becoming.'
   },
   {
-    title: 'Blog',
-    href: '/blog',
+    title: 'Field Notes',
+    href: '/field-notes',
     description: 'Finished writing, reflections, and essays that have settled into form.'
   },
   {
-    title: 'Projects',
-    href: '/projects',
-    description: 'Tools, research products, and public builds shaped by systems thinking.'
+    title: 'Garage',
+    href: '/garage',
+    description: 'Tools, software projects, and prototypes built to solve real problems.'
   },
   {
     title: 'Adventures',

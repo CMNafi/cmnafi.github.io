@@ -1,0 +1,1 @@
+import{i as t}from"./keyboard.BychFdYp.js";function a(){const e=document.querySelector(".page-shell");e&&setTimeout(()=>{e.classList.add("page-ready")},20)}document.addEventListener("astro:page-load",()=>{a(),t()});

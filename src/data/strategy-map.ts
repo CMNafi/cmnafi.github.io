@@ -134,7 +134,7 @@ export const strategyMapSignals: StrategyMapSignal[] = [
   },
   {
     title: "In the Driver's Seat",
-    description: 'A deep fascination with finance markets and cutting-edge technology continues to shape what I pay attention to.'
+    description: 'A deep fascination with finance markets and modern software engineering continues to shape what I pay attention to.'
   },
   {
     title: 'Work in Public',
@@ -150,14 +150,14 @@ export const strategyMapDestinations: StrategyMapDestination[] = [
     description: 'The workbench for ideas, systems, and experiments that are still taking shape.'
   },
   {
-    title: 'Blog',
-    href: '/blog',
+    title: 'Field Notes',
+    href: '/field-notes',
     mode: 'Finished writing',
     description: 'Essays, notes, and reflections that have settled into a clearer point of view.'
   },
   {
-    title: 'Projects',
-    href: '/projects',
+    title: 'Garage',
+    href: '/garage',
     mode: 'Tools and builds',
     description: 'Products, public experiments, and data-heavy systems built for real use.'
   },
@@ -280,7 +280,7 @@ export const journeyStops: JourneyStop[] = [
     place: 'New York City, New York',
     region: 'USA',
     title: 'Product and market context',
-    organization: 'Dasseti',
+    organization: 'SkyBridge',
     summary: 'The route narrows into fintech products, regulatory intelligence, and work that serves real clients directly.',
     narrative:
       'New York sharpened the public-facing edge of the work. Product thinking, investor workflows, and financial intelligence started aligning more clearly into one direction.',
@@ -289,16 +289,16 @@ export const journeyStops: JourneyStop[] = [
     mapY: '37%'
   },
   {
-    id: 'tampa',
+    id: 'florida',
     step: '09',
-    place: 'Tampa, Florida',
+    place: "Land O' Lakes, Florida",
     region: 'USA',
     title: 'Current base',
-    organization: 'Home',
-    summary: 'Today the route resolves into fintech, writing, public work, and a more integrated operating system.',
+    organization: 'Dasseti',
+    summary: 'Solutions Engineer translating between investment teams and their due-diligence software.',
     narrative:
-      'Tampa is the present-day base: the place where research, finance, product systems, and writing now move together with more clarity and intention.',
-    atlasLabel: '27.95 N / 82.46 W',
+      "Land O' Lakes, Florida is the present-day base: working remotely as a Solutions Engineer at Dasseti, translating between investment teams and software.",
+    atlasLabel: '28.21 N / 82.46 W',
     mapX: '36%',
     mapY: '54%'
   }

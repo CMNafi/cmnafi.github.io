@@ -31,7 +31,7 @@ const noteIndex = publishedNotes.findIndex(n => n.slug === note.slug);
 const newerNote = noteIndex > 0 ? publishedNotes[noteIndex - 1] : null;
 const olderNote = noteIndex >= 0 && noteIndex < publishedNotes.length - 1 ? publishedNotes[noteIndex + 1] : null;
 
-// SEO surface — prefer the dedicated seo* frontmatter, fall back to editorial fields
+// SEO surface: prefer the dedicated seo* frontmatter, fall back to editorial fields
 const pageTitle = note.data.seoTitle || note.data.title;
 const pageDescription = note.data.seoDescription || note.data.description || note.data.excerpt;
 const canonicalPath = `/field-notes/${note.slug}`;
@@ -93,9 +93,15 @@ const breadcrumbLd = {
       <div class="article-progress-bar" id="article-progress-bar"></div>
     </div>
 
-    <nav class="paddock-override-nav" aria-label="Breadcrumb">
-      <a href="/field-notes" class="return-wall">← FIELD NOTES</a>
-      <div class="nav-title">INCOMING TELEMETRY</div>
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <ol class="breadcrumb-trail">
+        <li><a href="/">Home</a></li>
+        <li class="breadcrumb-sep">/</li>
+        <li><a href="/field-notes">Field Notes</a></li>
+        <li class="breadcrumb-sep">/</li>
+        <li class="breadcrumb-current" aria-current="page">{note.data.title}</li>
+      </ol>
+      <a href="/field-notes" class="return-link">← All Field Notes</a>
     </nav>
 
     <article class="paddock-article">
@@ -176,12 +182,48 @@ const breadcrumbLd = {
 </script>
 
 <style>
-  .paddock-override-nav { display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono); }
-  .return-wall { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
-  .return-wall:hover { color: var(--pitlane-white); }
-  .nav-title { color: var(--pitlane-white); font-size: 11px; letter-spacing: 0.15em; }
+  .breadcrumb-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    font-family: var(--font-mono);
+    border-bottom: 1px solid var(--surface-line);
+    flex-wrap: wrap;
+  }
+  .breadcrumb-trail {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+  }
+  .breadcrumb-trail a { color: var(--ink-secondary); text-decoration: none; }
+  .breadcrumb-trail a:hover { color: var(--accent); }
+  .breadcrumb-sep { color: var(--ink-tertiary); }
+  .breadcrumb-current {
+    color: var(--ink-primary);
+    max-width: 320px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .return-link {
+    color: var(--ink-secondary);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .return-link:hover { color: var(--accent); }
 
-  .note-detail { min-height: 100vh; background: var(--paddock-black); }
+  .note-detail { min-height: 100vh; background: var(--surface-base); }
   .paddock-article { max-width: 760px; margin: 0 auto; padding: 2rem 2rem 6rem; }
 
   /* Reading progress rail */
@@ -221,7 +263,7 @@ const breadcrumbLd = {
   }
   .summary { font-family: var(--font-body); font-size: 1.25rem; color: var(--muted); margin: 0; line-height: 1.6; }
 
-  /* Header entrance — settle up, no bounce */
+  /* Header entrance: settle up, no bounce */
   @media (prefers-reduced-motion: no-preference) {
     .article-header {
       animation: header-settle var(--dur-slow) var(--ease-instrument) both;

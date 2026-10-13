@@ -32,7 +32,7 @@ const { id, title, description, posts } = Astro.props;
 
   <div class="interest-section__timeline">
     {posts.map((post) => (
-      <a class="interest-section__entry" href={`/blog/${post.slug}`}>
+      <a class="interest-section__entry" href={`/field-notes/${post.slug}`}>
         <div class="interest-section__date">
           <span>{formatDate(post.data.publishedAt)}</span>
         </div>

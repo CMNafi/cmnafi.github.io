@@ -2,9 +2,10 @@
 // src/layouts/CapitalLensPost.astro
 // Used by all Capital Lens finance deep dives
 import type { CollectionEntry } from 'astro:content';
+import AbExperimentEngine from '@/components/telemetry/AbExperimentEngine.astro';
 
 interface Props {
-  frontmatter: CollectionEntry<'blog'>['data'];
+  frontmatter: CollectionEntry<'field-notes'>['data'];
   accentColor?: string;
   paperColor?: string;
 }
@@ -21,7 +22,7 @@ const {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{frontmatter.title} — C M Nafi</title>
+  <title>{frontmatter.title}, C M Nafi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -340,7 +341,7 @@ const {
   }
   .cl-compare-col ul li:last-child { border-bottom: none; }
 
-  /* ── ANALYST DEEP DIVE ── */
+  /* ── ANALYST BREAKDOWN ── */
   .cl-deep-dive {
     background: #0d0d0d;
     color: #f5f0e8;
@@ -566,7 +567,7 @@ const {
     .cl-metric-grid { grid-template-columns: repeat(2, 1fr); }
     .cl-metric-value { font-size: 22px; }
 
-    /* Deep dive section padding */
+    /* Breakdown section padding */
     .cl-deep-dive-inner { padding: 0 20px; }
     .cl-deep-dive { padding: 40px 0 48px; }
     .cl-deep-dive h2 { font-size: 24px; }
@@ -592,7 +593,7 @@ const {
 <nav style="background:#0d0d0d; padding: 10px 32px;">
   <a href="/" style="color:#f5f0e8; font-family:'Playfair Display',serif; font-weight:700; font-size:15px; text-decoration:none; letter-spacing:0.04em;">C M Nafi</a>
   <span style="color:#555; font-family:'DM Mono',monospace; font-size:10px; margin-left:24px; letter-spacing:0.1em; text-transform:uppercase;">
-    <a href="/blog" style="color:#aaa; text-decoration:none;">← All Posts</a>
+    <a href="/field-notes" style="color:#aaa; text-decoration:none;">← All Field Notes</a>
   </span>
 </nav>
 
@@ -603,8 +604,11 @@ const {
   <span>Finance &amp; Investing</span>
 </div>
 
-<!-- The MDX content renders here — it should include .cl-hero, .cl-content-wrap etc -->
+<!-- The MDX content renders here: it should include .cl-hero, .cl-content-wrap etc -->
 <slot />
+
+<!-- A/B Testing & GA4 Telemetry Engine -->
+<AbExperimentEngine />
 
 </body>
 </html>

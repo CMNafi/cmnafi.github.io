@@ -11,6 +11,7 @@ const publishedEntries = [
   'about',
   'adventures',
   'apps',
+  'admin',
   'blog',
   'connect',
   'index.html',

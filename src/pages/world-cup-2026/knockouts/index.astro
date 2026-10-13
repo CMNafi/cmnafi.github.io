@@ -398,7 +398,7 @@ import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
     function advance(round, mi, team) {
       S.ko[`${round}_${mi}`] = team;
       if (round === 'TP' || round === 'Final') {
-        // Terminal rounds — no downstream to clear.
+        // Terminal rounds: no downstream to clear.
       } else {
         let m = mi;
         RDS.slice(RDS.indexOf(round) + 1).forEach(r => {
@@ -451,7 +451,7 @@ import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
       for (const t of tries) {
         if (tryCombo(t)) { S.third = t.slice(); S.ko = {}; sv(); renderKO(); return; }
       }
-      // Fallback: brute force C(12,8) — only ~495 combos.
+      // Fallback: brute force C(12,8): only ~495 combos.
       const n = all.length;
       function combinations(arr, k) {
         const out = [];
@@ -521,7 +521,7 @@ import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
           <div class="tph">THIRD-PLACE QUALIFIERS</div>
           <div class="tps${invalid ? ' warn' : ''}">
             Pick the 8 best 3rd-placed teams · ${S.third.length}/8 selected
-            ${invalid ? ' · ⚠ this combination cannot fit the official bracket — try a different mix' : ''}
+            ${invalid ? ' · ⚠ this combination cannot fit the official bracket: try a different mix' : ''}
           </div>
           <div class="tp-quick">
             <button onclick="autoFillThirds()">⚡ Auto-fill 8</button>
@@ -607,11 +607,11 @@ import WorldCupLayout from '../../../layouts/WorldCupLayout.astro';
             </div>
             <div class="medal silver">
               <div class="ml">🥈 RUNNER-UP</div>
-              ${runner ? `<div class="mt"><span class="bf">${runner[1]}</span>${runner[0]}</div>` : `<div class="mtb">—</div>`}
+              ${runner ? `<div class="mt"><span class="bf">${runner[1]}</span>${runner[0]}</div>` : `<div class="mtb">, </div>`}
             </div>
             <div class="medal bronze">
               <div class="ml">🥉 THIRD PLACE</div>
-              ${third ? `<div class="mt"><span class="bf">${third[1]}</span>${third[0]}</div>` : `<div class="mtb">—</div>`}
+              ${third ? `<div class="mt"><span class="bf">${third[1]}</span>${third[0]}</div>` : `<div class="mtb">, </div>`}
             </div>
           </div>
         </div>

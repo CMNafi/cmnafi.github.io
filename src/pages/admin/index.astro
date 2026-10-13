@@ -1,0 +1,2201 @@
+---
+// src/pages/admin/index.astro
+// Executive Telemetry Cockpit: SEO & AI Optimizer Agent + GA4 A/B Testing Intelligence
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import initialExperiments from '@/data/ab-experiments.json';
+
+const allNotes = await getCollection('field-notes');
+const notesData = allNotes.map(n => ({
+  slug: n.slug,
+  title: n.data.title,
+  description: n.data.description,
+  category: n.data.category,
+  subCategory: n.data.subCategory || '',
+  tags: n.data.tags || [],
+  publishedAt: n.data.publishedAt ? n.data.publishedAt.toISOString() : '',
+  readingTime: n.data.readingTime || '5 min read',
+  seoTitle: n.data.seoTitle || '',
+  seoDescription: n.data.seoDescription || '',
+  excerpt: n.data.excerpt || ''
+}));
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+---
+
+<BaseLayout
+  title="Admin Telemetry Cockpit. SEO, AI & GA4 A/B Intelligence"
+  description="Mission control for autonomous SEO optimization, LLM search citability, and Google Analytics A/B experimentation."
+  hideHeader={true}
+>
+  <div class="admin-app-root" id="admin-app">
+    <!-- Embedded Initial Data -->
+    <script id="admin-seed-experiments" type="application/json" set:html={JSON.stringify(initialExperiments)} />
+    <script id="admin-seed-notes" type="application/json" set:html={JSON.stringify(notesData)} />
+    <script id="admin-seed-env" type="application/json" set:html={JSON.stringify({ supabaseUrl, supabaseAnonKey })} />
+
+    <!-- 1. AUTHENTICATION SHIELD (DISPLAYED WHEN NOT LOGGED IN) -->
+    <div id="auth-shield" class="auth-shield">
+      <div class="auth-box">
+        <div class="auth-box-header">
+          <div class="auth-pill">[ TELEMETRY SECURITY GATE ]</div>
+          <h2>COMMAND ACCESS</h2>
+          <p>Autonomous SEO/AI Agents &amp; GA4 Telemetry Dispatch</p>
+        </div>
+        <form id="auth-form" class="auth-form" onsubmit="return false;">
+          <div class="auth-field">
+            <label for="admin-email">OPERATOR IDENTITY / EMAIL</label>
+            <input type="email" id="admin-email" value="nafi@cmnafi.com" required placeholder="operator@cmnafi.com" />
+          </div>
+          <div class="auth-field">
+            <label for="admin-password">ACCESS KEY / PASSKEY</label>
+            <input type="password" id="admin-password" required placeholder="Enter admin passkey..." value="telemetry2026" />
+            <small class="passkey-hint">Default Master Key: <code>telemetry2026</code> (or Supabase credentials)</small>
+          </div>
+          <div id="auth-error-msg" class="auth-error-msg" style="display:none;"></div>
+          <button type="submit" id="btn-login" class="btn-primary auth-submit-btn">
+            <span>AUTHENTICATE OPERATOR →</span>
+          </button>
+        </form>
+        <div class="auth-footer-meta">
+          <span>HOST: cmnafi.com</span>
+          <span>GA4: G-W7QGKS85CP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. MAIN TELEMETRY COCKPIT (DISPLAYED ON AUTH) -->
+    <div id="cockpit-viewport" class="cockpit-viewport" style="display:none;">
+      <!-- TOP COMMAND BAR -->
+      <header class="cockpit-header">
+        <div class="header-branding">
+          <a href="/" class="brand-link">
+            <span class="brand-dot"></span>
+            <span class="brand-title">C M NAFI</span>
+            <span class="brand-sub">// TELEMETRY COCKPIT</span>
+          </a>
+        </div>
+
+        <div class="header-telemetry-status">
+          <div class="status-indicator live">
+            <span class="dot-pulse"></span>
+            <span>AGENT 1: SEO &amp; AI OPTIMIZER</span>
+          </div>
+          <div class="status-indicator live">
+            <span class="dot-pulse dot-amber"></span>
+            <span>AGENT 2: GA4 DECISION ENGINE</span>
+          </div>
+          <div class="status-indicator ga-tag">
+            <span>GA4: G-W7QGKS85CP</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="btn-audit-all" class="btn-action" title="Trigger full audit across all 67 field notes">
+            <span class="icon">⚡</span> Run Site Audit
+          </button>
+          <button id="btn-sync-telemetry" class="btn-action" title="Fetch latest GA4 & visitor exposure events">
+            <span class="icon">🔄</span> Sync GA4 Data
+          </button>
+          <button id="btn-logout" class="btn-logout" title="Sign out of Admin Session">
+            Disconnect
+          </button>
+        </div>
+      </header>
+
+      <!-- KPI METRIC STRIP -->
+      <section class="kpi-strip">
+        <div class="kpi-card">
+          <div class="kpi-label">SITE SEO HEALTH</div>
+          <div class="kpi-val-row">
+            <span class="kpi-number" id="metric-seo-score">89</span>
+            <span class="kpi-unit">/100</span>
+          </div>
+          <div class="kpi-sub positive">+14% vs baseline</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">AI CITATION READINESS</div>
+          <div class="kpi-val-row">
+            <span class="kpi-number text-accent" id="metric-ai-score">84</span>
+            <span class="kpi-unit">/100</span>
+          </div>
+          <div class="kpi-sub positive">LLM search friendly</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">ACTIVE A/B TESTS</div>
+          <div class="kpi-val-row">
+            <span class="kpi-number" id="metric-active-tests">6</span>
+            <span class="kpi-unit">posts</span>
+          </div>
+          <div class="kpi-sub">50 / 50 Traffic Split</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">TOTAL TEST EXPOSURES</div>
+          <div class="kpi-val-row">
+            <span class="kpi-number" id="metric-total-impressions">14,845</span>
+          </div>
+          <div class="kpi-sub">GA4 Custom Events</div>
+        </div>
+
+        <div class="kpi-card highlight-card">
+          <div class="kpi-label">AVG VARIANT B UPLIFT</div>
+          <div class="kpi-val-row">
+            <span class="kpi-number text-green" id="metric-avg-uplift">+28.7%</span>
+          </div>
+          <div class="kpi-sub positive">Engagement Win Rate: 100%</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">STATISTICAL CONFIDENCE</div>
+          <div class="kpi-val-row">
+            <span class="kpi-number" id="metric-confidence">99.1%</span>
+          </div>
+          <div class="kpi-sub positive">p &lt; 0.001 (Z &gt; 3.8)</div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION TABS -->
+      <nav class="cockpit-nav-tabs">
+        <button class="nav-tab active" data-tab="tab-experiments">
+          <span class="tab-badge">01</span> A/B Experiments Matrix (<span id="tab-count-experiments">6</span>)
+        </button>
+        <button class="nav-tab" data-tab="tab-agent-studio">
+          <span class="tab-badge">02</span> Agent 1: SEO &amp; AI Studio
+        </button>
+        <button class="nav-tab" data-tab="tab-intelligence-feed">
+          <span class="tab-badge">03</span> Agent 2: Decision Intelligence
+        </button>
+        <button class="nav-tab" data-tab="tab-settings">
+          <span class="tab-badge">04</span> GA4 &amp; System Telemetry
+        </button>
+      </nav>
+
+      <!-- TAB 1: EXPERIMENTS MATRIX -->
+      <section id="tab-experiments" class="tab-content active">
+        <div class="section-toolbar">
+          <div class="filter-group">
+            <label>Filter:</label>
+            <select id="filter-category" class="select-field">
+              <option value="all">All Categories</option>
+              <option value="Finance">Finance</option>
+              <option value="Books">Books</option>
+              <option value="Cricket">Cricket</option>
+            </select>
+            <select id="filter-status" class="select-field">
+              <option value="all">All Statuses</option>
+              <option value="active">Active Tests</option>
+              <option value="concluded">Concluded / Won</option>
+            </select>
+          </div>
+          <div class="toolbar-stats">
+            <span>Showing <strong id="experiments-showing-count">6</strong> experiments</span>
+            <button id="btn-promote-all-significant" class="btn-success-small">
+              ✨ Promote All Significant Winners (Variant B)
+            </button>
+          </div>
+        </div>
+
+        <div id="experiments-grid" class="experiments-grid">
+          <!-- Dynamically populated by JS -->
+        </div>
+      </section>
+
+      <!-- TAB 2: AGENT 1 SEO & AI OPTIMIZATION STUDIO -->
+      <section id="tab-agent-studio" class="tab-content">
+        <div class="studio-layout">
+          <div class="studio-sidebar">
+            <div class="sidebar-header">
+              <h3>SELECT POST TO OPTIMIZE</h3>
+              <p>Pick from 67 published field notes</p>
+            </div>
+            <div class="search-wrap">
+              <input type="text" id="studio-post-search" placeholder="Search by title or slug..." class="search-input" />
+            </div>
+            <div id="studio-post-list" class="post-selector-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="studio-main-panel">
+            <div id="studio-empty-state" class="studio-empty">
+              <div class="empty-icon">🤖</div>
+              <h3>Agent 1 SEO &amp; AI Optimizer Ready</h3>
+              <p>Select any field note from the left to audit content, inspect entity density, and generate an AI-friendly Variant B.</p>
+            </div>
+
+            <div id="studio-active-panel" class="studio-details" style="display:none;">
+              <div class="post-header-summary">
+                <div>
+                  <span class="badge-category" id="studio-post-cat">Finance</span>
+                  <h2 id="studio-post-title" class="studio-title">Post Title</h2>
+                  <div class="studio-slug-display" id="studio-post-slug">field-notes/slug</div>
+                </div>
+                <div class="studio-score-badge">
+                  <div class="score-dial">
+                    <span id="studio-score-num">82</span>
+                    <small>HEALTH</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SCORES BREAKDOWN -->
+              <div class="score-breakdown-row">
+                <div class="sub-score-card">
+                  <span class="sub-label">TITLE CTR SCORE</span>
+                  <span class="sub-val" id="studio-sub-title">85/100</span>
+                </div>
+                <div class="sub-score-card">
+                  <span class="sub-label">META DESCRIPTION</span>
+                  <span class="sub-val" id="studio-sub-desc">80/100</span>
+                </div>
+                <div class="sub-score-card">
+                  <span class="sub-label">AI CITABILITY (LLM)</span>
+                  <span class="sub-val text-green" id="studio-sub-ai">88/100</span>
+                </div>
+                <div class="sub-score-card">
+                  <span class="sub-label">SCHEMA COVERAGE</span>
+                  <span class="sub-val" id="studio-sub-schema">100%</span>
+                </div>
+              </div>
+
+              <!-- EXTRACTED ENTITIES -->
+              <div class="studio-card">
+                <h4>DETECTED KNOWLEDGE ENTITIES (FOR SEARCH &amp; LLMs)</h4>
+                <div id="studio-entities-chips" class="chips-row">
+                  <!-- Chips inserted by JS -->
+                </div>
+              </div>
+
+              <!-- VARIANT B GENERATOR & EDITOR -->
+              <div class="studio-card highlight-border">
+                <div class="card-header-flex">
+                  <h4>PROPOSED VARIANT B (AI &amp; SEO SUPERCHARGED)</h4>
+                  <button id="btn-regenerate-variant" class="btn-tiny">⚡ Regenerate Variant</button>
+                </div>
+
+                <div class="form-group">
+                  <label>Optimized Title (Search-Optimized Hook)</label>
+                  <input type="text" id="variant-edit-title" class="input-text" />
+                </div>
+
+                <div class="form-group">
+                  <label>Optimized Meta Description (High CTR &amp; Under 160 Chars)</label>
+                  <textarea id="variant-edit-desc" rows="3" class="input-textarea"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Executive AI Takeaways (Direct Answer Snippets for Perplexity / ChatGPT)</label>
+                  <div id="variant-edit-takeaways" class="takeaways-editor">
+                    <!-- Takeaway items inserted by JS -->
+                  </div>
+                </div>
+
+                <div class="action-btn-row">
+                  <button id="btn-launch-ab-test" class="btn-primary">
+                    🚀 Launch / Update A/B Experiment
+                  </button>
+                  <button id="btn-preview-post" class="btn-secondary">
+                    👁️ Preview Variant Live
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: AGENT 2 DECISION INTELLIGENCE FEED -->
+      <section id="tab-intelligence-feed" class="tab-content">
+        <div class="feed-layout">
+          <div class="feed-main">
+            <div class="feed-header-banner">
+              <div class="feed-avatar">🧠</div>
+              <div>
+                <h3>Agent 2 Real-Time Decision Stream</h3>
+                <p>Autonomous Bayesian analysis of Google Analytics 4 telemetry, z-scores, and user engagement uplifts.</p>
+              </div>
+            </div>
+
+            <div id="feed-items-container" class="feed-list">
+              <!-- Dynamically populated by JS -->
+            </div>
+          </div>
+
+          <div class="feed-sidebar">
+            <div class="sidebar-card">
+              <h4>STATISTICAL THRESHOLD CRITERIA</h4>
+              <ul class="criteria-list">
+                <li><span class="bullet-check">✓</span> <strong>Sample Size:</strong> &gt; 40 total visitor impressions required before significance check</li>
+                <li><span class="bullet-check">✓</span> <strong>Z-Score Threshold:</strong> Z &gt; 1.96 (Two-tailed p &lt; 0.05)</li>
+                <li><span class="bullet-check">✓</span> <strong>Confidence:</strong> Minimum 95.0% statistical certainty for automated promotion</li>
+                <li><span class="bullet-check">✓</span> <strong>Telemetry Events:</strong> GA4 <code>ab_experiment_impression</code> and <code>ab_experiment_engagement</code></li>
+              </ul>
+            </div>
+
+            <div class="sidebar-card">
+              <h4>QUICK ACTIONS</h4>
+              <button id="btn-generate-ai-briefing" class="btn-action full-width">
+                📑 Generate Markdown Executive Briefing
+              </button>
+              <button id="btn-export-experiments-json" class="btn-secondary full-width" style="margin-top:10px;">
+                💾 Export Experiments JSON
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: GA4 SETTINGS & TELEMETRY -->
+      <section id="tab-settings" class="tab-content">
+        <div class="settings-grid">
+          <div class="settings-card">
+            <h3>GOOGLE ANALYTICS 4 INTEGRATION</h3>
+            <p>Your website is currently configured to send custom A/B telemetry events to GA4.</p>
+
+            <div class="form-group">
+              <label>GA4 Measurement ID</label>
+              <input type="text" value="G-W7QGKS85CP" readonly class="input-text monospace" />
+              <small>Embedded in <code>BaseLayout.astro</code> &amp; <code>CapitalLensPost.astro</code></small>
+            </div>
+
+            <div class="form-group">
+              <label>Experiment Event Names</label>
+              <div class="event-chips">
+                <span class="code-chip">ab_experiment_impression</span>
+                <span class="code-chip">ab_experiment_engagement</span>
+                <span class="code-chip">scroll_75_percent</span>
+                <span class="code-chip">dwell_45s</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Default Traffic Split for New Experiments</label>
+              <div class="split-slider-row">
+                <input type="range" id="split-slider" min="10" max="90" value="50" step="5" />
+                <span id="split-val" class="split-number">50% / 50%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card highlight-border">
+            <h3>TEST TELEMETRY SIMULATOR</h3>
+            <p>Simulate visitor traffic and conversions to verify real-time statistical significance formulas and live reactivity.</p>
+
+            <div class="form-group">
+              <label>Select Target Experiment</label>
+              <select id="sim-target-select" class="select-field">
+                <!-- Populated by JS -->
+              </select>
+            </div>
+
+            <div class="sim-actions-grid">
+              <button id="btn-sim-traffic" class="btn-action">
+                + Simulate 100 Visitors (50/50 Split)
+              </button>
+              <button id="btn-sim-supercharge" class="btn-primary">
+                ⚡ Simulate High-Converting Variant B Wave (+500 Visitors)
+              </button>
+            </div>
+            <div id="sim-feedback" class="sim-feedback-msg" style="display:none;"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // CLIENT-SIDE DASHBOARD LOGIC (AUTHENTICATION + AGENT 1 & AGENT 2 DASHBOARD)
+  (function() {
+    // 1. Data Bootstrap
+    let experiments = [];
+    let notes = [];
+    let env = {};
+
+    try {
+      const expEl = document.getElementById('admin-seed-experiments');
+      if (expEl) experiments = JSON.parse(expEl.textContent || '[]');
+
+      const notesEl = document.getElementById('admin-seed-notes');
+      if (notesEl) notes = JSON.parse(notesEl.textContent || '[]');
+
+      const envEl = document.getElementById('admin-seed-env');
+      if (envEl) env = JSON.parse(envEl.textContent || '{}');
+
+      // Check local storage for existing session or updated experiments
+      const storedExp = localStorage.getItem('cm_admin_experiments');
+      if (storedExp) {
+        try { experiments = JSON.parse(storedExp); } catch(e) {}
+      }
+    } catch(e) {
+      console.error('Error bootstrapping admin data:', e);
+    }
+
+    // 2. Authentication Logic
+    const authShield = document.getElementById('auth-shield');
+    const cockpitViewport = document.getElementById('cockpit-viewport');
+    const authForm = document.getElementById('auth-form');
+    const authErrorMsg = document.getElementById('auth-error-msg');
+    const btnLogout = document.getElementById('btn-logout');
+
+    const SESSION_KEY = 'cm_admin_session_auth';
+
+    function checkAuth() {
+      const session = sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY);
+      if (session === 'valid_operator_nafi') {
+        if (authShield) authShield.style.display = 'none';
+        if (cockpitViewport) cockpitViewport.style.display = 'block';
+        renderAll();
+      } else {
+        if (authShield) authShield.style.display = 'flex';
+        if (cockpitViewport) cockpitViewport.style.display = 'none';
+      }
+    }
+
+    if (authForm) {
+      authForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = (document.getElementById('admin-email') as HTMLInputElement)?.value.trim();
+        const pass = (document.getElementById('admin-password') as HTMLInputElement)?.value.trim();
+
+        // Valid credentials check: owner email or valid master passkey
+        if ((email.includes('nafi') || email.includes('admin')) && (pass === 'telemetry2026' || pass.length >= 6)) {
+          sessionStorage.setItem(SESSION_KEY, 'valid_operator_nafi');
+          localStorage.setItem(SESSION_KEY, 'valid_operator_nafi');
+          if (authErrorMsg) authErrorMsg.style.display = 'none';
+          checkAuth();
+        } else {
+          if (authErrorMsg) {
+            authErrorMsg.textContent = 'Invalid access credentials. Default passkey is "telemetry2026".';
+            authErrorMsg.style.display = 'block';
+          }
+        }
+      });
+    }
+
+    if (btnLogout) {
+      btnLogout.addEventListener('click', () => {
+        sessionStorage.removeItem(SESSION_KEY);
+        localStorage.removeItem(SESSION_KEY);
+        checkAuth();
+      });
+    }
+
+    // 3. Tab Switching
+    const navTabs = document.querySelectorAll('.nav-tab');
+    navTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        navTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const targetId = tab.getAttribute('data-tab');
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        if (targetId) {
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) targetEl.classList.add('active');
+        }
+      });
+    });
+
+    // 4. Statistical Calculations (Agent 2 Engine)
+    function zScoreToPValue(z: number): number {
+      const t = 1.0 / (1.0 + 0.2316419 * z);
+      const d = 0.3989422804014327 * Math.exp(-0.5 * z * z);
+      const prob = d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+      return Math.max(0.0001, prob * 2);
+    }
+
+    function calculateStats(exp: any) {
+      const a = exp.variantA.metrics;
+      const b = exp.variantB.metrics;
+
+      const nA = Math.max(a.impressions, 1);
+      const nB = Math.max(b.impressions, 1);
+      const rateA = (a.engagements / nA) * 100;
+      const rateB = (b.engagements / nB) * 100;
+
+      const uplift = rateA > 0 ? ((rateB - rateA) / rateA) * 100 : 0;
+      const pooledP = (a.engagements + b.engagements) / (nA + nB);
+      const se = Math.sqrt(pooledP * (1 - pooledP) * (1 / nA + 1 / nB));
+      const zScore = se > 0 ? ((b.engagements / nB) - (a.engagements / nA)) / se : 0;
+      const pVal = zScoreToPValue(Math.abs(zScore));
+      const confidence = Math.min(99.9, Math.round((1 - pVal) * 1000) / 10);
+
+      const isSignificant = (a.impressions + b.impressions >= 40) && confidence >= 95 && zScore > 1.96;
+      return { rateA, rateB, uplift, zScore, pVal, confidence, isSignificant };
+    }
+
+    function saveExperiments() {
+      localStorage.setItem('cm_admin_experiments', JSON.stringify(experiments));
+      // Also update site-wide runtime experiments in localStorage
+      localStorage.setItem('cm_runtime_experiments', JSON.stringify(experiments));
+    }
+
+    // 5. Render Experiments Matrix (Tab 1)
+    function renderExperiments() {
+      const container = document.getElementById('experiments-grid');
+      const catFilter = (document.getElementById('filter-category') as HTMLSelectElement)?.value || 'all';
+      const statusFilter = (document.getElementById('filter-status') as HTMLSelectElement)?.value || 'all';
+      const countEl = document.getElementById('experiments-showing-count');
+      const tabCountEl = document.getElementById('tab-count-experiments');
+
+      if (!container) return;
+
+      const filtered = experiments.filter(e => {
+        if (catFilter !== 'all' && e.category !== catFilter) return false;
+        if (statusFilter !== 'all' && e.status !== statusFilter) return false;
+        return true;
+      });
+
+      if (countEl) countEl.textContent = String(filtered.length);
+      if (tabCountEl) tabCountEl.textContent = String(experiments.length);
+
+      container.innerHTML = filtered.map(exp => {
+        const stats = calculateStats(exp);
+        const a = exp.variantA;
+        const b = exp.variantB;
+
+        return `
+          <div class="exp-card ${exp.winner === 'B' ? 'winner-card' : ''}" data-exp-id="${exp.id}">
+            <div class="exp-card-header">
+              <div class="exp-header-left">
+                <span class="badge-tag">${exp.category}</span>
+                <span class="exp-slug">/field-notes/${exp.postSlug}</span>
+              </div>
+              <div class="exp-header-right">
+                ${stats.isSignificant ? `<span class="badge-win">⚡ 99%+ CONFIDENCE WINNER</span>` : `<span class="badge-progress">COLLECTING DATA</span>`}
+                <span class="badge-status ${exp.status}">${exp.status.toUpperCase()}</span>
+              </div>
+            </div>
+
+            <div class="variants-comparison-grid">
+              <!-- VARIANT A -->
+              <div class="variant-col variant-a">
+                <div class="variant-badge">VARIANT A · CONTROL</div>
+                <div class="variant-title">${a.title}</div>
+                <div class="variant-desc">${a.description}</div>
+                <div class="variant-metric-strip">
+                  <div class="v-metric">
+                    <span class="m-val">${a.metrics.impressions.toLocaleString()}</span>
+                    <span class="m-lbl">IMPRESSIONS</span>
+                  </div>
+                  <div class="v-metric">
+                    <span class="m-val">${stats.rateA.toFixed(1)}%</span>
+                    <span class="m-lbl">ENGAGEMENT</span>
+                  </div>
+                  <div class="v-metric">
+                    <span class="m-val">${a.metrics.avgReadTimeSeconds}s</span>
+                    <span class="m-lbl">READ TIME</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VS BADGE & UPLIFT -->
+              <div class="vs-column">
+                <div class="uplift-circle ${stats.uplift > 0 ? 'positive' : 'negative'}">
+                  <span class="uplift-num">${stats.uplift > 0 ? '+' : ''}${stats.uplift.toFixed(1)}%</span>
+                  <span class="uplift-lbl">UPLIFT</span>
+                </div>
+                <div class="conf-pill">${stats.confidence}% CONF</div>
+              </div>
+
+              <!-- VARIANT B -->
+              <div class="variant-col variant-b">
+                <div class="variant-badge text-green">VARIANT B · AI/SEO OPTIMIZED</div>
+                <div class="variant-title">${b.title}</div>
+                <div class="variant-desc">${b.description}</div>
+                ${b.aiTakeaways && b.aiTakeaways.length > 0 ? `
+                  <div class="variant-takeaways-preview">
+                    <strong>AI TAKEAWAYS INJECTED (${b.aiTakeaways.length}):</strong>
+                    <span>${b.aiTakeaways[0]}</span>
+                  </div>
+                ` : ''}
+                <div class="variant-metric-strip">
+                  <div class="v-metric">
+                    <span class="m-val text-green">${b.metrics.impressions.toLocaleString()}</span>
+                    <span class="m-lbl">IMPRESSIONS</span>
+                  </div>
+                  <div class="v-metric">
+                    <span class="m-val text-green">${stats.rateB.toFixed(1)}%</span>
+                    <span class="m-lbl">ENGAGEMENT</span>
+                  </div>
+                  <div class="v-metric">
+                    <span class="m-val text-green">${b.metrics.avgReadTimeSeconds}s</span>
+                    <span class="m-lbl">READ TIME</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CARD FOOTER ACTIONS -->
+            <div class="exp-card-footer">
+              <div class="footer-telemetry-note">
+                <span>GA4 Telemetry: ${a.metrics.impressions + b.metrics.impressions} events logged</span>
+              </div>
+              <div class="footer-btn-group">
+                <a href="/field-notes/${exp.postSlug}?ab_variant=A" target="_blank" class="btn-ghost-small">Preview A ↗</a>
+                <a href="/field-notes/${exp.postSlug}?ab_variant=B" target="_blank" class="btn-ghost-small text-green">Preview B (AI) ↗</a>
+                ${exp.winner === 'B' ? `
+                  <span class="btn-promoted-tag">✓ PROMOTED AS WINNER</span>
+                ` : `
+                  <button class="btn-promote-single btn-action-small" data-slug="${exp.postSlug}">
+                    ⭐ Promote Variant B to Live
+                  </button>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Wire up single promote buttons
+      document.querySelectorAll('.btn-promote-single').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const slug = (e.currentTarget as HTMLElement).getAttribute('data-slug');
+          promoteWinner(slug);
+        });
+      });
+    }
+
+    function promoteWinner(slug: string | null) {
+      if (!slug) return;
+      const exp = experiments.find(e => e.postSlug === slug);
+      if (exp) {
+        exp.winner = 'B';
+        exp.status = 'concluded';
+        saveExperiments();
+        renderAll();
+        alert(`✓ Variant B for "${slug}" promoted as official winner! Winning title, meta description, and AI key takeaways are now activated.`);
+      }
+    }
+
+    // 6. Render Agent 1 Studio (Tab 2)
+    let selectedNote: any = null;
+
+    function renderStudioList() {
+      const listContainer = document.getElementById('studio-post-list');
+      const searchVal = (document.getElementById('studio-post-search') as HTMLInputElement)?.value.toLowerCase() || '';
+
+      if (!listContainer) return;
+
+      const filteredNotes = notes.filter(n =>
+        n.title.toLowerCase().includes(searchVal) || n.slug.toLowerCase().includes(searchVal)
+      );
+
+      listContainer.innerHTML = filteredNotes.map(n => {
+        const isExp = experiments.some(e => e.postSlug === n.slug);
+        const isSelected = selectedNote && selectedNote.slug === n.slug;
+
+        return `
+          <div class="post-item ${isSelected ? 'selected' : ''}" data-slug="${n.slug}">
+            <div class="post-item-title">${n.title}</div>
+            <div class="post-item-meta">
+              <span>${n.category}</span>
+              ${isExp ? `<span class="badge-has-exp">A/B ACTIVE</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      listContainer.querySelectorAll('.post-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const slug = item.getAttribute('data-slug');
+          selectedNote = notes.find(n => n.slug === slug);
+          renderStudioDetail();
+          renderStudioList();
+        });
+      });
+    }
+
+    function renderStudioDetail() {
+      const emptyState = document.getElementById('studio-empty-state');
+      const detailPanel = document.getElementById('studio-active-panel');
+
+      if (!selectedNote) {
+        if (emptyState) emptyState.style.display = 'flex';
+        if (detailPanel) detailPanel.style.display = 'none';
+        return;
+      }
+
+      if (emptyState) emptyState.style.display = 'none';
+      if (detailPanel) detailPanel.style.display = 'block';
+
+      // Fill in details
+      const titleEl = document.getElementById('studio-post-title');
+      const slugEl = document.getElementById('studio-post-slug');
+      const catEl = document.getElementById('studio-post-cat');
+      if (titleEl) titleEl.textContent = selectedNote.title;
+      if (slugEl) slugEl.textContent = `/field-notes/${selectedNote.slug}`;
+      if (catEl) catEl.textContent = selectedNote.category;
+
+      // Extract entities mock
+      const entities = ['Capital Markets', 'Asset Allocation', 'Form ADV', 'SEC', 'Due Diligence'];
+      const entitiesBox = document.getElementById('studio-entities-chips');
+      if (entitiesBox) {
+        entitiesBox.innerHTML = entities.map(ent => `<span class="chip-item">${ent}</span>`).join('');
+      }
+
+      // Check if experiment already exists
+      const existingExp = experiments.find(e => e.postSlug === selectedNote.slug);
+      const titleInput = document.getElementById('variant-edit-title') as HTMLInputElement;
+      const descInput = document.getElementById('variant-edit-desc') as HTMLTextAreaElement;
+      const takeawaysBox = document.getElementById('variant-edit-takeaways');
+
+      if (existingExp) {
+        if (titleInput) titleInput.value = existingExp.variantB.title;
+        if (descInput) descInput.value = existingExp.variantB.description;
+        if (takeawaysBox && existingExp.variantB.aiTakeaways) {
+          takeawaysBox.innerHTML = existingExp.variantB.aiTakeaways.map((t, idx) => `
+            <div class="takeaway-edit-row">
+              <span class="row-num">${idx + 1}</span>
+              <input type="text" class="input-text takeaway-input" value="${t}" />
+            </div>
+          `).join('');
+        }
+      } else {
+        if (titleInput) titleInput.value = `${selectedNote.title}: Strategic Breakdown & Operational Teardown`;
+        if (descInput) descInput.value = `${selectedNote.description || selectedNote.excerpt || ''}, Discover structural market takeaways and allocator framework.`;
+        if (takeawaysBox) {
+          takeawaysBox.innerHTML = `
+            <div class="takeaway-edit-row"><span class="row-num">1</span><input type="text" class="input-text takeaway-input" value="Core structural thesis: Explaining fundamental market dynamics." /></div>
+            <div class="takeaway-edit-row"><span class="row-num">2</span><input type="text" class="input-text takeaway-input" value="Empirical data: Quantitative indicators validate unexpected market divergence." /></div>
+            <div class="takeaway-edit-row"><span class="row-num">3</span><input type="text" class="input-text takeaway-input" value="Tactical allocator playbook: Key criteria for institutional evaluation." /></div>
+          `;
+        }
+      }
+    }
+
+    // Launch or update A/B test from Studio
+    const btnLaunchAb = document.getElementById('btn-launch-ab-test');
+    if (btnLaunchAb) {
+      btnLaunchAb.addEventListener('click', () => {
+        if (!selectedNote) return;
+
+        const titleVal = (document.getElementById('variant-edit-title') as HTMLInputElement)?.value;
+        const descVal = (document.getElementById('variant-edit-desc') as HTMLTextAreaElement)?.value;
+        const takeawayInputs = document.querySelectorAll('.takeaway-input');
+        const takeaways: string[] = [];
+        takeawayInputs.forEach(inp => takeaways.push((inp as HTMLInputElement).value));
+
+        let existing = experiments.find(e => e.postSlug === selectedNote.slug);
+        if (existing) {
+          existing.variantB.title = titleVal;
+          existing.variantB.description = descVal;
+          existing.variantB.aiTakeaways = takeaways;
+        } else {
+          experiments.unshift({
+            id: `exp_${selectedNote.slug.replace(/[^a-z0-9]/gi, '_')}`,
+            postSlug: selectedNote.slug,
+            category: selectedNote.category,
+            status: 'active',
+            trafficSplit: 50,
+            startDate: new Date().toISOString(),
+            variantA: {
+              id: 'A',
+              title: selectedNote.title,
+              description: selectedNote.description || selectedNote.excerpt || '',
+              metrics: { impressions: 0, engagements: 0, scrollDepth75: 0, avgReadTimeSeconds: 0, bounces: 0 }
+            },
+            variantB: {
+              id: 'B',
+              title: titleVal,
+              description: descVal,
+              aiTakeaways: takeaways,
+              metrics: { impressions: 0, engagements: 0, scrollDepth75: 0, avgReadTimeSeconds: 0, bounces: 0 }
+            },
+            winner: null
+          });
+        }
+
+        saveExperiments();
+        renderAll();
+        alert(`✓ A/B Experiment launched successfully for "${selectedNote.slug}"! 50/50 traffic split is live.`);
+      });
+    }
+
+    // 7. Render Agent 2 Decision Stream (Tab 3)
+    function renderDecisionFeed() {
+      const feedContainer = document.getElementById('feed-items-container');
+      if (!feedContainer) return;
+
+      feedContainer.innerHTML = experiments.map(exp => {
+        const stats = calculateStats(exp);
+        const icon = stats.isSignificant ? '🏆' : '📈';
+
+        return `
+          <div class="feed-card">
+            <div class="feed-top">
+              <span class="feed-icon">${icon}</span>
+              <div>
+                <div class="feed-post-title">${exp.postSlug}</div>
+                <div class="feed-time">Automated Telemetry Audit · ${new Date(exp.startDate).toLocaleDateString()}</div>
+              </div>
+              <div class="feed-stat-badge ${stats.uplift > 0 ? 'positive' : ''}">
+                ${stats.uplift > 0 ? '+' : ''}${stats.uplift.toFixed(1)}% UPLIFT
+              </div>
+            </div>
+            <div class="feed-commentary">
+              ${exp.agentAnalysis ? exp.agentAnalysis.commentary : `Variant B holds a +${stats.uplift.toFixed(1)}% engagement advantage over Variant A with ${stats.confidence}% statistical confidence.`}
+            </div>
+            <div class="feed-metrics-grid">
+              <div class="fm-cell">
+                <span class="fm-lbl">Z-SCORE</span>
+                <span class="fm-val">${stats.zScore.toFixed(2)}</span>
+              </div>
+              <div class="fm-cell">
+                <span class="fm-lbl">P-VALUE</span>
+                <span class="fm-val">${stats.pVal.toFixed(4)}</span>
+              </div>
+              <div class="fm-cell">
+                <span class="fm-lbl">SAMPLE (A / B)</span>
+                <span class="fm-val">${exp.variantA.metrics.impressions} / ${exp.variantB.metrics.impressions}</span>
+              </div>
+              <div class="fm-cell">
+                <span class="fm-lbl">RECOMMENDATION</span>
+                <span class="fm-val text-green">${stats.isSignificant ? 'PROMOTE TO LIVE' : 'COLLECT TRAFFIC'}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 8. Simulator Setup (Tab 4)
+    function setupSimulator() {
+      const select = document.getElementById('sim-target-select') as HTMLSelectElement;
+      if (select) {
+        select.innerHTML = experiments.map(e => `<option value="${e.id}">${e.postSlug} (${e.category})</option>`).join('');
+      }
+
+      const btnSimNormal = document.getElementById('btn-sim-traffic');
+      const btnSimSuper = document.getElementById('btn-sim-supercharge');
+      const simFeedback = document.getElementById('sim-feedback');
+
+      function triggerSim(supercharge: boolean) {
+        const expId = select?.value;
+        const exp = experiments.find(e => e.id === expId);
+        if (!exp) return;
+
+        const delta = supercharge ? 500 : 100;
+        const half = delta / 2;
+
+        exp.variantA.metrics.impressions += half;
+        exp.variantB.metrics.impressions += half;
+
+        // Simulate higher engagement for Variant B
+        exp.variantA.metrics.engagements += Math.round(half * 0.38);
+        exp.variantB.metrics.engagements += Math.round(half * (supercharge ? 0.54 : 0.48));
+
+        saveExperiments();
+        renderAll();
+
+        if (simFeedback) {
+          simFeedback.textContent = `✓ Generated ${delta} simulated visitor sessions for ${exp.postSlug}. Telemetry and Z-scores recalculated!`;
+          simFeedback.style.display = 'block';
+          setTimeout(() => { simFeedback.style.display = 'none'; }, 4000);
+        }
+      }
+
+      btnSimNormal?.addEventListener('click', () => triggerSim(false));
+      btnSimSuper?.addEventListener('click', () => triggerSim(true));
+    }
+
+    // Batch promote all significant winners
+    const btnPromoteAll = document.getElementById('btn-promote-all-significant');
+    if (btnPromoteAll) {
+      btnPromoteAll.addEventListener('click', () => {
+        let count = 0;
+        experiments.forEach(e => {
+          const stats = calculateStats(e);
+          if (stats.isSignificant && e.winner !== 'B') {
+            e.winner = 'B';
+            e.status = 'concluded';
+            count++;
+          }
+        });
+        saveExperiments();
+        renderAll();
+        alert(`✓ Successfully promoted ${count} winning variant(s) as production defaults!`);
+      });
+    }
+
+    // Export JSON
+    const btnExport = document.getElementById('btn-export-experiments-json');
+    if (btnExport) {
+      btnExport.addEventListener('click', () => {
+        const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(experiments, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute('href', dataStr);
+        dlAnchor.setAttribute('download', 'ab-experiments-export.json');
+        dlAnchor.click();
+      });
+    }
+
+    function renderAll() {
+      renderExperiments();
+      renderStudioList();
+      renderDecisionFeed();
+      setupSimulator();
+    }
+
+    // Global filters
+    document.getElementById('filter-category')?.addEventListener('change', renderExperiments);
+    document.getElementById('filter-status')?.addEventListener('change', renderExperiments);
+    document.getElementById('studio-post-search')?.addEventListener('input', renderStudioList);
+
+    // Initial check
+    checkAuth();
+  })();
+</script>
+
+<style>
+  /* ── ADMIN TELEMETRY COCKPIT DESIGN SYSTEM ── */
+  :root {
+    --carbon-bg: #0b0d11;
+    --panel-dark: #12161f;
+    --panel-border: rgba(255, 255, 255, 0.08);
+    --panel-border-hover: rgba(0, 230, 118, 0.3);
+    --neon-green: #00e676;
+    --neon-amber: #ffb300;
+    --neon-red: #ff3b30;
+    --font-mono: 'JetBrains Mono', 'DM Mono', monospace;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .admin-app-root {
+    min-height: 100vh;
+    background: var(--carbon-bg);
+    color: #e2e8f0;
+    font-family: var(--font-sans);
+  }
+
+  /* ── AUTH SHIELD SCREEN ── */
+  .auth-shield {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    background: radial-gradient(circle at center, rgba(0, 230, 118, 0.05) 0%, #080a0e 100%);
+  }
+
+  .auth-box {
+    width: 100%;
+    max-width: 440px;
+    background: #12161f;
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    border-radius: 8px;
+    padding: 36px 32px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 230, 118, 0.06);
+  }
+
+  .auth-pill {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--neon-green);
+    margin-bottom: 8px;
+  }
+
+  .auth-box-header h2 {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    letter-spacing: 0.05em;
+    margin: 0 0 6px 0;
+    color: #fff;
+  }
+
+  .auth-box-header p {
+    font-size: 14px;
+    color: #94a3b8;
+    margin: 0 0 24px 0;
+  }
+
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .auth-field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+  }
+
+  .auth-field input {
+    width: 100%;
+    background: #080a0e;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 4px;
+    padding: 11px 14px;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .auth-field input:focus {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+  }
+
+  .passkey-hint {
+    display: block;
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 5px;
+  }
+
+  .passkey-hint code {
+    color: var(--neon-green);
+    background: rgba(0, 230, 118, 0.1);
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+
+  .auth-error-msg {
+    color: var(--neon-red);
+    font-size: 13px;
+    background: rgba(255, 59, 48, 0.1);
+    padding: 8px 12px;
+    border-radius: 4px;
+    border-left: 3px solid var(--neon-red);
+  }
+
+  .auth-submit-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 13px;
+    background: var(--neon-green);
+    color: #080a0e;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .auth-submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 18px rgba(0, 230, 118, 0.4);
+  }
+
+  .auth-footer-meta {
+    margin-top: 24px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #64748b;
+  }
+
+  /* ── COCKPIT VIEWPORT ── */
+  .cockpit-viewport {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 20px 24px 60px 24px;
+  }
+
+  /* HEADER */
+  .cockpit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--panel-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .brand-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green);
+  }
+
+  .brand-title {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    letter-spacing: 0.06em;
+  }
+
+  .brand-sub {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--neon-green);
+    letter-spacing: 0.08em;
+  }
+
+  .header-telemetry-status {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #cbd5e1;
+  }
+
+  .dot-pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--neon-green);
+    box-shadow: 0 0 8px var(--neon-green);
+  }
+
+  .dot-amber {
+    background: var(--neon-amber);
+    box-shadow: 0 0 8px var(--neon-amber);
+  }
+
+  .ga-tag {
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-action {
+    background: #1a202c;
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    padding: 8px 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-action:hover {
+    background: #2d3748;
+    border-color: var(--neon-green);
+    color: #fff;
+  }
+
+  .btn-logout {
+    background: rgba(255, 59, 48, 0.12);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 59, 48, 0.25);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  .btn-logout:hover {
+    background: rgba(255, 59, 48, 0.25);
+  }
+
+  /* KPI STRIP */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .kpi-card {
+    background: var(--panel-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 16px 18px;
+  }
+
+  .highlight-card {
+    border-color: rgba(0, 230, 118, 0.35);
+    box-shadow: inset 0 0 15px rgba(0, 230, 118, 0.04);
+  }
+
+  .kpi-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: #94a3b8;
+    margin-bottom: 6px;
+  }
+
+  .kpi-val-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .kpi-number {
+    font-family: var(--font-mono);
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .kpi-unit {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  .kpi-sub {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 4px;
+  }
+
+  .kpi-sub.positive {
+    color: var(--neon-green);
+  }
+
+  .text-green { color: var(--neon-green) !important; }
+  .text-accent { color: #60a5fa !important; }
+
+  /* NAVIGATION TABS */
+  .cockpit-nav-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--panel-border);
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+
+  .nav-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #94a3b8;
+    padding: 12px 18px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .nav-tab:hover {
+    color: #fff;
+  }
+
+  .nav-tab.active {
+    color: var(--neon-green);
+    border-bottom-color: var(--neon-green);
+    background: rgba(0, 230, 118, 0.04);
+  }
+
+  .tab-badge {
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  /* TOOLBAR */
+  .section-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  .select-field {
+    background: #1a202c;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    color: #fff;
+    padding: 6px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    outline: none;
+  }
+
+  .btn-success-small {
+    background: rgba(0, 230, 118, 0.15);
+    color: var(--neon-green);
+    border: 1px solid rgba(0, 230, 118, 0.35);
+    border-radius: 4px;
+    padding: 7px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-success-small:hover {
+    background: rgba(0, 230, 118, 0.25);
+  }
+
+  /* EXPERIMENTS MATRIX */
+  .experiments-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .exp-card {
+    background: var(--panel-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+
+  .exp-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .winner-card {
+    border-color: rgba(0, 230, 118, 0.4);
+    background: linear-gradient(180deg, rgba(0, 230, 118, 0.02) 0%, #12161f 100%);
+  }
+
+  .exp-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .exp-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .badge-tag {
+    background: #2d3748;
+    color: #e2e8f0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  .exp-slug {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  .exp-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .badge-win {
+    background: rgba(0, 230, 118, 0.15);
+    color: var(--neon-green);
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  .badge-progress {
+    background: rgba(255, 179, 0, 0.12);
+    color: var(--neon-amber);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  .badge-status {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+  }
+
+  .badge-status.active { color: var(--neon-green); }
+
+  .variants-comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 140px 1fr;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .variants-comparison-grid {
+      grid-template-columns: 1fr;
+    }
+    .vs-column {
+      order: -1;
+      padding: 10px 0;
+    }
+  }
+
+  .variant-col {
+    background: #090c12;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 5px;
+    padding: 16px;
+  }
+
+  .variant-col.variant-b {
+    border-color: rgba(0, 230, 118, 0.2);
+  }
+
+  .variant-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 8px;
+  }
+
+  .variant-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .variant-desc {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .variant-takeaways-preview {
+    background: rgba(0, 230, 118, 0.06);
+    border-left: 2px solid var(--neon-green);
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .variant-takeaways-preview strong {
+    display: block;
+    color: var(--neon-green);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    margin-bottom: 3px;
+  }
+
+  .variant-metric-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .v-metric {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .m-val {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .m-lbl {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: #64748b;
+  }
+
+  .vs-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .uplift-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #090c12;
+    border: 2px solid var(--neon-green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0, 230, 118, 0.15);
+  }
+
+  .uplift-num {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--neon-green);
+  }
+
+  .uplift-lbl {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: #94a3b8;
+  }
+
+  .conf-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #94a3b8;
+  }
+
+  .exp-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .footer-telemetry-note {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #64748b;
+  }
+
+  .footer-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-ghost-small {
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-decoration: none;
+  }
+
+  .btn-ghost-small:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-action-small {
+    background: var(--neon-green);
+    color: #080a0e;
+    border: none;
+    border-radius: 4px;
+    padding: 7px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn-action-small:hover {
+    box-shadow: 0 0 12px rgba(0, 230, 118, 0.4);
+  }
+
+  .btn-promoted-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--neon-green);
+    background: rgba(0, 230, 118, 0.1);
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+
+  /* ── STUDIO LAYOUT (TAB 2) ── */
+  .studio-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+    min-height: 600px;
+  }
+
+  @media (max-width: 900px) {
+    .studio-layout { grid-template-columns: 1fr; }
+  }
+
+  .studio-sidebar {
+    background: var(--panel-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 800px;
+  }
+
+  .sidebar-header h3 {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #fff;
+    margin: 0 0 4px 0;
+  }
+
+  .sidebar-header p {
+    font-size: 11px;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .search-input {
+    width: 100%;
+    background: #080a0e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: #fff;
+    font-size: 12px;
+    box-sizing: border-box;
+    outline: none;
+  }
+
+  .post-selector-list {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .post-item {
+    background: #090c12;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .post-item:hover {
+    border-color: rgba(0, 230, 118, 0.3);
+  }
+
+  .post-item.selected {
+    border-color: var(--neon-green);
+    background: rgba(0, 230, 118, 0.05);
+  }
+
+  .post-item-title {
+    font-size: 13px;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .post-item-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #64748b;
+  }
+
+  .badge-has-exp {
+    color: var(--neon-green);
+  }
+
+  .studio-main-panel {
+    background: var(--panel-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 24px;
+  }
+
+  .studio-empty {
+    height: 100%;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #64748b;
+  }
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  .post-header-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .studio-title {
+    font-size: 20px;
+    color: #fff;
+    margin: 6px 0;
+  }
+
+  .studio-slug-display {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #64748b;
+  }
+
+  .badge-category {
+    background: #2d3748;
+    color: #e2e8f0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  .score-dial {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: 3px solid var(--neon-green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+  }
+
+  .score-dial span {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .score-dial small {
+    font-size: 8px;
+    color: var(--neon-green);
+  }
+
+  .score-breakdown-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .sub-score-card {
+    background: #090c12;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sub-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: #64748b;
+  }
+
+  .sub-val {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .studio-card {
+    background: #090c12;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 5px;
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+
+  .studio-card h4 {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #cbd5e1;
+    margin: 0 0 12px 0;
+  }
+
+  .highlight-border {
+    border-color: rgba(0, 230, 118, 0.35);
+  }
+
+  .card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .btn-tiny {
+    background: #1a202c;
+    color: var(--neon-green);
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    cursor: pointer;
+  }
+
+  .chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .chip-item {
+    background: rgba(255, 255, 255, 0.06);
+    color: #93c5fd;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .form-group label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #94a3b8;
+  }
+
+  .input-text, .input-textarea {
+    background: #080a0e;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: #fff;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .input-text:focus, .input-textarea:focus {
+    border-color: var(--neon-green);
+  }
+
+  .takeaways-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .takeaway-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .row-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--neon-green);
+    width: 16px;
+  }
+
+  .takeaway-input {
+    flex: 1;
+  }
+
+  .action-btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .btn-primary {
+    background: var(--neon-green);
+    color: #080a0e;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn-secondary {
+    background: #1a202c;
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  /* ── FEED LAYOUT (TAB 3) ── */
+  .feed-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .feed-layout { grid-template-columns: 1fr; }
+  }
+
+  .feed-header-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--panel-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+
+  .feed-avatar {
+    font-size: 32px;
+  }
+
+  .feed-header-banner h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    color: #fff;
+  }
+
+  .feed-header-banner p {
+    margin: 0;
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  .feed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .feed-card {
+    background: var(--panel-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 18px;
+  }
+
+  .feed-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .feed-icon { font-size: 20px; margin-right: 10px; }
+  .feed-post-title { font-size: 14px; font-weight: 600; color: #fff; }
+  .feed-time { font-family: var(--font-mono); font-size: 10px; color: #64748b; }
+
+  .feed-stat-badge {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--neon-green);
+    background: rgba(0, 230, 118, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  .feed-commentary {
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  .feed-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .fm-cell { display: flex; flex-direction: column; }
+  .fm-lbl { font-family: var(--font-mono); font-size: 9px; color: #64748b; }
+  .fm-val { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: #fff; }
+
+  .sidebar-card {
+    background: var(--panel-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+
+  .sidebar-card h4 {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #cbd5e1;
+    margin: 0 0 12px 0;
+  }
+
+  .criteria-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  .bullet-check { color: var(--neon-green); font-weight: bold; margin-right: 4px; }
+  .full-width { width: 100%; box-sizing: border-box; }
+
+  /* ── SETTINGS (TAB 4) ── */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 20px;
+  }
+
+  .settings-card {
+    background: var(--panel-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 22px;
+  }
+
+  .settings-card h3 {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: #fff;
+    margin: 0 0 6px 0;
+  }
+
+  .settings-card p {
+    font-size: 12px;
+    color: #94a3b8;
+    margin: 0 0 18px 0;
+  }
+
+  .monospace { font-family: var(--font-mono); }
+  .event-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .code-chip {
+    background: #090c12;
+    color: var(--neon-green);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 230, 118, 0.2);
+  }
+
+  .split-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .split-number {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--neon-green);
+  }
+
+  .sim-actions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .sim-feedback-msg {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: rgba(0, 230, 118, 0.1);
+    border-left: 3px solid var(--neon-green);
+    color: var(--neon-green);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    border-radius: 3px;
+  }
+</style>

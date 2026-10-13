@@ -7,7 +7,7 @@ export const homepageConfig = {
       'This site makes more sense once you see the whole mix: the books I keep returning to, the cricket memories I refuse to lose, the tools I am building for finance work, and the notes that connect them.',
     ctas: [
       { label: 'What I am up to now', href: '/now', variant: 'primary' },
-      { label: 'Read the timeline', href: '/blog', variant: 'ghost' }
+      { label: 'Read the timeline', href: '/field-notes', variant: 'ghost' }
     ]
   },
   brewingPage: {

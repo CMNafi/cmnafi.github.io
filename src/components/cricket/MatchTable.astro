@@ -40,8 +40,8 @@ const { matches } = Astro.props;
         <summary>
           <span>{match.date}</span>
           <strong>{match.opponent}</strong>
-          <span>{match.battingRuns ?? '—'}</span>
-          <span>{match.wickets ?? '—'}</span>
+          <span>{match.battingRuns ?? '-'}</span>
+          <span>{match.wickets ?? '-'}</span>
           <SourceBadge status={match.dataStatus} />
         </summary>
 
@@ -56,11 +56,11 @@ const { matches } = Astro.props;
           </div>
 
           <div class="match-row__stat-grid">
-            <div><span>Batting</span><strong>{match.battingRuns ?? '—'}{match.balls !== null ? ` off ${match.balls}` : ''}</strong></div>
-            <div><span>Boundaries</span><strong>{match.fours ?? '—'} fours · {match.sixes ?? '—'} sixes</strong></div>
-            <div><span>Strike rate</span><strong>{match.strikeRate ?? '—'}</strong></div>
-            <div><span>Bowling</span><strong>{match.bowlingOvers ?? '—'} overs · {match.wickets ?? '—'} wickets</strong></div>
-            <div><span>Economy</span><strong>{match.economy ?? '—'}</strong></div>
+            <div><span>Batting</span><strong>{match.battingRuns ?? '-'}{match.balls !== null ? ` off ${match.balls}` : ''}</strong></div>
+            <div><span>Boundaries</span><strong>{match.fours ?? '-'} fours · {match.sixes ?? '-'} sixes</strong></div>
+            <div><span>Strike rate</span><strong>{match.strikeRate ?? '-'}</strong></div>
+            <div><span>Bowling</span><strong>{match.bowlingOvers ?? '-'} overs · {match.wickets ?? '-'} wickets</strong></div>
+            <div><span>Economy</span><strong>{match.economy ?? '-'}</strong></div>
             <div><span>Fielding</span><strong>{match.catches ?? 0} catches · {match.runOuts ?? 0} run outs</strong></div>
             <div><span>Player of the match</span><strong>{match.motm ? 'Yes' : 'No'}</strong></div>
             <div><span>Source</span><strong>{match.source}</strong></div>

@@ -197,8 +197,8 @@ canvas.loss-canvas{max-height:220px}
   <div class="header-stats">
     <div class="hstat">ELAPSED <strong id="h-elapsed">--:--:--</strong></div>
     <div class="hstat">ETA <strong id="h-eta">--:--:--</strong></div>
-    <div class="hstat">RATE <strong id="h-rate">—</strong> step/s</div>
-    <div class="hstat">LR <strong id="h-lr">—</strong></div>
+    <div class="hstat">RATE <strong id="h-rate">, </strong> step/s</div>
+    <div class="hstat">LR <strong id="h-lr">, </strong></div>
   </div>
   <div class="header-right">
     <div class="status-badge idle" id="status-badge">
@@ -224,11 +224,11 @@ canvas.loss-canvas{max-height:220px}
     </div>
   </div>
   <div class="progress-meta">
-    <div class="pmeta"><span class="k">Step</span><span class="v" id="p-step">—</span><span style="color:var(--border2)">/</span><span class="v" id="p-max">—</span></div>
-    <div class="pmeta"><span class="k">Epoch</span><span class="v" id="p-epoch">—</span></div>
-    <div class="pmeta"><span class="k">Loss</span><span class="v loss" id="p-loss">—</span></div>
-    <div class="pmeta"><span class="k">Best</span><span class="v loss" id="p-best">—</span></div>
-    <div class="pmeta"><span class="k">LR</span><span class="v lr" id="p-lr">—</span></div>
+    <div class="pmeta"><span class="k">Step</span><span class="v" id="p-step">, </span><span style="color:var(--border2)">/</span><span class="v" id="p-max">, </span></div>
+    <div class="pmeta"><span class="k">Epoch</span><span class="v" id="p-epoch">, </span></div>
+    <div class="pmeta"><span class="k">Loss</span><span class="v loss" id="p-loss">, </span></div>
+    <div class="pmeta"><span class="k">Best</span><span class="v loss" id="p-best">, </span></div>
+    <div class="pmeta"><span class="k">LR</span><span class="v lr" id="p-lr">, </span></div>
   </div>
 </div>
 
@@ -245,22 +245,22 @@ canvas.loss-canvas{max-height:220px}
   <div class="panel">
     <div class="ptitle">System Status</div>
     <div class="sysrow">
-      <div class="syslabel">GPU VRAM <span id="s-vram">—</span></div>
+      <div class="syslabel">GPU VRAM <span id="s-vram">, </span></div>
       <div class="systrack"><div class="sysfill vram" id="s-vram-bar" style="width:0%"></div></div>
     </div>
     <div class="sysrow">
-      <div class="syslabel">GPU UTIL <span id="s-util">—</span></div>
+      <div class="syslabel">GPU UTIL <span id="s-util">, </span></div>
       <div class="systrack"><div class="sysfill util" id="s-util-bar" style="width:0%"></div></div>
     </div>
     <div class="sysrow">
-      <div class="syslabel">GPU TEMP <span id="s-temp">—</span></div>
+      <div class="syslabel">GPU TEMP <span id="s-temp">, </span></div>
       <div class="systrack"><div class="sysfill temp" id="s-temp-bar" style="width:0%"></div></div>
     </div>
     <div class="sysrow">
-      <div class="syslabel">SYS RAM <span id="s-ram">—</span></div>
+      <div class="syslabel">SYS RAM <span id="s-ram">, </span></div>
       <div class="systrack"><div class="sysfill ram" id="s-ram-bar" style="width:0%"></div></div>
     </div>
-    <div class="syscpu">CPU <span id="s-cpu">—</span>%</div>
+    <div class="syscpu">CPU <span id="s-cpu">, </span>%</div>
   </div>
 
   <!-- Dataset -->
@@ -270,7 +270,7 @@ canvas.loss-canvas{max-height:220px}
       <canvas id="dsChart" width="72" height="72" style="flex-shrink:0"></canvas>
       <div>
         <div class="ds-total-label">Total Examples</div>
-        <div class="ds-total-val" id="ds-total">—</div>
+        <div class="ds-total-val" id="ds-total">, </div>
       </div>
     </div>
     <div id="ds-table"></div>
@@ -287,7 +287,7 @@ canvas.loss-canvas{max-height:220px}
       <div class="conn-dot offline" id="conn-dot"></div>
       <span id="conn-label">Connecting…</span>
       <span style="color:var(--border2)">·</span>
-      <span id="last-updated">—</span>
+      <span id="last-updated">, </span>
     </span>
   </div>
   <div class="log-terminal" id="log-terminal"><span style="color:var(--muted)">Waiting for dashboard…</span><span class="cursor"></span></div>
@@ -384,10 +384,10 @@ function initCharts() {
 }
 
 // ── Utilities ────────────────────────────────────────────────────────────
-const fmt     = n => n != null ? Number(n).toLocaleString() : '—';
-const fmtLoss = v => v != null ? Number(v).toFixed(4) : '—';
-const fmtLR   = v => v != null ? Number(v).toExponential(2) : '—';
-const fmtRate = v => v > 0 ? Number(v).toFixed(3) : '—';
+const fmt     = n => n != null ? Number(n).toLocaleString() : ', ';
+const fmtLoss = v => v != null ? Number(v).toFixed(4) : ', ';
+const fmtLR   = v => v != null ? Number(v).toExponential(2) : ', ';
+const fmtRate = v => v > 0 ? Number(v).toFixed(3) : ', ';
 
 function fmtDur(s) {
   if (!s || s <= 0) return '--:--:--';
@@ -490,14 +490,14 @@ function render(data) {
   document.getElementById('h-pct').textContent = `${pct.toFixed(1)}%`;
   document.getElementById('p-step').textContent  = fmt(tr.current_step);
   document.getElementById('p-max').textContent   = fmt(tr.max_steps);
-  document.getElementById('p-epoch').textContent = tr.current_epoch != null ? Number(tr.current_epoch).toFixed(3) : '—';
+  document.getElementById('p-epoch').textContent = tr.current_epoch != null ? Number(tr.current_epoch).toFixed(3) : ', ';
   document.getElementById('p-loss').textContent  = fmtLoss(tr.current_loss);
   document.getElementById('p-lr').textContent    = fmtLR(tr.learning_rate);
   document.getElementById('h-lr').textContent    = fmtLR(tr.learning_rate);
 
   // Track best loss
   if (tr.current_loss != null && (bestLoss == null || tr.current_loss < bestLoss)) bestLoss = tr.current_loss;
-  document.getElementById('p-best').textContent = bestLoss != null ? bestLoss.toFixed(4) : '—';
+  document.getElementById('p-best').textContent = bestLoss != null ? bestLoss.toFixed(4) : ', ';
 
   // Header metrics
   document.getElementById('h-rate').textContent = fmtRate(tr.steps_per_sec);

@@ -25,7 +25,7 @@ const teamsData = teams.map(t => ({
   />
 
   <!-- Responsive Split Hero Layout -->
-  <div class="wc-hero-grid" style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 3.5rem; align-items: start; margin-bottom: 3.5rem;">
+  <div class="wc-hero-grid">
     
     <!-- Left Column: Title & Featured Matches -->
     <div style="display: flex; flex-direction: column; gap: 2rem; width: 100%;">
@@ -534,7 +534,14 @@ const teamsData = teams.map(t => ({
   }
 
   .wc-hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 3.5rem;
+    align-items: start;
+    margin-bottom: 3.5rem;
     box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
   }
   .wc-hero-grid * {
     box-sizing: border-box;
@@ -542,8 +549,8 @@ const teamsData = teams.map(t => ({
 
   @media (max-width: 860px) {
     .wc-hero-grid {
-      grid-template-columns: 1fr !important;
-      gap: 2.5rem !important;
+      grid-template-columns: 1fr;
+      gap: 2rem;
     }
   }
 </style>
