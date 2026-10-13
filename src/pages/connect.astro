@@ -2,73 +2,72 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Parc Fermé">
-  <nav class="paddock-override-nav">
-    <a href="/" class="return-wall">← PIT WALL</a>
-    <div class="nav-title">PARC FERMÉ</div>
-  </nav>
-
-  <main class="connect-viewport">
+<BaseLayout
+  title="Connect"
+  description="Email is the fastest way to reach Nafi. Most useful on due diligence, allocator workflows, and how investment teams adopt software."
+>
+  <div class="connect-viewport">
     <div class="comms-panel">
-      <h1>Secure Comms</h1>
-      <p>I read all messages and try to respond if there is a clear strategic overlap or an interesting technical problem being solved.</p>
-      
+      <h1>Say hello.</h1>
+      <p>
+        Email is the fastest way to reach me. I read everything and reply within two business days. I'm most
+        useful on due diligence, allocator workflows, and how investment teams actually adopt software, but a
+        good question about a Field Note or a cricket match is just as welcome.
+      </p>
+
       <div class="comms-grid">
         <a href="mailto:nafi@cmnafi.com" class="comms-link">
-          <span class="c-label">INBOX</span>
+          <span class="c-label">Email</span>
           <span class="c-val">nafi@cmnafi.com</span>
         </a>
-        <a href="https://x.com/naficm01" target="_blank" rel="noopener" class="comms-link">
-          <span class="c-label">TWITTER / X</span>
-          <span class="c-val">@naficm01</span>
-        </a>
         <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noopener" class="comms-link">
-          <span class="c-label">LINKEDIN</span>
+          <span class="c-label">LinkedIn</span>
           <span class="c-val">/in/cm-nafi</span>
         </a>
+        <a href="https://x.com/naficm01" target="_blank" rel="noopener" class="comms-link">
+          <span class="c-label">X</span>
+          <span class="c-val">@naficm01</span>
+        </a>
         <a href="https://github.com/CMNafi" target="_blank" rel="noopener" class="comms-link">
-          <span class="c-label">GITHUB</span>
+          <span class="c-label">GitHub</span>
           <span class="c-val">CMNafi</span>
         </a>
       </div>
+
+      <p class="comms-foot">Based in New York, working remotely.</p>
     </div>
-  </main>
+  </div>
 </BaseLayout>
 
 <style>
-  .paddock-override-nav { display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono); }
-  .return-wall { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
-  .nav-title { color: var(--pitlane-white); font-size: 11px; letter-spacing: 0.15em; }
-  
   .connect-viewport {
     min-height: 80vh;
     background: var(--paddock-black);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 2rem 1rem;
   }
-  
+
   .comms-panel {
-    background: var(--carbon);
-    border: 1px solid var(--graphite);
-    padding: 4rem;
-    border-radius: var(--radius-card);
-    border-top: 3px solid var(--telemetry-green);
-    max-width: 600px;
+    max-width: 640px;
     width: 100%;
   }
 
   .comms-panel h1 {
     font-family: var(--font-display);
-    font-size: 3rem;
+    font-weight: 300;
+    font-size: clamp(3rem, 8vw, 5rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
     color: var(--pitlane-white);
-    margin: 0 0 1rem;
+    margin: 0 0 1.5rem;
   }
+
   .comms-panel p {
     font-family: var(--font-body);
-    font-size: 1.1rem;
-    color: var(--muted);
+    font-size: 1.15rem;
+    color: var(--ink-secondary);
     margin-bottom: 3rem;
     line-height: 1.6;
   }
@@ -76,39 +75,47 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .comms-grid {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    border-top: 1px solid var(--surface-line);
   }
 
   .comms-link {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    background: var(--paddock-black);
-    border: 1px solid var(--graphite);
-    border-radius: var(--radius-chip);
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--surface-line);
     text-decoration: none;
-    transition: 0.2s;
+    transition: color var(--dur-fast);
   }
-  .comms-link:hover {
-    border-color: var(--pitlane-white);
-    transform: translateX(5px);
-  }
+
+  .comms-link:hover .c-val { color: var(--accent); }
 
   .c-label {
     font-family: var(--font-mono);
-    color: var(--muted);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
+    color: var(--ink-secondary);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
+
   .c-val {
-    font-family: var(--font-mono);
+    font-family: var(--font-display);
+    font-size: 1.35rem;
     color: var(--pitlane-white);
-    font-weight: 700;
+    transition: color var(--dur-fast);
+  }
+
+  .comms-panel .comms-foot {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+    margin: 2rem 0 0;
   }
 
   @media (max-width: 600px) {
-    .comms-panel { padding: 2rem; }
-    .comms-link { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .comms-link { flex-direction: column; gap: 0.35rem; }
   }
 </style>

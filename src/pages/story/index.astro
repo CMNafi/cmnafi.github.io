@@ -1,303 +1,448 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import TelemetryGrid from '@/components/telemetry/TelemetryGrid.astro';
-import SectorBadge from '@/components/telemetry/SectorBadge.astro';
+import { getCollection } from 'astro:content';
 
-const updated = "2026-04-17";
+// The nine chapters live in src/content/journey — STORY.md is the source of truth for what they say
+const chapters = (await getCollection('journey')).sort((a, b) => a.data.order - b.data.order);
+const rendered = await Promise.all(
+  chapters.map(async (chapter) => ({ chapter, Content: (await chapter.render()).Content }))
+);
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const record = [
+  { org: 'Dasseti', role: 'Solutions Engineer', when: '2023 to now', where: 'Remote' },
+  { org: 'BlackRock', role: 'Analyst, Data and AI', when: '2022 to 2023', where: 'Wilmington, DE' },
+  { org: 'SkyBridge', role: 'Data Scientist', when: '2021 to 2022', where: '' },
+  { org: 'Mayo Clinic', role: 'AI Intern', when: '2021 to 2022', where: 'Rochester, MN' }
+];
+
+const education = [
+  { org: 'Luther College', role: 'B.A. Data Science, Computer Science minor', when: '2022', where: 'Decorah, IA' },
+  { org: 'UWC Changshu', role: 'IB Diploma, full scholarship', when: '2016 to 2018', where: 'Changshu, China' }
+];
+
+const certifications = [
+  'IBM: Introduction to Data Engineering',
+  'Google: Data Analytics Professional Certificate',
+  'DeepLearning.AI: Neural Networks and Deep Learning',
+  'Salesforce: Einstein Analytics'
+];
 ---
 
-<BaseLayout title="My Story">
-  <nav class="paddock-override-nav">
-    <a href="/" class="return-wall">← PIT WALL</a>
-    <div class="nav-title">DRIVER BIOGRAPHY</div>
-  </nav>
+<BaseLayout
+  title="Story"
+  description="I left home at twelve and have been the newest person in the room ever since. Military school, China, Iowa, BlackRock, and now a job that is mostly translation."
+>
+  <article class="story">
+    <header class="story-head">
+      <p class="story-eyebrow">Story · {chapters.length} chapters · about 8 minutes</p>
+      <h1>The newest person <br />in the <em>room.</em></h1>
+      <p class="dek">
+        I left home at twelve and have been learning new rooms ever since. Military school, China, a small
+        town in Iowa, three very different institutions, and now a job that is mostly translation. This is
+        how that happened.
+      </p>
 
-  <main class="story-viewport">
-    <article class="paddock-article">
-      
-      <header class="recruiter-strip">
-        <h1 class="driver-name">C M Nafi</h1>
-        <p class="driver-subtitle">Solutions Engineer · Finance & Data Infrastructure</p>
-        
-        <div class="t-wrap">
-          <TelemetryGrid 
-            updated={updated}
-            status="Open to conversations"
-            stack="3+ years in institutional finance"
-            link="#"
-          />
-        </div>
-        
-        <div class="filter-chips">
-          <a href="/resume.pdf" target="_blank" class="chip">DOWNLOAD RÉSUMÉ → PDF</a>
-          <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" class="chip">LINKEDIN ↗</a>
-          <a href="mailto:nafi@cmnafi.com" class="chip">EMAIL</a>
-          <a href="#" class="chip">BOOK 20 MIN ↗</a>
-        </div>
-      </header>
+      <dl class="facts">
+        <div><dt>Now</dt><dd>Solutions Engineer, Dasseti</dd></div>
+        <div><dt>Based</dt><dd>New York, working remotely</dd></div>
+        <div><dt>Before</dt><dd>BlackRock, SkyBridge, Mayo Clinic</dd></div>
+        <div><dt>Studied</dt><dd>Data Science, Luther College</dd></div>
+      </dl>
 
-      <div class="prose">
-        <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="p1" label="THE SHORT ANSWER" /></div>
-          <p>I'm a solutions engineer at Dasseti, working at the intersection of institutional capital and the data infrastructure that moves it. I grew up in Bangladesh, left home at sixteen on a full scholarship to a United World College in China, and landed in a town of eight thousand in Iowa for university. I've since worked with BlackRock, Mayo Clinic, and Skybridge Associates — three very different institutions that share a single truth: the answer is almost always in the data, and the edge is almost always in how quickly you can get to it. I build tools, I ship writing, and I try to keep the feedback loop short.</p>
-        </div>
-
-        <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="p2" label="QUALIFYING ROUND" /></div>
-          <h3>Bangladesh → China → Iowa → Tampa</h3>
-          <p>I grew up in <strong>Dinajpur, Bangladesh</strong>, in a household that treated reading as the default answer to boredom. At sixteen I left on a full scholarship to <strong>UWC Changshu (China)</strong>, moving to a country where I didn't speak the language and learning most of what I know about self-reliance in the space of two years.</p>
-          <p>University took me to <strong>Luther College in Decorah, Iowa</strong> — a town of eight thousand people where winter teaches you patience and a small campus teaches you that depth beats breadth if you let it. I majored in <strong>Data Science</strong> and minored in <strong>Computer Science</strong>, and graduated <strong>2022</strong>.</p>
-          <p>I now live in <strong>Tampa, Florida</strong>, which is where the F1, the cricket, and the work all happen to sit.</p>
-          <blockquote><strong>What the route gave me:</strong> the instinct to read a system top-down and bottom-up at the same time, comfort with being the newest person in the room, and a bias for building the tool I wish existed instead of complaining about the one that doesn't.</blockquote>
-        </div>
-
-        <div class="story-section career-section">
-          <div class="section-badge"><SectorBadge variant="p3" label="THE RACE" /></div>
-          
-          <div class="brew-card stint-card" id="stint-dasseti">
-            <div class="brew-meta">
-              <span class="brew-accent badge-project">DASSETI</span>
-              <span class="brew-date">2023 – Present · Remote / Tampa, FL</span>
-            </div>
-            <h3>Solutions Engineer</h3>
-          </div>
-
-          <div class="brew-card stint-card" id="stint-blackrock">
-            <div class="brew-meta">
-              <span class="brew-accent badge-note">BLACKROCK</span>
-              <span class="brew-date">2022 – 2023 · NYC</span>
-            </div>
-            <h3>Analyst - Data and AI</h3>
-            <p>The world's largest asset manager. The first place I learned that a trillion dollars is a spreadsheet problem, a risk problem, and a storytelling problem all at once.</p>
-            <ul>
-              <li>Analytics team, working on risk reporting and fund performance metrics.</li>
-              <li>Built dashboards mapping capital flow analytics to strategy performance.</li>
-              <li>Presented findings to senior stakeholders at the end of the program.</li>
-            </ul>
-          </div>
-
-          <div class="brew-card stint-card" id="stint-skybridge">
-            <div class="brew-meta">
-              <span class="brew-accent badge-note">SKYBRIDGE ASSOCIATES</span>
-              <span class="brew-date">2021 – 2022 · New York, NY</span>
-            </div>
-            <h3>Data Scientist</h3>
-            <p>A multi-strategy alternative investment firm. Exposure to fund-of-funds construction, manager selection, and the operational side of allocating capital at institutional scale.</p>
-            <ul>
-              <li>Supported the manager-selection team with quantitative screening models across 200+ hedge fund profiles.</li>
-              <li>Built internal dashboards tracking exposure by strategy, geography, and liquidity profile.</li>
-              <li>Contributed to investment memos for alternative mandates.</li>
-            </ul>
-          </div>
-
-          <div class="brew-card stint-card" id="stint-mayoclinic">
-            <div class="brew-meta">
-              <span class="brew-accent badge-note">MAYO CLINIC</span>
-              <span class="brew-date">2021 – 2022 · Rochester, MN</span>
-            </div>
-            <h3>AI Intern</h3>
-            <p>A healthcare institution where the data engineering is operating at a scale most fintechs never see. The lesson was that reliability beats cleverness, and that messy real-world data is the job, not an obstacle to the job.</p>
-            <ul>
-              <li>Engineered ETL pipelines against clinical data sets serving research teams.</li>
-              <li>Owned and automated reporting pipelines handling high-velocity data.</li>
-              <li>Partnered with clinical stakeholders to translate ambiguous questions into measurable outputs.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="p1" label="CURRENT LAP" /></div>
-          <p>Day job is Dasseti. Outside that, I'm building a set of <strong>public finance data tools</strong> at <a href="/garage">cmnafi.com/garage</a> — most notably the ADV Screener, a 13F Data Finder, and a manager intelligence dashboard that ties entity resolution, regulatory filings, and narrative summarization together. They're works in progress on purpose.</p>
-          <p>I also write <strong>one or two Field Notes a week</strong> on <a href="/field-notes">cmnafi.com/field-notes</a> covering the corners of institutional finance, venture capital, and market structure that I find most worth explaining. The writing and the tools feed each other — every post surfaces something worth turning into a tool, and every tool surfaces something worth writing about.</p>
-        </div>
-
-        <div class="story-section telemetry-grid-stint">
-          <div class="section-badge"><SectorBadge variant="p2" label="THE SPECS" /></div>
-          <div class="spec-grid">
-            <div class="spec-col">
-              <h4>Languages & frameworks</h4>
-              <p>TypeScript · Python · SQL · Astro · Next.js · React · MDX</p>
-              <h4>Data & infra</h4>
-              <p>PostgreSQL · pgvector · Supabase · Pandas · REST/GraphQL APIs · SEC EDGAR</p>
-            </div>
-            <div class="spec-col">
-              <h4>AI & tooling</h4>
-              <p>OpenAI / Anthropic APIs · Claude Code + gstack · embeddings and hybrid search · agent workflows</p>
-              <h4>Domains</h4>
-              <p>Institutional asset management · hedge funds & alternatives · regulatory data (Form ADV, 13F) · due-diligence workflows · capital markets · sports finance and private equity.</p>
-            </div>
-            <div class="spec-col">
-              <h4>How I work</h4>
-              <p>Bias to ship · one pager before a system · short feedback loops · writing is thinking · small tools over big platforms · tests the moment a bug appears, not before.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="p3" label="EDUCATION" /></div>
-          <ul>
-            <li><strong>Luther College</strong>, Decorah, Iowa · B.A. in Data Science, Computer Science minor, 2022.</li>
-            <li><strong>UWC Changshu, China</strong> · IB Diploma. Full merit scholarship.</li>
-          </ul>
-          <h4 class="cert-title">Key Certifications</h4>
-          <ul>
-            <li>IBM: Introduction to Data Engineering</li>
-            <li>Google: Data Analytics Professional Certificate</li>
-            <li>DeepLearning.AI: Neural Networks and Deep Learning</li>
-            <li>Salesforce: Einstein Analytics</li>
-          </ul>
-        </div>
-
-        <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="sector1" label="THE PADDOCK" /></div>
-          <p>I play <strong>competitive cricket</strong> on the weekends — currently turning out for <strong>Tampa Bengals</strong> in the Tampa league. Five-wicket hauls and narrow chases show up on the blog with surprising regularity.</p>
-          <p>I follow <strong>Formula 1</strong> the way some people follow theology — I can tell you which team's pit wall is worth listening to on radio and which corner at Suzuka decides a season. I read a book a month, mostly non-fiction, and occasionally a novel that makes me feel underprepared.</p>
-          <p>If we ever talk, there's a non-trivial chance it drifts into one of these.</p>
-        </div>
-
-        <div class="story-section">
-          <div class="section-badge"><SectorBadge variant="sector2" label="PIT BOX" /></div>
-          <ul class="contact-list">
-            <li>✉️ <strong>Email</strong> — <a href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a> · replies within two business days.</li>
-            <li>💼 <strong>LinkedIn</strong> — <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank">linkedin.com/in/cm-nafi</a></li>
-            <li>💻 <strong>GitHub</strong> — <a href="https://github.com/CMNafi" target="_blank">github.com/CMNafi</a></li>
-            <li>📅 <strong>20-minute intro call</strong> — <a href="#">Book Meeting</a></li>
-          </ul>
-          <br/>
-          <p><strong>I'm most useful in conversations about:</strong> institutional finance data infrastructure, tools for allocators and due-diligence teams, solutions engineering at finance-adjacent SaaS, and technical writing for finance audiences.</p>
-          <p><strong>I'm probably not your person for:</strong> sell-side equity research roles, pure quant trading seats, or anything that requires me to stop building things to run a long sales cycle.</p>
-        </div>
-
+      <div class="head-links">
+        <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+        <a href="mailto:nafi@cmnafi.com">Email</a>
+        <a href="#record">The record ↓</a>
       </div>
-    </article>
-  </main>
+    </header>
+
+    <section class="short-version" aria-labelledby="short-version-title">
+      <h2 id="short-version-title" class="label">The short version</h2>
+      <p>
+        I'm a solutions engineer at Dasseti, based in New York and working remotely. I grew up in Bangladesh,
+        left home at twelve for military school, and at sixteen moved to China on a full scholarship to a
+        United World College, without speaking the language. I studied data science in an Iowa town of eight
+        thousand, then worked at Mayo Clinic, SkyBridge and BlackRock.
+      </p>
+      <p>
+        Every one of those places asked the same thing of me: learn how the room talks, then make yourself
+        useful in it. Now that's the job.
+      </p>
+    </section>
+
+    <nav class="chapter-index" aria-label="Chapters">
+      <ol>
+        {chapters.map((chapter) => (
+          <li>
+            <a href={`#${chapter.slug}`}>
+              <span class="ci-num">{pad(chapter.data.order)}</span>
+              <span class="ci-place">{chapter.data.place.split(',')[0]}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    {rendered.map(({ chapter, Content }) => (
+      <section class="chapter" id={chapter.slug} aria-labelledby={`${chapter.slug}-title`}>
+        <div class="chapter-meta">
+          <span class="chapter-num">Chapter {pad(chapter.data.order)}</span>
+          <span class="chapter-place">{chapter.data.place}</span>
+          <span class="chapter-period">{chapter.data.period}</span>
+          {chapter.data.role && (
+            <span class="chapter-role">{chapter.data.role}, {chapter.data.organization}</span>
+          )}
+        </div>
+        <div class="chapter-main">
+          <h2 id={`${chapter.slug}-title`}>{chapter.data.theme}</h2>
+          <div class="chapter-body">
+            <Content />
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <section class="off-clock" aria-labelledby="off-clock-title">
+      <h2 id="off-clock-title" class="label">Off the clock</h2>
+      <div class="off-grid">
+        <div>
+          <h3>Cricket</h3>
+          <p>
+            All-rounder, right-arm fast. Most of the match reports here come from the Tampa leagues, playing for
+            TB Bengal Tigers, SWAT and St Pete Shields. I write up the close ones.
+          </p>
+          <a href="/field-notes/category/cricket">Cricket notes →</a>
+        </div>
+        <div>
+          <h3>Formula 1</h3>
+          <p>
+            I follow it the way some people follow theology, which is why this site has a garage, sector
+            labels and a lap timer in the corner. Read it as affection, not engineering.
+          </p>
+        </div>
+        <div>
+          <h3>Books</h3>
+          <p>
+            About a book a month, mostly non-fiction, and the occasional novel that makes me feel
+            underprepared. Notes on the ones that stayed with me are in Field Notes.
+          </p>
+          <a href="/field-notes/category/books">Book notes →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="useful" aria-labelledby="useful-title">
+      <h2 id="useful-title" class="label">Where I'm useful</h2>
+      <p class="useful-lede">
+        Due diligence and allocator workflows. How investment teams evaluate and adopt software. Solutions
+        engineering at finance-adjacent SaaS. Regulatory data like Form ADV and 13F. Writing about finance for
+        people who don't read finance for fun.
+      </p>
+      <p class="useful-not">Probably not your person for sell-side equity research or a quant trading seat.</p>
+    </section>
+
+    <section class="record" id="record" aria-labelledby="record-title">
+      <h2 id="record-title" class="label">The record</h2>
+
+      <h3 class="record-head">Work</h3>
+      <ul class="record-list">
+        {record.map((r) => (
+          <li>
+            <span class="r-org">{r.org}</span>
+            <span class="r-role">{r.role}</span>
+            <span class="r-when">{r.when}{r.where && ` · ${r.where}`}</span>
+          </li>
+        ))}
+      </ul>
+
+      <h3 class="record-head">Education</h3>
+      <ul class="record-list">
+        {education.map((r) => (
+          <li>
+            <span class="r-org">{r.org}</span>
+            <span class="r-role">{r.role}</span>
+            <span class="r-when">{r.when} · {r.where}</span>
+          </li>
+        ))}
+      </ul>
+
+      <h3 class="record-head">Certifications</h3>
+      <p class="certs">{certifications.join(' · ')}</p>
+    </section>
+
+    <section class="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title" class="label">Say hello</h2>
+      <a class="contact-email" href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a>
+      <p>I read everything, and reply within two business days.</p>
+    </section>
+  </article>
 </BaseLayout>
 
 <style>
-  .paddock-override-nav { display: flex; justify-content: space-between; padding: 2rem; font-family: var(--font-mono); }
-  .return-wall { color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; }
-  .nav-title { color: var(--pitlane-white); font-size: 11px; letter-spacing: 0.15em; }
-  
-  .story-viewport { min-height: 100vh; background: var(--paddock-black); }
-  .paddock-article { max-width: 800px; margin: 0 auto; padding: 2rem 2rem 6rem; }
-  
-  .recruiter-strip {
-    border-bottom: 1px solid var(--carbon);
-    padding-bottom: 3rem;
-    margin-bottom: 4rem;
+  .story {
+    --ink-quiet: #8f8475;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(40px, 7vw, 96px) clamp(16px, 4vw, 48px) clamp(64px, 8vw, 120px);
+    color: var(--ink-primary);
   }
-  .driver-name {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 5vw, 4rem);
-    margin: 0 0 0.5rem;
-    color: var(--pitlane-white);
-    line-height: 1.1;
-  }
-  .driver-subtitle {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-  }
-  .t-wrap { max-width: 700px; margin-bottom: 2rem; }
 
-  /* CHIPS */
-  .filter-chips {
+  .story-eyebrow,
+  .label,
+  .chapter-meta,
+  .facts dt,
+  .head-links a,
+  .chapter-index,
+  .record-head,
+  .r-when,
+  .off-grid a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* Head */
+  .story-eyebrow { color: var(--ink-quiet); margin: 0 0 28px; }
+
+  .story-head h1 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(52px, 9vw, 128px);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    margin: 0 0 clamp(28px, 4vw, 44px);
+  }
+
+  .story-head h1 em { font-style: italic; }
+
+  .dek {
+    font-family: var(--font-serif);
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.5;
+    color: var(--ink-secondary);
+    max-width: 34em;
+    margin: 0 0 48px;
+    text-wrap: pretty;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+    gap: 0 32px;
+    margin: 0 0 28px;
+  }
+
+  .facts div {
+    border-top: 1px solid var(--surface-line);
+    padding: 16px 0;
+  }
+
+  .facts dt { color: var(--ink-quiet); font-size: 11px; margin-bottom: 6px; }
+  .facts dd { margin: 0; font-size: 17px; color: var(--ink-primary); }
+
+  .head-links { display: flex; flex-wrap: wrap; gap: 4px 28px; }
+  .head-links a { color: var(--ink-secondary); padding: 12px 0; transition: color var(--dur-fast); }
+  .head-links a:hover { color: var(--accent); }
+
+  /* Section labels */
+  .label {
+    color: var(--ink-quiet);
+    font-weight: 400;
+    margin: 0 0 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--surface-line);
+  }
+
+  .short-version { margin-top: clamp(72px, 10vw, 128px); }
+
+  .short-version p {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(24px, 3vw, 38px);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    max-width: 30em;
+    margin: 0 0 0.8em;
+    text-wrap: pretty;
+  }
+
+  .short-version p:last-child { color: var(--ink-secondary); }
+
+  /* Chapter index */
+  .chapter-index { margin: clamp(56px, 8vw, 96px) 0 0; }
+
+  .chapter-index ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.8rem;
-    margin-top: 2rem;
-  }
-  .chip {
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 11px;
-    border: 1px solid var(--graphite);
-    border-radius: var(--radius-chip);
-    padding: 0.6rem 1rem;
-    color: var(--muted);
-    text-decoration: none;
-    transition: 0.2s;
-  }
-  .chip:hover {
-    background: var(--pitlane-white);
-    color: var(--paddock-black);
-    border-color: var(--pitlane-white);
+    gap: 0;
+    border-top: 1px solid var(--surface-line);
+    border-bottom: 1px solid var(--surface-line);
   }
 
-  /* STORY SECTIONS */
-  .prose { font-family: var(--font-body); font-size: 1.15rem; line-height: 1.8; color: var(--text); }
-  .story-section { margin-bottom: 5rem; }
-  .section-badge { margin-bottom: 1.5rem; }
-  
-  .prose h3 { font-family: var(--font-display); font-size: 1.8rem; margin-top: 1rem; margin-bottom: 1rem; color: var(--pitlane-white); }
-  .prose p { margin-bottom: 1.5rem; color: rgba(244, 244, 241, 0.85); }
-  .prose strong { color: var(--pitlane-white); }
-  .prose a { color: var(--telemetry-green); text-decoration: underline; text-decoration-color: rgba(0, 230, 118, 0.4); text-underline-offset: 4px; transition: 0.2s; }
-  .prose a:hover { text-decoration-color: var(--telemetry-green); }
-  .prose blockquote { border-left: 3px solid var(--warning-amber); padding-left: 1.5rem; margin-left: 0; font-style: italic; color: rgba(255, 255, 255, 0.7); }
-  
-  /* STINT CARDS (Garage style) */
-  .brew-card {
-    display: block;
-    background: var(--carbon);
-    padding: 2rem;
-    border: 1px solid var(--graphite);
-    border-radius: var(--radius-card);
-    margin-bottom: 1.5rem;
-  }
-  .brew-meta {
+  .chapter-index a {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-family: var(--font-mono);
+    gap: 10px;
+    padding: 16px 20px 16px 0;
+    margin-right: 12px;
+    color: var(--ink-secondary);
     font-size: 11px;
-    letter-spacing: 0.1em;
+    transition: color var(--dur-fast);
   }
-  .brew-accent { padding: 0.3rem 0.6rem; border-radius: 2px; }
-  .badge-project { background: rgba(0, 230, 118, 0.1); color: var(--telemetry-green); }
-  .badge-note { background: rgba(139, 145, 154, 0.1); color: var(--muted); }
-  .brew-date { color: var(--muted); }
 
-  .brew-card h3 { font-family: var(--font-display); font-size: 1.8rem; color: var(--pitlane-white); margin: 0 0 1rem 0; }
-  .brew-card p { font-size: 1rem; color: rgba(244, 244, 241, 0.7); margin-bottom: 1rem; }
-  .brew-card ul { margin: 0 0 1.5rem 0; padding-left: 1.2rem; }
-  .brew-card li { font-size: 1rem; color: rgba(244, 244, 241, 0.8); margin-bottom: 0.5rem; }
+  .chapter-index .ci-num { color: var(--ink-primary); }
+  .chapter-index a:hover { color: var(--accent); }
 
-  /* GRID FOR SPECS */
-  .spec-grid {
+  /* Chapters */
+  .chapter {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+    gap: 24px clamp(32px, 5vw, 72px);
+    padding: clamp(56px, 7vw, 88px) 0;
+    border-bottom: 1px solid var(--surface-line);
+    scroll-margin-top: 80px;
   }
-  .spec-col h4 {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--graphite);
-    padding-bottom: 0.5rem;
-  }
-  .spec-col p { font-size: 1rem; }
 
-  /* LISTS */
-  .prose ul.contact-list { list-style: none; padding: 0; }
-  .prose ul.contact-list li { margin-bottom: 1rem; }
-  .cert-title {
-    font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase;
-    margin-top: 2rem; margin-bottom: 1rem;
+  .chapter-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--ink-quiet);
+    font-size: 11px;
+    align-self: start;
+    position: sticky;
+    top: 96px;
+  }
+
+  .chapter-num { color: var(--accent); }
+  .chapter-place { color: var(--ink-primary); }
+
+  .chapter-main h2 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(32px, 4.4vw, 56px);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    margin: 0 0 32px;
+    text-wrap: balance;
+  }
+
+  .chapter-body {
+    font-family: var(--font-serif);
+    font-size: clamp(18px, 1.5vw, 20px);
+    line-height: 1.7;
+    color: var(--ink-secondary);
+    max-width: 36em;
+  }
+
+  .chapter-body :global(p) { margin: 0 0 1.2em; text-wrap: pretty; }
+  .chapter-body :global(p:last-child) { margin-bottom: 0; }
+  .chapter-body :global(strong) { color: var(--ink-primary); font-weight: 600; }
+
+  .chapter-body :global(a) {
+    color: var(--ink-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 4px;
+    transition: color var(--dur-fast);
+  }
+
+  .chapter-body :global(a:hover) { color: var(--accent); }
+
+  /* Off the clock */
+  .off-clock,
+  .useful,
+  .record,
+  .contact { margin-top: clamp(72px, 9vw, 120px); }
+
+  .off-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 40px;
+  }
+
+  .off-grid h3 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+
+  .off-grid p {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-secondary);
+    margin: 0 0 16px;
+  }
+
+  .off-grid a { color: var(--ink-primary); font-size: 11px; transition: color var(--dur-fast); }
+  .off-grid a:hover { color: var(--accent); }
+
+  /* Useful */
+  .useful-lede {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(22px, 2.6vw, 32px);
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    max-width: 32em;
+    margin: 0 0 20px;
+  }
+
+  .useful-not { color: var(--ink-quiet); font-size: 16px; margin: 0; }
+
+  /* Record */
+  .record { scroll-margin-top: 80px; }
+
+  .record-head { color: var(--ink-secondary); font-weight: 400; font-size: 11px; margin: 32px 0 4px; }
+
+  .record-list { list-style: none; margin: 0; padding: 0; }
+
+  .record-list li {
+    display: grid;
+    grid-template-columns: minmax(0, 200px) minmax(0, 1fr) auto;
+    gap: 4px 24px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--surface-line);
+  }
+
+  .r-org { font-family: var(--font-serif); font-size: 20px; }
+  .r-role { color: var(--ink-secondary); font-size: 16px; }
+  .r-when { color: var(--ink-quiet); font-size: 11px; text-align: right; }
+
+  .certs { color: var(--ink-secondary); font-size: 15px; line-height: 1.7; margin: 8px 0 0; }
+
+  /* Contact */
+  .contact-email {
+    display: inline-block;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(34px, 7vw, 96px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink-primary);
+    overflow-wrap: anywhere;
+    transition: color var(--dur-fast);
+  }
+
+  .contact-email:hover { color: var(--accent); }
+  .contact p { color: var(--ink-quiet); margin: 20px 0 0; font-size: 16px; }
+
+  @media (max-width: 760px) {
+    .chapter { grid-template-columns: minmax(0, 1fr); }
+    .chapter-meta { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
+    .record-list li { grid-template-columns: minmax(0, 1fr); }
+    .r-when { text-align: left; }
   }
 
   @media print {
-    .paddock-override-nav, .filter-chips { display: none !important; }
-    .story-viewport { background: #fff; color: #000; }
-    .prose a { color: #000; text-decoration: none; }
+    .head-links, .chapter-index, .contact { display: none !important; }
   }
 </style>
