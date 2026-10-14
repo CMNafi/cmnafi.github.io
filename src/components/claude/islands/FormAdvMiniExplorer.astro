@@ -1,0 +1,941 @@
+---
+/**
+ * FormAdvMiniExplorer: a small, honest taste of Regulatory Lens.
+ * Eight SEC-registered advisers, each read from its own Form ADV Part 1A on IAPD
+ * (see src/data/claude/islands/sample-advisers.ts for sources and caveats).
+ * Pick a firm for its filing snapshot; turn on "Compare with" for a side-by-side diff.
+ * No-JS: the default firm's snapshot renders statically.
+ */
+import type { IslandProps } from '@/types/claude-site';
+import {
+  sampleAdvisers,
+  CLIENT_TYPE_LABELS,
+  ADV_SNAPSHOT_FETCHED,
+  ADV_UNIVERSE,
+  DEFAULT_ADVISER_ID,
+  DEFAULT_COMPARE_ID,
+  type AdviserSnapshot
+} from '@/data/claude/islands/sample-advisers';
+import { formatIsoDate, formatUsdShort, formatUsdFull, formatInt, formatPct } from '@/data/claude/islands/island-format';
+
+interface Props extends IslandProps {
+  /** Firm shown first (defaults to BlackRock) */
+  firmId?: string;
+  /** Firm offered as the comparison (defaults to Blackstone) */
+  compareId?: string;
+}
+
+const { compact = false, firmId = DEFAULT_ADVISER_ID, compareId = DEFAULT_COMPARE_ID } = Astro.props;
+
+const byId = new Map(sampleAdvisers.map((f) => [f.id, f]));
+const firmA: AdviserSnapshot = byId.get(firmId) ?? sampleAdvisers[0];
+const firmB: AdviserSnapshot =
+  byId.get(compareId) && compareId !== firmA.id ? byId.get(compareId)! : sampleAdvisers.find((f) => f.id !== firmA.id)!;
+
+const uid = `adv-${Math.random().toString(36).slice(2, 8)}`;
+
+function discPct(f: AdviserSnapshot): number {
+  return f.raum.total > 0 ? (f.raum.discretionary / f.raum.total) * 100 : 0;
+}
+function clientRows(f: AdviserSnapshot) {
+  const total = f.raum.total || 1;
+  return [...f.clientTypes]
+    .sort((x, y) => y.raum - x.raum)
+    .map((c) => ({
+      label: c.otherLabel ? `${CLIENT_TYPE_LABELS[c.key]}: ${c.otherLabel.toLowerCase()}` : CLIENT_TYPE_LABELS[c.key],
+      raum: c.raum,
+      pct: (c.raum / total) * 100
+    }));
+}
+---
+
+<section
+  class:list={['adv', { 'adv--compact': compact }]}
+  data-island="FormAdvMiniExplorer"
+  data-compact={compact ? 'true' : 'false'}
+  data-firm-a={firmA.id}
+  data-firm-b={firmB.id}
+  aria-label="Form ADV filing snapshot explorer"
+>
+  <div class="adv__controls">
+    <div class="adv__search">
+      <label class="adv__label" for={`${uid}-q`}>Find an adviser in this snapshot</label>
+      <input
+        class="adv__input"
+        id={`${uid}-q`}
+        type="search"
+        inputmode="search"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Firm name, CRD or keyword"
+        data-adv-search
+      />
+    </div>
+
+    <div class="adv__pills" role="group" aria-label="Advisers in this snapshot" data-adv-pills>
+      {
+        sampleAdvisers.map((f) => (
+          <button
+            type="button"
+            class="adv__pill"
+            data-adv-pill={f.id}
+            aria-pressed={f.id === firmA.id ? 'true' : 'false'}
+            title={f.legalName}
+          >
+            {f.shortName}
+          </button>
+        ))
+      }
+    </div>
+    <p class="adv__empty" data-adv-empty hidden>
+      No adviser in this eight-firm snapshot matches that. <a href="/garage/form-adv-data-finder">Regulatory Lens</a> searches all
+      <span class="adv__fig">{formatInt(ADV_UNIVERSE.advisers)}</span>.
+    </p>
+
+    {
+      !compact && (
+        <div class="adv__compare">
+          <label class="adv__check">
+            <input type="checkbox" data-adv-compare-toggle />
+            <span>Compare with</span>
+          </label>
+          <label class="cl-sr-only" for={`${uid}-b`}>Second adviser to compare</label>
+          <select class="adv__select" id={`${uid}-b`} data-adv-compare-select disabled>
+            {sampleAdvisers.map((f) => (
+              <option value={f.id} selected={f.id === firmB.id} disabled={f.id === firmA.id}>
+                {f.displayName}
+              </option>
+            ))}
+          </select>
+        </div>
+      )
+    }
+  </div>
+
+  <div class="adv__cards" data-adv-cards data-mode="single">
+    <div class="adv__slot" data-adv-slot="a">
+      {
+        sampleAdvisers.map((f) => (
+          <article class="card" data-firm-card={f.id} hidden={f.id !== firmA.id}>
+            <p class="card__eyebrow">Filing snapshot</p>
+            <p class="card__name">{f.displayName}</p>
+            <p class="card__meta">
+              CRD <span class="card__fig">{f.crd}</span> · SEC file <span class="card__fig">{f.secFileNumber}</span> · {f.headquarters}
+            </p>
+            <div class="card__aum">
+              <span class="card__aum-label">Regulatory assets under management, Item 5.F</span>
+              <span class="card__aum-value">{formatUsdShort(f.raum.total)}</span>
+              <span class="card__aum-full">{formatUsdFull(f.raum.total)}</span>
+            </div>
+            <div class="card__split">
+              <div class="card__bar" role="img" aria-label={`Discretionary ${formatPct(discPct(f))}, non-discretionary ${formatPct(100 - discPct(f))}`}>
+                <span class="card__bar-disc" style={`width:${discPct(f)}%`} />
+              </div>
+              <p class="card__split-legend">
+                <span>
+                  <span class="card__key card__key--disc" aria-hidden="true" />
+                  Discretionary <span class="card__fig">{formatPct(discPct(f))}</span>
+                </span>
+                <span>
+                  <span class="card__key card__key--non" aria-hidden="true" />
+                  Non-discretionary <span class="card__fig">{formatPct(100 - discPct(f))}</span>
+                </span>
+              </p>
+            </div>
+            <dl class="card__facts">
+              <div><dt>Accounts</dt><dd class="card__fig">{formatInt(f.accounts.total)}</dd></div>
+              <div><dt>Employees</dt><dd class="card__fig">{formatInt(f.employees)}</dd></div>
+              <div><dt>Non-U.S. clients</dt><dd class="card__fig">{formatPct(f.nonUsClientPct)}</dd></div>
+              <div><dt>Fee arrangements</dt><dd class="card__na">Not in this snapshot</dd></div>
+            </dl>
+            <div class="card__clients">
+              <p class="card__sub">Client types by regulatory AUM, Item 5.D</p>
+              <ul class="card__client-list">
+                {clientRows(f).map((r) => (
+                  <li class="card__client">
+                    <span class="card__client-label">{r.label}</span>
+                    <span class="card__client-fig">
+                      {formatUsdShort(r.raum)} <span class="card__client-pct">{formatPct(r.pct)}</span>
+                    </span>
+                    <span class="card__client-track" aria-hidden="true">
+                      <span class="card__client-fill" style={`width:${Math.max(r.pct, 0.6)}%`} />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {f.note && <p class="card__note">{f.note}</p>}
+            <p class="card__source">
+              {f.filing.kind}, filed <span class="card__fig">{formatIsoDate(f.filing.date)}</span>. Read from SEC IAPD on{' '}
+              <span class="card__fig">{formatIsoDate(ADV_SNAPSHOT_FETCHED)}</span>. <a href={f.links.pdf} rel="noopener">Open the filing</a>
+              {f.related && (
+                <>
+                  {' '}· <a href={f.related.href}>{f.related.label}</a>
+                </>
+              )}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+    <div class="adv__slot" data-adv-slot="b" hidden></div>
+  </div>
+
+  {
+    !compact && (
+      <div class="adv__diff" data-adv-diff hidden>
+        <p class="adv__diff-title">
+          <span data-diff="headline">Side by side</span>
+        </p>
+        <div class="adv__diff-bars" aria-hidden="true">
+          <div class="adv__diff-bar">
+            <span class="adv__diff-name" data-diff="name-a" />
+            <span class="adv__diff-track"><span class="adv__diff-fill adv__diff-fill--a" data-diff="bar-a" /></span>
+          </div>
+          <div class="adv__diff-bar">
+            <span class="adv__diff-name" data-diff="name-b" />
+            <span class="adv__diff-track"><span class="adv__diff-fill adv__diff-fill--b" data-diff="bar-b" /></span>
+          </div>
+        </div>
+        <div class="adv__table-wrap">
+          <table class="adv__table">
+            <caption class="cl-sr-only">Business-model comparison from Form ADV Item 5</caption>
+            <thead>
+              <tr>
+                <th scope="col">Item 5</th>
+                <th scope="col" data-diff="th-a" />
+                <th scope="col" data-diff="th-b" />
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Regulatory AUM</th><td data-diff="aum-a" /><td data-diff="aum-b" /></tr>
+              <tr><th scope="row">Discretionary share</th><td data-diff="disc-a" /><td data-diff="disc-b" /></tr>
+              <tr><th scope="row">Accounts</th><td data-diff="acct-a" /><td data-diff="acct-b" /></tr>
+              <tr><th scope="row">Average RAUM per account</th><td data-diff="avg-a" /><td data-diff="avg-b" /></tr>
+              <tr><th scope="row">Employees</th><td data-diff="emp-a" /><td data-diff="emp-b" /></tr>
+              <tr><th scope="row">Largest client type</th><td data-diff="top-a" /><td data-diff="top-b" /></tr>
+              <tr><th scope="row">RAUM from non-U.S. persons</th><td data-diff="nonus-a" /><td data-diff="nonus-b" /></tr>
+              <tr><th scope="row">Filing date</th><td data-diff="date-a" /><td data-diff="date-b" /></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="adv__diff-note">Average RAUM per account and shares are computed from the filed figures. Each row is one registered adviser entity, not a whole firm.</p>
+      </div>
+    )
+  }
+
+  <p class="cl-sr-only" aria-live="polite" data-adv-live></p>
+
+  <footer class="adv__foot">
+    <p class="adv__universe">
+      For scale: <span class="adv__fig">{formatInt(ADV_UNIVERSE.advisers)}</span> advisers file Form ADV, reporting
+      <span class="adv__fig">{ADV_UNIVERSE.totalRaumLabel}</span>; <span class="adv__fig">{formatInt(ADV_UNIVERSE.form13fFilers)}</span> of them file Form 13F
+      (bulk data as of {ADV_UNIVERSE.asOf}).
+    </p>
+    <p class="adv__cta">
+      <a class="adv__cta-link" href="/garage/form-adv-data-finder">Open Regulatory Lens <span aria-hidden="true">→</span></a>
+      <a class="adv__cta-link" href={ADV_UNIVERSE.href}>Read The Universe of Form ADV <span aria-hidden="true">→</span></a>
+    </p>
+  </footer>
+
+</section>
+
+<script>
+  import { sampleAdvisers, CLIENT_TYPE_LABELS, type AdviserSnapshot } from '@/data/claude/islands/sample-advisers';
+  import { formatIsoDate, formatUsdShort, formatInt, formatPct, formatMultiple } from '@/data/claude/islands/island-format';
+
+  const firms = new Map<string, AdviserSnapshot>(sampleAdvisers.map((f) => [f.id, f]));
+
+  function matches(f: AdviserSnapshot, q: string): boolean {
+    if (!q) return true;
+    const hay = [f.shortName, f.displayName, f.legalName, f.crd, f.secFileNumber, f.headquarters, ...f.searchTerms]
+      .join(' ')
+      .toLowerCase();
+    return q
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean)
+      .every((token) => hay.includes(token));
+  }
+
+  function topClient(f: AdviserSnapshot): string {
+    const top = [...f.clientTypes].sort((a, b) => b.raum - a.raum)[0];
+    if (!top || f.raum.total <= 0) return '—';
+    return `${CLIENT_TYPE_LABELS[top.key]} (${formatPct((top.raum / f.raum.total) * 100)})`;
+  }
+
+  function initAdv(root: HTMLElement) {
+    if (root.dataset.advReady === 'true') return;
+    root.dataset.advReady = 'true';
+
+    const slotA = root.querySelector<HTMLElement>('[data-adv-slot="a"]');
+    const slotB = root.querySelector<HTMLElement>('[data-adv-slot="b"]');
+    const cards = root.querySelector<HTMLElement>('[data-adv-cards]');
+    const pills = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-adv-pill]'));
+    const search = root.querySelector<HTMLInputElement>('[data-adv-search]');
+    const empty = root.querySelector<HTMLElement>('[data-adv-empty]');
+    const toggle = root.querySelector<HTMLInputElement>('[data-adv-compare-toggle]');
+    const select = root.querySelector<HTMLSelectElement>('[data-adv-compare-select]');
+    const diff = root.querySelector<HTMLElement>('[data-adv-diff]');
+    const live = root.querySelector<HTMLElement>('[data-adv-live]');
+    if (!slotA || !slotB || !cards) return;
+    const cardsA = Array.from(slotA.querySelectorAll<HTMLElement>('[data-firm-card]'));
+
+    let a = root.dataset.firmA ?? sampleAdvisers[0].id;
+    let b = root.dataset.firmB ?? sampleAdvisers[1].id;
+    let comparing = false;
+
+    /** Clones keep Astro's scoped-style attributes, so the copy in slot B is styled like the original. */
+    const cloneCard = (id: string): HTMLElement | null => {
+      const card = cardsA.find((c) => c.dataset.firmCard === id);
+      if (!card) return null;
+      const copy = card.cloneNode(true) as HTMLElement;
+      copy.hidden = false;
+      return copy;
+    };
+
+    const setDiff = (key: string, text: string) => {
+      const el = diff?.querySelector<HTMLElement>(`[data-diff="${key}"]`);
+      if (el) el.textContent = text;
+    };
+
+    function renderDiff() {
+      if (!diff) return;
+      const fa = firms.get(a);
+      const fb = firms.get(b);
+      if (!fa || !fb) return;
+      const big = fa.raum.total >= fb.raum.total ? fa : fb;
+      const small = big === fa ? fb : fa;
+      const ratio = small.raum.total > 0 ? big.raum.total / small.raum.total : Infinity;
+      setDiff(
+        'headline',
+        `${big.displayName} reports ${formatMultiple(ratio)} the regulatory AUM of ${small.displayName}.`
+      );
+      const max = Math.max(fa.raum.total, fb.raum.total) || 1;
+      setDiff('name-a', `${fa.shortName} ${formatUsdShort(fa.raum.total)}`);
+      setDiff('name-b', `${fb.shortName} ${formatUsdShort(fb.raum.total)}`);
+      const barA = diff.querySelector<HTMLElement>('[data-diff="bar-a"]');
+      const barB = diff.querySelector<HTMLElement>('[data-diff="bar-b"]');
+      if (barA) barA.style.width = `${Math.max((fa.raum.total / max) * 100, 0.5)}%`;
+      if (barB) barB.style.width = `${Math.max((fb.raum.total / max) * 100, 0.5)}%`;
+      setDiff('th-a', fa.shortName);
+      setDiff('th-b', fb.shortName);
+      for (const [suffix, f] of [
+        ['a', fa],
+        ['b', fb]
+      ] as const) {
+        const disc = f.raum.total > 0 ? (f.raum.discretionary / f.raum.total) * 100 : 0;
+        setDiff(`aum-${suffix}`, formatUsdShort(f.raum.total));
+        setDiff(`disc-${suffix}`, formatPct(disc));
+        setDiff(`acct-${suffix}`, formatInt(f.accounts.total));
+        setDiff(`avg-${suffix}`, f.accounts.total > 0 ? formatUsdShort(f.raum.total / f.accounts.total) : '—');
+        setDiff(`emp-${suffix}`, formatInt(f.employees));
+        setDiff(`top-${suffix}`, topClient(f));
+        setDiff(`nonus-${suffix}`, f.raum.total > 0 ? formatPct((f.nonUsRaum / f.raum.total) * 100) : '—');
+        setDiff(`date-${suffix}`, formatIsoDate(f.filing.date));
+      }
+    }
+
+    function render(announce: boolean) {
+      cardsA.forEach((c) => {
+        c.hidden = c.dataset.firmCard !== a;
+      });
+      if (comparing) {
+        const nodeB = cloneCard(b);
+        if (nodeB) slotB!.replaceChildren(nodeB);
+      }
+      slotB!.hidden = !comparing;
+      cards!.dataset.mode = comparing ? 'compare' : 'single';
+      if (diff) diff.hidden = !comparing;
+      pills.forEach((p) => p.setAttribute('aria-pressed', p.dataset.advPill === a ? 'true' : 'false'));
+      if (select) {
+        Array.from(select.options).forEach((opt) => {
+          opt.disabled = opt.value === a;
+        });
+        select.value = b;
+        select.disabled = !comparing;
+      }
+      if (comparing) renderDiff();
+      if (announce && live) {
+        const fa = firms.get(a);
+        const fb = firms.get(b);
+        live.textContent = comparing && fa && fb
+          ? `Comparing ${fa.displayName}, ${formatUsdShort(fa.raum.total)}, with ${fb.displayName}, ${formatUsdShort(fb.raum.total)}.`
+          : fa
+            ? `${fa.displayName}: regulatory AUM ${formatUsdShort(fa.raum.total)}.`
+            : '';
+      }
+    }
+
+    function pickA(id: string) {
+      if (!firms.has(id)) return;
+      a = id;
+      if (b === a) b = sampleAdvisers.find((f) => f.id !== a)!.id;
+      render(true);
+    }
+
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => pickA(pill.dataset.advPill ?? a));
+    });
+
+    search?.addEventListener('input', () => {
+      const q = search.value.trim();
+      let shown = 0;
+      pills.forEach((pill) => {
+        const f = firms.get(pill.dataset.advPill ?? '');
+        const ok = !!f && matches(f, q);
+        pill.hidden = !ok;
+        if (ok) shown += 1;
+      });
+      if (empty) empty.hidden = shown > 0;
+    });
+
+    search?.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      const first = pills.find((p) => !p.hidden);
+      if (first?.dataset.advPill) pickA(first.dataset.advPill);
+    });
+
+    toggle?.addEventListener('change', () => {
+      comparing = toggle.checked;
+      if (b === a) b = sampleAdvisers.find((f) => f.id !== a)!.id;
+      render(true);
+    });
+
+    select?.addEventListener('change', () => {
+      if (select.value && select.value !== a) {
+        b = select.value;
+        render(true);
+      }
+    });
+
+    render(false);
+  }
+
+  function boot() {
+    document.querySelectorAll<HTMLElement>('[data-island="FormAdvMiniExplorer"]').forEach(initAdv);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  else boot();
+  document.addEventListener('astro:page-load', boot);
+</script>
+
+<style>
+  .adv {
+    display: grid;
+    gap: 16px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    min-width: 0;
+  }
+
+  .adv__controls {
+    display: grid;
+    gap: 10px;
+  }
+
+  .adv__label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  .adv__input,
+  .adv__select {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+  }
+
+  .adv__input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.8;
+  }
+
+  .adv__input:focus-visible,
+  .adv__select:focus-visible,
+  .adv__pill:focus-visible,
+  .adv__check input:focus-visible,
+  .adv a:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+  }
+
+  .adv__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .adv__pill {
+    min-height: 34px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.2;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .adv__pill:hover {
+    border-color: var(--text-secondary);
+  }
+
+  .adv__pill[aria-pressed='true'] {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--bg-surface);
+  }
+
+  .adv__pill[hidden] {
+    display: none;
+  }
+
+  .adv__empty {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .adv__compare {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+  }
+
+  .adv__check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+
+  .adv__check input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-primary);
+  }
+
+  .adv__select {
+    width: auto;
+    flex: 1 1 220px;
+    max-width: 340px;
+  }
+
+  .adv__select:disabled {
+    opacity: 0.55;
+  }
+
+  .adv__cards {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .adv__cards[data-mode='compare'] {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+
+  .adv__slot {
+    min-width: 0;
+  }
+
+  .adv__slot[hidden] {
+    display: none;
+  }
+
+  /* ---- Snapshot card ---- */
+  .card {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    min-width: 0;
+  }
+
+  .card[hidden] {
+    display: none;
+  }
+
+  .card__eyebrow {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .card__name {
+    margin: -6px 0 0;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .card__meta {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .card__fig,
+  .adv__fig {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.92em;
+  }
+
+  .card__aum {
+    display: grid;
+    gap: 2px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .card__aum-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .card__aum-value {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 34px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .card__aum-full {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+  }
+
+  .card__split {
+    display: grid;
+    gap: 6px;
+  }
+
+  .card__bar {
+    display: flex;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--accent-amber);
+  }
+
+  .card__bar-disc {
+    display: block;
+    height: 100%;
+    background: var(--accent-primary);
+  }
+
+  .card__split-legend {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .card__key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    margin-right: 6px;
+    vertical-align: -1px;
+  }
+
+  .card__key--disc {
+    background: var(--accent-primary);
+  }
+
+  .card__key--non {
+    background: var(--accent-amber);
+  }
+
+  .card__facts {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px 16px;
+  }
+
+  .card__facts div {
+    min-width: 0;
+  }
+
+  .card__facts dt {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .card__facts dd {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .card__na {
+    font-size: 14px !important;
+    color: var(--text-secondary);
+  }
+
+  .card__sub {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .card__client-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .card__client {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 12px;
+    font-size: 14px;
+  }
+
+  .card__client-label {
+    min-width: 0;
+  }
+
+  .card__client-fig {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .card__client-pct {
+    color: var(--text-secondary);
+  }
+
+  .card__client-track {
+    grid-column: 1 / -1;
+    display: block;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--bg-subtle);
+    overflow: hidden;
+  }
+
+  .card__client-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--accent-primary);
+  }
+
+  .card__note {
+    margin: 0;
+    padding-left: 10px;
+    border-left: 2px solid var(--accent-amber);
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .card__source {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+
+  .card a,
+  .adv__empty a,
+  .adv__foot a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  /* ---- Compare ---- */
+  .adv__diff {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    background: var(--bg-subtle);
+    min-width: 0;
+  }
+
+  .adv__diff[hidden] {
+    display: none;
+  }
+
+  .adv__diff-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 19px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  .adv__diff-bars {
+    display: grid;
+    gap: 6px;
+  }
+
+  .adv__diff-bar {
+    display: grid;
+    grid-template-columns: minmax(96px, 30%) 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .adv__diff-name {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .adv__diff-track {
+    display: block;
+    height: 12px;
+    background: var(--bg-surface);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .adv__diff-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+
+  .adv__diff-fill--a {
+    background: var(--accent-primary);
+  }
+
+  .adv__diff-fill--b {
+    background: var(--accent-amber);
+  }
+
+  .adv__table-wrap {
+    overflow-x: auto;
+    min-width: 0;
+  }
+
+  .adv__table {
+    width: 100%;
+    font-size: 14px;
+    border-collapse: collapse;
+  }
+
+  .adv__table th,
+  .adv__table td {
+    padding: 7px 8px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .adv__table thead th {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+
+  .adv__table tbody th {
+    font-weight: 400;
+    color: var(--text-secondary);
+    width: 34%;
+  }
+
+  .adv__table td {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+  }
+
+  .adv__table td[data-diff^='top'] {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+  }
+
+  .adv__diff-note {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+
+  /* ---- Footer ---- */
+  .adv__foot {
+    display: grid;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .adv__universe {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .adv__cta {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-size: 14px;
+  }
+
+  .adv__cta-link {
+    font-weight: 500;
+  }
+
+  /* ---- Compact ---- */
+  .adv--compact .card__clients,
+  .adv--compact .card__note,
+  .adv--compact .card__facts div:nth-child(n + 3) {
+    display: none;
+  }
+
+  .adv--compact .card__aum-value {
+    font-size: 28px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .adv__pill,
+    .adv__diff-fill {
+      transition: none;
+    }
+  }
+</style>

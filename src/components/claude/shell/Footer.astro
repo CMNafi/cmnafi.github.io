@@ -1,0 +1,203 @@
+---
+/** The one footer for every /claude page. */
+import { claudeNav } from './nav';
+
+const year = new Date().getUTCFullYear();
+
+const contacts = [
+  { label: 'Email', handle: 'nafi@cmnafi.com', href: 'mailto:nafi@cmnafi.com', external: false },
+  { label: 'GitHub', handle: 'CMNafi', href: 'https://github.com/CMNafi', external: true },
+  { label: 'LinkedIn', handle: 'cm-nafi', href: 'https://www.linkedin.com/in/cm-nafi/', external: true },
+  { label: 'X', handle: '@naficm01', href: 'https://x.com/naficm01', external: true },
+];
+---
+<footer class="cl-footer">
+  <div class="cl-footer__inner">
+    <div class="cl-footer__statement">
+      <p class="cl-footer__line">
+        <span class="cl-footer__name">C M Nafi</span> — Engineering financial systems, writing long-form
+        capital analysis, and playing weekend league cricket in Tampa.
+      </p>
+      <nav class="cl-footer__nav" aria-label="Footer">
+        <ul role="list">
+          {claudeNav.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="cl-footer__contact">
+      <h2 class="cl-footer__heading">Elsewhere</h2>
+      <ul class="cl-footer__links" role="list">
+        {contacts.map((c) => (
+          <li>
+            <a
+              href={c.href}
+              {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            >
+              <span class="cl-footer__label">{c.label}</span>
+              <span class="cl-footer__handle">{c.handle}</span>
+              {c.external && <span class="cl-sr-only"> (opens in a new tab)</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <button class="cl-footer__hint" type="button" data-cl-palette-open aria-haspopup="dialog" aria-controls="cl-palette">
+        Press <kbd>?</kbd> for shortcuts
+      </button>
+    </div>
+  </div>
+
+  <div class="cl-footer__base">
+    <p>
+      <span class="cl-tnum">© {year}</span> C M Nafi
+    </p>
+  </div>
+</footer>
+
+<style>
+  .cl-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--border-strong);
+    background: var(--bg-canvas);
+    color: var(--text-secondary);
+  }
+
+  .cl-footer__inner,
+  .cl-footer__base {
+    width: 100%;
+    max-width: calc(var(--max-w-page) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .cl-footer__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: var(--space-2xl);
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .cl-footer__line {
+    max-width: 34ch;
+    color: var(--text-primary);
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  .cl-footer__name {
+    font-weight: 500;
+  }
+
+  .cl-footer__nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cl-footer__nav a {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+
+  .cl-footer__nav a:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+
+  .cl-footer__heading {
+    margin-bottom: var(--space-sm);
+    color: var(--text-secondary);
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .cl-footer__links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .cl-footer__links li {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .cl-footer__links a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-md);
+    min-height: 44px;
+    padding: 11px 0;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .cl-footer__label {
+    font-size: 0.9rem;
+  }
+
+  .cl-footer__handle {
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+    text-align: right;
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .cl-footer__links a:hover .cl-footer__handle {
+    color: var(--accent-primary);
+  }
+
+  .cl-footer__hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: var(--space-md);
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+  }
+
+  .cl-footer__hint:hover {
+    color: var(--text-primary);
+  }
+
+  .cl-footer__base {
+    padding-block: var(--space-md) var(--space-xl);
+  }
+
+  .cl-footer__base p {
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+  }
+
+  @media (max-width: 760px) {
+    .cl-footer__inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .cl-footer__hint {
+      display: none;
+    }
+  }
+</style>

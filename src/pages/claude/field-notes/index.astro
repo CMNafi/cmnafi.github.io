@@ -1,0 +1,441 @@
+---
+// /claude/field-notes/ : "Essays, Match Logs & Bookshelf" (Agent 2).
+// Built from getCollection('field-notes') joined with the curation layer in
+// src/data/claude/writing-curated.ts. Every published post appears exactly once.
+import ClaudeLayout from '@/layouts/ClaudeLayout.astro';
+import FlagshipBento from '@/components/claude/catalog/FlagshipBento.astro';
+import EssayLedgerTable from '@/components/claude/catalog/EssayLedgerTable.astro';
+import CricketScorecardList from '@/components/claude/catalog/CricketScorecardList.astro';
+import BookshelfGrid from '@/components/claude/catalog/BookshelfGrid.astro';
+import { getCuratedWriting, SUBTOPICS } from '@/data/claude/writing-curated';
+import { formatDate, isoDay } from '@/data/claude/format';
+
+const writing = await getCuratedWriting();
+const { counts } = writing;
+
+const tabs = [
+  { id: 'all', label: 'All streams', count: counts.all },
+  { id: 'essays', label: 'Capital & Systems Essays', count: counts.essays },
+  { id: 'cricket', label: 'Cricket Match Logs', count: counts.cricket },
+  { id: 'shelf', label: 'Reading Shelf', count: counts.shelf },
+].filter((t) => t.id === 'all' || t.count > 0);
+---
+<ClaudeLayout
+  title="Field Notes: Essays, Match Logs & Bookshelf"
+  description="Long reads on how money moves, match reports from league cricket in Florida, and notes on the books that stayed."
+  activePath="/claude/field-notes/"
+>
+  <div class="fn cl-container" data-fn>
+    <header class="fn-hero">
+      <p class="fn-eyebrow">Field Notes</p>
+      <h1 class="fn-title">Essays, Match Logs &amp; Bookshelf</h1>
+      <p class="fn-lede">
+        Every big number has a story behind it. These are the long reads where I chase one down,
+        through funding rounds, filings and old court cases, alongside reports from the cricket
+        matches worth remembering and notes on the books that stayed with me.
+      </p>
+      <p class="fn-totals">
+        <span><span class="fn-num">{counts.all}</span> pieces</span>
+        <span><span class="fn-num">{counts.essays}</span> essays</span>
+        <span><span class="fn-num">{counts.cricket}</span> match logs</span>
+        <span><span class="fn-num">{counts.shelf}</span> books</span>
+        {counts.notes > 0 && <span><span class="fn-num">{counts.notes}</span> notes</span>}
+      </p>
+    </header>
+
+    <nav class="fn-tabs" aria-label="Filter by stream">
+      <div class="fn-tabs-track" role="group" aria-label="Streams" data-fn-tabs>
+        {tabs.map((tab, i) => (
+          <button
+            type="button"
+            class="fn-tab"
+            data-stream={tab.id}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+            aria-controls={tab.id === 'all' ? 'essays cricket shelf notes' : tab.id}
+          >
+            {tab.label}
+            <span class="fn-tab-count">{tab.count}</span>
+          </button>
+        ))}
+      </div>
+    </nav>
+    <p class="cl-sr-only" aria-live="polite" data-fn-status></p>
+
+    {(writing.flagships.length > 0 || counts.ledger > 0) && (
+      <section id="essays" class="fn-section" data-fn-section="essays" aria-labelledby="essays-title">
+        <div class="fn-section-head">
+          <h2 id="essays-title" class="fn-h2">Capital &amp; Systems Essays</h2>
+          <p class="fn-section-lede">
+            Where money moves and why: venture rounds, buyouts, public markets, regulation and the odd
+            piece of transit history.
+          </p>
+        </div>
+
+        {writing.flagships.length > 0 && (
+          <div class="fn-sub">
+            <div class="fn-sub-head">
+              <h3 class="fn-h3">Flagship deep research</h3>
+              <p class="fn-sub-note">The longest, most-researched pieces, newest first.</p>
+            </div>
+            <FlagshipBento items={writing.flagships} />
+          </div>
+        )}
+
+        {counts.ledger > 0 && (
+          <div class="fn-sub" id="ledger">
+            <div class="fn-sub-head">
+              <h3 class="fn-h3">The essay ledger</h3>
+              <p class="fn-sub-note">Everything else, searchable. Rankings fold into one row; the March 2026 explainers sit in their own archive group.</p>
+            </div>
+            <EssayLedgerTable
+              recent={writing.ledger.recent}
+              compendiums={writing.ledger.compendiums}
+              archive={writing.ledger.archive}
+              archiveLabel={writing.ledger.archiveLabel}
+              subtopics={SUBTOPICS}
+            />
+          </div>
+        )}
+      </section>
+    )}
+
+    {counts.cricket > 0 && (
+      <section id="cricket" class="fn-section" data-fn-section="cricket" aria-labelledby="cricket-title">
+        <div class="fn-section-head">
+          <h2 id="cricket-title" class="fn-h2">Cricket Match Logs</h2>
+          <p class="fn-section-lede">
+            League cricket in Florida, written up when a match turned on a spell, a chase or a last over.
+            I play as an all-rounder and bowl right-arm fast.
+          </p>
+        </div>
+        <CricketScorecardList items={writing.cricket} />
+      </section>
+    )}
+
+    {counts.shelf > 0 && (
+      <section id="shelf" class="fn-section" data-fn-section="shelf" aria-labelledby="shelf-title">
+        <div class="fn-section-head">
+          <h2 id="shelf-title" class="fn-h2">Reading Shelf</h2>
+          <p class="fn-section-lede">
+            Short notes on the books that changed how I think: what stayed, what it changed, and why it
+            is still on the shelf.
+          </p>
+        </div>
+        <BookshelfGrid groups={writing.shelf} />
+      </section>
+    )}
+
+    {counts.notes > 0 && (
+      <section id="notes" class="fn-section fn-section--notes" data-fn-section="notes" aria-labelledby="notes-title">
+        <div class="fn-section-head">
+          <h2 id="notes-title" class="fn-h2 fn-h2--small">Shorter notes</h2>
+          <p class="fn-section-lede">Notes on taste: games, films and what makes a book worth keeping.</p>
+        </div>
+        <ul class="fn-notes" role="list">
+          {writing.notes.map((note) => (
+            <li>
+              <a class="fn-note-title" href={note.href}>{note.title}</a>
+              <p class="fn-note-summary">{note.summary}</p>
+              <p class="fn-note-meta">
+                <time datetime={isoDay(note.publishedAt)}>{formatDate(note.publishedAt)}</time>
+                <span aria-hidden="true"> · </span>{note.readingMinutes} min
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </div>
+</ClaudeLayout>
+
+<script>
+  function initStreamTabs() {
+    const root = document.querySelector<HTMLElement>('[data-fn]');
+    const track = root?.querySelector<HTMLElement>('[data-fn-tabs]');
+    if (!root || !track) return;
+
+    const tabs = Array.from(track.querySelectorAll<HTMLButtonElement>('button[data-stream]'));
+    const sections = Array.from(root.querySelectorAll<HTMLElement>('[data-fn-section]'));
+    const status = root.querySelector<HTMLElement>('[data-fn-status]');
+    const known = new Set(tabs.map((t) => t.dataset.stream));
+
+    const select = (stream: string, opts: { updateHash?: boolean } = {}) => {
+      const active = known.has(stream) ? stream : 'all';
+      tabs.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.stream === active)));
+      sections.forEach((s) => {
+        s.hidden = active !== 'all' && s.dataset.fnSection !== active;
+      });
+      if (status) {
+        const label = tabs.find((t) => t.dataset.stream === active)?.firstChild?.textContent?.trim() ?? '';
+        status.textContent = active === 'all' ? 'Showing all streams.' : `Showing ${label}.`;
+      }
+      if (opts.updateHash) {
+        const url = active === 'all' ? window.location.pathname + window.location.search : `#${active}`;
+        history.replaceState(null, '', url);
+      }
+    };
+
+    // After switching streams, bring the reader back to the top of the filtered content
+    // (the bar's natural position, just under the sticky site header) instead of leaving them mid-page.
+    const hero = root.querySelector<HTMLElement>('.fn-hero');
+    const toStreamTop = () => {
+      if (!hero) return;
+      const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 64;
+      const top = Math.max(0, hero.getBoundingClientRect().bottom + window.scrollY - headerH);
+      if (window.scrollY > top) window.scrollTo({ top, behavior: 'auto' });
+    };
+
+    tabs.forEach((tab) =>
+      tab.addEventListener('click', () => {
+        select(tab.dataset.stream ?? 'all', { updateHash: true });
+        toStreamTop();
+      }),
+    );
+
+    // Deep links: /claude/field-notes/#cricket opens that stream.
+    const fromHash = () => {
+      const id = window.location.hash.slice(1);
+      if (known.has(id)) {
+        select(id);
+        toStreamTop();
+      }
+    };
+    window.addEventListener('hashchange', fromHash);
+    fromHash();
+  }
+
+  initStreamTabs();
+</script>
+
+<style>
+  .fn {
+    padding-block: clamp(40px, 6vw, 80px) clamp(56px, 8vw, 112px);
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+  }
+
+  /* ---------- Hero ---------- */
+  .fn-hero {
+    display: grid;
+    gap: 18px;
+    max-width: 840px;
+    padding-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  .fn-eyebrow {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--accent-highlight);
+  }
+
+  .fn-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    font-size: clamp(2.5rem, 1.7rem + 3.4vw, 4.25rem);
+  }
+
+  .fn-lede {
+    max-width: 62ch;
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .fn-totals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  .fn-num {
+    margin-right: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+  }
+
+  /* ---------- Stream tabs ---------- */
+  .fn-tabs {
+    position: sticky;
+    top: var(--header-h, 64px);
+    z-index: 5;
+    margin-inline: calc(-1 * var(--gutter, 16px));
+    padding: 10px var(--gutter, 16px);
+    border-block: 1px solid var(--border-subtle);
+    background: var(--bg-canvas);
+  }
+
+  .fn-tabs-track {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fn-tabs-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fn-tab {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 7px 14px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background-color var(--duration-fast, 140ms) var(--ease-standard, ease),
+      color var(--duration-fast, 140ms) var(--ease-standard, ease),
+      border-color var(--duration-fast, 140ms) var(--ease-standard, ease);
+  }
+
+  .fn-tab:hover {
+    color: var(--text-primary);
+    border-color: var(--border-subtle);
+  }
+
+  .fn-tab:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .fn-tab[aria-pressed='true'] {
+    border-color: var(--text-primary);
+    background: var(--text-primary);
+    color: var(--bg-canvas);
+  }
+
+  .fn-tab-count {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.75;
+  }
+
+  /* ---------- Sections ---------- */
+  .fn-section {
+    padding-top: clamp(40px, 6vw, 72px);
+    scroll-margin-top: calc(var(--header-h, 64px) + 72px);
+  }
+
+  .fn-section[hidden] {
+    display: none;
+  }
+
+  .fn-section-head {
+    display: grid;
+    gap: 8px;
+    max-width: 720px;
+    margin-bottom: 28px;
+  }
+
+  .fn-h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.625rem);
+  }
+
+  .fn-h2--small {
+    font-size: clamp(1.5rem, 1.25rem + 0.8vw, 1.875rem);
+  }
+
+  .fn-section-lede {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .fn-sub + .fn-sub {
+    margin-top: clamp(40px, 5vw, 64px);
+  }
+
+  .fn-sub-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+    margin-bottom: 18px;
+  }
+
+  .fn-h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.375rem;
+    letter-spacing: -0.02em;
+  }
+
+  .fn-sub-note {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  #ledger {
+    scroll-margin-top: calc(var(--header-h, 64px) + 72px);
+  }
+
+  /* ---------- Notes ---------- */
+  .fn-notes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 0 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fn-notes li {
+    display: grid;
+    gap: 4px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .fn-note-title {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .fn-note-title:hover {
+    color: var(--accent-primary);
+    text-decoration: underline;
+  }
+
+  .fn-note-summary {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .fn-note-meta {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+  }
+
+  .fn-note-meta time {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fn-tab {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,245 @@
+---
+// Section D of /claude/field-notes/: the annotated bookshelf, grouped by theme (Agent 2).
+// Authors and themes come from writing-curated.ts; a personal note appears only where the post itself gives one.
+import type { ShelfGroup } from '@/data/claude/writing-curated';
+
+interface Props {
+  groups: ShelfGroup[];
+}
+
+const { groups } = Astro.props;
+
+const shelfKey = (theme: string) =>
+  theme.startsWith('Markets') ? 'markets' : theme.startsWith('Founders') ? 'founders' : theme.startsWith('Meaning') ? 'meaning' : 'other';
+---
+<div class="bs">
+  {groups.map((group) => {
+    const key = shelfKey(group.theme);
+    const headId = `bs-${key}`;
+    return (
+      <section class="bs-group" data-shelf={key} aria-labelledby={headId}>
+        <header class="bs-head">
+          <h3 id={headId} class="bs-theme">
+            {group.theme} <span class="bs-count">{group.books.length}</span>
+          </h3>
+          {group.blurb && <p class="bs-blurb">{group.blurb}</p>}
+        </header>
+        <ul class="bs-row" role="list">
+          {group.books.map((book) => (
+            <li class:list={['bs-book', book.bookMeta?.personalContextNote && 'has-note']}>
+              <article aria-labelledby={`bs-${book.slug}`}>
+                <span class="bs-spine" aria-hidden="true"></span>
+                <div class="bs-text">
+                  <h4 class="bs-title" id={`bs-${book.slug}`}>
+                    <a href={book.href}>{book.title}</a>
+                  </h4>
+                  {book.bookMeta?.author && <p class="bs-author">{book.bookMeta.author}</p>}
+                  <p class="bs-line">{book.summary}</p>
+                  {book.bookMeta?.personalContextNote && (
+                    <p class="bs-note">
+                      <span class="bs-note-label">Why I picked it up</span>
+                      {book.bookMeta.personalContextNote}
+                    </p>
+                  )}
+                  {/* No date here on purpose: the shelf notes carry back-filed publish dates
+                      (e.g. Good to Great is dated Feb 2020 but describes reading it in summer 2021). */}
+                  <p class="bs-meta"><span class="bs-min">{book.readingMinutes}</span> min note</p>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  })}
+</div>
+
+<style>
+  .bs {
+    display: grid;
+    gap: clamp(28px, 4vw, 44px);
+    font-family: var(--font-sans);
+  }
+
+  .bs-group {
+    --spine: var(--text-muted);
+  }
+
+  .bs-group[data-shelf='markets'] {
+    --spine: var(--accent-primary);
+  }
+
+  .bs-group[data-shelf='founders'] {
+    --spine: var(--accent-blue);
+  }
+
+  .bs-group[data-shelf='meaning'] {
+    --spine: var(--accent-amber);
+  }
+
+  .bs-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .bs-theme {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.375rem;
+    letter-spacing: -0.02em;
+  }
+
+  .bs-count {
+    margin-left: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-secondary);
+    letter-spacing: 0;
+  }
+
+  .bs-blurb {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  .bs-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .bs-book {
+    position: relative;
+    min-width: 0;
+  }
+
+  .bs-book.has-note {
+    grid-column: span 2;
+  }
+
+  .bs-book article {
+    display: grid;
+    grid-template-columns: 8px minmax(0, 1fr);
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    transition: border-color var(--duration-base, 220ms) var(--ease-standard, ease);
+  }
+
+  .bs-book:hover article,
+  .bs-book:focus-within article {
+    border-color: var(--text-muted);
+  }
+
+  .bs-spine {
+    background: var(--spine);
+  }
+
+  .bs-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px 12px;
+  }
+
+  .bs-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.125rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .bs-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .bs-title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-sm);
+  }
+
+  .bs-title a:hover {
+    color: var(--accent-primary);
+  }
+
+  .bs-title a:focus-visible {
+    outline: none;
+  }
+
+  .bs-title a:focus-visible::after {
+    outline: 2px solid var(--focus-ring, var(--accent-blue));
+    outline-offset: 3px;
+  }
+
+  .bs-author {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+  }
+
+  .bs-line {
+    margin-top: 4px;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .bs-note {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-left: 2px solid var(--spine);
+    background: var(--bg-subtle);
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--text-primary);
+  }
+
+  .bs-note-label {
+    display: block;
+    margin-bottom: 2px;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .bs-meta {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+  }
+
+  .bs-min {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 600px) {
+    .bs-book.has-note {
+      grid-column: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bs-book article {
+      transition: none;
+    }
+  }
+</style>

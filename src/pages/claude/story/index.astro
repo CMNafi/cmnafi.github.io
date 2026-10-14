@@ -1,0 +1,813 @@
+---
+/**
+ * /claude/story/: first-person narrative in four chapters, condensed from
+ * src/content/journey/*.mdx and STORY.md. Chapter section ids follow the JourneyAtlasMap
+ * contract in src/types/claude-site.ts (chapter-<JourneyStopId>).
+ */
+import ClaudeLayout from '@/layouts/ClaudeLayout.astro';
+import JourneyAtlasMap from '@/components/claude/islands/JourneyAtlasMap.astro';
+import type { JourneyStopId } from '@/types/claude-site';
+
+interface Fact {
+  label: string;
+  value: string;
+  /** Set the value in mono/tabular figures (real numbers and years only). */
+  figure?: boolean;
+  /** Plain-text unit after a figure, e.g. ' countries'. */
+  unit?: string;
+  /** Optional year range, always set as a mono figure after the value. */
+  years?: string;
+}
+
+interface Chapter {
+  id: JourneyStopId;
+  number: string;
+  place: string;
+  short: string;
+  period: string;
+  periodIsFigure: boolean;
+  theme: string;
+  facts: Fact[];
+}
+
+const chapters: Chapter[] = [
+  {
+    id: 'dinajpur',
+    number: 'One',
+    place: 'Dinajpur, Bangladesh',
+    short: 'Dinajpur',
+    period: 'Childhood',
+    periodIsFigure: false,
+    theme: 'Early curiosities, mathematics, and weekend cricket.',
+    facts: [
+      { label: 'Home', value: 'Dinajpur, northern Bangladesh' },
+      { label: 'At twelve', value: 'Rangpur Cadet College' },
+      { label: 'Distance from home', value: '66 km', figure: true },
+    ],
+  },
+  {
+    id: 'changshu',
+    number: 'Two',
+    place: 'Changshu, China',
+    short: 'Changshu',
+    period: '2016',
+    periodIsFigure: true,
+    theme: 'A country, and a language, I didn’t know.',
+    facts: [
+      { label: 'School', value: 'UWC Changshu' },
+      { label: 'Age', value: '16', figure: true },
+      { label: 'Scholarship', value: 'Full' },
+      { label: 'Diploma', value: 'International Baccalaureate' },
+      { label: 'Classmates from', value: '100+', unit: ' countries', figure: true },
+    ],
+  },
+  {
+    id: 'iowa',
+    number: 'Three',
+    place: 'Iowa, United States',
+    short: 'Iowa',
+    period: '2018–2022',
+    periodIsFigure: true,
+    theme: 'Eight thousand people and a long winter.',
+    facts: [
+      { label: 'College', value: 'Luther College, Decorah' },
+      { label: 'Town', value: '~8,000', unit: ' people', figure: true },
+      { label: 'Degree', value: 'B.A. Data Science, Computer Science minor' },
+      { label: 'Mayo Clinic', value: 'AI Intern', years: '2021–22' },
+      { label: 'SkyBridge', value: 'Data Scientist', years: '2021–22' },
+      { label: 'BlackRock, after graduating', value: 'Analyst, Data & AI', years: '2022–23' },
+    ],
+  },
+  {
+    id: 'florida',
+    number: 'Four',
+    place: 'Florida, United States',
+    short: 'Florida',
+    period: '2023–now',
+    periodIsFigure: true,
+    theme: 'Numbers, tools, and matches.',
+    facts: [
+      { label: 'Dasseti', value: 'Solutions Engineer, remote', years: '2023–now' },
+      { label: 'Based', value: 'Land O’ Lakes, Florida' },
+      { label: 'Cricket', value: 'All-rounder, right-arm fast' },
+      { label: 'Grounds', value: 'Waverly, Evans Park' },
+    ],
+  },
+];
+
+const byId = Object.fromEntries(chapters.map((c) => [c.id, c])) as Record<JourneyStopId, Chapter>;
+---
+<ClaudeLayout
+  title="Story"
+  description="Dinajpur, Changshu, Iowa, Florida. How C M Nafi learned to work out how a room talks, then translate."
+  activePath="/claude/story/"
+>
+  <article class="st">
+    <header class="st-intro cl-container">
+      <p class="st-intro__kicker">Story</p>
+      <h1 class="st-intro__title">Learn the room. Then translate.</h1>
+      <p class="st-intro__dek">
+        I have been the newest person in the room since I was twelve: military school in Rangpur, then China at
+        sixteen without the language, then a town of eight thousand in Iowa. Each time, the job was the same. Work out
+        how the room actually talks, then make myself useful in it.
+      </p>
+    </header>
+
+    <div class="st-map cl-container">
+      <JourneyAtlasMap />
+    </div>
+
+    <div class="st-body">
+      <nav class="st-toc" aria-label="Chapters">
+        <ol class="st-toc__list cl-container" role="list">
+          {chapters.map((c) => (
+            <li>
+              <a class="st-toc__link" href={`#chapter-${c.id}`} data-toc-link={c.id}>
+                <span class="st-toc__num" aria-hidden="true">{chapters.indexOf(c) + 1}</span>
+                <span class="st-toc__place">{c.short}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      {/* Chapter one */}
+      <section
+        id="chapter-dinajpur"
+        class="st-chapter cl-container"
+        aria-labelledby="chapter-dinajpur-title"
+        data-chapter="dinajpur"
+      >
+        <header class="st-chapter__head">
+          <p class="st-chapter__num">Chapter {byId.dinajpur.number}</p>
+          <h2 id="chapter-dinajpur-title" class="st-chapter__title">{byId.dinajpur.place}</h2>
+          <p class="st-chapter__theme">{byId.dinajpur.theme}</p>
+        </header>
+        <div class="st-chapter__grid">
+          <aside class="st-facts" aria-label="Dinajpur at a glance">
+            <p class="st-facts__period">{byId.dinajpur.period}</p>
+            <dl>
+              {byId.dinajpur.facts.map((f) => (
+                <div class="st-facts__row">
+                  <dt>{f.label}</dt>
+                  <dd><span class:list={{ 'cl-mono': f.figure }}>{f.value}</span>{f.unit}{f.years && <span class="st-facts__years cl-mono">{f.years}</span>}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
+          <div class="st-prose">
+            <p>
+              I grew up in Dinajpur, in the north of Bangladesh, in a household that treated reading as the default
+              answer to boredom. If you were restless, you found a book. If you had finished the book, you found
+              another one.
+            </p>
+            <p>
+              It was a small world, and I mean that kindly. Everyone knew everyone’s rhythms. Days had a shape. What it
+              gave me was a habit: watch closely, keep the details, and don’t confuse noise for substance. Almost every
+              room I’ve walked into since has been louder than that house. The habit still works.
+            </p>
+            <blockquote class="st-pull">
+              <p>It’s the one chapter where I wasn’t new to anything.</p>
+            </blockquote>
+            <p>
+              At twelve I left home for Rangpur Cadet College, a military school <span class="cl-mono st-fig">66 km</span>
+              away. At twelve, it might as well have been another country. It was the first room I had to learn by
+              myself. The rules were written down. How the place actually worked was not, and nobody explains that
+              part. You watch the people who have been there longer, you notice what they notice, and you adjust.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Chapter two */}
+      <section
+        id="chapter-changshu"
+        class="st-chapter cl-container"
+        aria-labelledby="chapter-changshu-title"
+        data-chapter="changshu"
+      >
+        <header class="st-chapter__head">
+          <p class="st-chapter__num">Chapter {byId.changshu.number}</p>
+          <h2 id="chapter-changshu-title" class="st-chapter__title">{byId.changshu.place}</h2>
+          <p class="st-chapter__theme">{byId.changshu.theme}</p>
+        </header>
+        <div class="st-chapter__grid">
+          <aside class="st-facts" aria-label="Changshu at a glance">
+            <p class="st-facts__period cl-mono">{byId.changshu.period}</p>
+            <dl>
+              {byId.changshu.facts.map((f) => (
+                <div class="st-facts__row">
+                  <dt>{f.label}</dt>
+                  <dd><span class:list={{ 'cl-mono': f.figure }}>{f.value}</span>{f.unit}{f.years && <span class="st-facts__years cl-mono">{f.years}</span>}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
+          <div class="st-prose">
+            <p>
+              At sixteen I left again, this time for a city in China I had never seen, on a full scholarship to United
+              World College Changshu. I didn’t speak the language. Neither did a lot of my classmates, who came from
+              more than <span class="cl-mono st-fig">100</span> countries.
+            </p>
+            <p>
+              That was the point of the place. UWC puts people from very different realities in the same classrooms
+              and the same late-night conversations, and asks them to find common language. You learn quickly that
+              smart people can start from completely different assumptions, and that the fastest way across is
+              curiosity plus honesty.
+            </p>
+            <p>
+              The International Baccalaureate rewarded range. You carried several disciplines at once and were
+              expected to connect them rather than keep them apart. I still work that way. Whether the problem is a
+              product, a regulatory filing or a client’s workflow, I look for the bridge before the silo.
+            </p>
+            <blockquote class="st-pull">
+              <p>You don’t just endure the unfamiliar. Done well, it makes you larger.</p>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      {/* Chapter three */}
+      <section
+        id="chapter-iowa"
+        class="st-chapter cl-container"
+        aria-labelledby="chapter-iowa-title"
+        data-chapter="iowa"
+      >
+        <header class="st-chapter__head">
+          <p class="st-chapter__num">Chapter {byId.iowa.number}</p>
+          <h2 id="chapter-iowa-title" class="st-chapter__title">{byId.iowa.place}</h2>
+          <p class="st-chapter__theme">{byId.iowa.theme}</p>
+        </header>
+        <div class="st-chapter__grid">
+          <aside class="st-facts" aria-label="Iowa at a glance">
+            <p class="st-facts__period cl-mono">{byId.iowa.period}</p>
+            <dl>
+              {byId.iowa.facts.map((f) => (
+                <div class="st-facts__row">
+                  <dt>{f.label}</dt>
+                  <dd><span class:list={{ 'cl-mono': f.figure }}>{f.value}</span>{f.unit}{f.years && <span class="st-facts__years cl-mono">{f.years}</span>}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
+          <div class="st-prose">
+            <p>
+              University took me to Luther College in Decorah, Iowa, a town of about
+              <span class="cl-mono st-fig">8,000</span> people. Winter there teaches patience. A small campus teaches
+              you that depth beats breadth, if you let it.
+            </p>
+            <p>
+              I majored in Data Science with a minor in Computer Science and graduated in
+              <span class="cl-mono st-fig">2022</span>. The degree gave me tools, but the bigger change was in the
+              questions I asked. Where did this information come from? What is signal and what is noise? What decision
+              is it actually supposed to support?
+            </p>
+            <p>
+              Junior year, I applied to Blackstone. Or I thought I did. When the interview invitation arrived, I read
+              the name three times. <strong>BlackRock.</strong> I had prepared private equity case studies and was
+              about to walk into a conversation about fixed income risk. I learned what duration meant very quickly.
+              That mix-up sent me down a rabbit hole I have never fully climbed out of: how money is actually
+              organized, and why two firms with nearly identical names ended up as opposites. I eventually wrote it all
+              down in <a href="/field-notes/blackstone-vs-blackrock">an essay</a>.
+            </p>
+            <blockquote class="st-pull">
+              <p>I had prepared for private equity. I was about to walk into fixed income risk.</p>
+            </blockquote>
+            <h3 class="st-subhead">Healthcare, then institutional money</h3>
+            <p>
+              Before I graduated, the work started. At Mayo Clinic, as an AI intern, I worked with clinical data for
+              research teams, where the distance between an analysis and a consequence was short. Clinicians brought
+              questions that were important and vague at the same time, and turning them into something measurable
+              meant learning how they thought first. Messy, real-world data isn’t an obstacle to the job. It is the job.
+            </p>
+            <p>
+              At SkyBridge, as a data scientist supporting manager selection, I helped build quantitative screens
+              across more than <span class="cl-mono st-fig">200</span> hedge fund profiles and contributed to
+              investment memos. A good memo isn’t a pile of findings. It’s an argument, shaped to fit how decisions
+              actually get made. That’s where I stopped thinking of narrative as decoration. Narrative is translation.
+            </p>
+            <p>
+              After graduating, I joined BlackRock as an analyst in Data and AI, working in Wilmington, Delaware. Yes,
+              the same BlackRock I once confused with Blackstone. I worked on risk reporting, fund performance metrics
+              and dashboards connecting capital-flow analytics to strategy performance. The lesson I carried out of
+              the building: a trillion dollars is a spreadsheet problem, a risk problem and a storytelling problem, all
+              at once.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Chapter four */}
+      <section
+        id="chapter-florida"
+        class="st-chapter cl-container"
+        aria-labelledby="chapter-florida-title"
+        data-chapter="florida"
+      >
+        <header class="st-chapter__head">
+          <p class="st-chapter__num">Chapter {byId.florida.number}</p>
+          <h2 id="chapter-florida-title" class="st-chapter__title">{byId.florida.place}</h2>
+          <p class="st-chapter__theme">{byId.florida.theme}</p>
+        </header>
+        <div class="st-chapter__grid">
+          <aside class="st-facts" aria-label="Florida at a glance">
+            <p class="st-facts__period cl-mono">{byId.florida.period}</p>
+            <dl>
+              {byId.florida.facts.map((f) => (
+                <div class="st-facts__row">
+                  <dt>{f.label}</dt>
+                  <dd><span class:list={{ 'cl-mono': f.figure }}>{f.value}</span>{f.unit}{f.years && <span class="st-facts__years cl-mono">{f.years}</span>}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
+          <div class="st-prose">
+            <p>
+              In <span class="cl-mono st-fig">2023</span> I joined Dasseti, a fintech company that builds due
+              diligence software for investors. My title is solutions engineer. I’m not a software engineer, and that
+              distinction is the whole job.
+            </p>
+            <p>
+              A solutions engineer sits between two groups who both know exactly what they mean and rarely mean the
+              same thing: investment and operations teams on one side, the product on the other. I learn how a
+              client’s team actually works, then translate in both directions. The twelve-year-old working out the
+              unwritten rules at Rangpur was practising for this. I just didn’t know it had a name.
+            </p>
+            <p>
+              These days I live in Land O’ Lakes, Florida, and work remotely. The rest of my time goes to three things
+              that turn out to be the same habit, pointed in different directions. I write long-form pieces on how
+              capital actually moves, from <a href="/field-notes/gamestop-bid-for-ebay">GameStop’s bid for eBay</a> to
+              <a href="/field-notes/uber-the-32-billion-hole">Uber’s $32.8 billion hole</a>. I build small tools I
+              wanted and couldn’t find, like <a href="/garage/captains-view">Captains View</a>, a cricket fielding
+              planner, and <a href="/garage/form-adv-data-finder">Regulatory Lens</a>, a way to read an investment
+              adviser’s entire regulatory file in one place. I build them with AI coding tools, which rewards the same
+              skill as the day job: describing exactly what should exist, then refusing to stop until it does.
+            </p>
+            <p>
+              And on weekends I play league cricket across Tampa Bay, at grounds like Waverly and Evans Park, as an
+              all-rounder who bowls right-arm fast. I write up the close finishes.
+              <a href="/field-notes/seven-to-defend-swat-vs-royal-phoenix">Seven runs to defend</a> in the last over.
+              <a href="/field-notes/four-wickets-and-a-chase-blazehawks-vs-go-leopards">Four wickets and a chase</a>. I
+              still replay them.
+            </p>
+            <blockquote class="st-pull st-pull--close">
+              <p>Numbers into stories, problems into tools, matches into memory. It’s all translation.</p>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="st-next cl-container" aria-labelledby="st-next-title">
+      <h2 id="st-next-title" class="st-next__title">Keep reading</h2>
+      <ul class="st-next__list" role="list">
+        <li>
+          <a href="/claude/field-notes/">
+            <span class="st-next__label">Essays &amp; Notes</span>
+            <span class="st-next__hint">Every big number has a story behind it.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/claude/garage/">
+            <span class="st-next__label">Projects</span>
+            <span class="st-next__hint">Small tools I wanted and couldn’t find.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/claude/connect/">
+            <span class="st-next__label">Connect</span>
+            <span class="st-next__hint">Email, GitHub, LinkedIn and X.</span>
+          </a>
+        </li>
+      </ul>
+    </footer>
+  </article>
+</ClaudeLayout>
+
+<script>
+  type StopId = 'dinajpur' | 'changshu' | 'iowa' | 'florida';
+
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-chapter]'));
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+  let current: StopId | null = null;
+  let lockedUntil = 0;
+
+  function markActive(id: StopId, announceToMap: boolean) {
+    if (id === current) return;
+    current = id;
+    tocLinks.forEach((link) => {
+      const on = link.dataset.tocLink === id;
+      link.classList.toggle('is-active', on);
+      if (on) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+    if (announceToMap) {
+      document.dispatchEvent(new CustomEvent('journey:focus', { detail: { id } }));
+    }
+  }
+
+  // The map scrolls to a chapter and tells us which; hold that choice while the scroll settles
+  // so the observer doesn't flicker through the chapters in between.
+  document.addEventListener('journey:select', (event) => {
+    const id = (event as CustomEvent<{ id?: StopId }>).detail?.id;
+    if (!id || !sections.some((s) => s.dataset.chapter === id)) return;
+    lockedUntil = performance.now() + 1200;
+    markActive(id, false);
+  });
+
+  tocLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      const id = link.dataset.tocLink as StopId;
+      lockedUntil = performance.now() + 1200;
+      markActive(id, true);
+    });
+  });
+
+  if ('IntersectionObserver' in window && sections.length) {
+    const visible = new Map<StopId, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = (entry.target as HTMLElement).dataset.chapter as StopId;
+          if (entry.isIntersecting) visible.set(id, entry.intersectionRatio);
+          else visible.delete(id);
+        });
+        if (performance.now() < lockedUntil || !visible.size) return;
+        // The first chapter (in reading order) that touches the reading band wins.
+        const next = sections.find((s) => visible.has(s.dataset.chapter as StopId));
+        if (next) markActive(next.dataset.chapter as StopId, true);
+      },
+      { rootMargin: '-35% 0px -55% 0px', threshold: [0, 0.01] },
+    );
+    sections.forEach((section) => observer.observe(section));
+  }
+</script>
+
+<style>
+  :global(html[data-theme]) {
+    scroll-padding-top: calc(var(--header-h) + 72px);
+  }
+
+  .st-intro {
+    padding-top: clamp(40px, 7vw, 96px);
+    padding-bottom: var(--space-2xl);
+  }
+
+  .st-intro__kicker {
+    margin-bottom: var(--space-md);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .st-intro__title {
+    max-width: 14em;
+    font-size: clamp(2.5rem, 1.6rem + 4vw, 4.75rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+
+  .st-intro__dek {
+    max-width: 40em;
+    margin-top: var(--space-lg);
+    color: var(--text-secondary);
+    font-family: var(--font-serif);
+    font-size: clamp(1.15rem, 1.05rem + 0.45vw, 1.4rem);
+    line-height: 1.5;
+  }
+
+  .st-map {
+    padding-bottom: var(--space-2xl);
+  }
+
+  /* Sticky chapter index */
+  .st-body {
+    position: relative;
+  }
+
+  .st-toc {
+    position: sticky;
+    top: calc(var(--header-h) + 1px);
+    z-index: 20;
+    border-top: 1px solid var(--border-strong);
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-canvas);
+  }
+
+  .st-toc__list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-block: 0;
+    list-style: none;
+  }
+
+  .st-toc__link {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-height: 48px;
+    padding: 13px 4px 12px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .st-toc__link:hover {
+    color: var(--text-primary);
+  }
+
+  .st-toc__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 12px;
+    bottom: -1px;
+    height: 2px;
+    background: var(--accent-highlight);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  .st-toc__link.is-active {
+    color: var(--text-primary);
+  }
+
+  .st-toc__link.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .st-toc__num {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .st-toc__place {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Chapters */
+  .st-chapter {
+    margin-top: clamp(56px, 8vw, 104px);
+  }
+
+  .st-chapter + .st-chapter .st-chapter__head {
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .st-chapter__head {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    column-gap: var(--space-2xl);
+    margin-bottom: var(--space-xl);
+  }
+
+  .st-chapter__num {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    padding-top: 0.6em;
+    color: var(--text-secondary);
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-style: italic;
+  }
+
+  .st-chapter__title {
+    grid-column: 2;
+    font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+    font-weight: 400;
+    line-height: 1.05;
+  }
+
+  .st-chapter__theme {
+    grid-column: 2;
+    max-width: 40ch;
+    margin-top: var(--space-sm);
+    color: var(--text-secondary);
+    font-family: var(--font-serif);
+    font-size: clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem);
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .st-chapter__grid {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    column-gap: var(--space-2xl);
+    align-items: start;
+  }
+
+  /* Facts rail */
+  .st-facts {
+    position: sticky;
+    top: calc(var(--header-h) + 72px);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .st-facts__period {
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .st-facts__period.cl-mono {
+    font-size: 0.8125rem;
+  }
+
+  .st-facts dl {
+    margin: 0;
+  }
+
+  .st-facts__row {
+    padding: 8px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .st-facts dt {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+  }
+
+  .st-facts dd {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  .st-facts dd .cl-mono {
+    font-size: 0.8125rem;
+  }
+
+  .st-facts dd .st-facts__years {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+  }
+
+  /* Prose */
+  .st-prose {
+    max-width: var(--max-w-prose);
+    color: var(--text-primary);
+    font-family: var(--font-serif);
+    font-size: clamp(1.125rem, 1.07rem + 0.25vw, 1.25rem);
+    line-height: 1.7;
+  }
+
+  .st-prose > * + * {
+    margin-top: 1.1em;
+  }
+
+  .st-prose a {
+    text-decoration-color: var(--accent-primary);
+    text-decoration-thickness: 1px;
+  }
+
+  .st-prose a:hover {
+    color: var(--accent-primary);
+  }
+
+  .st-prose strong {
+    font-weight: 600;
+  }
+
+  .st-fig {
+    font-size: 0.82em;
+    letter-spacing: -0.01em;
+  }
+
+  .st-subhead {
+    margin-top: 2em;
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+
+  .st-pull {
+    margin: 1.6em 0;
+    padding: 0.2em 0 0.2em 1.1em;
+    border-left: 2px solid var(--accent-highlight);
+  }
+
+  .st-pull p {
+    color: var(--text-primary);
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 1.2rem + 0.7vw, 1.75rem);
+    font-style: italic;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+
+  .st-pull--close {
+    margin-top: 2em;
+    margin-bottom: 0;
+  }
+
+  /* Keep reading */
+  .st-next {
+    margin-top: clamp(72px, 10vw, 128px);
+    padding-bottom: clamp(56px, 8vw, 104px);
+  }
+
+  .st-next__title {
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-strong);
+    font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
+  }
+
+  .st-next__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-lg);
+    margin: var(--space-lg) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .st-next__list a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+    padding: var(--space-lg);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .st-next__list a:hover {
+    border-color: var(--text-muted);
+  }
+
+  .st-next__label {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+  }
+
+  .st-next__list a:hover .st-next__label {
+    color: var(--accent-primary);
+  }
+
+  .st-next__hint {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 899px) {
+    .st-chapter__head,
+    .st-chapter__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .st-chapter__num {
+      grid-row: auto;
+      padding-top: 0;
+      margin-bottom: 6px;
+    }
+
+    .st-chapter__title,
+    .st-chapter__theme {
+      grid-column: 1;
+    }
+
+    .st-facts {
+      position: static;
+      margin-bottom: var(--space-xl);
+    }
+
+    .st-facts dl {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-lg);
+    }
+
+    .st-next__list {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-md);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .st-toc__link {
+      gap: 5px;
+      font-size: 0.8125rem;
+    }
+
+    .st-toc__num {
+      display: none;
+    }
+  }
+</style>
