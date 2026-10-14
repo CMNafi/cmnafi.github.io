@@ -1,0 +1,11 @@
+---
+import type { WritingItem } from '../../../types/codex-site';
+import { bookTheme } from '../../../data/codex/writing-curated';
+interface Props {items:WritingItem[]}
+const {items}=Astro.props;
+const themes=['Markets & Wall Street','Founders & Systems','Meaning & Craft'];
+---
+<section aria-labelledby="bookshelf-title"><h2 id="bookshelf-title">The reading shelf</h2><p>Notes on books that stayed with me, grouped by the questions they opened.</p>{themes.map(theme => <section class="theme"><h3>{theme}</h3><div class="shelf">{items.filter(item => bookTheme(item)===theme).map(item => <article><time datetime={item.publishedAt}>{item.publishedAt}</time><h4><a href={`/field-notes/${item.slug}/`}>{item.title}</a></h4>{item.bookMeta?.author && <p class="author">{item.bookMeta.author}</p>}<p>{item.summary}</p>{item.bookMeta?.personalContextNote && <p class="context">{item.bookMeta.personalContextNote}</p>}<a class="read" href={`/field-notes/${item.slug}/`}>Read note · {item.readingMinutes} min</a></article>)}</div></section>)}</section>
+<style>
+  h2{font:400 2.5rem var(--font-serif);letter-spacing:-.02em}p{color:var(--text-secondary);line-height:1.6}.theme{margin-top:36px}h3{font:400 1.65rem var(--font-serif);padding-bottom:14px;border-bottom:1px solid var(--border-strong)}.shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}article{background:var(--bg-surface);padding:24px;border:1px solid var(--border-subtle);border-left:4px solid var(--accent-primary);display:flex;flex-direction:column;min-width:0}time{font:.7rem var(--font-mono);font-variant-numeric:tabular-nums;color:var(--text-muted)}h4{font:400 1.6rem/1.2 var(--font-serif);margin:18px 0 8px}h4 a{color:var(--text-primary)}article p{font-size:.85rem}.author{margin:0}.context{background:var(--bg-subtle);padding:12px;border-radius:var(--radius-sm);color:var(--text-primary)}.read{margin-top:auto;padding-top:12px;font-size:.8rem;color:var(--accent-primary)}@media(max-width:850px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:550px){.shelf{grid-template-columns:1fr}}
+</style>

@@ -9,6 +9,10 @@
 
 ## 0. The one-sentence vision
 
+### October 14, 2026: isolated Editorial Systems Lab preview
+
+The requested three-agent redesign is published exclusively under `/codex/`, with its own layout, scoped design tokens, shell, catalog, and interactive islands. Its five routes are `/codex/`, `/codex/garage/`, `/codex/field-notes/`, `/codex/story/`, and `/codex/connect/`. Existing production routes, global tokens, and telemetry components remain unchanged. The preview intentionally replaces telemetry metaphors with a paper/dark editorial design. This scoped implementation supersedes the telemetry-only component directive within the preview. Existing essays and applications remain linked at their canonical URLs. Illustrative models and unavailable source data are clearly identified.
+
 A paddock-quality personal site where every project is a **car in the garage still
 being built**, every blog post is a **telemetry readout worth syndicating**, and
 every page feels like it was designed by someone who watches the race, not just

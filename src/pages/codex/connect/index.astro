@@ -1,0 +1,14 @@
+---
+import CodexLayout from '../../../layouts/CodexLayout.astro';
+---
+<CodexLayout title="Connect & Collaborate | C M Nafi" description="Talk financial data, capital research, or Tampa Bay cricket with Nafi.">
+  <header class="page-intro"><p class="eyebrow">Good questions welcome.</p><h1>Connect &<br /><em>collaborate.</em></h1><p>I read all messages and try to respond if there is a clear strategic overlap or an interesting technical problem being solved.</p></header>
+  <section class="section" aria-labelledby="topics"><div class="section-heading"><h2 id="topics">What I enjoy jamming on.</h2></div><div class="contact-grid"><article class="contact-card"><p class="eyebrow">Data & Decisions</p><h3>Institutional data<br />& SEC filings</h3><p>Form ADV, Form 13F, private markets data, and LLM/MCP tools that make regulatory datasets easier to explore.</p></article><article class="contact-card"><p class="eyebrow">Research & Writing</p><h3>Capital markets<br />research</h3><p>Corporate histories, cap tables, PE/VC fund economics, and the cash flows behind sports.</p></article><article class="contact-card"><p class="eyebrow">Tactics & Matches</p><h3>Cricket analytics<br />& local matches</h3><p>Tactical fielding models, ball-by-ball analysis, or a weekend match in Tampa Bay.</p></article></div><div class="contact-action"><div><h2>Start with a note.</h2><p><a href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a></p></div><div><button type="button" class="primary-button" id="copy-email">Copy email ↗</button><p id="copy-status" role="status" aria-live="polite" style="font-size:11px;margin-top:8px;min-height:18px"></p></div></div><div class="social-grid"><a href="https://github.com/CMNafi"><span>GitHub <small>/ CMNafi</small></span><span>↗</span></a><a href="https://www.linkedin.com/in/cm-nafi/"><span>LinkedIn <small>/ cm-nafi</small></span><span>↗</span></a><a href="https://x.com/naficm01"><span>X <small>/ @naficm01</small></span><span>↗</span></a></div></section>
+</CodexLayout>
+<script>
+  document.querySelector('#copy-email')?.addEventListener('click', async () => {
+    const status = document.querySelector('#copy-status');
+    try { await navigator.clipboard.writeText('nafi@cmnafi.com'); if (status) status.textContent = 'Copied. See you in the inbox.'; }
+    catch { if (status) status.textContent = 'Select the email address above to copy it.'; }
+  });
+</script>

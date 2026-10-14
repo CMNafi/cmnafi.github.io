@@ -1,0 +1,24 @@
+---
+import '../styles/codex.css';
+import Header from '../components/codex/shell/Header.astro';
+import Footer from '../components/codex/shell/Footer.astro';
+import CommandPalette from '../components/codex/shell/CommandPalette.astro';
+interface Props { title?: string; description?: string }
+const { title = 'C M Nafi | Systems & Capital', description = 'Financial systems, capital research, and weekend cricket. An editorial preview of cmnafi.com.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en" class="codex-site" data-theme="paper">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title><meta name="description" content={description} />
+  <meta name="robots" content="noindex, nofollow" /><meta name="theme-color" content="#FAF8F5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <script is:inline>try { document.documentElement.dataset.theme = localStorage.getItem('cmnafi.codex.theme') === 'dark' ? 'dark' : 'paper'; } catch {}</script>
+  <slot name="head" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <Header /><main id="main" class="page-container"><slot /></main><Footer /><CommandPalette />
+</body>
+</html>

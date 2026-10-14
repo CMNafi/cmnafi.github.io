@@ -1,0 +1,29 @@
+---
+import {stops} from '../../../data/codex/islands/journey';
+const project=(lat:number,lon:number)=>({x:(lon+180)/360*720,y:(90-lat)/180*300});
+---
+<section class="atlas" data-atlas aria-label="Four chapter life atlas">
+ <h3>Four places that changed the questions.</h3>
+ <div class="stops">{stops.map((s,i)=><button data-stop={i} aria-pressed={i===0?'true':'false'}>{s.name}</button>)}<button data-world>Show full map</button></div>
+ <svg viewBox="0 0 720 300" role="img" aria-label="Schematic longitude and latitude map connecting Bangladesh, China, Iowa and Florida">
+  <rect width="720" height="300" fill="var(--bg-subtle)"/>
+  {[0,60,120,180,240,300].map(y=><path d={`M0 ${y}H720`} stroke="var(--border-subtle)"/>)}{[0,120,240,360,480,600,720].map(x=><path d={`M${x} 0V300`} stroke="var(--border-subtle)"/>)}
+  <g data-routes></g>
+  {stops.map((s,i)=>{const p=project(s.lat,s.lon);return <g><circle cx={p.x} cy={p.y} r="6" fill="var(--accent-primary)"/><text x={p.x} y={p.y+(i===1?-13:23)} text-anchor="middle">{s.name}</text></g>;})}
+ </svg>
+ <p class="caption">Equirectangular map, with sampled great-circle paths. Distances measure geography, not the flights taken. The line crosses the date line between China and Iowa.</p>
+ <article data-detail aria-live="polite"><h4>{stops[0].name}</h4><p>{stops[0].detail}</p></article>
+ <p class="source">Chapter dates follow Nafi’s biography. Tampa Bay is the regional map reference; home is Land O’ Lakes.</p>
+ <script is:inline type="application/json" data-stops set:html={JSON.stringify(stops).replaceAll('<','\\u003c')}/>
+</section>
+<script>
+ import {distance} from '../../../data/codex/islands/journey';
+ import type {stops} from '../../../data/codex/islands/journey';
+ function init(){document.querySelectorAll<HTMLElement>('[data-atlas]').forEach(root=>{if(root.dataset.ready)return;root.dataset.ready='true';const data=JSON.parse(root.querySelector('[data-stops]')!.textContent!) as typeof stops;const rad=Math.PI/180;
+ const xyz=(s:typeof data[number])=>[Math.cos(s.lat*rad)*Math.cos(s.lon*rad),Math.cos(s.lat*rad)*Math.sin(s.lon*rad),Math.sin(s.lat*rad)];const layer=root.querySelector('[data-routes]')!;
+ for(let i=1;i<data.length;i++){const a=xyz(data[i-1]),b=xyz(data[i]);const omega=Math.acos(Math.max(-1,Math.min(1,a.reduce((sum,v,j)=>sum+v*b[j],0))));let previousX:number|null=null;let path='';for(let step=0;step<=60;step++){const t=step/60,k1=Math.sin((1-t)*omega)/Math.sin(omega),k2=Math.sin(t*omega)/Math.sin(omega);const v=a.map((n,j)=>n*k1+b[j]*k2),lon=Math.atan2(v[1],v[0])/rad,lat=Math.atan2(v[2],Math.hypot(v[0],v[1]))/rad;const x=(lon+180)*2,y=(90-lat)/180*300;path+=`${previousX===null||Math.abs(x-previousX)>360?'M':'L'}${x.toFixed(2)},${y.toFixed(2)} `;previousX=x;}const route=document.createElementNS('http://www.w3.org/2000/svg','path');route.setAttribute('d',path);route.setAttribute('fill','none');route.setAttribute('stroke','var(--accent-primary)');route.setAttribute('stroke-width','2');route.dataset.route=String(i);layer.append(route);}
+ const render=(index:number,scroll:boolean)=>{const s=data[index];root.querySelectorAll<HTMLButtonElement>('[data-stop]').forEach((b,i)=>b.setAttribute('aria-pressed',String(index===i)));layer.querySelectorAll<SVGPathElement>('path').forEach(path=>{path.setAttribute('stroke',Number(path.dataset.route)===index?'var(--accent-highlight)':'var(--accent-primary)');path.setAttribute('stroke-width',Number(path.dataset.route)===index?'4':'2');});const target=root.querySelector('[data-detail]')!;target.replaceChildren();const title=document.createElement('h4');title.textContent=s.name;const date=document.createElement('p');date.textContent=`${s.years} · ${s.role}`;const body=document.createElement('p');body.textContent=s.detail;const km=document.createElement('p');km.textContent=index?`${Math.round(distance(data[index-1],s)).toLocaleString()} km from ${data[index-1].name}, great-circle distance`:'The starting point';const link=document.createElement('a');link.href=s.link;link.textContent='Related reading and tools';target.append(title,date,body,km,link);if(scroll){const x=Math.max(0,Math.min(360,(s.lon+180)*2-180)),y=Math.max(0,Math.min(150,(90-s.lat)/180*300-75));root.querySelector('svg')!.setAttribute('viewBox',`${x} ${y} 360 150`);document.getElementById(`chapter-${s.id}`)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}};root.querySelectorAll<HTMLButtonElement>('[data-stop]').forEach((b,i)=>b.addEventListener('click',()=>render(i,true)));root.querySelector('[data-world]')!.addEventListener('click',()=>root.querySelector('svg')!.setAttribute('viewBox','0 0 720 300'));render(0,false);});}init();document.addEventListener('astro:page-load',init);
+</script>
+<style>
+ .atlas{font-family:var(--font-sans);color:var(--text-primary)}h3{font:400 1.8rem var(--font-serif);margin:0 0 1rem}.stops{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}button{padding:.65rem;border:1px solid var(--border-subtle);background:var(--bg-surface);color:var(--text-primary);font:inherit;cursor:pointer}button[aria-pressed=true]{color:var(--accent-primary);border-color:var(--accent-primary)}svg{width:100%;border:1px solid var(--border-subtle)}svg text{fill:var(--text-primary);font:12px var(--font-sans)}p{color:var(--text-secondary);line-height:1.6}.caption,.source{font-size:.78rem}article{padding:1rem;background:var(--bg-surface);border:1px solid var(--border-subtle)}:global([data-detail] h4){font:400 1.5rem var(--font-serif);margin:0}:global([data-detail] a){color:var(--accent-primary)}:focus-visible{outline:2px solid var(--accent-blue);outline-offset:3px}
+</style>

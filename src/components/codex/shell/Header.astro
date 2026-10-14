@@ -1,0 +1,15 @@
+---
+const links = [['Home','/codex/'],['Projects','/codex/garage/'],['Essays & Notes','/codex/field-notes/'],['Story','/codex/story/'],['Connect','/codex/connect/']];
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+<header class="site-header page-container">
+  <a class="wordmark" href="/codex/">C M Nafi<span>Systems & Capital</span></a>
+  <nav aria-label="Main navigation">{links.map(([name, href]) => <a href={href} aria-current={current === href.replace(/\/$/, '') ? 'page' : undefined}>{name}</a>)}</nav>
+  <div class="header-controls"><button id="theme-toggle" type="button" aria-label="Switch to dark theme">Dark</button><button type="button" data-open-command aria-label="Open keyboard shortcuts"><kbd>⌘K</kbd></button></div>
+</header>
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('#theme-toggle');
+  const update = () => { const dark = document.documentElement.dataset.theme === 'dark'; if (toggle) { toggle.textContent = dark ? 'Paper' : 'Dark'; toggle.setAttribute('aria-label', `Switch to ${dark ? 'paper' : 'dark'} theme`); } };
+  update();
+  toggle?.addEventListener('click', () => { const theme = document.documentElement.dataset.theme === 'dark' ? 'paper' : 'dark'; document.documentElement.dataset.theme = theme; try { localStorage.setItem('cmnafi.codex.theme', theme); } catch {} update(); });
+</script>

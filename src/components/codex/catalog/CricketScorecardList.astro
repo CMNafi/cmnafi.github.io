@@ -1,0 +1,9 @@
+---
+import type { WritingItem } from '../../../types/codex-site';
+interface Props { items: WritingItem[] }
+const {items}=Astro.props;
+---
+<section aria-labelledby="match-log-title"><h2 id="match-log-title">From the pitch</h2><p>Five matches worth keeping. League cricket, personal figures and the team around them.</p><div class="scorecards">{items.map(item => <article><time datetime={item.publishedAt}>{item.publishedAt}</time><h3><a href={`/field-notes/${item.slug}/`}>{item.title}</a></h3><p>{item.cricketStats?.matchup}</p>{item.cricketStats?.venue && <p class="venue">{item.cricketStats.venue}, Tampa</p>}<span class="stat">{item.cricketStats?.highlightStat}</span><p class="outcome">{item.cricketStats?.outcome}</p><a class="read" href={`/field-notes/${item.slug}/`}>Read the match story →</a></article>)}</div></section>
+<style>
+  h2{font:400 2.5rem var(--font-serif);letter-spacing:-.02em}p{color:var(--text-secondary);line-height:1.6}.scorecards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:26px}article{padding:26px;border:1px solid var(--border-subtle);background:var(--bg-surface)}time{font:.75rem var(--font-mono);font-variant-numeric:tabular-nums;color:var(--text-secondary)}h3{font:400 1.65rem/1.2 var(--font-serif);margin:18px 0 10px}h3 a{color:var(--text-primary)}.venue{font-size:.8rem}.stat{display:inline-block;background:var(--bg-subtle);color:var(--accent-amber);padding:9px 12px;font: .8rem var(--font-mono);font-variant-numeric:tabular-nums}.outcome{font-size:.85rem}.read{color:var(--accent-primary);font-size:.85rem}@media(max-width:650px){.scorecards{grid-template-columns:1fr}}
+</style>

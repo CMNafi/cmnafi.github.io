@@ -1,0 +1,29 @@
+---
+import type { WritingItem } from '../../../types/codex-site';
+interface Props { items: WritingItem[]; compendiums: WritingItem[] }
+const {items,compendiums} = Astro.props;
+---
+<section class="ledger" aria-labelledby="essay-ledger-title" data-essay-ledger>
+  <h2 id="essay-ledger-title">The research ledger</h2><p>Company histories, institutional capital, market structure and systems worth understanding.</p>
+  <div class="ledger-controls"><label>Search essays<input type="search" data-essay-search placeholder="Title, thesis or topic" /></label><label>Subtopic<select data-essay-topic><option value="all">All subtopics</option>{['Venture Capital','Private Equity','Public Equities','Macro','General'].map(topic => <option>{topic}</option>)}</select></label></div>
+  <p class="result-count" aria-live="polite" data-essay-count>{items.length} essays</p>
+  <div class="table-scroll"><table><caption class="sr-only">Essay ledger, newest first</caption><thead><tr><th scope="col">Date</th><th scope="col">Title & core thesis</th><th scope="col">Subtopic</th><th scope="col">Read</th></tr></thead><tbody>{items.map(item => <tr data-essay-row data-topic={item.subtopic} data-search={`${item.title} ${item.summary} ${item.subtopic}`.toLowerCase()}><td><time datetime={item.publishedAt}>{item.publishedAt}</time></td><td><a href={`/field-notes/${item.slug}/`}>{item.title}</a><p>{item.summary}</p></td><td>{item.subtopic}</td><td>{item.readingMinutes} min</td></tr>)}</tbody></table></div>
+  <p data-essay-empty hidden>No essays match that search. Try another title or choose all subtopics.</p>
+  <details class="compendiums"><summary>Historical Data Compendiums <span>({compendiums.length})</span></summary><p>Long reference rankings, collected separately from the original research ledger.</p><ul>{compendiums.map(item => <li><time datetime={item.publishedAt}>{item.publishedAt}</time><a href={`/field-notes/${item.slug}/`}>{item.title}</a><span>{item.readingMinutes} min</span></li>)}</ul></details>
+</section>
+<script>
+  function initLedger() {
+    document.querySelectorAll<HTMLElement>('[data-essay-ledger]').forEach(root => {
+      if(root.dataset.ready) return; root.dataset.ready='true';
+      const search=root.querySelector<HTMLInputElement>('[data-essay-search]')!;
+      const topic=root.querySelector<HTMLSelectElement>('[data-essay-topic]')!;
+      const rows=[...root.querySelectorAll<HTMLElement>('[data-essay-row]')];
+      const update=() => { let count=0; for(const row of rows){const show=(topic.value==='all'||row.dataset.topic===topic.value)&&(row.dataset.search ?? '').includes(search.value.trim().toLowerCase());row.hidden=!show;if(show)count++;} root.querySelector('[data-essay-count]')!.textContent=`${count} ${count===1?'essay':'essays'}`;root.querySelector<HTMLElement>('[data-essay-empty]')!.hidden=count!==0;};
+      search.addEventListener('input',update);topic.addEventListener('change',update);
+    });
+  }
+  initLedger(); document.addEventListener('astro:page-load',initLedger);
+</script>
+<style>
+  h2{font:400 2.5rem var(--font-serif);letter-spacing:-.02em}p{color:var(--text-secondary);line-height:1.6}.ledger-controls{display:flex;flex-wrap:wrap;gap:18px;margin:24px 0 10px}label{font-size:.8rem;display:grid;gap:8px;min-width:220px}input,select{background:var(--bg-surface);color:var(--text-primary);font:inherit;padding:12px;border:1px solid var(--border-subtle);border-radius:var(--radius-sm)}.result-count{font-size:.8rem}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;text-align:left}th{font-size:.75rem;font-weight:500;color:var(--text-secondary);padding:14px 16px;border-bottom:1px solid var(--border-strong)}td{padding:20px 16px;border-bottom:1px solid var(--border-subtle);font-size:.82rem;vertical-align:top}td:first-child,td:last-child{white-space:nowrap;font-family:var(--font-mono);font-size:.72rem}td a{font-size:1.05rem;color:var(--text-primary);font-weight:500}td p{font-size:.85rem;max-width:65ch;margin-bottom:0}.compendiums{padding:22px 0;border-bottom:1px solid var(--border-subtle)}summary{cursor:pointer;font-size:1.15rem;color:var(--accent-primary)}ul{list-style:none;padding:0}li{display:flex;gap:18px;align-items:baseline;padding:10px 0;flex-wrap:wrap}li time,li span{font:.7rem var(--font-mono)}li a{color:var(--text-primary)}.sr-only{position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden} [hidden]{display:none!important}
+</style>

@@ -1,0 +1,25 @@
+---
+const commands = [['H','Home','/codex/'],['G','Projects','/codex/garage/'],['F','Essays & Notes','/codex/field-notes/'],['S','Story','/codex/story/'],['C','Connect','/codex/connect/']];
+---
+<dialog id="command-palette" class="command-palette" aria-labelledby="command-title">
+  <div class="command-heading"><h2 id="command-title">Where would you like to go?</h2><button type="button" data-close-command aria-label="Close shortcuts">Esc</button></div>
+  <p>Choose a page or press its shortcut.</p><nav aria-label="Keyboard shortcuts">{commands.map(([key,label,href]) => <a href={href} data-command-key={key.toLowerCase()}><span>{label}</span><kbd>{key}</kbd></a>)}</nav>
+</dialog>
+<script>
+  const modal = document.querySelector<HTMLDialogElement>('#command-palette');
+  let previous: HTMLElement | null = null;
+  const open = () => { if (!modal || modal.open) return; previous = document.activeElement as HTMLElement; modal.showModal(); };
+  document.querySelectorAll('[data-open-command]').forEach(button => button.addEventListener('click', open));
+  document.querySelector('[data-close-command]')?.addEventListener('click', () => modal?.close());
+  modal?.addEventListener('close', () => previous?.focus());
+  modal?.addEventListener('click', event => { if (event.target === modal) { const rect = modal.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) modal.close(); } });
+  document.addEventListener('keydown', event => {
+    const target = event.target as HTMLElement;
+    if (target.closest('input,textarea,select,[contenteditable="true"]')) return;
+    if (((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') || event.key === '?') { event.preventDefault(); open(); return; }
+    if (modal?.open && !event.altKey && !event.metaKey && !event.ctrlKey) {
+      const link = [...modal.querySelectorAll<HTMLAnchorElement>('[data-command-key]')].find(item => item.dataset.commandKey === event.key.toLowerCase());
+      if (link) { event.preventDefault(); window.location.assign(link.href); }
+    }
+  });
+</script>
