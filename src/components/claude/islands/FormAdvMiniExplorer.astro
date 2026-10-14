@@ -1,0 +1,8 @@
+---
+// STARTER STUB — Agent 3 replaces this with the real interactive island.
+// Contract: default export at this path, accepts IslandProps (compact?: boolean), renders a self-contained block.
+import type { IslandProps } from '@/types/claude-site';
+type Props = IslandProps;
+const { compact = false } = Astro.props;
+---
+<div class="cl-island-stub" data-island="FormAdvMiniExplorer" data-compact={compact ? 'true' : 'false'}>FormAdvMiniExplorer</div>

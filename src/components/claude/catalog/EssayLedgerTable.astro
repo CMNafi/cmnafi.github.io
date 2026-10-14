@@ -1,0 +1,650 @@
+---
+// Section B of /claude/field-notes/: the searchable essay ledger (Agent 2).
+// Every non-flagship Finance post appears here exactly once: newer essays first, the three
+// "100 Greatest" rankings folded into one collapsible row, and the late-March 2026 explainers
+// in their own quieter archive group. Search and subtopic pills filter all three groups.
+import type { FinanceSubtopic, WritingItem } from '@/types/claude-site';
+import { formatDate, isoDay } from '@/data/claude/format';
+
+interface Props {
+  recent: WritingItem[];
+  compendiums: WritingItem[];
+  archive: WritingItem[];
+  archiveLabel: string;
+  subtopics: FinanceSubtopic[];
+}
+
+const { recent, compendiums, archive, archiveLabel, subtopics } = Astro.props;
+const all = [...recent, ...compendiums, ...archive];
+const pills = [
+  { id: 'all', label: 'All', count: all.length },
+  ...subtopics.map((s) => ({ id: s, label: s, count: all.filter((i) => i.subtopic === s).length })),
+].filter((p) => p.count > 0);
+
+const searchText = (i: WritingItem) => `${i.title} ${i.summary} ${i.subtopic ?? ''}`.toLowerCase();
+const compendiumIds = compendiums.map((c) => `lg-row-${c.slug}`).join(' ');
+const compendiumSpan = compendiums.length
+  ? `${compendiums.reduce((n, c) => n + c.readingMinutes, 0)} min across ${compendiums.length} rankings`
+  : '';
+---
+<div class="lg" data-ledger>
+  <div class="lg-controls">
+    <div class="lg-search">
+      <label class="lg-search-label" for="lg-search-input">Search the ledger</label>
+      <div class="lg-search-field">
+        <svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m13 13 4 4" stroke-linecap="round"></path></svg>
+        <input
+          id="lg-search-input"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Title, company, idea…"
+          data-lg-search
+        />
+      </div>
+    </div>
+    <div class="lg-pills" role="group" aria-label="Filter by subtopic" data-lg-pills>
+      {pills.map((p, i) => (
+        <button type="button" class="lg-pill" data-subtopic={p.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+          {p.label} <span class="lg-pill-count">{p.count}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <p class="lg-status" aria-live="polite" data-lg-status>{all.length} essays</p>
+
+  <table class="lg-table">
+    <caption class="cl-sr-only">
+      Essay ledger: date, title and core thesis, subtopic and reading time for each essay.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col" class="lg-col-date">Date</th>
+        <th scope="col" class="lg-col-title">Title &amp; core thesis</th>
+        <th scope="col" class="lg-col-sub">Subtopic</th>
+        <th scope="col" class="lg-col-read">Read</th>
+      </tr>
+    </thead>
+
+    <tbody data-lg-group="recent">
+      {recent.map((item) => (
+        <tr class="lg-row" data-lg-row data-subtopic={item.subtopic} data-search={searchText(item)}>
+          <td class="lg-col-date"><time datetime={isoDay(item.publishedAt)}>{formatDate(item.publishedAt)}</time></td>
+          <td class="lg-col-title">
+            <a class="lg-title" href={item.href}>{item.title}</a>
+            <p class="lg-thesis">{item.summary}</p>
+            <p class="lg-mobile-meta">
+              <time datetime={isoDay(item.publishedAt)}>{formatDate(item.publishedAt)}</time> · {item.subtopic} · {item.readingMinutes} min
+            </p>
+          </td>
+          <td class="lg-col-sub"><span class="lg-sub">{item.subtopic}</span></td>
+          <td class="lg-col-read"><span class="lg-num">{item.readingMinutes}</span> min</td>
+        </tr>
+      ))}
+    </tbody>
+
+    {compendiums.length > 0 && (
+      <tbody data-lg-group="compendium" data-expanded="true">
+        <tr class="lg-group-row lg-group-row--toggle" data-lg-group-head>
+          <td colspan="4">
+            {/* Rows render open; the script folds them on load, so nothing is hidden without JS. */}
+            <button
+              type="button"
+              class="lg-toggle"
+              aria-expanded="true"
+              aria-controls={compendiumIds}
+              data-lg-toggle
+            >
+              <span class="lg-toggle-icon" aria-hidden="true"></span>
+              <span class="lg-toggle-text">
+                <span class="lg-group-title">Historical data compendiums</span>
+                <span class="lg-group-sub">
+                  “100 Greatest” rankings: {compendiums.map((c) => c.title.replace(/^The 100 Greatest /i, '')).join(' · ')}
+                </span>
+              </span>
+              <span class="lg-group-count">{compendiumSpan}</span>
+            </button>
+          </td>
+        </tr>
+        {compendiums.map((item) => (
+          <tr
+            class="lg-row lg-row--nested"
+            id={`lg-row-${item.slug}`}
+            data-lg-row
+            data-compendium
+            data-subtopic={item.subtopic}
+            data-search={searchText(item)}
+          >
+            <td class="lg-col-date"><time datetime={isoDay(item.publishedAt)}>{formatDate(item.publishedAt)}</time></td>
+            <td class="lg-col-title">
+              <a class="lg-title" href={item.href}>{item.title}</a>
+              <p class="lg-thesis">{item.summary}</p>
+              <p class="lg-mobile-meta">
+                <time datetime={isoDay(item.publishedAt)}>{formatDate(item.publishedAt)}</time> · {item.subtopic} · {item.readingMinutes} min
+              </p>
+            </td>
+            <td class="lg-col-sub"><span class="lg-sub">{item.subtopic}</span></td>
+            <td class="lg-col-read"><span class="lg-num">{item.readingMinutes}</span> min</td>
+          </tr>
+        ))}
+      </tbody>
+    )}
+
+    {archive.length > 0 && (
+      <tbody data-lg-group="archive" class="lg-archive">
+        <tr class="lg-group-row" data-lg-group-head>
+          <th colspan="4" scope="colgroup">
+            <span class="lg-group-title">Archive · {archiveLabel}</span>
+            <span class="lg-group-sub">
+              A burst of shorter explainers from late March 2026, kept in full and listed newest first.
+            </span>
+          </th>
+        </tr>
+        {archive.map((item) => (
+          <tr class="lg-row" data-lg-row data-subtopic={item.subtopic} data-search={searchText(item)}>
+            <td class="lg-col-date"><time datetime={isoDay(item.publishedAt)}>{formatDate(item.publishedAt)}</time></td>
+            <td class="lg-col-title">
+              <a class="lg-title" href={item.href}>{item.title}</a>
+              <p class="lg-thesis">{item.summary}</p>
+              <p class="lg-mobile-meta">
+                <time datetime={isoDay(item.publishedAt)}>{formatDate(item.publishedAt)}</time> · {item.subtopic} · {item.readingMinutes} min
+              </p>
+            </td>
+            <td class="lg-col-sub"><span class="lg-sub">{item.subtopic}</span></td>
+            <td class="lg-col-read"><span class="lg-num">{item.readingMinutes}</span> min</td>
+          </tr>
+        ))}
+      </tbody>
+    )}
+  </table>
+
+  <div class="lg-empty" hidden data-lg-empty>
+    <p>No essays match that search.</p>
+    <button type="button" class="lg-clear" data-lg-clear>Clear search and filters</button>
+  </div>
+</div>
+
+<script>
+  function initLedger(root: HTMLElement) {
+    const input = root.querySelector<HTMLInputElement>('[data-lg-search]');
+    const pills = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-lg-pills] button'));
+    const status = root.querySelector<HTMLElement>('[data-lg-status]');
+    const empty = root.querySelector<HTMLElement>('[data-lg-empty]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-lg-clear]');
+    const toggle = root.querySelector<HTMLButtonElement>('[data-lg-toggle]');
+    const groups = Array.from(root.querySelectorAll<HTMLElement>('tbody[data-lg-group]'));
+    const rows = Array.from(root.querySelectorAll<HTMLTableRowElement>('[data-lg-row]'));
+    const total = rows.length;
+
+    let subtopic = 'all';
+    let expanded = false;
+
+    const render = () => {
+      const terms = (input?.value ?? '').trim().toLowerCase().split(/\s+/).filter(Boolean);
+      const filtering = terms.length > 0 || subtopic !== 'all';
+      let shown = 0;
+
+      rows.forEach((row) => {
+        const text = row.dataset.search ?? '';
+        const matches =
+          (subtopic === 'all' || row.dataset.subtopic === subtopic) && terms.every((t) => text.includes(t));
+        // Compendium rows stay folded unless the reader opens them or is actively filtering.
+        const visible = matches && (!('compendium' in row.dataset) || filtering || expanded);
+        row.hidden = !visible;
+        if (matches) shown += 1;
+      });
+
+      groups.forEach((group) => {
+        const head = group.querySelector<HTMLElement>('[data-lg-group-head]');
+        if (!head) return;
+        const anyMatch = Array.from(group.querySelectorAll<HTMLElement>('[data-lg-row]')).some((r) => {
+          const text = r.dataset.search ?? '';
+          return (subtopic === 'all' || r.dataset.subtopic === subtopic) && terms.every((t) => text.includes(t));
+        });
+        head.hidden = !anyMatch;
+        if (group.dataset.lgGroup === 'compendium') {
+          const open = filtering ? anyMatch : expanded;
+          group.dataset.expanded = String(open);
+          toggle?.setAttribute('aria-expanded', String(open));
+          if (toggle) toggle.disabled = filtering;
+        }
+      });
+
+      if (empty) empty.hidden = shown > 0;
+      if (status) {
+        status.textContent = filtering
+          ? `${shown} of ${total} essays match`
+          : `${total} essays`;
+      }
+    };
+
+    input?.addEventListener('input', render);
+    pills.forEach((pill) =>
+      pill.addEventListener('click', () => {
+        subtopic = pill.dataset.subtopic ?? 'all';
+        pills.forEach((p) => p.setAttribute('aria-pressed', String(p === pill)));
+        render();
+      }),
+    );
+    toggle?.addEventListener('click', () => {
+      expanded = !expanded;
+      render();
+    });
+    clear?.addEventListener('click', () => {
+      if (input) input.value = '';
+      subtopic = 'all';
+      pills.forEach((p, i) => p.setAttribute('aria-pressed', String(i === 0)));
+      render();
+      input?.focus();
+    });
+
+    render();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-ledger]').forEach(initLedger);
+</script>
+
+<style>
+  .lg {
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+  }
+
+  /* ---------- Controls ---------- */
+  .lg-controls {
+    display: grid;
+    grid-template-columns: minmax(220px, 340px) minmax(0, 1fr);
+    gap: 14px 24px;
+    align-items: end;
+    margin-bottom: 14px;
+  }
+
+  .lg-search-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .lg-search-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .lg-search-field svg {
+    position: absolute;
+    left: 12px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .lg-search-field input {
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 0.9375rem;
+  }
+
+  .lg-search-field input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .lg-search-field input:focus-visible {
+    border-color: var(--focus-ring, var(--accent-blue));
+    outline: 2px solid var(--focus-ring, var(--accent-blue));
+    outline-offset: 0;
+  }
+
+  .lg-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+
+  .lg-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 5px 11px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: background-color var(--duration-fast, 140ms) var(--ease-standard, ease),
+      color var(--duration-fast, 140ms) var(--ease-standard, ease),
+      border-color var(--duration-fast, 140ms) var(--ease-standard, ease);
+  }
+
+  .lg-pill:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
+
+  .lg-pill[aria-pressed='true'] {
+    border-color: var(--accent-primary);
+    background: var(--accent-primary);
+    color: var(--text-on-accent, var(--bg-surface));
+  }
+
+  .lg-pill-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.8;
+  }
+
+  .lg-status {
+    margin-bottom: 8px;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Table ---------- */
+  .lg-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 1px solid var(--border-strong);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lg-table thead th {
+    padding: 10px 12px 10px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: left;
+  }
+
+  .lg-table td {
+    padding: 16px 16px 16px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: top;
+  }
+
+  .lg-col-date {
+    width: 8.5em;
+    white-space: nowrap;
+  }
+
+  .lg-col-date time {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .lg-col-sub {
+    width: 10.5em;
+  }
+
+  .lg-table th.lg-col-read,
+  .lg-table td.lg-col-read {
+    width: 4.5em;
+    padding-right: 0;
+    text-align: right;
+    white-space: nowrap;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  .lg-num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+  }
+
+  .lg-title {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .lg-title:hover {
+    color: var(--accent-primary);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+
+  .lg-thesis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    max-width: 72ch;
+    margin-top: 4px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .lg-mobile-meta {
+    display: none;
+  }
+
+  .lg-sub {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--bg-subtle);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .lg-row[hidden],
+  .lg-group-row[hidden] {
+    display: none;
+  }
+
+  /* ---------- Groups ---------- */
+  .lg-group-row td,
+  .lg-group-row th {
+    padding: 0;
+    border-bottom: 1px solid var(--border-subtle);
+    text-align: left;
+    font-weight: 400;
+  }
+
+  .lg-group-row th {
+    padding: 28px 0 12px;
+  }
+
+  .lg-group-title {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.1875rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .lg-group-sub {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .lg-toggle {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 4px 14px;
+    align-items: center;
+    width: 100%;
+    padding: 16px 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+  }
+
+  .lg-toggle:disabled {
+    cursor: default;
+  }
+
+  .lg-toggle:hover:not(:disabled) .lg-group-title {
+    color: var(--accent-primary);
+  }
+
+  .lg-toggle-icon {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+  }
+
+  .lg-toggle-icon::before,
+  .lg-toggle-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 1.5px;
+    background: var(--text-secondary);
+    transform: translate(-50%, -50%);
+    transition: transform var(--duration-fast, 140ms) var(--ease-standard, ease);
+  }
+
+  .lg-toggle-icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .lg-toggle[aria-expanded='true'] .lg-toggle-icon::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  .lg-group-count {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .lg-row--nested td {
+    background: var(--bg-subtle);
+  }
+
+  .lg-row--nested td:first-child {
+    padding-left: 14px;
+    box-shadow: inset 2px 0 0 var(--accent-amber);
+  }
+
+  .lg-archive .lg-title {
+    font-size: 1.0625rem;
+  }
+
+  .lg-archive .lg-group-row th {
+    padding-top: 40px;
+  }
+
+  /* ---------- Empty state ---------- */
+  .lg-empty {
+    display: grid;
+    justify-items: start;
+    gap: 10px;
+    padding: 28px 0;
+    color: var(--text-secondary);
+  }
+
+  .lg-empty[hidden] {
+    display: none;
+  }
+
+  .lg-clear {
+    padding: 6px 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+  }
+
+  .lg-clear:hover {
+    border-color: var(--text-muted);
+  }
+
+  /* ---------- Narrow screens: one column, metadata folds under the title ---------- */
+  @media (max-width: 820px) {
+    .lg-controls {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lg-pills {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .lg-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .lg-table td.lg-col-date,
+    .lg-table td.lg-col-sub,
+    .lg-table td.lg-col-read {
+      display: none;
+    }
+
+    .lg-table td.lg-col-title {
+      padding-right: 0;
+    }
+
+    .lg-row--nested td.lg-col-title {
+      padding-left: 14px;
+      box-shadow: inset 2px 0 0 var(--accent-amber);
+    }
+
+    .lg-mobile-meta {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .lg-mobile-meta time {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .lg-toggle {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lg-group-count {
+      grid-column: 2;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lg-pill,
+    .lg-toggle-icon::before,
+    .lg-toggle-icon::after {
+      transition: none;
+    }
+  }
+</style>

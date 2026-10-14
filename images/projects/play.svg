@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520" fill="none">
+  <rect width="900" height="520" fill="#120f0d"/>
+  <g stroke="#2a2520"><path d="M50 90h800M50 420h800M450 110v290"/><rect x="70" y="140" width="270" height="240" rx="4"/><path d="M70 260h270M140 140v55h130v-55M140 380v-55h130v55"/><circle cx="205" cy="260" r="40"/></g>
+  <path d="M510 332C470 332 465 285 485 255L535 180C558 147 583 143 625 150L734 168C763 173 797 211 774 240L705 270C680 276 682 301 653 318C624 335 550 332 510 332Z" stroke="#e8b86a" stroke-width="3"/>
+  <circle cx="691" cy="274" r="7" fill="#e8b86a"/>
+  <g fill="#f4ede4" font-family="Georgia,serif"><text x="65" y="65" font-size="32">A little play.</text><text x="65" y="475" font-size="18">Football. Formula 1. Cricket.</text></g>
+  <text x="710" y="475" font-family="monospace" font-size="12" fill="#e8b86a">OFF THE CLOCK</text>
+</svg>

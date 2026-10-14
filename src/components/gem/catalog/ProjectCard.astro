@@ -1,0 +1,257 @@
+---
+import type { ProjectItem } from '../../../types/gem-site';
+
+interface Props {
+  project: ProjectItem;
+}
+
+const { project } = Astro.props;
+---
+
+<article class="project-system-card" data-category={project.category} data-lifecycle={project.lifecycle}>
+  <header class="card-masthead">
+    <div class="category-meta-row">
+      <span class="category-badge">{project.category.replace('-', ' & ')}</span>
+      <span class:list={['lifecycle-pill', project.lifecycle]}>
+        <span class="pulse-pip"></span>
+        {project.lifecycle === 'live' ? 'Live System' : 'Active R&D'}
+      </span>
+    </div>
+
+    <h3 class="project-title">
+      {project.href ? (
+        <a href={project.href} target={project.href.startsWith('http') ? '_blank' : '_self'}>
+          {project.title} <span class="arrow">↗</span>
+        </a>
+      ) : (
+        project.title
+      )}
+    </h3>
+    <p class="project-tagline">{project.tagline}</p>
+  </header>
+
+  <div class="card-specs">
+    <!-- Key Metric Callout (Authentic metric, never fake telemetry) -->
+    <div class="metric-callout">
+      <span class="spec-label">Key Benchmark / Scope</span>
+      <div class="metric-val">{project.keyMetricBadge}</div>
+    </div>
+
+    <!-- Core Problem Statement -->
+    <div class="problem-block">
+      <span class="spec-label">System Problem Solved</span>
+      <p class="problem-text">{project.problem}</p>
+    </div>
+
+    <!-- Architecture Pipeline Flow Pill -->
+    <div class="architecture-block">
+      <span class="spec-label">System Architecture Pipeline</span>
+      <div class="pipeline-capsule">
+        <code>{project.architectureSummary}</code>
+      </div>
+    </div>
+
+    <!-- Tech Stack Tags -->
+    <div class="stack-block">
+      <span class="spec-label">Implementation Stack</span>
+      <ul class="stack-tags">
+        {project.stack.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <footer class="card-footer">
+    <span class="updated-time">Updated: {project.updatedAt}</span>
+    {project.href && (
+      <a href={project.href} class="launch-btn" target={project.href.startsWith('http') ? '_blank' : '_self'}>
+        Launch Application ↗
+      </a>
+    )}
+  </footer>
+</article>
+
+<style>
+  .project-system-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .project-system-card:hover {
+    border-color: var(--border-strong);
+  }
+
+  .category-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+  }
+
+  .category-badge {
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+  }
+
+  .lifecycle-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 12px;
+  }
+
+  .lifecycle-pill.live {
+    background: var(--bg-subtle);
+    color: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
+  }
+
+  .lifecycle-pill['active-r&d'],
+  .lifecycle-pill.active-r\&d {
+    background: var(--bg-subtle);
+    color: var(--accent-amber);
+    border: 1px solid var(--accent-amber);
+  }
+
+  .pulse-pip {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .project-title {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+
+  .project-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .project-title a:hover {
+    color: var(--accent-highlight);
+  }
+
+  .project-title .arrow {
+    font-size: 0.75em;
+    color: var(--accent-highlight);
+  }
+
+  .project-tagline {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0 0 16px;
+  }
+
+  .card-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-block: 8px 16px;
+  }
+
+  .spec-label {
+    display: block;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+
+  .metric-callout .metric-val {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-primary);
+    background: var(--bg-subtle);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    display: inline-block;
+  }
+
+  .problem-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .pipeline-capsule {
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+  }
+
+  .pipeline-capsule code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .stack-tags {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .stack-tags li {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    padding: 3px 7px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 14px;
+    margin-top: auto;
+    font-size: 11px;
+  }
+
+  .updated-time {
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+
+  .launch-btn {
+    color: var(--accent-highlight);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .launch-btn:hover {
+    text-decoration: underline;
+  }
+</style>

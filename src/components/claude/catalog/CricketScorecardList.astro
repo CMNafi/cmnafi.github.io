@@ -1,0 +1,270 @@
+---
+// Section C of /claude/field-notes/: cricket match reports as scorecards (Agent 2).
+// Matchups, venues, figures and results come from writing-curated.ts, checked against each report.
+import type { WritingItem } from '@/types/claude-site';
+import { formatDate, isoDay } from '@/data/claude/format';
+
+interface Props {
+  items: WritingItem[];
+}
+
+const { items } = Astro.props;
+
+/** "Four wickets and a chase: Blazehawks vs Go Leopards" -> "Four wickets and a chase" */
+const headline = (title: string) => {
+  const i = title.indexOf(':');
+  return i > 0 ? title.slice(0, i) : title;
+};
+---
+<ol class="sc-list" role="list">
+  {items.map((item) => {
+    const stats = item.cricketStats;
+    const [home, away] = stats?.matchup.split(/\s+vs\.?\s+/i) ?? [];
+    return (
+      <li class="sc">
+        <article aria-labelledby={`sc-${item.slug}`}>
+          <div class="sc-strip">
+            <time datetime={isoDay(item.publishedAt)}>{formatDate(item.publishedAt)}</time>
+            {stats?.competition && <span>{stats.competition}</span>}
+          </div>
+
+          <div class="sc-body">
+            {stats && home && away && (
+              <p class="sc-matchup">
+                <span>{home}</span>
+                <span class="sc-vs">vs</span>
+                <span>{away}</span>
+              </p>
+            )}
+            <h3 class="sc-title" id={`sc-${item.slug}`}>
+              <a href={item.href}>{headline(item.title)}</a>
+            </h3>
+            {(stats?.venue || stats?.matchDate) && (
+              <p class="sc-where">
+                {stats?.venue}
+                {stats?.venue && stats?.matchDate && <span aria-hidden="true"> · </span>}
+                {stats?.matchDate && (
+                  <>
+                    Played <time datetime={stats.matchDate}>{formatDate(stats.matchDate)}</time>
+                  </>
+                )}
+              </p>
+            )}
+
+            {stats ? (
+              <dl class="sc-figs">
+                <div class="sc-fig sc-fig--mine">
+                  <dt>My day</dt>
+                  <dd>{stats.highlightStat}</dd>
+                </div>
+                <div class="sc-fig">
+                  <dt>Result</dt>
+                  <dd>{stats.outcome}</dd>
+                </div>
+              </dl>
+            ) : (
+              <p class="sc-summary">{item.summary}</p>
+            )}
+          </div>
+
+          <div class="sc-foot">
+            {stats?.scoreline && <p class="sc-score">{stats.scoreline}</p>}
+            <p class="sc-read">{item.readingMinutes} min read</p>
+          </div>
+        </article>
+      </li>
+    );
+  })}
+</ol>
+
+<style>
+  .sc-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-sans);
+  }
+
+  .sc {
+    position: relative;
+    min-width: 0;
+  }
+
+  .sc article {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    transition: border-color var(--duration-base, 220ms) var(--ease-standard, ease),
+      transform var(--duration-base, 220ms) var(--ease-standard, ease);
+  }
+
+  .sc:hover article,
+  .sc:focus-within article {
+    border-color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sc:hover article {
+      transform: translateY(-2px);
+    }
+  }
+
+  .sc-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    padding: 10px 18px;
+    border-bottom: 1px dashed var(--border-subtle);
+    background: var(--bg-subtle);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .sc-strip time {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sc-body {
+    display: grid;
+    gap: 8px;
+    padding: 16px 18px 12px;
+  }
+
+  .sc-matchup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .sc-vs {
+    font-weight: 400;
+    font-style: italic;
+    font-family: var(--font-serif);
+    color: var(--text-muted);
+  }
+
+  .sc-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.375rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .sc-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .sc-title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+  }
+
+  .sc-title a:hover {
+    color: var(--accent-primary);
+  }
+
+  .sc-title a:focus-visible {
+    outline: none;
+  }
+
+  .sc-title a:focus-visible::after {
+    outline: 2px solid var(--focus-ring, var(--accent-blue));
+    outline-offset: 3px;
+  }
+
+  .sc-where {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  .sc-where time {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sc-figs {
+    display: grid;
+    gap: 8px;
+    margin: 6px 0 0;
+  }
+
+  .sc-fig {
+    display: grid;
+    grid-template-columns: 4.5em minmax(0, 1fr);
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .sc-fig dt {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .sc-fig dd {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sc-fig--mine dd {
+    justify-self: start;
+    padding: 3px 9px;
+    border: 1px solid var(--accent-amber);
+    border-radius: 999px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .sc-summary {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .sc-foot {
+    display: grid;
+    gap: 4px;
+    margin-top: auto;
+    padding: 10px 18px 14px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .sc-score {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-secondary);
+  }
+
+  .sc-read {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sc article {
+      transition: none;
+    }
+  }
+</style>

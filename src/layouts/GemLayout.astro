@@ -1,0 +1,60 @@
+---
+import '../styles/gem/global.css';
+import Header from '../components/gem/shell/Header.astro';
+import Footer from '../components/gem/shell/Footer.astro';
+import CommandPalette from '../components/gem/shell/CommandPalette.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  currentPath?: string;
+}
+
+const {
+  title = 'C M Nafi | Editorial Systems Lab',
+  description = 'Engineering financial data infrastructure behind institutional capital, and writing about filings, business models, and Tampa league cricket.',
+  currentPath = ''
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="gem-site" data-theme="paper">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#FAF8F5" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Editorial Fonts (Inter, Newsreader, JetBrains Mono) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Theme persistence script (zero flash) -->
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem('cmnafi.gem.theme');
+        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'paper');
+        }
+      } catch {}
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <Header currentPath={currentPath} />
+    <main id="main-content" class="gem-page-container">
+      <slot />
+    </main>
+    <Footer />
+    <CommandPalette />
+  </body>
+</html>

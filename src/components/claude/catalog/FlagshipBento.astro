@@ -1,0 +1,226 @@
+---
+// Section A of /claude/field-notes/: flagship deep research as an editorial bento (Agent 2).
+// The first item is the lead. Figures come from writing-curated.ts, each checked against its post.
+import type { WritingItem } from '@/types/claude-site';
+import { formatDate, isoDay } from '@/data/claude/format';
+
+interface Props {
+  items: WritingItem[];
+}
+
+const { items } = Astro.props;
+---
+<ol class="fb" role="list">
+  {items.map((item, i) => (
+    <li class:list={['fb-card', i === 0 && 'is-lead']}>
+      <article aria-labelledby={`fb-${item.slug}`}>
+        {item.kicker && <p class="fb-kicker">{item.kicker}</p>}
+        <h4 class="fb-title" id={`fb-${item.slug}`}>
+          <a href={item.href}>{item.title}</a>
+        </h4>
+        {item.callout && (
+          <p class="fb-callout">
+            <span class="fb-figure">{item.callout.figure}</span>
+            <span class="fb-figure-label">{item.callout.label}</span>
+          </p>
+        )}
+        <p class="fb-summary">{item.summary}</p>
+        <p class="fb-meta">
+          <time datetime={isoDay(item.publishedAt)}>{formatDate(item.publishedAt)}</time>
+          <span aria-hidden="true">·</span>
+          <span>{item.readingMinutes} min read</span>
+        </p>
+      </article>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .fb {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-sans);
+  }
+
+  .fb-card {
+    position: relative;
+    grid-column: span 2;
+    min-width: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    transition: border-color var(--duration-base, 220ms) var(--ease-standard, ease);
+  }
+
+  .fb-card:hover,
+  .fb-card:focus-within {
+    border-color: var(--text-muted);
+  }
+
+  .fb-card article {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    padding: 22px;
+  }
+
+  .fb-card.is-lead {
+    grid-column: span 4;
+    grid-row: span 2;
+    background: var(--bg-subtle);
+    border-color: var(--border-subtle);
+  }
+
+  .fb-card.is-lead article {
+    gap: 18px;
+    padding: clamp(24px, 3.4vw, 40px);
+  }
+
+  .fb-kicker {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--accent-highlight);
+  }
+
+  .fb-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.3125rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .is-lead .fb-title {
+    font-weight: 400;
+    font-size: clamp(1.875rem, 1.4rem + 1.8vw, 2.875rem);
+    line-height: 1.06;
+  }
+
+  .fb-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  /* The whole card is the link target. */
+  .fb-title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+  }
+
+  .fb-title a:hover {
+    color: var(--accent-primary);
+  }
+
+  .fb-title a:focus-visible {
+    outline: none;
+  }
+
+  .fb-title a:focus-visible::after {
+    outline: 2px solid var(--focus-ring, var(--accent-blue));
+    outline-offset: 3px;
+  }
+
+  .fb-callout {
+    display: grid;
+    gap: 4px;
+    padding: 12px 0 12px 14px;
+    border-left: 2px solid var(--accent-highlight);
+  }
+
+  .fb-figure {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums lining-nums;
+    color: var(--text-primary);
+  }
+
+  .is-lead .fb-figure {
+    font-size: clamp(3rem, 2.2rem + 3vw, 4.75rem);
+  }
+
+  .fb-figure-label {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+  }
+
+  .is-lead .fb-figure-label {
+    max-width: 36ch;
+    font-size: 0.9375rem;
+  }
+
+  .fb-summary {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+
+  .is-lead .fb-summary {
+    -webkit-line-clamp: unset;
+    max-width: 58ch;
+    font-family: var(--font-serif);
+    font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--text-primary);
+  }
+
+  .fb-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 960px) {
+    .fb {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fb-card,
+    .fb-card.is-lead {
+      grid-column: span 1;
+      grid-row: auto;
+    }
+
+    .fb-card.is-lead,
+    .fb-card:last-child:nth-child(even) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .fb {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fb-card.is-lead,
+    .fb-card:last-child:nth-child(even) {
+      grid-column: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fb-card {
+      transition: none;
+    }
+  }
+</style>

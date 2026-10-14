@@ -1,0 +1,337 @@
+---
+// One project in the /claude/garage/ catalog (Agent 2).
+import type { ProjectItem } from '@/types/claude-site';
+import { CATEGORY_LABELS, LIFECYCLE_LABELS } from '@/data/claude/projects';
+import { formatDate, isoDay, splitFigures } from '@/data/claude/format';
+
+interface Props {
+  project: ProjectItem;
+  /** Heading level for the card title (defaults to h3). */
+  headingLevel?: 2 | 3 | 4;
+}
+
+const { project, headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
+const titleId = `project-${project.id}-title`;
+const isLive = project.lifecycle === 'live';
+const dateLabel = project.dateKind === 'launched' ? 'Launched' : 'Updated';
+const badgeParts = splitFigures(project.keyMetricBadge);
+---
+<article
+  class="pc"
+  data-category={project.category}
+  data-lifecycle={project.lifecycle}
+  aria-labelledby={titleId}
+>
+  <div class="pc-top">
+    <p class="pc-meta">
+      <span class:list={['pc-status', isLive ? 'is-live' : 'is-rd']}>
+        <span class="pc-dot" aria-hidden="true"></span>{LIFECYCLE_LABELS[project.lifecycle]}
+      </span>
+      <span class="pc-sep" aria-hidden="true">·</span>
+      <span class="pc-cat">{CATEGORY_LABELS[project.category]}</span>
+    </p>
+    <p class="pc-date">
+      {dateLabel} <time datetime={isoDay(project.updatedAt)}>{formatDate(project.updatedAt)}</time>
+    </p>
+  </div>
+
+  <Heading id={titleId} class="pc-title">{project.title}</Heading>
+  <p class="pc-tagline">{project.tagline}</p>
+
+  <p class="pc-badge">
+    <span class="cl-sr-only">Key figure: </span>
+    {badgeParts.map((part) => (part.isFigure ? <span class="pc-fig">{part.text}</span> : part.text))}
+  </p>
+
+  <div class="pc-pipeline">
+    <p class="pc-label" id={`${titleId}-pipe`}>How it fits together</p>
+    <ol class="pc-pipe" aria-labelledby={`${titleId}-pipe`}>
+      {project.pipeline.map((stage, i) => (
+        <li>
+          <span class="pc-stage">{stage}</span>
+          {i < project.pipeline.length - 1 && <span class="pc-arrow" aria-hidden="true">→</span>}
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <details class="pc-more">
+    <summary>The problem and the build</summary>
+    <div class="pc-more-body">
+      <p><strong>Problem.</strong> {project.problem}</p>
+      <p><strong>How it works.</strong> {project.architectureSummary}</p>
+    </div>
+  </details>
+
+  <ul class="pc-stack" aria-label="Stack">
+    {project.stack.map((tag) => <li>{tag}</li>)}
+  </ul>
+
+  <div class="pc-actions">
+    {project.href ? (
+      <a class="pc-btn pc-btn--primary" href={project.href}>
+        {project.ctaLabel ?? `Open ${project.title}`}<span aria-hidden="true"> ↗</span>
+      </a>
+    ) : (
+      <span class="pc-note">No public build yet</span>
+    )}
+    {project.demoId && (
+      <a class="pc-btn pc-btn--ghost" href={`#${project.demoId}`}>
+        {project.demoLabel ?? 'Try the demo'}<span aria-hidden="true"> ↓</span>
+      </a>
+    )}
+  </div>
+</article>
+
+<style>
+  .pc {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    padding: 22px 22px 20px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    transition: border-color var(--duration-base, 220ms) var(--ease-standard, ease);
+  }
+
+  .pc:hover {
+    border-color: var(--text-muted);
+  }
+
+  .pc-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  .pc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pc-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .pc-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+  }
+
+  .pc-status.is-rd .pc-dot {
+    background: transparent;
+    border: 1.5px solid var(--accent-amber);
+  }
+
+  .pc-date {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pc-date time {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .pc-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .pc-tagline {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .pc-badge {
+    align-self: flex-start;
+    padding: 6px 10px;
+    border-left: 2px solid var(--accent-highlight);
+    background: var(--bg-subtle);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text-primary);
+  }
+
+  .pc-fig {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--accent-highlight);
+  }
+
+  .pc-label {
+    margin-bottom: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .pc-pipe {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pc-pipe li {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .pc-stage {
+    display: inline-block;
+    padding: 3px 9px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--bg-canvas);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+  }
+
+  .pc-arrow {
+    padding: 0 5px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  .pc-more {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 10px;
+    font-size: 0.875rem;
+  }
+
+  .pc-more summary {
+    cursor: pointer;
+    width: fit-content;
+    color: var(--text-secondary);
+    font-weight: 500;
+    list-style-position: outside;
+  }
+
+  .pc-more summary:hover {
+    color: var(--accent-primary);
+  }
+
+  .pc-more-body {
+    display: grid;
+    gap: 8px;
+    padding-top: 8px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .pc-more-body strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .pc-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pc-stack li {
+    padding: 2px 7px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+  }
+
+  .pc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    margin-top: auto;
+    padding-top: 6px;
+  }
+
+  .pc-btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--duration-fast, 140ms) var(--ease-standard, ease),
+      color var(--duration-fast, 140ms) var(--ease-standard, ease),
+      border-color var(--duration-fast, 140ms) var(--ease-standard, ease);
+  }
+
+  .pc-btn--primary {
+    background: var(--accent-primary);
+    color: var(--text-on-accent, var(--bg-surface));
+    border: 1px solid var(--accent-primary);
+  }
+
+  .pc-btn--primary:hover {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--bg-surface);
+  }
+
+  .pc-btn--ghost {
+    padding-inline: 4px;
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--border-subtle);
+    text-underline-offset: 0.25em;
+  }
+
+  .pc-btn--ghost:hover {
+    color: var(--accent-primary);
+    text-decoration-color: currentColor;
+  }
+
+  .pc-note {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pc,
+    .pc-btn {
+      transition: none;
+    }
+  }
+</style>

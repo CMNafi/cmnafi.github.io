@@ -1,0 +1,214 @@
+---
+import type { WritingItem } from '../../../types/gem-site';
+
+interface Props {
+  books: WritingItem[];
+}
+
+const { books } = Astro.props;
+
+const themes: ('Markets & Wall Street' | 'Founders & Systems' | 'Meaning & Craft')[] = [
+  'Markets & Wall Street',
+  'Founders & Systems',
+  'Meaning & Craft'
+];
+
+const booksByTheme = themes.map((theme) => ({
+  theme,
+  items: books.filter((b) => b.bookMeta?.category === theme)
+}));
+---
+
+<div class="bookshelf-system">
+  {booksByTheme.map((group) => (
+    <section class="shelf-theme-group">
+      <header class="theme-header">
+        <h3 class="theme-title">{group.theme}</h3>
+        <span class="theme-count">{group.items.length} Volumes</span>
+      </header>
+
+      <div class="spine-grid">
+        {group.items.map((b) => {
+          const hasContext = !!b.bookMeta?.personalContextNote;
+          return (
+            <article class:list={['book-spine-card', { 'has-note': hasContext }]}>
+              <div class="spine-top">
+                <span class="book-author">{b.bookMeta?.author || 'Author'}</span>
+                <h4 class="book-title">
+                  <a href={`/field-notes/${b.slug}/`}>{b.title}</a>
+                </h4>
+              </div>
+
+              {b.bookMeta?.personalContextNote && (
+                <div class="personal-context-box">
+                  <span class="context-tag">Personal Note:</span>
+                  <p class="context-text">{b.bookMeta.personalContextNote}</p>
+                </div>
+              )}
+
+              <p class="book-summary-text">{b.summary}</p>
+
+              <footer class="spine-footer">
+                <time class="read-date data-mono">{b.publishedAt}</time>
+                <a href={`/field-notes/${b.slug}/`} class="open-notes-link">
+                  Read Book Notes →
+                </a>
+              </footer>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  ))}
+</div>
+
+<style>
+  .bookshelf-system {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    font-family: var(--font-sans);
+  }
+
+  .shelf-theme-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .theme-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 8px;
+  }
+
+  .theme-title {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0;
+    color: var(--text-primary);
+  }
+
+  .theme-count {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .spine-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .book-spine-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    transition: all 0.15s ease;
+  }
+
+  .book-spine-card:hover {
+    border-color: var(--border-strong);
+    border-left-color: var(--accent-primary);
+  }
+
+  .book-spine-card.has-note {
+    border-left-color: var(--accent-highlight);
+    background: var(--bg-canvas);
+  }
+
+  .book-author {
+    display: block;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .book-title {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  .book-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .book-title a:hover {
+    color: var(--accent-highlight);
+  }
+
+  .personal-context-box {
+    background: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .context-tag {
+    display: block;
+    font-size: 9px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--accent-highlight);
+    margin-bottom: 3px;
+  }
+
+  .context-text {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    font-style: italic;
+  }
+
+  .book-summary-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .spine-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 10px;
+    font-size: 11px;
+    margin-top: auto;
+  }
+
+  .read-date {
+    color: var(--text-muted);
+    font-size: 10px;
+  }
+
+  .open-notes-link {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .open-notes-link:hover {
+    text-decoration: underline;
+  }
+</style>

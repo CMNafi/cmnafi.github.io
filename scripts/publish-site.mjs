@@ -20,6 +20,8 @@ const publishedEntries = [
   'og-default.svg',
   'projects',
   'writing',
+  'gem',
+  'codex',
   '.nojekyll',
   'CNAME'
 ];

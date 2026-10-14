@@ -1,0 +1,301 @@
+---
+import GemLayout from '../../../layouts/GemLayout.astro';
+import JourneyAtlasMap from '../../../components/gem/islands/JourneyAtlasMap.astro';
+---
+
+<GemLayout
+  title="The Story | Four Chapters across Dinajpur, Changshu, Iowa & Florida · C M Nafi"
+  description="A biographical narrative tracing early mathematical roots in Bangladesh, international schooling in China, data science in Iowa, and institutional financial engineering in Tampa Bay."
+  currentPath="/gem/story/"
+>
+  <div class="story-page">
+    <header class="story-masthead">
+      <span class="eyebrow-tag">Personal Narrative & Trajectory</span>
+      <h1 class="page-title">Four Chapters Across Three Continents</h1>
+      <p class="masthead-intro">
+        A personal chronicle of roots, scholarships, data science, institutional finance, and amateur league cricket—from the northern plains of Bangladesh to Kuncheng Lake in China, the rolling hills of Iowa, and the coastal waters of Tampa Bay.
+      </p>
+    </header>
+
+    <!-- Top Mounted Island: JourneyAtlasMap -->
+    <section class="interactive-atlas-mount">
+      <JourneyAtlasMap />
+    </section>
+
+    <!-- Four Real Geographical & Intellectual Chapters -->
+    <div class="chapters-container">
+      <!-- Chapter 01: Dinajpur -->
+      <section id="chapter-dinajpur" class="story-chapter-section">
+        <div class="chapter-sidebar">
+          <span class="chapter-index">Chapter 01</span>
+          <h2 class="chapter-place">Dinajpur</h2>
+          <span class="chapter-country">Bangladesh</span>
+          <div class="chapter-meta-data">
+            <span class="coord-tag data-mono">25.6279° N, 88.6332° E</span>
+            <span class="years-tag data-mono">2000 – 2016</span>
+          </div>
+        </div>
+
+        <div class="chapter-prose">
+          <p class="lead-para">
+            I grew up in Dinajpur, a quiet northern district in Bangladesh known for its ancient terracotta temples, lush lychee orchards, and endless monsoon rains. Long before I ever touched a production database or parsed an SEC filing, my world was built on mathematics competitions, notebook physics problems, and dusty street cricket pitch construction.
+          </p>
+          <p>
+            Cricket was our informal laboratory for probability. We played with electrical tape wrapped tightly around tennis balls to make them swing in humid air. Setting field placements when defending small totals on cramped neighborhood grounds taught me the fundamentals of risk asymmetry: you cannot protect every boundary, so you have to calculate where the batter is most likely to make an unforced mistake.
+          </p>
+          <p>
+            Late nights were spent solving olympiad geometry problems by kerosene lamps during power cuts, cultivating a stubborn affection for formal systems that could be rigorously verified from first principles.
+          </p>
+          <blockquote class="chapter-quote">
+            "Before software, cricket and geometry taught me that constraints are not limitations—they are the rules that make tactical optimization possible."
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- Chapter 02: Changshu -->
+      <section id="chapter-changshu" class="story-chapter-section">
+        <div class="chapter-sidebar">
+          <span class="chapter-index">Chapter 02</span>
+          <h2 class="chapter-place">Changshu</h2>
+          <span class="chapter-country">Jiangsu, China</span>
+          <div class="chapter-meta-data">
+            <span class="coord-tag data-mono">31.6539° N, 120.7522° E</span>
+            <span class="years-tag data-mono">2016 – 2018</span>
+          </div>
+        </div>
+
+        <div class="chapter-prose">
+          <p class="lead-para">
+            At sixteen, my life experienced a sharp, irrevocable discontinuity. I was awarded a full scholarship to attend United World College (UWC) Changshu China, situated on an island in Kuncheng Lake, an hour northwest of Shanghai.
+          </p>
+          <p>
+            Overnight, I went from a provincial Bangladeshi town to living in dormitories alongside students from over a hundred countries—classmates who had survived refugee camps, children of diplomats, and self-taught programmers from Eastern Europe. In our economics and philosophy seminars, we debated whether global capital allocation models could ever be both Pareto-efficient and ethically defensible.
+          </p>
+          <p>
+            Living in the heart of the Yangtze River Delta during China's high-speed rail and mobile payment explosion made one thing starkly clear: infrastructure determines destiny. The physical and digital systems a society builds dictate what its citizens can imagine. That era laid the foundation for <em>Worldview</em>, an interactive atlas deconstructing how individuals navigate culture, psychology, and ethics.
+          </p>
+          <blockquote class="chapter-quote">
+            "Moving to China at sixteen permanently cured me of intellectual parochialism. You quickly learn that every human system is an engineered choice, not a natural law."
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- Chapter 03: Iowa -->
+      <section id="chapter-iowa" class="story-chapter-section">
+        <div class="chapter-sidebar">
+          <span class="chapter-index">Chapter 03</span>
+          <h2 class="chapter-place">Decorah & Des Moines</h2>
+          <span class="chapter-country">Iowa, United States</span>
+          <div class="chapter-meta-data">
+            <span class="coord-tag data-mono">43.3017° N, 91.7896° W</span>
+            <span class="years-tag data-mono">2018 – 2022</span>
+          </div>
+        </div>
+
+        <div class="chapter-prose">
+          <p class="lead-para">
+            My collegiate journey brought me to the Upper Midwest to study Data Science, Mathematics, and Economics. In Iowa, the stark winters and quiet limestone bluffs provided an ideal environment for deep, uninterrupted technical study.
+          </p>
+          <p>
+            My undergraduate years became a sequence of high-velocity apprenticeships across health informatics and institutional finance:
+          </p>
+          <ul class="story-roles-list">
+            <li>
+              <strong>Mayo Clinic (Rochester, MN):</strong> Engineered quantitative health data pipelines, modeling longitudinal patient cohort statistics and learning how high-stakes systems must maintain absolute data integrity under audit scrutiny.
+            </li>
+            <li>
+              <strong>SkyBridge Capital (Summer 2021):</strong> Immersed in fund-of-hedge-funds due diligence and multi-manager absolute return strategies. Between analyzing manager tracking errors, my mentor handed me Jim Collins' <em>Good to Great</em>, sparking a lifelong interest in how capital structures shape organizational discipline.
+            </li>
+            <li>
+              <strong>BlackRock:</strong> Explored institutional portfolio risk engines (Aladdin), factor attribution, and liquidity management, experiencing firsthand the computational scale needed to coordinate trillions of dollars of global institutional savings.
+            </li>
+          </ul>
+          <blockquote class="chapter-quote">
+            "Institutional finance is ultimately an exercise in data plumbing: whoever can turn messy, distributed regulatory disclosures into clean relational state wins."
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- Chapter 04: Florida -->
+      <section id="chapter-tampa" class="story-chapter-section">
+        <div class="chapter-sidebar">
+          <span class="chapter-index">Chapter 04</span>
+          <h2 class="chapter-place">Tampa Bay</h2>
+          <span class="chapter-country">Florida, United States</span>
+          <div class="chapter-meta-data">
+            <span class="coord-tag data-mono">27.9506° N, 82.4572° W</span>
+            <span class="years-tag data-mono">2022 – Present</span>
+          </div>
+        </div>
+
+        <div class="chapter-prose">
+          <p class="lead-para">
+            Today, I live and work in the Tampa Bay region as a Solutions Engineer at <strong>Dasseti</strong>. We build the diligence and data infrastructure that institutional asset allocators, pensions, and fund managers rely on to evaluate private equity, private credit, and alternative funds.
+          </p>
+          <p>
+            On nights and weekends, I run the <em>Editorial Systems Lab</em>:
+          </p>
+          <ul class="story-roles-list">
+            <li>
+              Building <strong>Regulatory Lens</strong> and <strong>ADV Screener</strong>: Parsing the complete SEC IARD universe (56,000+ registered advisers) out of raw XML bulk dumps into SQLite, orchestrated with FastMCP servers and fine-tuned LLM evaluators.
+            </li>
+            <li>
+              Writing long-form research monographs on corporate capital structures—such as tracing Uber’s $32.8B funding history or analyzing the 2025 cash flows of twelve major sports leagues.
+            </li>
+            <li>
+              Playing competitive league cricket across Tampa Bay fields (Waverly Park, Evans Park). Whether bowling a death-over spell defending 5 runs or hitting 78 off 47 in a tense chase, cricket remains the grounded, tactile counterpart to software architecture.
+            </li>
+          </ul>
+          <blockquote class="chapter-quote">
+            "Whether it's defending seven runs in the final over at Waverly or parsing 56,000 SEC adviser disclosures, the goal remains the same: clarity under pressure."
+          </blockquote>
+        </div>
+      </section>
+    </div>
+  </div>
+</GemLayout>
+
+<style>
+  .story-page {
+    padding-top: 48px;
+  }
+
+  .story-masthead {
+    margin-bottom: 40px;
+  }
+
+  .page-title {
+    font-size: clamp(38px, 4.5vw, 60px);
+    margin: 0 0 16px;
+    font-weight: 400;
+  }
+
+  .masthead-intro {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    max-width: var(--max-w-prose);
+    margin: 0;
+  }
+
+  .interactive-atlas-mount {
+    margin-bottom: 56px;
+  }
+
+  .chapters-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .story-chapter-section {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 48px;
+    padding-block: 56px;
+    border-top: 1px solid var(--border-subtle);
+    scroll-margin-top: 90px;
+  }
+
+  .chapter-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .chapter-index {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-primary);
+    font-weight: 600;
+  }
+
+  .chapter-place {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 500;
+    margin: 4px 0 0;
+    line-height: 1.15;
+  }
+
+  .chapter-country {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .chapter-meta-data {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 16px;
+    font-size: 11px;
+  }
+
+  .coord-tag {
+    color: var(--accent-highlight);
+  }
+
+  .years-tag {
+    color: var(--text-muted);
+  }
+
+  .chapter-prose {
+    max-width: var(--max-w-prose);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-secondary);
+  }
+
+  .lead-para {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+
+  .story-roles-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .story-roles-list li {
+    background: var(--bg-surface);
+    border-left: 3px solid var(--accent-primary);
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .story-roles-list strong {
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .chapter-quote {
+    margin: 24px 0 8px;
+    padding-left: 20px;
+    border-left: 2px solid var(--accent-highlight);
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-style: italic;
+    color: var(--text-primary);
+    line-height: 1.45;
+  }
+
+  @media (max-width: 820px) {
+    .story-chapter-section {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding-block: 40px;
+    }
+  }
+</style>

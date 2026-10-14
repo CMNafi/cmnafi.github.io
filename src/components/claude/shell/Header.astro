@@ -1,0 +1,469 @@
+---
+/**
+ * /claude global header: wordmark + role tag, primary nav, theme toggle, command-menu pill.
+ * Collapses into a disclosure menu below 900px.
+ */
+import { claudeNav, isActivePath } from './nav';
+
+export interface Props {
+  activePath?: string;
+}
+
+const { activePath = Astro.url.pathname } = Astro.props;
+---
+<header class="cl-header" data-cl-header>
+  <div class="cl-header__inner">
+    <a class="cl-wordmark" href="/claude/" aria-label="C M Nafi, home">
+      <span class="cl-wordmark__name">C M Nafi</span>
+      <span class="cl-wordmark__role" aria-hidden="true">Systems &amp; Capital</span>
+    </a>
+
+    <button
+      class="cl-menu-btn"
+      type="button"
+      aria-expanded="false"
+      aria-controls="cl-header-panel"
+      data-cl-menu-btn
+    >
+      <span class="cl-menu-btn__label" data-cl-menu-label>Menu</span>
+      <span class="cl-menu-btn__icon" aria-hidden="true"><span></span><span></span></span>
+    </button>
+
+    <div class="cl-header__panel" id="cl-header-panel" data-cl-header-panel>
+      <nav class="cl-nav" aria-label="Primary">
+        <ul class="cl-nav__list" role="list">
+          {claudeNav.map((item) => {
+            const active = isActivePath(activePath, item.href);
+            return (
+              <li>
+                <a
+                  class:list={['cl-nav__link', { 'is-active': active }]}
+                  href={item.href}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <div class="cl-header__tools">
+        <div class="cl-theme" role="group" aria-label="Color theme">
+          <button class="cl-theme__opt" type="button" data-cl-theme-set="light" aria-pressed="true">Paper</button>
+          <button class="cl-theme__opt" type="button" data-cl-theme-set="dark" aria-pressed="false">Dark</button>
+        </div>
+
+        <button
+          class="cl-kpill"
+          type="button"
+          data-cl-palette-open
+          aria-haspopup="dialog"
+          aria-controls="cl-palette"
+          aria-keyshortcuts="Meta+K Control+K"
+        >
+          <span class="cl-sr-only">Open the command menu</span>
+          <span class="cl-kpill__keys" aria-hidden="true"><span data-cl-mod-key>⌘</span>K</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const THEME_KEY = 'cmnafi-claude-theme';
+  type Theme = 'light' | 'dark';
+
+  function currentTheme(): Theme {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+
+  function syncThemeButtons(theme: Theme) {
+    document.querySelectorAll<HTMLButtonElement>('[data-cl-theme-set]').forEach((btn) => {
+      btn.setAttribute('aria-pressed', btn.dataset.clThemeSet === theme ? 'true' : 'false');
+    });
+  }
+
+  function applyTheme(theme: Theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch {
+      /* storage unavailable: the choice simply lasts for this page view */
+    }
+    syncThemeButtons(theme);
+    document.dispatchEvent(new CustomEvent('cl:theme-change', { detail: { theme } }));
+  }
+
+  // Expose a tiny API so the command menu can toggle the theme too.
+  (window as unknown as { clTheme: { get: () => Theme; set: (t: Theme) => void } }).clTheme = {
+    get: currentTheme,
+    set: applyTheme,
+  };
+
+  syncThemeButtons(currentTheme());
+  document.querySelectorAll<HTMLButtonElement>('[data-cl-theme-set]').forEach((btn) => {
+    btn.addEventListener('click', () => applyTheme(btn.dataset.clThemeSet === 'dark' ? 'dark' : 'light'));
+  });
+
+  // Show the right modifier key for the reader's platform.
+  const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent);
+  if (!isMac) {
+    document.querySelectorAll<HTMLElement>('[data-cl-mod-key]').forEach((el) => {
+      el.textContent = 'Ctrl ';
+    });
+  }
+
+  // Phone menu disclosure.
+  const header = document.querySelector<HTMLElement>('[data-cl-header]');
+  const menuBtn = document.querySelector<HTMLButtonElement>('[data-cl-menu-btn]');
+  const panel = document.querySelector<HTMLElement>('[data-cl-header-panel]');
+  const menuLabel = document.querySelector<HTMLElement>('[data-cl-menu-label]');
+
+  function setMenu(open: boolean) {
+    if (!menuBtn || !panel || !header) return;
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    header.classList.toggle('is-open', open);
+    if (menuLabel) menuLabel.textContent = open ? 'Close' : 'Menu';
+  }
+
+  menuBtn?.addEventListener('click', () => {
+    setMenu(menuBtn.getAttribute('aria-expanded') !== 'true');
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && header?.classList.contains('is-open')) {
+      setMenu(false);
+      menuBtn?.focus();
+    }
+  });
+
+  // Reset the disclosure when the viewport grows back to desktop.
+  const desktop = window.matchMedia('(min-width: 900px)');
+  desktop.addEventListener('change', (e) => {
+    if (e.matches) setMenu(false);
+  });
+</script>
+
+<style>
+  .cl-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg-canvas);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .cl-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    width: 100%;
+    max-width: calc(var(--max-w-page) + 2 * var(--gutter));
+    min-height: var(--header-h);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Wordmark */
+  .cl-wordmark {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-right: auto;
+    color: var(--text-primary);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .cl-wordmark:hover {
+    color: var(--text-primary);
+  }
+
+  .cl-wordmark__name {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .cl-wordmark__role {
+    position: relative;
+    padding-left: 12px;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    letter-spacing: 0;
+  }
+
+  .cl-wordmark__role::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 1px;
+    height: 0.95em;
+    background: var(--border-subtle);
+    transform: translateY(-50%);
+  }
+
+  /* Panel: inline on desktop */
+  .cl-header__panel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  .cl-nav__list {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cl-nav__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 10px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 450;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .cl-nav__link:hover {
+    color: var(--text-primary);
+    background: var(--bg-subtle);
+  }
+
+  .cl-nav__link.is-active {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .cl-nav__link.is-active::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 4px;
+    height: 1px;
+    background: var(--accent-highlight);
+  }
+
+  .cl-header__tools {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  /* Theme toggle */
+  .cl-theme {
+    display: inline-flex;
+    padding: 2px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--bg-surface);
+  }
+
+  .cl-theme__opt {
+    min-height: 28px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    transition: color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .cl-theme__opt:hover {
+    color: var(--text-primary);
+  }
+
+  .cl-theme__opt[aria-pressed='true'] {
+    background: var(--text-primary);
+    color: var(--bg-canvas);
+  }
+
+  /* Command pill */
+  .cl-kpill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--border-subtle);
+    border-bottom-width: 2px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1;
+    white-space: nowrap;
+    transition: color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .cl-kpill:hover {
+    color: var(--text-primary);
+    border-color: var(--text-muted);
+  }
+
+  /* Menu button (phones/tablets only) */
+  .cl-menu-btn {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .cl-menu-btn__icon {
+    position: relative;
+    display: inline-block;
+    width: 14px;
+    height: 8px;
+  }
+
+  .cl-menu-btn__icon span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform var(--duration-base) var(--ease-standard), top var(--duration-base) var(--ease-standard);
+  }
+
+  .cl-menu-btn__icon span:first-child {
+    top: 0;
+  }
+
+  .cl-menu-btn__icon span:last-child {
+    top: 6.5px;
+  }
+
+  .cl-header.is-open .cl-menu-btn__icon span:first-child {
+    top: 3.25px;
+    transform: rotate(45deg);
+  }
+
+  .cl-header.is-open .cl-menu-btn__icon span:last-child {
+    top: 3.25px;
+    transform: rotate(-45deg);
+  }
+
+  @media (max-width: 1020px) {
+    .cl-wordmark__role {
+      display: none;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .cl-header__inner {
+      flex-wrap: wrap;
+      gap: 0 var(--space-md);
+    }
+
+    .cl-wordmark__role {
+      display: inline;
+    }
+
+    .cl-menu-btn {
+      display: inline-flex;
+    }
+
+    .cl-header__panel {
+      flex-basis: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-md);
+      padding: var(--space-xs) 0 var(--space-lg);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    /* Only hide once JS is known to be running, so the nav never disappears without it. */
+    :global(html.cl-js) .cl-header:not(.is-open) .cl-header__panel {
+      display: none;
+    }
+
+    .cl-nav__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .cl-nav__list li + li {
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .cl-nav__link {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 2px;
+      border-radius: 0;
+      color: var(--text-primary);
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+    }
+
+    .cl-nav__link:hover {
+      background: transparent;
+      color: var(--accent-primary);
+    }
+
+    .cl-nav__link.is-active::after {
+      left: auto;
+      right: 2px;
+      top: 50%;
+      bottom: auto;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+
+    .cl-header__tools {
+      justify-content: space-between;
+    }
+
+    .cl-theme__opt {
+      min-height: 36px;
+      padding: 0 16px;
+      font-size: 0.85rem;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .cl-wordmark__role {
+      display: none;
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) and (max-width: 899px) {
+    /* No physical keyboard expected: the shortcut pill is noise here. */
+    .cl-kpill {
+      display: none;
+    }
+  }
+</style>

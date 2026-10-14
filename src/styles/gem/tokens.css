@@ -1,0 +1,49 @@
+:root {
+  /* Surfaces */
+  --bg-canvas: #FAF8F5;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #F2EFE9;
+  --bg-elevated: #EAE5DC;
+
+  /* Ink & Typography */
+  --text-primary: #111315;
+  --text-secondary: #4A4F55;
+  --text-muted: #767C84;
+
+  /* Accents */
+  --accent-primary: #1E3A2F;      /* Institutional Forest Slate */
+  --accent-highlight: #D94E34;    /* Editorial Vermilion */
+  --accent-amber: #B87D14;        /* Cricket / Data Gold */
+  --accent-blue: #1D4ED8;         /* Systems Link Blue */
+
+  /* Borders & Hairlines (Editorial 1px rules) */
+  --border-subtle: #E4DFD7;
+  --border-strong: #111315;
+
+  /* Typography Stacks */
+  --font-serif: 'Newsreader', 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Spacing & Layout */
+  --max-w-page: 1160px;
+  --max-w-prose: 68ch;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+[data-theme="dark"] {
+  --bg-canvas: #0D0F12;
+  --bg-surface: #14171C;
+  --bg-subtle: #1B1F26;
+  --bg-elevated: #242933;
+  --text-primary: #F3F4F6;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --accent-primary: #34D399;
+  --accent-highlight: #F97316;
+  --accent-amber: #FBBF24;
+  --accent-blue: #60A5FA;
+  --border-subtle: #262B35;
+  --border-strong: #F3F4F6;
+}

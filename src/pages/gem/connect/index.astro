@@ -1,0 +1,385 @@
+---
+import GemLayout from '../../../layouts/GemLayout.astro';
+---
+
+<GemLayout
+  title="Connect & Collaborate | Engineering, Capital & Cricket · C M Nafi"
+  description="Get in touch for institutional data engineering, private market diligence pipelines, capital research, and Tampa Bay cricket."
+  currentPath="/gem/connect/"
+>
+  <div class="connect-page" data-connect-page>
+    <header class="connect-masthead">
+      <span class="eyebrow-tag">Editorial Systems Lab · Direct Inquiries</span>
+      <h1 class="page-title">Connect & Collaborate</h1>
+      <p class="masthead-intro">
+        I read all messages and try to respond if there is a clear strategic overlap or an interesting technical problem being solved.
+      </p>
+    </header>
+
+    <!-- 1-Click Copy Email Action Hero Banner -->
+    <div class="email-action-banner">
+      <div class="banner-text">
+        <span class="banner-label">Primary Electronic Mail</span>
+        <div class="email-address-display">nafi@cmnafi.com</div>
+        <p class="banner-subtext">Direct inbox · PGP encrypted upon request</p>
+      </div>
+      <div class="banner-btn-wrap">
+        <button type="button" class="copy-email-btn" data-copy-email-btn>
+          <span class="btn-text" data-btn-text>Copy Email (nafi@cmnafi.com)</span>
+          <span class="btn-icon">📋</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Visual Confirmation Toast (Hidden by default) -->
+    <div class="toast-notification" data-copy-toast aria-live="polite">
+      ✓ Email address copied to clipboard (nafi@cmnafi.com)
+    </div>
+
+    <!-- What I Enjoy Jamming On Grid -->
+    <section class="jamming-section editorial-section">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">Strategic Focus</span>
+          <h2>What I Enjoy Jamming On</h2>
+        </div>
+        <span class="jamming-hint">Areas of immediate high technical interest</span>
+      </div>
+
+      <div class="jamming-cards-grid">
+        <article class="jam-card">
+          <div class="card-num data-mono">01</div>
+          <h3 class="jam-title">Institutional Data & SEC Filings</h3>
+          <p class="jam-body">
+            Form ADV, Form 13F, relational normalization of regulatory disclosures, private markets due diligence infrastructure, and building LLM / FastMCP tool servers over structured filing registries.
+          </p>
+          <div class="jam-footer">
+            <span class="jam-tag">Regulatory Lens · ADV Screener</span>
+          </div>
+        </article>
+
+        <article class="jam-card">
+          <div class="card-num data-mono">02</div>
+          <h3 class="jam-title">Capital Markets Research</h3>
+          <p class="jam-body">
+            Deep forensic dives into corporate histories, cap table transformations, venture capital & private equity fund economics, alternative investment portfolio frontiers (CAIA), and global sports cash flows.
+          </p>
+          <div class="jam-footer">
+            <span class="jam-tag">Uber $32.8B Study · CAIA Hub</span>
+          </div>
+        </article>
+
+        <article class="jam-card">
+          <div class="card-num data-mono">03</div>
+          <h3 class="jam-title">Cricket Analytics & Tactical Modeling</h3>
+          <p class="jam-body">
+            Geometric fielding restriction engines, death-over run prevention heuristics, ball-by-ball tournament tracking, or coordinating weekend league matches across the Tampa Bay area.
+          </p>
+          <div class="jam-footer">
+            <span class="jam-tag">Captains View · Waverly League</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Social Signals & Profiles Grid -->
+    <section class="profiles-section editorial-section">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">Public Signals</span>
+          <h2>Open Profiles & Registries</h2>
+        </div>
+      </div>
+
+      <div class="profiles-grid">
+        <a href="https://github.com/CMNafi" target="_blank" rel="noopener noreferrer" class="profile-card">
+          <div class="profile-icon">💻</div>
+          <div class="profile-info">
+            <span class="profile-platform">GitHub</span>
+            <strong class="profile-handle">CMNafi ↗</strong>
+            <p class="profile-meta">Open-source regulatory parsers, Astro apps, and FastMCP tools</p>
+          </div>
+        </a>
+
+        <a href="https://linkedin.com/in/cm-nafi" target="_blank" rel="noopener noreferrer" class="profile-card">
+          <div class="profile-icon">💼</div>
+          <div class="profile-info">
+            <span class="profile-platform">LinkedIn</span>
+            <strong class="profile-handle">in/cm-nafi ↗</strong>
+            <p class="profile-meta">Solutions Engineering at Dasseti, BlackRock & Mayo Clinic alumni</p>
+          </div>
+        </a>
+
+        <a href="https://x.com/naficm01" target="_blank" rel="noopener noreferrer" class="profile-card">
+          <div class="profile-icon">𝕏</div>
+          <div class="profile-info">
+            <span class="profile-platform">X (Twitter)</span>
+            <strong class="profile-handle">@naficm01 ↗</strong>
+            <p class="profile-meta">Notes on institutional capital, filings, and weekend cricket</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </div>
+</GemLayout>
+
+<script>
+  function initConnectPage() {
+    const copyBtn = document.querySelector<HTMLButtonElement>('[data-copy-email-btn]');
+    const toast = document.querySelector<HTMLElement>('[data-copy-toast]');
+    const btnText = document.querySelector<HTMLElement>('[data-btn-text]');
+
+    copyBtn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('nafi@cmnafi.com');
+        if (toast) {
+          toast.classList.add('visible');
+          setTimeout(() => toast.classList.remove('visible'), 3200);
+        }
+        if (btnText) {
+          btnText.textContent = 'Copied to Clipboard! ✓';
+          setTimeout(() => {
+            btnText.textContent = 'Copy Email (nafi@cmnafi.com)';
+          }, 2500);
+        }
+      } catch (err) {
+        // Fallback for older browsers
+        window.location.href = 'mailto:nafi@cmnafi.com';
+      }
+    });
+  }
+
+  initConnectPage();
+  document.addEventListener('astro:page-load', initConnectPage);
+</script>
+
+<style>
+  .connect-page {
+    padding-top: 48px;
+    position: relative;
+  }
+
+  .connect-masthead {
+    margin-bottom: 40px;
+  }
+
+  .page-title {
+    font-size: clamp(38px, 4.5vw, 60px);
+    margin: 0 0 16px;
+    font-weight: 400;
+  }
+
+  .masthead-intro {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: var(--max-w-prose);
+    margin: 0;
+  }
+
+  /* Email Action Banner */
+  .email-action-banner {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .banner-label {
+    display: block;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .email-address-display {
+    font-family: var(--font-serif);
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.15;
+  }
+
+  .banner-subtext {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 6px 0 0;
+  }
+
+  .copy-email-btn {
+    background: var(--accent-primary);
+    color: var(--bg-canvas);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .copy-email-btn:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+  }
+
+  /* Toast Notification */
+  .toast-notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--accent-primary);
+    color: var(--bg-canvas);
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: var(--font-sans);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: all 0.25s ease;
+  }
+
+  .toast-notification.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Jamming Grid */
+  .jamming-hint {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+
+  .jamming-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .jam-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card-num {
+    font-size: 12px;
+    color: var(--accent-highlight);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .jam-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 10px;
+    line-height: 1.25;
+  }
+
+  .jam-body {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0 0 20px;
+  }
+
+  .jam-footer {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 12px;
+  }
+
+  .jam-tag {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+
+  /* Profiles Grid */
+  .profiles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .profile-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    display: flex;
+    gap: 16px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.15s ease;
+  }
+
+  .profile-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+
+  .profile-icon {
+    font-size: 24px;
+  }
+
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .profile-platform {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .profile-handle {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .profile-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 820px) {
+    .email-action-banner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .jamming-cards-grid {
+      grid-template-columns: 1fr;
+    }
+    .profiles-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

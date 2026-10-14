@@ -1,0 +1,282 @@
+/*
+ * /claude base styles: element-level defaults for every page that uses ClaudeLayout.
+ * Loaded after tokens.css. Selectors are wrapped in :where() wherever possible so they carry
+ * zero specificity and any component's scoped <style> wins without a fight.
+ * Colors come only from tokens.css.
+ */
+
+/* ---------- Reset ---------- */
+:where(*, *::before, *::after) {
+  box-sizing: border-box;
+}
+
+:where(body, h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ol, ul) {
+  margin: 0;
+}
+
+:where(ol, ul)[role='list'],
+:where(ol, ul).cl-plain-list {
+  list-style: none;
+  padding: 0;
+}
+
+:where(img, picture, svg, video, canvas) {
+  display: block;
+  max-width: 100%;
+}
+
+:where(img, svg) {
+  height: auto;
+}
+
+:where(input, button, textarea, select) {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+:where(button) {
+  cursor: pointer;
+}
+
+:where(table) {
+  border-collapse: collapse;
+}
+
+/* ---------- Document ---------- */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--bg-canvas);
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* ---------- Typography ---------- */
+:where(h1, h2, h3, h4) {
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+:where(h1, h2) {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+:where(h1) {
+  font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.75rem);
+}
+
+:where(h2) {
+  font-size: clamp(1.625rem, 1.3rem + 1.2vw, 2.25rem);
+}
+
+:where(h3) {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+:where(h4) {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+:where(p) {
+  text-wrap: pretty;
+}
+
+:where(strong, b) {
+  font-weight: 600;
+}
+
+:where(em, i) {
+  font-style: italic;
+}
+
+:where(small) {
+  font-size: 0.875em;
+}
+
+:where(code, kbd, samp, pre) {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+:where(kbd) {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--border-subtle);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 0.78em;
+  line-height: 1.5;
+  text-align: center;
+}
+
+:where(hr) {
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+:where(blockquote) {
+  font-family: var(--font-serif);
+}
+
+/* Numbers that should line up: tables, dates, money, cricket stats */
+:where(table, time, data, .cl-tnum) {
+  font-variant-numeric: tabular-nums;
+}
+
+.cl-tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+.cl-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/* ---------- Links ---------- */
+:where(a) {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--border-subtle);
+  text-underline-offset: 0.2em;
+  transition: color var(--duration-fast) var(--ease-standard),
+    text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+
+:where(a:hover) {
+  color: var(--accent-primary);
+  text-decoration-color: currentColor;
+}
+
+/* ---------- Focus & selection ---------- */
+:where(:focus) {
+  outline: none;
+}
+
+:where(:focus-visible) {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--text-primary);
+}
+
+/* ---------- Layout utilities (prefixed so they never collide) ---------- */
+.cl-container {
+  width: 100%;
+  max-width: calc(var(--max-w-page) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.cl-prose {
+  max-width: var(--max-w-prose);
+}
+
+.cl-sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.cl-skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--text-primary);
+  color: var(--bg-canvas);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transform: translateY(-160%);
+}
+
+.cl-skip-link:focus-visible,
+.cl-skip-link:focus {
+  transform: none;
+}
+
+main:focus {
+  outline: none;
+}
+
+/*
+ * Placeholder look for island starter stubs (Agent 3 replaces the stubs; real islands never
+ * carry this class), so layouts read as intentional while the islands are being built.
+ */
+.cl-island-stub {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  padding: 24px;
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+/* ---------- Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

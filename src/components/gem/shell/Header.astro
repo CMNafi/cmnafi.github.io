@@ -1,0 +1,258 @@
+---
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '' } = Astro.props;
+
+const navItems = [
+  { label: 'Home', href: '/gem/' },
+  { label: 'Projects', href: '/gem/garage/' },
+  { label: 'Essays & Notes', href: '/gem/field-notes/' },
+  { label: 'Story', href: '/gem/story/' },
+  { label: 'Connect', href: '/gem/connect/' }
+];
+---
+
+<header class="gem-header">
+  <div class="header-inner">
+    <!-- Wordmark & Role -->
+    <div class="brand-group">
+      <a href="/gem/" class="brand-wordmark">
+        <span class="name">C M Nafi</span>
+        <span class="role-tag">Systems & Capital</span>
+      </a>
+    </div>
+
+    <!-- Navigation links -->
+    <nav class="main-nav" aria-label="Main Navigation">
+      {navItems.map((item) => {
+        const isActive = currentPath === item.href || (item.href !== '/gem/' && currentPath.startsWith(item.href));
+        return (
+          <a
+            href={item.href}
+            class:list={['nav-link', { active: isActive }]}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        );
+      })}
+    </nav>
+
+    <!-- Shell Controls -->
+    <div class="shell-controls">
+      <button
+        type="button"
+        class="ctrl-btn palette-btn"
+        data-open-palette
+        title="Open Command Palette (? or ⌘K)"
+        aria-label="Open Command Palette"
+      >
+        <kbd class="shortcut-kbd">⌘K</kbd>
+      </button>
+
+      <button
+        type="button"
+        class="ctrl-btn theme-toggle"
+        data-theme-toggle
+        title="Toggle Paper / Dark theme"
+        aria-label="Toggle Paper or Dark theme"
+      >
+        <span class="theme-label" data-theme-label>Theme</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  function initHeaderControls() {
+    const themeBtn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+    const themeLabel = document.querySelector<HTMLElement>('[data-theme-label]');
+    const paletteBtn = document.querySelector<HTMLButtonElement>('[data-open-palette]');
+
+    function updateLabel(theme: string) {
+      if (themeLabel) {
+        themeLabel.textContent = theme === 'dark' ? 'Paper' : 'Dark';
+      }
+    }
+
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'paper';
+    updateLabel(currentTheme);
+
+    themeBtn?.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const nextTheme = isDark ? 'paper' : 'dark';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      try {
+        localStorage.setItem('cmnafi.gem.theme', nextTheme);
+      } catch {}
+      updateLabel(nextTheme);
+    });
+
+    paletteBtn?.addEventListener('click', () => {
+      const palette = document.querySelector<HTMLDialogElement>('[data-command-dialog]');
+      if (palette) {
+        palette.showModal();
+      }
+    });
+
+    // Global keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === '?' && !['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName))) {
+        e.preventDefault();
+        const palette = document.querySelector<HTMLDialogElement>('[data-command-dialog]');
+        if (palette) {
+          if (palette.open) palette.close();
+          else palette.showModal();
+        }
+      }
+    });
+  }
+
+  initHeaderControls();
+  document.addEventListener('astro:page-load', initHeaderControls);
+</script>
+
+<style>
+  .gem-header {
+    border-bottom: 1px solid var(--border-strong);
+    background: var(--bg-canvas);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    width: min(var(--max-w-page), calc(100% - 48px));
+    margin-inline: auto;
+    min-height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .brand-group {
+    display: flex;
+    align-items: center;
+  }
+
+  .brand-wordmark {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--text-primary);
+  }
+
+  .brand-wordmark .name {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-wordmark .role-tag {
+    font-size: 10px;
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .main-nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-left: auto;
+  }
+
+  .nav-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding-block: 8px;
+    position: relative;
+    transition: color 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+
+  .nav-link.active {
+    color: var(--text-primary);
+  }
+
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background: var(--accent-highlight);
+  }
+
+  .shell-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ctrl-btn {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    padding: 6px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+
+  .ctrl-btn:hover {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+  }
+
+  .shortcut-kbd {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  .theme-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 820px) {
+    .header-inner {
+      flex-wrap: wrap;
+      padding-block: 16px;
+      min-height: auto;
+      gap: 14px;
+    }
+
+    .main-nav {
+      order: 3;
+      width: 100%;
+      margin-left: 0;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .shell-controls {
+      margin-left: auto;
+    }
+  }
+</style>

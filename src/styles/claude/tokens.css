@@ -1,0 +1,90 @@
+/*
+ * /claude design tokens: the shared contract for all three /claude agents.
+ * Loaded only by src/layouts/ClaudeLayout.astro, so nothing here touches the main site.
+ */
+:root {
+  color-scheme: light;
+
+  /* Surfaces */
+  --bg-canvas: #FAF8F5;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #F2EFE9;
+  --bg-elevated: #EAE5DC;
+
+  /* Ink & typography */
+  --text-primary: #111315;
+  --text-secondary: #4A4F55;
+  --text-muted: #767C84;
+
+  /* Accents */
+  --accent-primary: #1E3A2F;   /* institutional forest slate */
+  --accent-highlight: #D94E34; /* editorial vermilion */
+  --accent-amber: #B87D14;     /* cricket / data gold */
+  --accent-blue: #1D4ED8;      /* systems link blue */
+
+  /* Borders & hairlines */
+  --border-subtle: #E4DFD7;
+  --border-strong: #111315;
+
+  /* Type stacks */
+  --font-serif: 'Newsreader', 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Layout */
+  --max-w-page: 1160px;
+  --max-w-prose: 68ch;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  /* ---- Added by the shell (Agent 1). Additive only; nothing above changes. ---- */
+
+  /* Page gutters & rhythm */
+  --gutter: clamp(16px, 4vw, 40px);
+  --header-h: 64px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 72px;
+  --space-4xl: 112px;
+
+  /* Interaction */
+  --focus-ring: var(--accent-blue);
+  --text-on-accent: #FFFFFF;
+  --selection-bg: rgba(217, 78, 52, 0.18);
+  --overlay-scrim: rgba(17, 19, 21, 0.36);
+  --shadow-card: 0 1px 2px rgba(17, 19, 21, 0.04);
+  --shadow-overlay: 0 1px 2px rgba(17, 19, 21, 0.06), 0 24px 64px rgba(17, 19, 21, 0.18);
+  --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration-fast: 140ms;
+  --duration-base: 220ms;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-canvas: #0D0F12;
+  --bg-surface: #14171C;
+  --bg-subtle: #1B1F26;
+  --bg-elevated: #242933;
+  --text-primary: #F3F4F6;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --accent-primary: #34D399;
+  --accent-highlight: #F97316;
+  --accent-amber: #FBBF24;
+  --accent-blue: #60A5FA;
+  --border-subtle: #262B35;
+  --border-strong: #F3F4F6;
+
+  /* Added by the shell (Agent 1) */
+  --text-on-accent: #0D0F12;
+  --selection-bg: rgba(249, 115, 22, 0.28);
+  --overlay-scrim: rgba(0, 0, 0, 0.62);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-overlay: 0 1px 2px rgba(0, 0, 0, 0.4), 0 24px 64px rgba(0, 0, 0, 0.55);
+}

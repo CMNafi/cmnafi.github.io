@@ -1,0 +1,480 @@
+---
+/**
+ * /claude/connect/: how to reach Nafi, what he likes to work on, one-click email copy.
+ * Related-reading titles are read from the content collections so they always match the source.
+ */
+import { getCollection } from 'astro:content';
+import ClaudeLayout from '@/layouts/ClaudeLayout.astro';
+
+const EMAIL = 'nafi@cmnafi.com';
+
+const notes = await getCollection('field-notes', ({ data }) => !data.draft);
+const projects = await getCollection('projects');
+const noteTitle = (slug: string) => notes.find((n) => n.slug === slug)?.data.title;
+const projectTitle = (slug: string) => projects.find((p) => p.slug === slug)?.data.title;
+
+interface Related {
+  label: string;
+  href: string;
+}
+
+function related(items: Array<{ label?: string; href: string }>): Related[] {
+  return items.filter((i): i is Related => Boolean(i.label));
+}
+
+const topics = [
+  {
+    title: 'Institutional Data & SEC Filings',
+    body: 'Form ADV, Form 13F, private markets data engineering, and LLM/MCP tooling over regulatory datasets.',
+    related: related([
+      { label: noteTitle('adv-universe'), href: '/field-notes/adv-universe' },
+      { label: projectTitle('form-adv-data-finder'), href: '/garage/form-adv-data-finder' },
+    ]),
+  },
+  {
+    title: 'Capital Markets Research',
+    body: 'Deep dives into corporate histories, cap tables, PE/VC fund economics, and sports cash flows.',
+    related: related([
+      { label: noteTitle('uber-the-32-billion-hole'), href: '/field-notes/uber-the-32-billion-hole' },
+      { label: noteTitle('capital-lens-16'), href: '/field-notes/capital-lens-16' },
+    ]),
+  },
+  {
+    title: 'Cricket Analytics & Local Matches',
+    body: 'Tactical fielding models, ball-by-ball analytics, or Tampa Bay league cricket.',
+    related: related([
+      { label: projectTitle('captains-view'), href: '/garage/captains-view' },
+      {
+        label: noteTitle('four-wickets-and-a-chase-blazehawks-vs-go-leopards'),
+        href: '/field-notes/four-wickets-and-a-chase-blazehawks-vs-go-leopards',
+      },
+    ]),
+  },
+];
+
+const profiles = [
+  { name: 'GitHub', handle: 'CMNafi', href: 'https://github.com/CMNafi' },
+  { name: 'LinkedIn', handle: '/in/cm-nafi', href: 'https://www.linkedin.com/in/cm-nafi/' },
+  { name: 'X', handle: '@naficm01', href: 'https://x.com/naficm01' },
+];
+---
+<ClaudeLayout
+  title="Connect & Collaborate"
+  description="How to reach C M Nafi: email, GitHub, LinkedIn and X, and the problems he most enjoys working on."
+  activePath="/claude/connect/"
+>
+  <div class="cn cl-container">
+    <section class="cn-hero" aria-labelledby="cn-title">
+      <div class="cn-hero__main">
+        <h1 id="cn-title" class="cn-title">Connect &amp; Collaborate</h1>
+        <p class="cn-note">
+          I read all messages and try to respond if there is a clear strategic overlap or an interesting technical
+          problem being solved.
+        </p>
+
+        <div class="cn-email">
+          <button class="cn-copy" type="button" data-copy-email={EMAIL}>
+            <svg class="cn-copy__icon" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false">
+              <rect x="6.5" y="6.5" width="10" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"></rect>
+              <path d="M13.5 4.5v-.5A1.5 1.5 0 0 0 12 2.5H4A1.5 1.5 0 0 0 2.5 4v8A1.5 1.5 0 0 0 4 13.5h.5" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+            </svg>
+            <span>Copy email (<span class="cn-copy__addr">{EMAIL}</span>)</span>
+          </button>
+          <a class="cn-mailto" href={`mailto:${EMAIL}`}>Or open your mail app <span aria-hidden="true">→</span></a>
+        </div>
+
+        <p class="cn-based">Based in Land O’ Lakes, Florida. Working remotely.</p>
+      </div>
+
+      <div class="cn-hero__side">
+        <h2 class="cn-side-title">Elsewhere</h2>
+        <ul class="cn-profiles" role="list">
+          {profiles.map((p) => (
+            <li>
+              <a class="cn-profile" href={p.href} target="_blank" rel="noopener noreferrer">
+                <span class="cn-profile__name">{p.name}</span>
+                <span class="cn-profile__handle cl-mono">{p.handle}</span>
+                <span class="cn-profile__arrow" aria-hidden="true">↗</span>
+                <span class="cl-sr-only"> (opens in a new tab)</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="cn-topics" aria-labelledby="cn-topics-title">
+      <h2 id="cn-topics-title" class="cn-topics__title">What I Enjoy Jamming On</h2>
+      <ul class="cn-grid" role="list">
+        {topics.map((t) => (
+          <li class="cn-card">
+            <h3 class="cn-card__title">{t.title}</h3>
+            <p class="cn-card__body">{t.body}</p>
+            {t.related.length > 0 && (
+              <div class="cn-card__related">
+                <p class="cn-card__related-label">Start with</p>
+                <ul role="list">
+                  {t.related.map((r) => (
+                    <li><a href={r.href}>{r.label}</a></li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+
+  <div class="cn-toast" role="status" aria-live="polite" aria-atomic="true" data-copy-toast></div>
+</ClaudeLayout>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('[data-copy-email]');
+  const toast = document.querySelector<HTMLElement>('[data-copy-toast]');
+  let hideTimer: number | undefined;
+
+  function showToast(message: string) {
+    if (!toast) return;
+    // Clear first so screen readers re-announce a repeated message.
+    toast.textContent = '';
+    window.clearTimeout(hideTimer);
+    window.requestAnimationFrame(() => {
+      toast.textContent = message;
+      toast.classList.add('is-visible');
+      hideTimer = window.setTimeout(() => {
+        toast.classList.remove('is-visible');
+        window.setTimeout(() => {
+          if (!toast.classList.contains('is-visible')) toast.textContent = '';
+        }, 300);
+      }, 2800);
+    });
+  }
+
+  function legacyCopy(text: string): boolean {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '0';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try {
+      ok = document.execCommand('copy');
+    } catch {
+      ok = false;
+    }
+    ta.remove();
+    return ok;
+  }
+
+  button?.addEventListener('click', async () => {
+    const email = button.dataset.copyEmail ?? '';
+    let ok = false;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(email);
+        ok = true;
+      }
+    } catch {
+      ok = false;
+    }
+    if (!ok) ok = legacyCopy(email);
+    button.focus();
+
+    if (ok) {
+      button.classList.add('is-copied');
+      window.setTimeout(() => button.classList.remove('is-copied'), 2800);
+      showToast(`Copied ${email} to your clipboard.`);
+    } else {
+      showToast(`Couldn’t copy automatically. The address is ${email}.`);
+    }
+  });
+</script>
+
+<style>
+  .cn {
+    padding-top: clamp(40px, 7vw, 96px);
+    padding-bottom: clamp(56px, 8vw, 112px);
+  }
+
+  /* Hero */
+  .cn-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: var(--space-3xl);
+    align-items: start;
+  }
+
+  .cn-title {
+    font-size: clamp(2.5rem, 1.6rem + 3.8vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+
+  .cn-note {
+    max-width: 34em;
+    margin-top: var(--space-lg);
+    color: var(--text-secondary);
+    font-family: var(--font-serif);
+    font-size: clamp(1.15rem, 1.05rem + 0.5vw, 1.45rem);
+    line-height: 1.5;
+  }
+
+  .cn-email {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md) var(--space-lg);
+    margin-top: var(--space-xl);
+  }
+
+  .cn-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    max-width: 100%;
+    padding: 0 20px;
+    border: 1px solid var(--text-primary);
+    border-radius: var(--radius-sm);
+    background: var(--text-primary);
+    color: var(--bg-canvas);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: left;
+    transition: background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .cn-copy:hover {
+    border-color: var(--accent-primary);
+    background: var(--accent-primary);
+    color: var(--text-on-accent);
+  }
+
+  .cn-copy.is-copied {
+    border-color: var(--accent-primary);
+    background: var(--accent-primary);
+    color: var(--text-on-accent);
+  }
+
+  .cn-copy__icon {
+    flex: none;
+  }
+
+  .cn-copy__addr {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    overflow-wrap: anywhere;
+  }
+
+  .cn-mailto {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    text-decoration-color: var(--border-subtle);
+  }
+
+  .cn-based {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  /* Profiles */
+  .cn-side-title {
+    margin-bottom: var(--space-sm);
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+
+  .cn-profiles {
+    display: grid;
+    gap: var(--space-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cn-profile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name arrow'
+      'handle arrow';
+    align-items: center;
+    gap: 2px var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .cn-profile:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
+
+  .cn-profile__name {
+    grid-area: name;
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+
+  .cn-profile__handle {
+    grid-area: handle;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    overflow-wrap: anywhere;
+  }
+
+  .cn-profile__arrow {
+    grid-area: arrow;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    transition: transform var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+  }
+
+  .cn-profile:hover .cn-profile__arrow {
+    color: var(--accent-primary);
+    transform: translate(2px, -2px);
+  }
+
+  /* Topics */
+  .cn-topics {
+    margin-top: clamp(64px, 9vw, 120px);
+  }
+
+  .cn-topics__title {
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-strong);
+    font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+  }
+
+  .cn-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-lg);
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cn-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    min-width: 0;
+    padding: var(--space-lg);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+  }
+
+  .cn-card__title {
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+
+  .cn-card__body {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .cn-card__related {
+    margin-top: auto;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .cn-card__related-label {
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+  }
+
+  .cn-card__related ul {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cn-card__related a {
+    color: var(--text-primary);
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.35;
+    text-decoration-color: var(--border-subtle);
+  }
+
+  .cn-card__related a:hover {
+    color: var(--accent-primary);
+    text-decoration-color: currentColor;
+  }
+
+  /* Toast */
+  .cn-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    z-index: 60;
+    max-width: calc(100vw - 32px);
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    background: var(--text-primary);
+    color: var(--bg-canvas);
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-overlay);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 8px);
+    transition: opacity var(--duration-base) var(--ease-standard), transform var(--duration-base) var(--ease-standard);
+  }
+
+  .cn-toast:empty {
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .cn-toast.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  @media (max-width: 899px) {
+    .cn-hero {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2xl);
+    }
+
+    .cn-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-md);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .cn-copy {
+      width: 100%;
+      justify-content: center;
+      padding: 10px 16px;
+    }
+  }
+</style>
