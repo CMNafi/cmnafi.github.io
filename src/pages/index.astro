@@ -1,553 +1,67 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-
-// Copy follows STORY.md. Ground truth: Nafi, Land O' Lakes, Florida, Solutions Engineer at Dasseti.
-// Layout rule for this page: one idea above the fold, then a quiet index. Resist adding sections.
-
-const notes = (await getCollection('field-notes'))
-  .filter((n) => !n.data.draft)
-  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
-const latestNotes = notes.slice(0, 5);
-
-const projects = (await getCollection('projects'))
-  .filter((p) => p.data.status === 'live')
-  .sort((a, b) => b.data.priority - a.data.priority)
-  .slice(0, 3);
-
-// One-line descriptions for the homepage list; anything not listed falls back to the project summary
-const taglines: Record<string, string> = {
-  worldview: 'An atlas of everyday choices, and the evidence behind them.',
-  'form-adv-data-finder': "An investment adviser's filings, joined into one profile.",
-  'style-fielding': 'Cricket fielding plans for every phase of a match.',
-  'captains-view': 'A tactical cricket fielding planner.'
-};
-
-const building = [
-  ...projects.map((p) => ({
-    title: p.data.title,
-    line: taglines[p.slug] ?? p.data.summary,
-    href: p.data.liveUrl ?? `/garage/${p.slug}`
-  })),
-  { title: 'CAIA Corner', line: 'A study hub for alternative investments.', href: '/caia' }
+import { getCollection, type CollectionEntry } from 'astro:content';
+import FormAdvMiniExplorer from '@/components/codex/islands/FormAdvMiniExplorer.astro';
+import CricketFieldingTactician from '@/components/codex/islands/CricketFieldingTactician.astro';
+import '@/styles/home-hub.css';
+const entries: CollectionEntry<'field-notes'>[] = await getCollection('field-notes');
+const notes = entries.filter(n => !n.data.draft).sort((a,b) => b.data.publishedAt.valueOf()-a.data.publishedAt.valueOf());
+const slugs = ['retail-software-landscape','uber-the-32-billion-hole','the-open-syllabus','adv-universe','gamestop-bid-for-ebay','capital-lens-16','four-wickets-and-a-chase-blazehawks-vs-go-leopards','one-of-those-days-swat-vs-tampa-telugu-titans','seven-to-defend-swat-vs-royal-phoenix','going-infinite','good-to-great'];
+const selected = slugs.map(slug => notes.find(n=>n.slug===slug)).filter((n): n is NonNullable<typeof n> => Boolean(n));
+const stream = (n: typeof notes[number]) => n.slug==='the-open-syllabus' ? 'finance' : n.data.category.toLowerCase();
+const streams = [{id:'all',name:'All selected'},{id:'finance',name:'Capital & systems'},{id:'cricket',name:'Cricket logs'},{id:'books',name:'Book notes'}];
+const latest = notes[0];
+const builds = [
+  {id:'claude',name:'The editorial monograph',description:'A warm reading-first version, with generous margins and a curated research archive.',focus:'Narrative pacing and long-form reading'},
+  {id:'gem',name:'The interactive systems lab',description:'An experiment in bringing the tools and the stories behind them into the same room.',focus:'Interactive demos and structured ledgers'},
+  {id:'codex',name:'The editorial workbench',description:'A paper-and-dark workspace for source-linked adviser snapshots, cricket tactics, and thoughtful writing.',focus:'Real data, simple controls, and a clear index'}
 ];
-
-const route = ['Dinajpur', 'Rangpur', 'Changshu', 'Decorah', 'Rochester', 'Wilmington', "Land O' Lakes"];
-
-const nav = [
-  { label: 'Field Notes', href: '/field-notes' },
-  { label: 'Garage', href: '/garage' },
-  { label: 'Play', href: '/play' },
-  { label: 'Story', href: '/story' },
-  { label: 'Connect', href: '/connect' }
+const chapters = [
+  {id:'dasseti',place:"Land O' Lakes, Florida",organization:'Dasseti',period:'2023 to now',title:'Translating between teams and software',body:'I work as a solutions engineer at Dasseti, remotely from Florida. The job is to understand the investment team’s question and help the product answer it in language that makes sense to them.',lesson:'Learn how the room talks before deciding what it needs.',href:'/story/#dasseti'},
+  {id:'blackrock',place:'Wilmington, Delaware',organization:'BlackRock',period:'2022 to 2023',title:'A trillion dollars is a storytelling problem',body:'At BlackRock, I worked in Data & AI. Numbers mattered, but so did the way people understood them. An application mix-up between Blackstone and BlackRock became part of how I found that room.',lesson:'The names can be similar. The businesses behind them are not.',href:'/field-notes/blackstone-vs-blackrock/'},
+  {id:'skybridge',place:'New York',organization:'SkyBridge Associates',period:'2021 to 2022',title:'Narrative is translation',body:'My internship at SkyBridge connected alternative investments with the questions people actually ask about a manager. It was also where a recommendation to read Good to Great stayed with me.',lesson:'A useful story helps someone see what the numbers are saying.',href:'/field-notes/good-to-great/'},
+  {id:'mayo',place:'Rochester, Minnesota',organization:'Mayo Clinic',period:'2021 to 2022',title:'Messy data is the job',body:'Working with healthcare data at Mayo Clinic taught me to pay attention to the seams: what a field means, where it comes from, and what changes when it passes from one system to another.',lesson:'The work begins with understanding the data you have.',href:'/story/#rochester-mayo'},
+  {id:'origins',place:'Dinajpur, Changshu, Decorah',organization:'Home, UWC, Luther College',period:'Childhood to 2022',title:'The newest person in the room',body:'I left Dinajpur at twelve for military school in Rangpur. At sixteen, a full scholarship took me to UWC Changshu in China. Four winters at Luther College in Iowa followed, studying data science with a computer science minor.',lesson:'Listen first. Learn the room. Then make yourself useful.',href:'/story/'}
 ];
-
-const formatDate = (d: Date) =>
-  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric', timeZone: 'UTC' });
-
-// Search dataset for the Cmd+K dialog
-const searchPayload = notes.map((n) => ({
-  title: n.data.title,
-  slug: n.slug,
-  category: n.data.category,
-  excerpt: n.data.excerpt || n.data.description || ''
-}));
+const initial = chapters[0];
+const title='C M Nafi | Curiosities, Systems & Stories';
+const description='Solutions engineer at Dasseti, based in Florida. Notes on capital, books and cricket, tools from the Garage, and three live website redesign experiments.';
 ---
-
-<BaseLayout
-  title="C M Nafi"
-  description="Solutions Engineer at Dasseti, living in Land O' Lakes, Florida. I grew up in Dinajpur, Bangladesh, left home at twelve, and translate between investment teams and software."
-  hideHeader={true}
->
-  <div class="home">
-    <header class="top wrap">
-      <a class="wordmark" href="/">C M Nafi</a>
-      <nav class="top-nav" aria-label="Primary">
-        {nav.map((item) => <a href={item.href}>{item.label}</a>)}
-      </nav>
-      <button type="button" id="cmd-k-trigger" class="search-btn" aria-label="Search field notes (Ctrl or Command + K)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="11" cy="11" r="7.5"></circle>
-          <line x1="21" y1="21" x2="16.5" y2="16.5"></line>
-        </svg>
-      </button>
-    </header>
-
-    <section class="intro wrap-narrow" aria-labelledby="intro-title">
-      <h1 id="intro-title" class="intro-title">
-        <span class="rise">Learn the room.</span>
-        <span class="rise" style="animation-delay: 0.12s">Then <em>translate.</em></span>
-      </h1>
-
-      <p class="intro-lede rise" style="animation-delay: 0.3s">
-        I'm Nafi, a solutions engineer at Dasseti. I left home at twelve for military school in Bangladesh and have
-        been the newest person in the room ever since. These days I live in Florida and translate between investment
-        teams and the software they run due diligence on.
-      </p>
-
-      <p class="route rise" style="animation-delay: 0.4s">
-        {route.map((place, i) => (
-          <>
-            <span>{place}</span>
-            {i < route.length - 1 && <span class="route-sep" aria-hidden="true">→</span>}
-          </>
-        ))}
-      </p>
-
-      <div class="intro-actions rise" style="animation-delay: 0.5s">
-        <a class="btn" href="/story">Read the story <span class="arr" aria-hidden="true">→</span></a>
-        <a class="quiet-link" href="/field-notes">Field notes <span class="arr" aria-hidden="true">→</span></a>
-      </div>
-    </section>
-
-    <div class="index wrap-narrow">
-      <section class="block" aria-labelledby="writing-title">
-        <h2 id="writing-title" class="block-label">Writing</h2>
-        <div class="block-body">
-          <ul class="list">
-            {latestNotes.map((n) => (
-              <li>
-                <a class="item" href={`/field-notes/${n.slug}`}>
-                  <span class="item-date">{formatDate(n.data.publishedAt)}</span>
-                  <span class="item-title">{n.data.title}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-          <a class="more" href="/field-notes">All {notes.length} field notes <span class="arr" aria-hidden="true">→</span></a>
-        </div>
-      </section>
-
-      <section class="block" aria-labelledby="building-title">
-        <h2 id="building-title" class="block-label">Building</h2>
-        <div class="block-body">
-          <ul class="list">
-            {building.map((b) => (
-              <li>
-                <a class="item item-project" href={b.href}>
-                  <span class="item-title">{b.title}</span>
-                  <span class="item-line">{b.line}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-          <a class="more" href="/garage">The whole garage <span class="arr" aria-hidden="true">→</span></a>
-        </div>
-      </section>
-
-      <section class="block" aria-labelledby="hello-title">
-        <h2 id="hello-title" class="block-label">Say hello</h2>
-        <div class="block-body">
-          <p class="hello">
-            Happy to talk about due diligence, allocator workflows, or a close finish in cricket.
-            <a href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a>
-          </p>
-        </div>
-      </section>
-    </div>
-
-    <dialog id="cmd-k-modal" class="search-modal" aria-label="Search field notes">
-      <div class="search-box">
-        <div class="search-head">
-          <input
-            type="search"
-            id="cmd-k-input"
-            class="search-field"
-            placeholder="Search field notes"
-            aria-label="Search field notes"
-            autocomplete="off"
-            spellcheck="false"
-          />
-          <button type="button" id="cmd-k-close" class="search-close" aria-label="Close search">Esc</button>
-        </div>
-        <div id="search-results-list" class="search-results" role="listbox" aria-label="Results"></div>
-      </div>
-    </dialog>
-
-    <script id="search-notes-data" type="application/json" set:html={JSON.stringify(searchPayload)}></script>
-  </div>
-</BaseLayout>
-
-<style>
-  .home {
-    --ink-quiet: #8f8475;
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
-    background: var(--surface-base);
-    color: var(--ink-primary);
-    font-family: var(--font-serif);
-  }
-
-  .wrap,
-  .wrap-narrow {
-    margin: 0 auto;
-    box-sizing: border-box;
-    padding-left: clamp(16px, 5vw, 48px);
-    padding-right: clamp(16px, 5vw, 48px);
-  }
-
-  .wrap { max-width: 1200px; }
-  .wrap-narrow { max-width: 1040px; }
-
-  .home a { color: var(--ink-primary); text-decoration: none; }
-
-  .home :is(a, button):focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 4px;
-    border-radius: 2px;
-  }
-
-  /* Header */
-  .top {
-    display: flex;
-    align-items: center;
-    gap: 8px 28px;
-    padding-top: 28px;
-    padding-bottom: 28px;
-  }
-
-  .wordmark { font-size: 20px; letter-spacing: -0.01em; margin-right: auto; }
-
-  .top-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px; }
-
-  .top-nav a,
-  .block-label,
-  .item-date,
-  .route,
-  .btn,
-  .quiet-link,
-  .more {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .top-nav a {
-    color: var(--ink-secondary) !important;
-    padding: 10px 0;
-    transition: color var(--dur-fast);
-  }
-
-  .top-nav a:hover { color: var(--ink-primary) !important; }
-
-  .search-btn {
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    margin-left: -8px;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: var(--ink-secondary);
-    cursor: pointer;
-    transition: color var(--dur-fast);
-  }
-
-  .search-btn:hover { color: var(--ink-primary); }
-
-  /* Hero */
-  .intro {
-    padding-top: clamp(56px, 12vh, 140px);
-    padding-bottom: clamp(72px, 12vh, 140px);
-  }
-
-  .intro-title {
-    margin: 0 0 clamp(28px, 4vw, 44px);
-    font-size: clamp(46px, 8vw, 104px);
-    font-weight: 300;
-    line-height: 0.98;
-    letter-spacing: -0.045em;
-  }
-
-  .intro-title span { display: block; }
-  .intro-title em { font-style: italic; color: var(--accent); padding-right: 0.04em; }
-
-  .intro-lede {
-    margin: 0 0 28px;
-    max-width: 34em;
-    font-size: clamp(19px, 1.9vw, 23px);
-    line-height: 1.55;
-    color: var(--ink-secondary);
-    text-wrap: pretty;
-  }
-
-  .route {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 10px;
-    margin: 0 0 40px;
-    font-size: 11px;
-    color: var(--ink-quiet);
-  }
-
-  .route-sep { color: var(--ink-tertiary); }
-
-  .intro-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    height: 48px;
-    padding: 0 24px;
-    border-radius: 2px;
-    background: var(--ink-primary);
-    color: var(--surface-base) !important;
-    font-weight: 500;
-    transition: background var(--dur-fast);
-  }
-
-  .btn:hover { background: #ffffff; }
-
-  .quiet-link { color: var(--ink-secondary) !important; transition: color var(--dur-fast); }
-  .quiet-link:hover { color: var(--ink-primary) !important; }
-
-  .arr { display: inline-block; transition: transform 0.3s var(--ease); }
-  .btn:hover .arr,
-  .quiet-link:hover .arr,
-  .more:hover .arr { transform: translateX(5px); }
-
-  /* Index: label column + content column */
-  .index { padding-bottom: clamp(72px, 10vh, 120px); }
-
-  .block {
-    display: grid;
-    grid-template-columns: 180px minmax(0, 1fr);
-    gap: 16px 40px;
-    padding: 40px 0;
-    border-top: 1px solid var(--surface-line);
-  }
-
-  .block-label { margin: 0; padding-top: 6px; font-weight: 400; color: var(--ink-quiet); }
-
-  .list { list-style: none; margin: 0; padding: 0; }
-
-  .item {
-    display: flex;
-    align-items: baseline;
-    gap: 6px 28px;
-    padding: 12px 0;
-  }
-
-  .item-date { flex: 0 0 120px; font-size: 11px; color: var(--ink-quiet); }
-
-  .item-title {
-    font-size: clamp(19px, 1.8vw, 22px);
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    transition: color var(--dur-fast);
-  }
-
-  .item:hover .item-title { color: var(--accent); }
-
-  .item-project { flex-direction: column; gap: 4px; }
-  .item-line { font-size: 16px; line-height: 1.5; color: var(--ink-secondary); }
-
-  .more {
-    display: inline-flex;
-    gap: 10px;
-    margin-top: 16px;
-    font-size: 11px;
-    color: var(--ink-secondary) !important;
-    transition: color var(--dur-fast);
-  }
-
-  .more:hover { color: var(--ink-primary) !important; }
-
-  .hello { margin: 0; max-width: 34em; font-size: 20px; line-height: 1.55; color: var(--ink-secondary); }
-
-  .hello a {
-    display: inline-block;
-    color: var(--ink-primary);
-    text-decoration: underline !important;
-    text-decoration-color: var(--accent) !important;
-    text-underline-offset: 5px;
-  }
-
-
-  /* Search dialog */
-  .search-modal {
-    width: min(600px, calc(100vw - 32px));
-    margin: clamp(56px, 14vh, 140px) auto auto;
-    padding: 0;
-    border: 1px solid var(--surface-line);
-    border-radius: 6px;
-    background: var(--surface-raised);
-    color: var(--ink-primary);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
-  }
-
-  .search-modal::backdrop { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px); }
-
-  .search-head {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--surface-line);
-  }
-
-  .search-field {
-    flex: 1;
-    border: 0;
-    outline: none;
-    background: none;
-    color: var(--ink-primary);
-    font-family: var(--font-serif);
-    font-size: 18px;
-  }
-
-  .search-field::placeholder { color: var(--ink-quiet); }
-
-  .search-close {
-    border: 1px solid var(--surface-line);
-    border-radius: 3px;
-    padding: 2px 6px;
-    background: none;
-    color: var(--ink-secondary);
-    font-family: var(--font-mono);
-    font-size: 10px;
-    cursor: pointer;
-  }
-
-  .search-results { max-height: min(420px, 60vh); overflow-y: auto; padding: 8px; }
-
-  .search-results :global(.search-item) {
-    display: block;
-    padding: 10px 12px;
-    border-radius: 4px;
-    color: var(--ink-primary);
-    text-decoration: none;
-  }
-
-  .search-results :global(.search-item:hover),
-  .search-results :global(.search-item.is-selected) { background: var(--accent-dim); }
-
-  .search-results :global(.search-item-title) { display: block; font-size: 16px; }
-
-  .search-results :global(.search-item-meta) {
-    display: block;
-    margin-top: 2px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-quiet);
-  }
-
-  .search-results :global(.search-empty) { padding: 32px 12px; text-align: center; color: var(--ink-quiet); }
-
-  /* Motion */
-  .rise { animation: rise 0.9s var(--ease) both; }
-  @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-
-  /* Small screens: nav drops to its own row, search stays beside the name */
-  @media (max-width: 640px) {
-    .top { display: grid; grid-template-columns: 1fr auto; padding-bottom: 12px; }
-    .search-btn { margin-left: 0; margin-right: -8px; }
-    .top-nav { grid-column: 1 / -1; grid-row: 2; gap: 4px 22px; }
-  }
-
-  /* Small screens: labels sit above their lists */
-  @media (max-width: 720px) {
-    .block { grid-template-columns: minmax(0, 1fr); padding: 32px 0; }
-    .block-label { padding-top: 0; }
-    .item { flex-wrap: wrap; }
-    .item-date { flex-basis: 100%; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .rise { animation: none; }
-  }
-</style>
-
+<!doctype html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title><meta name="description" content={description} /><link rel="canonical" href="https://www.cmnafi.com/" />
+  <meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content="https://www.cmnafi.com/" /><meta property="og:type" content="website" /><meta property="og:image" content="https://www.cmnafi.com/og-default.svg" />
+  <meta name="twitter:card" content="summary_large_image" /><meta name="theme-color" content="#FAF8F5" />
+  <script is:inline>try{document.documentElement.dataset.theme=localStorage.getItem('cmnafi.home.theme')==='dark'?'dark':'paper'}catch{}</script>
+  <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-W7QGKS85CP"></script>
+  <script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-W7QGKS85CP');</script>
+</head>
+<body id="top">
+  <a class="home-skip" href="#main">Skip to content</a>
+  <div class="beta-ribbon"><div class="beta-ribbon-inner"><div><span class="beta-badge">The redesign notebook</span><span class="ribbon-copy">One brief. Three different versions. Take a look.</span></div><nav class="beta-links" aria-label="Beta builds">{builds.map(build=><a class="beta-pill" href={`/${build.id}/`}>/{build.id} ↗</a>)}</nav></div></div>
+  <header class="site-header"><div class="brand"><a href="/" class="brand-name">C M Nafi</a><span class="brand-tag">Curiosities, systems & stories</span></div><nav class="nav-row" aria-label="Primary navigation"><a href="/garage/">The Garage</a><a href="/field-notes/">Field Notes</a><a href="/play/">Play</a><a href="/story/">My Story</a><a href="/connect/">Connect</a><button class="theme-btn" id="home-theme-toggle" type="button">Theme: Paper</button></nav></header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title"><div><div class="hero-kicker">Solutions engineer · Numbers, tools, and matches</div><h1 class="hero-title" id="hero-title">Building the tools I wish existed.<br />Writing down what I learn <em>along the way.</em></h1><p class="hero-prose">I’m Nafi, a solutions engineer at <strong>Dasseti</strong>, based in Land O’ Lakes, Florida. Before this, I worked at <strong>BlackRock</strong>, <strong>SkyBridge Associates</strong>, and <strong>Mayo Clinic</strong>. Different rooms, the same habit: understand the question before trying to answer it.</p><p class="hero-prose">I grew up in <strong>Dinajpur, Bangladesh</strong>, left home at twelve for military school, moved to <strong>UWC Changshu in China</strong> on a full scholarship at sixteen, and studied data science at <strong>Luther College in Decorah, Iowa</strong>. These days I translate between investment teams and software, write about capital, and turn up for weekend cricket.</p><blockquote class="hero-quote">Learn the room. Then translate.</blockquote></div><aside class="now-card" aria-label="Current notebook"><div class="now-header"><span>Current notebook</span><span>Florida</span></div><ul class="now-list"><li><span class="now-item-label">Day job</span><div class="now-item-val">Solutions Engineer at Dasseti</div><div class="now-item-sub">Investment teams, due diligence, and the software they use.</div></li><li><span class="now-item-label">On the workbench</span><a class="now-item-val" href="/garage/">Regulatory Lens & cricket tools ↗</a><div class="now-item-sub">Small tools for questions I keep coming back to.</div></li><li><span class="now-item-label">Latest field note</span><a class="now-item-val" href={`/field-notes/${latest.slug}/`}>{latest.data.title} ↗</a><div class="now-item-sub">{latest.data.excerpt}</div></li><li><span class="now-item-label">Off the clock</span><a class="now-item-val" href="/play/">Cricket, FPL, and Formula 1 ↗</a><div class="now-item-sub">The teams I turn up for and the games I follow.</div></li></ul></aside></section>
+    <section class="section-block latest-report" aria-labelledby="latest-report-title"><div class="section-head"><div><span class="hero-kicker">New research · October 14, 2026</span><h2 class="section-title" id="latest-report-title">The retail software stack.</h2><p class="section-subtitle">Who runs the till, the pumps, and the back office, and where the workflow breaks. A full report across six retail verticals, with searchable pricing tables and an analysis of the manual steps AI could help with.</p></div><a class="btn-launch" href="/field-notes/retail-software-landscape/">Read the interactive report ↗</a></div></section>
+    <section class="section-block" id="beta-lab" aria-labelledby="beta-title"><div class="section-head"><div><h2 class="section-title" id="beta-title">Three ways to tell the same story.</h2><p class="section-subtitle">I gave Claude, Gemini, and Codex the same redesign brief. Their builds are here to explore. Which one feels most like a place you would come back to?</p></div><span class="section-link" id="home-vote-status" role="status">Save a preference in this browser.</span></div><div class="beta-grid">{builds.map((build,i)=><article class="beta-card"><div><div class="beta-card-top"><span class="beta-route">cmnafi.com/{build.id}</span><span class="beta-status">Build {i+1}</span></div><h3>{build.name}</h3><p>{build.description}</p><p class="beta-traits">{build.focus}</p></div><div class="beta-card-actions"><a class="btn-launch" href={`/${build.id}/`}>Open /{build.id} ↗</a><button class="btn-vote" data-build={build.id} aria-pressed="false" type="button">My favorite</button></div></article>)}</div><p class="local-choice-note">Your choice stays on this device. It is not a public vote tally.</p></section>
+    <section class="section-block" id="story" aria-labelledby="chapters-title"><div class="section-head"><div><h2 class="section-title" id="chapters-title">What each room taught me.</h2><p class="section-subtitle">A few chapters from home, college, and work. Click a chapter to read the part that stayed with me.</p></div><a class="section-link" href="/story/">The full story →</a></div><div class="story-explorer"><div class="stop-tabs" role="group" aria-label="Career chapters">{chapters.map((chapter,i)=><button class:list={['stop-btn',{active:i===0}]} data-chapter={i} aria-pressed={i===0?'true':'false'} type="button"><span><span class="stop-place">{chapter.organization}</span><span class="stop-org">{chapter.place}</span></span><span class="stop-years">{chapter.period}</span></button>)}</div><div class="stop-detail-panel" aria-live="polite"><div><div class="stop-detail-kicker" data-chapter-kicker>{initial.place} · {initial.period}</div><h3 class="stop-detail-title" data-chapter-title>{initial.title}</h3><p class="stop-detail-body" data-chapter-body>{initial.body}</p><div class="stop-lesson-box"><strong>What stayed with me</strong><span data-chapter-lesson>{initial.lesson}</span></div></div><a class="section-link" data-chapter-link href={initial.href}>Related story or note →</a></div></div><script is:inline type="application/json" id="home-chapters" set:html={JSON.stringify(chapters).replaceAll('<','\u003c')} /></section>
+    <section class="section-block" id="garage" aria-labelledby="tools-title"><div class="section-head"><div><h2 class="section-title" id="tools-title">Try the question for yourself.</h2><p class="section-subtitle">Source-linked adviser snapshots and a cricket field you can move around. Inspect the assumptions, change the inputs, and see what happens.</p></div><a class="section-link" href="/garage/">The whole Garage →</a></div><div class="workbench-grid"><div class="island-card"><FormAdvMiniExplorer /></div><div class="island-card"><CricketFieldingTactician /></div></div></section>
+    <section class="section-block" id="field-notes" aria-labelledby="notes-title"><div class="section-head"><div><h2 class="section-title" id="notes-title">Selected Field Notes.</h2><p class="section-subtitle">Capital research, reading notes, and matches worth keeping. Choose a stream to find a place to start.</p></div><a class="section-link" href="/field-notes/">All {notes.length} published notes →</a></div><div class="filter-bar" role="group" aria-label="Filter selected writing">{streams.map(s=><button class:list={['firm-pill',{active:s.id==='all'}]} data-writing-filter={s.id} type="button" aria-pressed={s.id==='all'?'true':'false'}>{s.name} ({s.id==='all'?selected.length:selected.filter(n=>stream(n)===s.id).length})</button>)}</div><div class="home-ledger-scroll"><table class="ledger-table"><thead><tr><th scope="col">Date</th><th scope="col">Essay / note & core question</th><th scope="col">Stream</th><th scope="col">Read</th></tr></thead><tbody>{selected.map(note=><tr data-writing-stream={stream(note)}><td class="tabular"><time datetime={note.data.publishedAt.toISOString()}>{note.data.publishedAt.toISOString().slice(0,10)}</time></td><td><a class="essay-title-cell" href={`/field-notes/${note.slug}/`}>{note.data.title}</a><span class="essay-desc-cell">{note.data.excerpt}</span></td><td><span class="stream-tag">{note.slug==='the-open-syllabus'?'Systems & learning':note.data.category}</span></td><td class="tabular">{note.data.readingTime}</td></tr>)}</tbody></table></div></section>
+    <section class="section-block home-contact" id="connect" aria-labelledby="hello-title"><div class="section-head"><div><h2 class="section-title" id="hello-title">Say hello.</h2><p class="section-subtitle">Happy to talk about allocator workflows, a good book, a close finish in cricket, or which beta build you liked best.</p></div><div><button class="btn-launch" id="home-copy-email" type="button">Copy nafi@cmnafi.com</button><p id="home-copy-status" role="status"></p></div></div><a class="section-link" href="/connect/">More ways to connect →</a></section>
+  </main>
+  <footer class="site-footer"><div>© {new Date().getFullYear()} C M Nafi · Dinajpur → Changshu → Decorah → Florida</div><nav class="footer-links" aria-label="Footer"><a href="/sitemap/">Sitemap</a><a href="https://www.linkedin.com/in/cm-nafi/">LinkedIn ↗</a><a href="https://github.com/CMNafi">GitHub ↗</a><a href="mailto:nafi@cmnafi.com">Email</a></nav></footer>
+</body></html>
 <script>
-  type Note = { title: string; slug: string; category: string; excerpt: string };
-
-  const escapeHtml = (s: string) =>
-    s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
-
-  let shortcutBound = false;
-
-  function setupSearch() {
-    const modal = document.getElementById('cmd-k-modal') as HTMLDialogElement | null;
-    const trigger = document.getElementById('cmd-k-trigger');
-    const close = document.getElementById('cmd-k-close');
-    const input = document.getElementById('cmd-k-input') as HTMLInputElement | null;
-    const results = document.getElementById('search-results-list');
-    const data = document.getElementById('search-notes-data');
-    if (!modal || !input || !results || modal.dataset.ready) return;
-    modal.dataset.ready = 'true';
-
-    let notes: Note[] = [];
-    try {
-      notes = JSON.parse(data?.textContent || '[]');
-    } catch {
-      notes = [];
-    }
-
-    const render = (query: string) => {
-      const q = query.trim().toLowerCase();
-      const found = q
-        ? notes.filter((n) => `${n.title} ${n.category} ${n.excerpt}`.toLowerCase().includes(q)).slice(0, 8)
-        : notes.slice(0, 6);
-
-      results.innerHTML = found.length
-        ? found
-            .map(
-              (n, i) =>
-                `<a href="/field-notes/${n.slug}" class="search-item${i === 0 ? ' is-selected' : ''}" role="option">` +
-                `<span class="search-item-title">${escapeHtml(n.title)}</span>` +
-                `<span class="search-item-meta">${escapeHtml(n.category)}</span></a>`
-            )
-            .join('')
-        : `<div class="search-empty">Nothing for “${escapeHtml(query)}”.</div>`;
-    };
-
-    const open = () => {
-      input.value = '';
-      render('');
-      modal.showModal();
-      input.focus();
-    };
-
-    trigger?.addEventListener('click', open);
-    close?.addEventListener('click', () => modal.close());
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.close(); // click on the backdrop
-    });
-
-    input.addEventListener('input', () => render(input.value));
-    input.addEventListener('keydown', (e) => {
-      const items = Array.from(results.querySelectorAll<HTMLAnchorElement>('.search-item'));
-      if (!items.length) return;
-      const current = items.findIndex((el) => el.classList.contains('is-selected'));
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        const next = (current + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
-        items.forEach((el, i) => el.classList.toggle('is-selected', i === next));
-        items[next].scrollIntoView({ block: 'nearest' });
-      } else if (e.key === 'Enter' && current >= 0) {
-        e.preventDefault();
-        items[current].click();
-      }
-    });
-
-    // One global shortcut listener for the whole session, even across page transitions
-    if (!shortcutBound) {
-      shortcutBound = true;
-      window.addEventListener('keydown', (e) => {
-        if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== 'k') return;
-        const dialog = document.getElementById('cmd-k-modal') as HTMLDialogElement | null;
-        const opener = document.getElementById('cmd-k-trigger');
-        if (!dialog || !opener) return;
-        e.preventDefault();
-        if (dialog.open) dialog.close();
-        else opener.click();
-      });
-    }
-  }
-
-  document.addEventListener('astro:page-load', setupSearch);
+  const themeButton=document.querySelector<HTMLButtonElement>('#home-theme-toggle');
+  const showTheme=()=>{if(themeButton)themeButton.textContent=document.documentElement.dataset.theme==='dark'?'Theme: Dark':'Theme: Paper';};
+  showTheme();themeButton?.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'paper':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('cmnafi.home.theme',next)}catch{}showTheme();});
+  const votes=[...document.querySelectorAll<HTMLButtonElement>('[data-build]')];
+  const choose=(id:string)=>{votes.forEach(button=>{const active=button.dataset.build===id;button.classList.toggle('voted',active);button.setAttribute('aria-pressed',String(active));button.textContent=active?'Saved as my favorite':'My favorite';});const status=document.querySelector('#home-vote-status');if(status)status.textContent=`Your local preference: /${id}.`;};
+  try{const saved=localStorage.getItem('cmnafi.home.build');if(saved&&votes.some(b=>b.dataset.build===saved))choose(saved)}catch{}
+  votes.forEach(button=>button.addEventListener('click',()=>{const id=button.dataset.build!;choose(id);try{localStorage.setItem('cmnafi.home.build',id)}catch{const status=document.querySelector('#home-vote-status');if(status)status.textContent='Preference selected. This browser cannot save it.';}}));
+  const chapters=JSON.parse(document.querySelector('#home-chapters')!.textContent!) as {place:string;period:string;title:string;body:string;lesson:string;href:string}[];
+  document.querySelectorAll<HTMLButtonElement>('[data-chapter]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-chapter]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});const c=chapters[Number(button.dataset.chapter)];for(const [selector,value] of [['[data-chapter-kicker]',`${c.place} · ${c.period}`],['[data-chapter-title]',c.title],['[data-chapter-body]',c.body],['[data-chapter-lesson]',c.lesson]])document.querySelector(selector)!.textContent=value;document.querySelector<HTMLAnchorElement>('[data-chapter-link]')!.href=c.href;}));
+  document.querySelectorAll<HTMLButtonElement>('[data-writing-filter]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-writing-filter]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});document.querySelectorAll<HTMLElement>('[data-writing-stream]').forEach(row=>{row.hidden=button.dataset.writingFilter!=='all'&&button.dataset.writingFilter!==row.dataset.writingStream;});}));
+  document.querySelector('#home-copy-email')?.addEventListener('click',async()=>{const status=document.querySelector('#home-copy-status')!;try{await navigator.clipboard.writeText('nafi@cmnafi.com');status.textContent='Email copied.'}catch{status.textContent='Email: nafi@cmnafi.com';}});
 </script>

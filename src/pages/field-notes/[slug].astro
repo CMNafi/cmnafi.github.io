@@ -8,7 +8,7 @@ import { siteConfig } from '@/config/site';
 export async function getStaticPaths() {
   const notes = await getCollection('field-notes');
   return notes
-    .filter(note => note.slug !== 'capital-lens-16' && note.slug !== 'capital-lens-17')
+    .filter(note => !['capital-lens-16', 'capital-lens-17', 'retail-software-landscape'].includes(note.slug))
     .map(note => ({
       params: { slug: note.slug },
       props: { note },
