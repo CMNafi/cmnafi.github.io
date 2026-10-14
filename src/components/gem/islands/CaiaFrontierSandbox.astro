@@ -1,0 +1,636 @@
+---
+import {
+  assetClasses,
+  portfolioPresets,
+  calculatePortfolio,
+  computeEfficientFrontier
+} from '../../../data/gem/islands/portfolio';
+
+const initialWeights = [50, 30, 20];
+const initialResult = calculatePortfolio(initialWeights);
+const frontierPoints = computeEfficientFrontier();
+---
+
+<div class="caia-sandbox-island" data-caia-island>
+  <header class="sandbox-header">
+    <div class="header-meta">
+      <span class="badge-tag">Alternative Investments · CAIA Curriculum</span>
+      <span class="model-note">Covariance Matrix & Mean-Variance Optimization</span>
+    </div>
+    <div class="preset-strip">
+      <span class="preset-label">Model Presets:</span>
+      {portfolioPresets.map((preset) => (
+        <button
+          type="button"
+          class="preset-btn"
+          data-preset-id={preset.id}
+          data-weights={JSON.stringify(preset.weights)}
+        >
+          {preset.name}
+        </button>
+      ))}
+    </div>
+  </header>
+
+  <div class="sandbox-layout">
+    <!-- Sliders Column -->
+    <div class="allocation-panel">
+      <h4 class="panel-title">Asset Allocation Weights (100% Normalized)</h4>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">01. Global Public Equities</span>
+          <span class="slider-val" data-val-0>{initialWeights[0]}%</span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={initialWeights[0]}
+          class="weight-slider slider-equities"
+          data-slider="0"
+          aria-label="Public Equities Weight"
+        />
+        <div class="asset-meta-hint">
+          Exp Return: 8.2% · Volatility: 16.5% · Equity beta
+        </div>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">02. Private Equity & Direct Lending</span>
+          <span class="slider-val" data-val-1>{initialWeights[1]}%</span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={initialWeights[1]}
+          class="weight-slider slider-pe"
+          data-slider="1"
+          aria-label="Private Equity & Debt Weight"
+        />
+        <div class="asset-meta-hint">
+          Exp Return: 11.8% · Volatility: 19.0% · Illiquidity premium
+        </div>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">03. Real Assets & Absolute Return</span>
+          <span class="slider-val" data-val-2>{initialWeights[2]}%</span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={initialWeights[2]}
+          class="weight-slider slider-real"
+          data-slider="2"
+          aria-label="Real Assets & Hedge Funds Weight"
+        />
+        <div class="asset-meta-hint">
+          Exp Return: 7.5% · Volatility: 10.5% · Inflation & alpha hedge
+        </div>
+      </div>
+
+      <!-- Quick Metrics HUD -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="m-label">Expected Return</span>
+          <span class="m-val highlight" data-ret-val>
+            {(initialResult.expectedReturn * 100).toFixed(2)}%
+          </span>
+        </div>
+        <div class="metric-card">
+          <span class="m-label">Annual Volatility</span>
+          <span class="m-val" data-vol-val>
+            {(initialResult.volatility * 100).toFixed(2)}%
+          </span>
+        </div>
+        <div class="metric-card">
+          <span class="m-label">Sharpe Ratio (SR)</span>
+          <span class="m-val primary" data-sharpe-val>
+            {initialResult.sharpeRatio.toFixed(2)}
+          </span>
+        </div>
+        <div class="metric-card">
+          <span class="m-label">Estimated Max DD</span>
+          <span class="m-val" data-dd-val>
+            -{(initialResult.estimatedMaxDrawdown * 100).toFixed(1)}%
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frontier Chart Column -->
+    <div class="chart-panel">
+      <div class="chart-header">
+        <h4 class="panel-title">Markowitz Efficient Frontier</h4>
+        <span class="chart-subtitle">Risk (Volatility) vs. Expected Return</span>
+      </div>
+
+      <div class="svg-stage">
+        <svg
+          viewBox="0 0 340 240"
+          class="frontier-svg"
+          data-frontier-svg
+          aria-label="SVG Efficient Frontier curve plotting portfolio return against volatility"
+        >
+          <!-- Grid lines -->
+          <line x1="40" y1="20" x2="40" y2="200" class="axis-line" />
+          <line x1="40" y1="200" x2="320" y2="200" class="axis-line" />
+
+          <line x1="40" y1="155" x2="320" y2="155" class="chart-grid" />
+          <line x1="40" y1="110" x2="320" y2="110" class="chart-grid" />
+          <line x1="40" y1="65" x2="320" y2="65" class="chart-grid" />
+
+          <!-- Axis Labels -->
+          <text x="35" y="200" class="axis-tick" text-anchor="end">6%</text>
+          <text x="35" y="155" class="axis-tick" text-anchor="end">8%</text>
+          <text x="35" y="110" class="axis-tick" text-anchor="end">10%</text>
+          <text x="35" y="65" class="axis-tick" text-anchor="end">12%</text>
+
+          <text x="40" y="216" class="axis-tick" text-anchor="middle">8%</text>
+          <text x="133" y="216" class="axis-tick" text-anchor="middle">12%</text>
+          <text x="226" y="216" class="axis-tick" text-anchor="middle">16%</text>
+          <text x="320" y="216" class="axis-tick" text-anchor="middle">20%</text>
+
+          <text x="180" y="232" class="axis-title" text-anchor="middle">Annualized Volatility (σ)</text>
+          <text x="14" y="110" class="axis-title y-axis" text-anchor="middle" transform="rotate(-90 14 110)">Expected Return (μ)</text>
+
+          <!-- Frontier Curve -->
+          <path d="" class="frontier-curve-path" data-curve-path />
+
+          <!-- Active Allocation Dot -->
+          <g class="active-portfolio-node" data-portfolio-node transform="translate(180, 120)">
+            <circle r="12" class="portfolio-halo" />
+            <circle r="5" class="portfolio-core" />
+            <text x="8" y="-8" class="portfolio-tag" data-chart-tag>Active Portfolio</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="thesis-note">
+        <p>
+          <strong>CAIA Takeaway:</strong> Adding uncorrelated alternatives (private credit + real assets) expands the efficient envelope upward and leftward—capturing higher yield while compressing volatility.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="sandbox-footer">
+    <div class="footer-copy">
+      <span>Based on portfolio mathematics from C M Nafi's CAIA Level I & II study frameworks</span>
+    </div>
+    <div class="footer-links">
+      <a href="/gem/garage/" class="learn-link">CAIA Knowledge Hub Project →</a>
+      <a href="/gem/field-notes/" class="learn-link">Alternative Capital Essays →</a>
+    </div>
+  </footer>
+
+  <script is:inline type="application/json" data-frontier-json set:html={JSON.stringify(frontierPoints).replaceAll('<', '\\u003c')} />
+</div>
+
+<script>
+  function initCaiaSandbox() {
+    document.querySelectorAll<HTMLElement>('[data-caia-island]').forEach((island) => {
+      if (island.dataset.initialized) return;
+      island.dataset.initialized = 'true';
+
+      const frontierScript = island.querySelector('[data-frontier-json]');
+      if (!frontierScript || !frontierScript.textContent) return;
+      const frontierData = JSON.parse(frontierScript.textContent);
+
+      // Asset Class parameters
+      const returns = [0.082, 0.118, 0.075];
+      const vols = [0.165, 0.190, 0.105];
+      const corrs = [
+        [1.00, 0.68, 0.32],
+        [0.68, 1.00, 0.42],
+        [0.32, 0.42, 1.00]
+      ];
+      const riskFree = 0.040;
+
+      let weights = [50, 30, 20];
+
+      const sliders = [
+        island.querySelector<HTMLInputElement>('[data-slider="0"]')!,
+        island.querySelector<HTMLInputElement>('[data-slider="1"]')!,
+        island.querySelector<HTMLInputElement>('[data-slider="2"]')!
+      ];
+
+      const valDisplays = [
+        island.querySelector('[data-val-0]')!,
+        island.querySelector('[data-val-1]')!,
+        island.querySelector('[data-val-2]')!
+      ];
+
+      const retVal = island.querySelector('[data-ret-val]')!;
+      const volVal = island.querySelector('[data-vol-val]')!;
+      const sharpeVal = island.querySelector('[data-sharpe-val]')!;
+      const ddVal = island.querySelector('[data-dd-val]')!;
+      const portfolioNode = island.querySelector<SVGGElement>('[data-portfolio-node]')!;
+      const chartTag = island.querySelector('[data-chart-tag]')!;
+      const curvePath = island.querySelector<SVGPathElement>('[data-curve-path]')!;
+      const presetButtons = island.querySelectorAll<HTMLButtonElement>('.preset-btn');
+
+      // Coordinate mapping for SVG (Width: 340, Height: 240)
+      // X: Volatility from 0.08 (x=40) to 0.20 (x=320) -> scale = (320 - 40) / (0.20 - 0.08) = 280 / 0.12 = 2333.33
+      // Y: Return from 0.06 (y=200) to 0.12 (y=65) -> scale = (200 - 65) / (0.12 - 0.06) = 135 / 0.06 = 2250
+      function mapCoords(vol: number, ret: number) {
+        const x = 40 + (vol - 0.08) * (280 / 0.12);
+        const y = 200 - (ret - 0.06) * (135 / 0.06);
+        return {
+          x: Math.max(40, Math.min(320, x)),
+          y: Math.max(30, Math.min(200, y))
+        };
+      }
+
+      function renderCurve() {
+        if (!curvePath || !frontierData.length) return;
+        const d = frontierData
+          .map((pt: any, i: number) => {
+            const { x, y } = mapCoords(pt.volatility, pt.expectedReturn);
+            return `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`;
+          })
+          .join(' ');
+        curvePath.setAttribute('d', d);
+      }
+
+      function calculate(w: number[]) {
+        const nw = w.map((v) => v / 100);
+        const meanReturn = nw.reduce((sum, weight, idx) => sum + weight * returns[idx], 0);
+
+        let variance = 0;
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            variance += nw[i] * nw[j] * vols[i] * vols[j] * corrs[i][j];
+          }
+        }
+        const vol = Math.sqrt(Math.max(0.0001, variance));
+        const sharpe = (meanReturn - riskFree) / vol;
+        const dd = Math.max(0.04, 2.3 * vol - 0.4 * meanReturn);
+
+        return { meanReturn, vol, sharpe, dd };
+      }
+
+      function updateUI() {
+        // Update slider values and texts
+        sliders.forEach((s, idx) => {
+          s.value = String(weights[idx]);
+          valDisplays[idx].textContent = `${weights[idx]}%`;
+        });
+
+        // Compute metrics
+        const res = calculate(weights);
+        if (retVal) retVal.textContent = `${(res.meanReturn * 100).toFixed(2)}%`;
+        if (volVal) volVal.textContent = `${(res.vol * 100).toFixed(2)}%`;
+        if (sharpeVal) sharpeVal.textContent = res.sharpe.toFixed(2);
+        if (ddVal) ddVal.textContent = `-${(res.dd * 100).toFixed(1)}%`;
+
+        // Update chart dot
+        const coords = mapCoords(res.vol, res.meanReturn);
+        if (portfolioNode) {
+          portfolioNode.setAttribute('transform', `translate(${coords.x}, ${coords.y})`);
+        }
+        if (chartTag) {
+          chartTag.textContent = `SR: ${res.sharpe.toFixed(2)}`;
+        }
+      }
+
+      function normalize(changedIndex: number, newVal: number) {
+        const clamped = Math.max(0, Math.min(100, Math.round(newVal)));
+        const rem = 100 - clamped;
+        const otherIdxs = [0, 1, 2].filter((i) => i !== changedIndex);
+        const otherSum = weights[otherIdxs[0]] + weights[otherIdxs[1]];
+
+        weights[changedIndex] = clamped;
+        if (otherSum === 0) {
+          weights[otherIdxs[0]] = Math.floor(rem / 2);
+          weights[otherIdxs[1]] = rem - weights[otherIdxs[0]];
+        } else {
+          const share1 = Math.round((weights[otherIdxs[0]] / otherSum) * rem);
+          weights[otherIdxs[0]] = share1;
+          weights[otherIdxs[1]] = rem - share1;
+        }
+        updateUI();
+      }
+
+      sliders.forEach((slider, idx) => {
+        slider.addEventListener('input', () => {
+          normalize(idx, Number(slider.value));
+        });
+      });
+
+      presetButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const w = JSON.parse(btn.getAttribute('data-weights') || '[50,30,20]');
+          weights = [...w];
+          updateUI();
+        });
+      });
+
+      renderCurve();
+      updateUI();
+    });
+  }
+
+  initCaiaSandbox();
+  document.addEventListener('astro:page-load', initCaiaSandbox);
+</script>
+
+<style>
+  .caia-sandbox-island {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+  }
+
+  .sandbox-header {
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+
+  .header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    margin-bottom: 12px;
+  }
+
+  .badge-tag {
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  .model-note {
+    color: var(--text-muted);
+  }
+
+  .preset-strip {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .preset-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-right: 4px;
+  }
+
+  .preset-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+    font-family: var(--font-sans);
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .preset-btn:hover {
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+  }
+
+  .sandbox-layout {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 24px;
+  }
+
+  .panel-title {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0 0 14px;
+  }
+
+  .slider-group {
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .slider-val {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent-primary);
+  }
+
+  .weight-slider {
+    width: 100%;
+    margin-bottom: 6px;
+    accent-color: var(--accent-primary);
+    cursor: pointer;
+  }
+
+  .asset-meta-hint {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .metric-card {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    padding: 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  .m-label {
+    display: block;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .m-val {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+  }
+
+  .m-val.highlight {
+    color: var(--accent-amber);
+  }
+
+  .m-val.primary {
+    color: var(--accent-primary);
+  }
+
+  .chart-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+  }
+
+  .chart-subtitle {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+
+  .svg-stage {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .frontier-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .axis-line {
+    stroke: var(--text-secondary);
+    stroke-width: 1.5;
+  }
+
+  .chart-grid {
+    stroke: var(--border-subtle);
+    stroke-dasharray: 4 4;
+    stroke-width: 0.8;
+  }
+
+  .axis-tick {
+    font-size: 9px;
+    font-family: var(--font-mono);
+    fill: var(--text-muted);
+  }
+
+  .axis-title {
+    font-size: 9px;
+    font-family: var(--font-mono);
+    fill: var(--text-secondary);
+    letter-spacing: 0.05em;
+  }
+
+  .frontier-curve-path {
+    fill: none;
+    stroke: var(--accent-primary);
+    stroke-width: 2.5;
+  }
+
+  .portfolio-halo {
+    fill: var(--accent-highlight);
+    opacity: 0.3;
+    animation: pulse 2s infinite ease-in-out;
+  }
+
+  .portfolio-core {
+    fill: var(--accent-highlight);
+    stroke: var(--bg-canvas);
+    stroke-width: 2;
+  }
+
+  .portfolio-tag {
+    font-size: 9px;
+    font-family: var(--font-mono);
+    fill: var(--accent-highlight);
+    font-weight: 600;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.4); opacity: 0.1; }
+  }
+
+  .thesis-note {
+    background: var(--bg-subtle);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin-top: 10px;
+  }
+
+  .thesis-note p {
+    margin: 0;
+  }
+
+  .sandbox-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 14px;
+    margin-top: 18px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 14px;
+  }
+
+  .learn-link {
+    color: var(--accent-blue);
+    text-decoration: none;
+  }
+
+  .learn-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .sandbox-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

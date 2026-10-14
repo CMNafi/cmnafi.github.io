@@ -1,0 +1,688 @@
+---
+import { cricketScenarios } from '../../../data/gem/islands/cricket-scenarios';
+---
+
+<div class="cricket-tactician-island" data-cricket-island>
+  <p style="padding:16px;margin:0;background:var(--bg-subtle);color:var(--text-secondary);font-size:13px">Suggested formations inspired by match notes. Exact historical field positions are not recorded. Coverage percentages are geometric indices, not calibrated save probabilities.</p>
+  <header class="island-header">
+    <div class="header-meta">
+      <span class="badge-tag">Tactical Engine · Tampa League Cricket</span>
+      <span class="phase-tag" data-phase-badge>{cricketScenarios[0].matchPhase}</span>
+    </div>
+    
+    <div class="scenario-selector-row">
+      <label for="scenario-select" class="selector-label">Match Situation:</label>
+      <select id="scenario-select" data-scenario-select>
+        {cricketScenarios.map((s, idx) => (
+          <option value={s.id} selected={idx === 0}>
+            {s.name} ({s.date}) — {s.outcome}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <div class="situation-card">
+      <p class="situation-context" data-situation-context>
+        {cricketScenarios[0].context}
+      </p>
+      <div class="tactical-note" data-tactical-note>
+        <strong>Captain's Thesis:</strong> {cricketScenarios[0].tacticalNote}
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Rule & Metrics HUD -->
+  <div class="rules-coverage-bar">
+    <div class="rule-status-badge" data-rule-badge>
+      <span class="status-indicator"></span>
+      <span data-rule-text>5 / 5 Outside 30-Yard Circle · Legal Field</span>
+    </div>
+    <div class="coverage-metrics">
+      <div class="metric-item">
+        <span class="m-label">Boundary Coverage Index</span>
+        <span class="m-val" data-boundary-metric>78%</span>
+      </div>
+      <div class="metric-item">
+        <span class="m-label">Single Coverage Index</span>
+        <span class="m-val" data-single-metric>84%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG 2D Cricket Oval -->
+  <div class="pitch-stage">
+    <svg
+      viewBox="0 0 400 400"
+      class="field-svg"
+      data-field-svg
+      aria-label="2D Cricket Field Tactician. Drag fielders to test field restriction rules."
+    >
+      <!-- Boundary Rope (Outer Ellipse) -->
+      <ellipse cx="200" cy="200" rx="185" ry="190" class="boundary-rope" />
+      
+      <!-- Grass Shading Patterns -->
+      <circle cx="200" cy="200" r="160" class="field-grass-outer" />
+      
+      <!-- 30-Yard Restriction Circle (Radius = 96px in SVG coords) -->
+      <circle cx="200" cy="200" r="96" class="inner-circle-30yd" />
+      <text x="200" y="96" class="circle-label" text-anchor="middle">30-Yard Circle</text>
+
+      <!-- Center Pitch Strip -->
+      <rect x="188" y="165" width="24" height="70" class="pitch-strip" />
+      <!-- Crease markings -->
+      <line x1="184" y1="180" x2="216" y2="180" class="crease-line" />
+      <line x1="184" y1="220" x2="216" y2="220" class="crease-line" />
+
+      <!-- Fixed Batter / Keeper / Bowler nodes -->
+      <g class="fixed-node batter-node" transform="translate(200, 182)">
+        <circle r="6" class="fixed-circle batter" />
+        <text y="-10" text-anchor="middle">Batter</text>
+      </g>
+      <g class="fixed-node keeper-node" transform="translate(200, 150)">
+        <circle r="5" class="fixed-circle keeper" />
+        <text y="-9" text-anchor="middle">Wicketkeeper</text>
+      </g>
+      <g class="fixed-node bowler-node" transform="translate(200, 240)">
+        <circle r="5" class="fixed-circle bowler" />
+        <text y="16" text-anchor="middle">Bowler</text>
+      </g>
+
+      <!-- 9 Draggable Fielders Layer -->
+      <g data-fielders-layer class="fielders-layer"></g>
+    </svg>
+  </div>
+
+  <!-- Controls & Action Toolbar -->
+  <footer class="tactician-controls">
+    <div class="action-buttons">
+      <button type="button" class="action-btn reveal-btn" data-reveal-btn>
+        Reveal Suggested Formation
+      </button>
+      <button type="button" class="action-btn reset-btn" data-reset-btn>
+        Reset Default Positions
+      </button>
+    </div>
+
+    <div class="active-fielder-bar">
+      <span>Selected Fielder: <strong data-selected-name>Fielder 1 (Deep Mid-Wicket)</strong></span>
+      <span class="hint-text">Drag dots with mouse/touch or click "Reveal"</span>
+    </div>
+
+    <div class="footer-links">
+      <a href="/gem/field-notes/" data-essay-link class="link-item">
+        Read Match Report: <span data-essay-name>{cricketScenarios[0].name}</span> →
+      </a>
+      <a href="/gem/garage/" class="link-item">
+        Captains View Tactical App →
+      </a>
+    </div>
+  </footer>
+
+  <script is:inline type="application/json" data-scenarios-json set:html={JSON.stringify(cricketScenarios).replaceAll('<', '\\u003c')} />
+</div>
+
+<script>
+  function initCricketTactician() {
+    document.querySelectorAll<HTMLElement>('[data-cricket-island]').forEach((island) => {
+      if (island.dataset.initialized) return;
+      island.dataset.initialized = 'true';
+
+      const scriptEl = island.querySelector('[data-scenarios-json]');
+      if (!scriptEl || !scriptEl.textContent) return;
+      const scenarios = JSON.parse(scriptEl.textContent);
+
+      let currentScenarioIdx = 0;
+      let fielders: any[] = [];
+      let activeDragIdx: number | null = null;
+      let selectedFielderIdx = 0;
+
+      const svg = island.querySelector<SVGSVGElement>('[data-field-svg]')!;
+      const layer = island.querySelector<SVGGElement>('[data-fielders-layer]')!;
+      const scenarioSelect = island.querySelector<HTMLSelectElement>('[data-scenario-select]')!;
+      const phaseBadge = island.querySelector<HTMLElement>('[data-phase-badge]')!;
+      const situationContext = island.querySelector<HTMLElement>('[data-situation-context]')!;
+      const tacticalNote = island.querySelector<HTMLElement>('[data-tactical-note]')!;
+      const ruleText = island.querySelector<HTMLElement>('[data-rule-text]')!;
+      const ruleBadge = island.querySelector<HTMLElement>('[data-rule-badge]')!;
+      const boundaryMetric = island.querySelector<HTMLElement>('[data-boundary-metric]')!;
+      const singleMetric = island.querySelector<HTMLElement>('[data-single-metric]')!;
+      const selectedNameEl = island.querySelector<HTMLElement>('[data-selected-name]')!;
+      const essayLink = island.querySelector<HTMLAnchorElement>('[data-essay-link]')!;
+      const essayName = island.querySelector<HTMLElement>('[data-essay-name]')!;
+      const revealBtn = island.querySelector<HTMLButtonElement>('[data-reveal-btn]')!;
+      const resetBtn = island.querySelector<HTMLButtonElement>('[data-reset-btn]')!;
+
+      // Center is at 200, 200
+      const CENTER_X = 200;
+      const CENTER_Y = 200;
+      const CIRCLE_RADIUS = 96;
+      const BOUNDARY_RX = 180;
+      const BOUNDARY_RY = 185;
+
+      function clampInsideBoundary(x: number, y: number) {
+        const dx = x - CENTER_X;
+        const dy = y - CENTER_Y;
+        const distRatio = Math.sqrt((dx / BOUNDARY_RX) ** 2 + (dy / BOUNDARY_RY) ** 2);
+        if (distRatio > 0.96) {
+          const factor = 0.96 / distRatio;
+          return { x: CENTER_X + dx * factor, y: CENTER_Y + dy * factor };
+        }
+        return { x, y };
+      }
+
+      function loadScenario(idx: number, useNafiSetup: boolean = true) {
+        currentScenarioIdx = idx;
+        const scenario = scenarios[idx];
+
+        if (phaseBadge) phaseBadge.textContent = scenario.matchPhase;
+        if (situationContext) situationContext.textContent = scenario.context;
+        if (tacticalNote) {
+          tacticalNote.innerHTML = `<strong>Captain's Thesis:</strong> ${scenario.tacticalNote}`;
+        }
+        if (essayName) essayName.textContent = scenario.name;
+        if (essayLink) essayLink.href = `/gem/field-notes/`;
+
+        if (useNafiSetup) {
+          fielders = JSON.parse(JSON.stringify(scenario.nafiSetup));
+        } else {
+          // Standard ring formation
+          fielders = Array.from({ length: 9 }, (_, i) => {
+            const angle = (i * 40 - 90) * (Math.PI / 180);
+            const r = i < scenario.maxFieldersOutsideCircle ? 145 : 72;
+            return {
+              id: i + 1,
+              label: `Fielder ${i + 1}`,
+              x: CENTER_X + Math.cos(angle) * r,
+              y: CENTER_Y + Math.sin(angle) * r,
+              role: i < scenario.maxFieldersOutsideCircle ? 'Boundary Fence' : 'Inner Ring'
+            };
+          });
+        }
+
+        renderFielderNodes();
+        evaluateRulesAndCoverage();
+      }
+
+      function renderFielderNodes() {
+        layer.innerHTML = '';
+        fielders.forEach((f, idx) => {
+          const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          g.setAttribute('class', `fielder-dot ${idx === selectedFielderIdx ? 'selected' : ''}`);
+          g.setAttribute('transform', `translate(${f.x}, ${f.y})`);
+          g.setAttribute('data-idx', String(idx));
+          g.setAttribute('tabindex', '0');
+          g.setAttribute('role', 'button');
+          g.setAttribute('aria-label', `${f.label}: ${f.role}`);
+
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('r', '11');
+
+          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('dy', '4');
+          text.textContent = String(f.id);
+
+          g.appendChild(circle);
+          g.appendChild(text);
+
+          // Pointer events for smooth drag
+          g.addEventListener('pointerdown', (e) => {
+            activeDragIdx = idx;
+            selectedFielderIdx = idx;
+            g.setPointerCapture(e.pointerId);
+            updateSelection();
+          });
+
+          g.addEventListener('pointermove', (e) => {
+            if (activeDragIdx !== idx) return;
+            const ctm = svg.getScreenCTM();
+            if (!ctm) return;
+            const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(ctm.inverse());
+            const clamped = clampInsideBoundary(pt.x, pt.y);
+            fielders[idx].x = clamped.x;
+            fielders[idx].y = clamped.y;
+            g.setAttribute('transform', `translate(${clamped.x}, ${clamped.y})`);
+            evaluateRulesAndCoverage();
+          });
+
+          g.addEventListener('pointerup', () => {
+            activeDragIdx = null;
+          });
+          g.addEventListener('pointercancel', () => {
+            activeDragIdx = null;
+          });
+
+          g.addEventListener('click', () => {
+            selectedFielderIdx = idx;
+            updateSelection();
+          });
+
+          layer.appendChild(g);
+        });
+        updateSelection();
+      }
+
+      function updateSelection() {
+        const cur = fielders[selectedFielderIdx];
+        if (selectedNameEl && cur) {
+          selectedNameEl.textContent = `Fielder ${cur.id}: ${cur.label} (${cur.role})`;
+        }
+        layer.querySelectorAll('.fielder-dot').forEach((node, i) => {
+          node.classList.toggle('selected', i === selectedFielderIdx);
+        });
+      }
+
+      function evaluateRulesAndCoverage() {
+        const scenario = scenarios[currentScenarioIdx];
+        let outsideCount = 0;
+
+        fielders.forEach((f) => {
+          const dist = Math.hypot(f.x - CENTER_X, f.y - CENTER_Y);
+          if (dist > CIRCLE_RADIUS) {
+            outsideCount++;
+          }
+        });
+
+        const isLegal = outsideCount <= scenario.maxFieldersOutsideCircle;
+        if (ruleBadge) {
+          ruleBadge.classList.toggle('legal', isLegal);
+          ruleBadge.classList.toggle('violation', !isLegal);
+        }
+
+        if (ruleText) {
+          if (isLegal) {
+            ruleText.textContent = `${outsideCount} / ${scenario.maxFieldersOutsideCircle} Outside Circle · Legal Formation`;
+          } else {
+            ruleText.textContent = `${outsideCount} / ${scenario.maxFieldersOutsideCircle} Outside Circle · Powerplay Violation!`;
+          }
+        }
+
+        // Geometric coverage simulation
+        let boundaryCoveragePoints = 0;
+        let singleCoveragePoints = 0;
+        const totalSampleArcs = 36;
+
+        for (let i = 0; i < totalSampleArcs; i++) {
+          const angle = (i * 2 * Math.PI) / totalSampleArcs;
+          // Boundary arc testing (radius 160)
+          const bx = CENTER_X + Math.cos(angle) * 160;
+          const by = CENTER_Y + Math.sin(angle) * 160;
+          // Single arc testing (radius 75)
+          const sx = CENTER_X + Math.cos(angle) * 75;
+          const sy = CENTER_Y + Math.sin(angle) * 75;
+
+          const nearBoundary = fielders.some((f) => Math.hypot(f.x - bx, f.y - by) < 46);
+          const nearSingle = fielders.some((f) => Math.hypot(f.x - sx, f.y - sy) < 32);
+
+          if (nearBoundary) boundaryCoveragePoints++;
+          if (nearSingle) singleCoveragePoints++;
+        }
+
+        const bPct = Math.min(96, Math.max(25, Math.round((boundaryCoveragePoints / totalSampleArcs) * 100)));
+        const sPct = Math.min(96, Math.max(25, Math.round((singleCoveragePoints / totalSampleArcs) * 100)));
+
+        if (boundaryMetric) boundaryMetric.textContent = `${bPct}%`;
+        if (singleMetric) singleMetric.textContent = `${sPct}%`;
+      }
+
+      scenarioSelect?.addEventListener('change', () => {
+        const found = scenarios.findIndex((s: any) => s.id === scenarioSelect.value);
+        if (found >= 0) {
+          loadScenario(found, true);
+        }
+      });
+
+      revealBtn?.addEventListener('click', () => {
+        loadScenario(currentScenarioIdx, true);
+      });
+
+      resetBtn?.addEventListener('click', () => {
+        loadScenario(currentScenarioIdx, false);
+      });
+
+      loadScenario(0, true);
+    });
+  }
+
+  initCricketTactician();
+  document.addEventListener('astro:page-load', initCricketTactician);
+</script>
+
+<style>
+  .cricket-tactician-island {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+  }
+
+  .island-header {
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+
+  .header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+  }
+
+  .badge-tag {
+    color: var(--accent-amber);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  .phase-tag {
+    background: var(--bg-subtle);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+  }
+
+  .scenario-selector-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .selector-label {
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--text-secondary);
+  }
+
+  .scenario-selector-row select {
+    width: 100%;
+    padding: 7px 10px;
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-family: var(--font-sans);
+  }
+
+  .situation-card {
+    background: var(--bg-subtle);
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .situation-context {
+    margin: 0 0 6px;
+    color: var(--text-primary);
+  }
+
+  .tactical-note {
+    color: var(--text-secondary);
+    font-size: 11px;
+  }
+
+  .rules-coverage-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+
+  .rule-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+  }
+
+  .rule-status-badge.legal {
+    color: var(--accent-primary);
+  }
+  .rule-status-badge.legal .status-indicator {
+    background: var(--accent-primary);
+  }
+
+  .rule-status-badge.violation {
+    color: var(--accent-highlight);
+  }
+  .rule-status-badge.violation .status-indicator {
+    background: var(--accent-highlight);
+  }
+
+  .coverage-metrics {
+    display: flex;
+    gap: 16px;
+  }
+
+  .metric-item {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .m-label {
+    color: var(--text-muted);
+  }
+
+  .m-val {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pitch-stage {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+  }
+
+  .field-svg {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    touch-action: none;
+    user-select: none;
+  }
+
+  .boundary-rope {
+    fill: var(--bg-subtle);
+    stroke: var(--border-subtle);
+    stroke-width: 2;
+  }
+
+  .field-grass-outer {
+    fill: none;
+    stroke: var(--border-subtle);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+  }
+
+  .inner-circle-30yd {
+    fill: none;
+    stroke: var(--accent-primary);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 4;
+    opacity: 0.8;
+  }
+
+  .circle-label {
+    font-size: 9px;
+    font-family: var(--font-mono);
+    fill: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .pitch-strip {
+    fill: var(--bg-elevated);
+    stroke: var(--border-subtle);
+    stroke-width: 1;
+  }
+
+  .crease-line {
+    stroke: var(--text-secondary);
+    stroke-width: 1.5;
+  }
+
+  .fixed-circle {
+    stroke-width: 1.5;
+  }
+
+  .fixed-circle.batter {
+    fill: var(--accent-highlight);
+    stroke: var(--bg-canvas);
+  }
+
+  .fixed-circle.keeper {
+    fill: var(--accent-blue);
+    stroke: var(--bg-canvas);
+  }
+
+  .fixed-circle.bowler {
+    fill: var(--accent-amber);
+    stroke: var(--bg-canvas);
+  }
+
+  .fixed-node text {
+    font-size: 9px;
+    font-family: var(--font-sans);
+    fill: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* Draggable Fielders */
+  :global(.fielder-dot) {
+    cursor: grab;
+    outline: none;
+  }
+
+  :global(.fielder-dot:active) {
+    cursor: grabbing;
+  }
+
+  :global(.fielder-dot circle) {
+    fill: var(--accent-primary);
+    stroke: var(--bg-canvas);
+    stroke-width: 2;
+    transition: transform 0.1s ease, fill 0.15s ease;
+  }
+
+  :global(.fielder-dot.selected circle) {
+    fill: var(--accent-highlight);
+    stroke: var(--text-primary);
+    stroke-width: 2.5;
+  }
+
+  :global(.fielder-dot text) {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    fill: var(--bg-canvas);
+    pointer-events: none;
+  }
+
+  .tactician-controls {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .action-btn {
+    padding: 8px 14px;
+    font-size: 11px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .reveal-btn {
+    background: var(--accent-primary);
+    color: var(--bg-canvas);
+    border: 1px solid var(--accent-primary);
+  }
+
+  .reveal-btn:hover {
+    opacity: 0.92;
+  }
+
+  .reset-btn {
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .reset-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  .active-fielder-bar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-secondary);
+    padding: 6px 8px;
+    background: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .hint-text {
+    color: var(--text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 12px;
+    font-size: 11px;
+  }
+
+  .link-item {
+    color: var(--accent-blue);
+    text-decoration: none;
+  }
+
+  .link-item:hover {
+    text-decoration: underline;
+  }
+</style>

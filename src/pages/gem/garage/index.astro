@@ -1,0 +1,170 @@
+---
+import GemLayout from '../../../layouts/GemLayout.astro';
+import { projects } from '../../../data/gem/projects';
+import ProjectCard from '../../../components/gem/catalog/ProjectCard.astro';
+import FormAdvMiniExplorer from '../../../components/gem/islands/FormAdvMiniExplorer.astro';
+import CaiaFrontierSandbox from '../../../components/gem/islands/CaiaFrontierSandbox.astro';
+
+const categories = [
+  { id: 'all', label: `All Systems (${projects.length})` },
+  { id: 'fintech-sec', label: `FinTech & SEC Data (${projects.filter((p) => p.category === 'fintech-sec').length})` },
+  { id: 'cricket-sports', label: `Cricket & Sports (${projects.filter((p) => p.category === 'cricket-sports').length})` },
+  { id: 'knowledge-systems', label: `Knowledge Systems (${projects.filter((p) => p.category === 'knowledge-systems').length})` }
+];
+---
+
+<GemLayout
+  title="The Systems Workbench | Projects & Architecture · C M Nafi"
+  description="Eight production financial data systems, cricket tactical planners, and decision atlases built by C M Nafi."
+  currentPath="/gem/garage/"
+>
+  <div class="workbench-page">
+    <!-- Masthead -->
+    <header class="workbench-masthead">
+      <span class="eyebrow-tag">Editorial Systems Lab · Engineering Catalog</span>
+      <h1 class="page-title">The Systems Workbench</h1>
+      <p class="masthead-intro">
+        A working ledger of eight production data applications, SEC regulatory engines, cricket tactical planners, and decision atlases. Every system is built around real datasets, declarative schemas, and verified quantitative logic.
+      </p>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-tabs-bar" data-workbench-tabs>
+        {categories.map((c, idx) => (
+          <button
+            type="button"
+            class:list={['filter-tab', { active: idx === 0 }]}
+            data-filter={c.id}
+          >
+            {c.label}
+          </button>
+        ))}
+      </div>
+    </header>
+
+    <!-- Projects Grid -->
+    <section class="projects-grid-section" data-projects-grid>
+      {projects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </section>
+
+    <!-- Interactive Diligence Workbench Section (Mounted Islands) -->
+    <section class="workbench-islands-section editorial-section">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">Embedded Micro-Tool 01</span>
+          <h2>SEC Form ADV & 13F Intelligence Sandbox</h2>
+        </div>
+        <a href="/gem/field-notes/" class="section-link-more">Read "The Universe of Form ADV" Essay →</a>
+      </div>
+      <FormAdvMiniExplorer />
+    </section>
+
+    <section class="workbench-islands-section editorial-section">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">Embedded Micro-Tool 02</span>
+          <h2>CAIA Portfolio Frontier & Covariance Engine</h2>
+        </div>
+        <a href="/caia/" class="section-link-more">Open CAIA Knowledge Hub →</a>
+      </div>
+      <CaiaFrontierSandbox />
+    </section>
+  </div>
+</GemLayout>
+
+<script>
+  function initWorkbenchFilters() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('[data-workbench-tabs] .filter-tab');
+    const cards = document.querySelectorAll<HTMLElement>('.project-system-card');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const filter = tab.getAttribute('data-filter') || 'all';
+
+        tabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        cards.forEach((card) => {
+          const cat = card.getAttribute('data-category') || '';
+          card.style.display = filter === 'all' || cat === filter ? 'flex' : 'none';
+        });
+      });
+    });
+  }
+
+  initWorkbenchFilters();
+  document.addEventListener('astro:page-load', initWorkbenchFilters);
+</script>
+
+<style>
+  .workbench-page {
+    padding-top: 48px;
+  }
+
+  .workbench-masthead {
+    margin-bottom: 40px;
+  }
+
+  .page-title {
+    font-size: clamp(38px, 4.5vw, 60px);
+    margin: 0 0 16px;
+    font-weight: 400;
+  }
+
+  .masthead-intro {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: var(--max-w-prose);
+    margin: 0 0 28px;
+  }
+
+  .category-tabs-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 16px;
+  }
+
+  .filter-tab {
+    padding: 8px 14px;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .filter-tab:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  .filter-tab.active {
+    background: var(--accent-primary);
+    color: var(--bg-canvas);
+    border-color: var(--accent-primary);
+  }
+
+  .projects-grid-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+
+  .workbench-islands-section {
+    margin-top: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .projects-grid-section {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

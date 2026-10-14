@@ -1,0 +1,676 @@
+---
+import GemLayout from '../../layouts/GemLayout.astro';
+import FormAdvMiniExplorer from '../../components/gem/islands/FormAdvMiniExplorer.astro';
+import CricketFieldingTactician from '../../components/gem/islands/CricketFieldingTactician.astro';
+import { getCuratedWriting, flagshipSlugs } from '../../data/gem/writing-curated';
+
+const allWriting = await getCuratedWriting();
+
+const flagshipItems = flagshipSlugs
+  .map((slug) => allWriting.find((item) => item.slug === slug))
+  .filter(Boolean) as typeof allWriting;
+
+const leadEssay = flagshipItems[0];
+const secondaryEssays = flagshipItems.slice(1);
+
+const recentCricket = allWriting.filter((item) => item.stream === 'cricket').slice(0, 3);
+const selectedBooks = allWriting.filter((item) => item.stream === 'books').slice(0, 4);
+---
+
+<GemLayout
+  title="C M Nafi | Editorial Systems Lab"
+  description="Engineering the data infrastructure behind institutional capital—and writing about businesses, filings, and last-over chases."
+  currentPath="/gem/"
+>
+  <div class="gem-homepage">
+    <!-- ZONE 1: Editorial Masthead & Identity -->
+    <section class="masthead-zone">
+      <div class="masthead-main">
+        <span class="eyebrow-tag">Editorial Systems Lab · C M Nafi</span>
+        <h1 class="headline-statement">
+          Engineering the data infrastructure behind institutional capital—and writing about the businesses, filings, and last-over chases that catch my attention.
+        </h1>
+        <p class="grounded-bio">
+          Solutions Engineer at <strong>Dasseti</strong>. Previously BlackRock, Mayo Clinic, and SkyBridge. I grew up in Dinajpur, moved to Changshu on scholarship at sixteen, studied data science in Iowa, and now build financial systems from Florida.
+        </p>
+
+        <!-- 4-Stop Trajectory Bar -->
+        <nav class="trajectory-bar" aria-label="Life & Career Trajectory">
+          <span class="traj-label">Trajectory:</span>
+          <a href="/gem/story/#chapter-dinajpur" class="traj-stop">Dinajpur <span class="arrow">→</span></a>
+          <a href="/gem/story/#chapter-changshu" class="traj-stop">Changshu <span class="arrow">→</span></a>
+          <a href="/gem/story/#chapter-iowa" class="traj-stop">Iowa <span class="arrow">→</span></a>
+          <a href="/gem/story/#chapter-tampa" class="traj-stop active">Tampa Bay</a>
+          <a href="/gem/story/" class="traj-full-link">Read the 4-Chapter Story ↗</a>
+        </nav>
+      </div>
+
+      <div class="masthead-aside">
+        <div class="dispatch-card">
+          <span class="dispatch-label">Current Dispatch</span>
+          <div class="dispatch-body">
+            <strong>Solutions Engineering</strong>
+            <p>Parsing raw SEC Form ADV/13F filings into local SQLite stores & LLM/MCP research workflows at Dasseti.</p>
+          </div>
+          <div class="dispatch-footer">
+            <span class="dot-online"></span>
+            <span>Tampa Bay, FL</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ZONE 2: Live Interactive Workbench (Bento Grid) -->
+    <section class="workbench-zone editorial-section">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">Interactive Domain Islands</span>
+          <h2>The Systems Workbench</h2>
+        </div>
+        <a href="/gem/garage/" class="section-link-more">Explore all 8 projects in the Workbench →</a>
+      </div>
+
+      <div class="workbench-bento-grid">
+        <!-- Primary Island: SEC Form ADV Explorer -->
+        <div class="island-slot primary-slot">
+          <div class="slot-header">
+            <span class="slot-eyebrow">Interactive Tool 01</span>
+            <h3 class="slot-title">SEC Form ADV & 13F Intelligence</h3>
+          </div>
+          <FormAdvMiniExplorer />
+        </div>
+
+        <!-- Secondary Island: Cricket Pitch Simulator -->
+        <div class="island-slot secondary-slot">
+          <div class="slot-header">
+            <span class="slot-eyebrow">Tactical Engine 02</span>
+            <h3 class="slot-title">2D Cricket Field & Last-Over Simulator</h3>
+          </div>
+          <CricketFieldingTactician />
+        </div>
+      </div>
+
+      <!-- Compact Project Strip -->
+      <div class="compact-project-strip">
+        <div class="project-strip-card">
+          <span class="strip-cat">Knowledge Systems</span>
+          <h4 class="strip-title"><a href="/projects/worldview/">Worldview ↗</a></h4>
+          <p class="strip-desc">An atlas of everyday choices across psychology, culture, and ethics.</p>
+        </div>
+
+        <div class="project-strip-card">
+          <span class="strip-cat">FinTech & SEC Data</span>
+          <h4 class="strip-title"><a href="/caia/">CAIA Knowledge Hub ↗</a></h4>
+          <p class="strip-desc">Alternative investments curriculum, portfolio covariance, and factor models.</p>
+        </div>
+
+        <div class="project-strip-card action-card">
+          <span class="strip-cat">Full Engineering Catalog</span>
+          <h4 class="strip-title"><a href="/gem/garage/">Projects Workbench →</a></h4>
+          <p class="strip-desc">Filter all 8 production data pipelines, tactical models, and research tools.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ZONE 3: Curated Writing Ledger (Split View) -->
+    <section class="ledger-zone editorial-section">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">Editorial Monographs & Match Logs</span>
+          <h2>Curated Writing Ledger</h2>
+        </div>
+        <a href="/gem/field-notes/" class="section-link-more">Browse Full Archive ({allWriting.length} entries) →</a>
+      </div>
+
+      <div class="ledger-split-layout">
+        <!-- Left Column (65%): Flagship Deep Dives -->
+        <div class="flagship-column">
+          {leadEssay && (
+            <article class="lead-essay-spotlight">
+              <div class="spotlight-badge-row">
+                <span class="spotlight-badge">Lead Essay Spotlight</span>
+                <time class="spotlight-date data-mono">{leadEssay.publishedAt} · {leadEssay.readingMinutes} min read</time>
+              </div>
+              <h3 class="lead-essay-title">
+                <a href={`/field-notes/${leadEssay.slug}/`}>{leadEssay.title}</a>
+              </h3>
+              <p class="lead-essay-summary">
+                {leadEssay.summary}
+              </p>
+              <div class="lead-essay-action">
+                <a href={`/field-notes/${leadEssay.slug}/`} class="read-lead-btn">
+                  Read Full Teardown →
+                </a>
+              </div>
+            </article>
+          )}
+
+          <div class="secondary-essays-list">
+            {secondaryEssays.map((essay) => (
+              <article class="secondary-essay-row">
+                <div class="essay-title-col">
+                  <h4 class="secondary-title">
+                    <a href={`/field-notes/${essay.slug}/`}>{essay.title}</a>
+                  </h4>
+                  <p class="secondary-summary">{essay.summary}</p>
+                </div>
+                <div class="essay-meta-col">
+                  <time class="meta-date data-mono">{essay.publishedAt}</time>
+                  <span class="meta-time data-mono">{essay.readingMinutes} min</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <!-- Right Column (35%): From the Pitch & Bookshelf -->
+        <aside class="pitch-bookshelf-column">
+          <!-- Recent Tampa Cricket Logs -->
+          <div class="side-module cricket-side-module">
+            <header class="side-module-header">
+              <h3 class="module-title">Recent Tampa Match Logs</h3>
+              <span class="module-tag">Weekend League</span>
+            </header>
+            <div class="side-match-list">
+              {recentCricket.map((m) => (
+                <a href={`/field-notes/${m.slug}/`} class="side-match-item">
+                  <span class="match-name">{m.title}</span>
+                  <div class="match-stat-row">
+                    <span class="stat-highlight">{m.cricketStats?.highlightStat}</span>
+                    <time class="match-time data-mono">{m.publishedAt}</time>
+                  </div>
+                </a>
+              ))}
+            </div>
+            <a href="/gem/field-notes/" class="module-footer-link">All 5 Tampa Match Logs →</a>
+          </div>
+
+          <!-- Selected Book Notes -->
+          <div class="side-module books-side-module">
+            <header class="side-module-header">
+              <h3 class="module-title">Selected Book Notes</h3>
+              <span class="module-tag">Annotated Shelf</span>
+            </header>
+            <div class="side-book-list">
+              {selectedBooks.map((b) => (
+                <a href={`/field-notes/${b.slug}/`} class="side-book-item">
+                  <span class="book-title">{b.title}</span>
+                  <span class="book-author">{b.bookMeta?.author}</span>
+                  {b.bookMeta?.personalContextNote && (
+                    <span class="book-note-snippet">"{b.bookMeta.personalContextNote}"</span>
+                  )}
+                </a>
+              ))}
+            </div>
+            <a href="/gem/field-notes/" class="module-footer-link">Browse Full 23-Volume Shelf →</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>
+</GemLayout>
+
+<style>
+  .gem-homepage {
+    padding-top: 48px;
+  }
+
+  /* Zone 1: Masthead */
+  .masthead-zone {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 48px;
+    align-items: end;
+    padding-bottom: 48px;
+  }
+
+  .headline-statement {
+    font-size: clamp(36px, 4.2vw, 58px);
+    line-height: 1.15;
+    margin: 0 0 24px;
+    font-weight: 400;
+    max-width: 900px;
+  }
+
+  .grounded-bio {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    max-width: var(--max-w-prose);
+    margin: 0 0 28px;
+  }
+
+  .trajectory-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+
+  .traj-label {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .traj-stop {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 3px 6px;
+    border-radius: 2px;
+  }
+
+  .traj-stop:hover {
+    color: var(--accent-highlight);
+  }
+
+  .traj-stop.active {
+    color: var(--accent-primary);
+    font-weight: 600;
+  }
+
+  .traj-stop .arrow {
+    color: var(--text-muted);
+  }
+
+  .traj-full-link {
+    color: var(--accent-blue);
+    margin-left: 8px;
+  }
+
+  .dispatch-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 12px;
+  }
+
+  .dispatch-label {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+
+  .dispatch-body strong {
+    display: block;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .dispatch-body p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .dispatch-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 8px;
+  }
+
+  .dot-online {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+  }
+
+  /* Zone 2: Workbench */
+  .workbench-bento-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .island-slot {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .slot-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-canvas);
+  }
+
+  .slot-eyebrow {
+    display: block;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .slot-title {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .compact-project-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+  }
+
+  .project-strip-card {
+    padding: 20px 24px;
+    border-right: 1px solid var(--border-subtle);
+  }
+
+  .project-strip-card:last-child {
+    border-right: none;
+  }
+
+  .project-strip-card.action-card {
+    background: var(--bg-subtle);
+  }
+
+  .strip-cat {
+    display: block;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .strip-title {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    margin: 0 0 6px;
+    font-weight: 500;
+  }
+
+  .strip-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .strip-title a:hover {
+    color: var(--accent-highlight);
+  }
+
+  .strip-desc {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  /* Zone 3: Writing Ledger */
+  .ledger-split-layout {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 48px;
+  }
+
+  .lead-essay-spotlight {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--accent-highlight);
+    border-radius: var(--radius-sm);
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+
+  .spotlight-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    margin-bottom: 12px;
+  }
+
+  .spotlight-badge {
+    text-transform: uppercase;
+    color: var(--accent-highlight);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  .spotlight-date {
+    color: var(--text-muted);
+  }
+
+  .lead-essay-title {
+    font-family: var(--font-serif);
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 12px;
+  }
+
+  .lead-essay-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .lead-essay-title a:hover {
+    color: var(--accent-highlight);
+  }
+
+  .lead-essay-summary {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin: 0 0 16px;
+  }
+
+  .read-lead-btn {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent-highlight);
+    text-decoration: none;
+  }
+
+  .read-lead-btn:hover {
+    text-decoration: underline;
+  }
+
+  .secondary-essays-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .secondary-essay-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .secondary-title {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 500;
+    margin: 0 0 4px;
+    line-height: 1.3;
+  }
+
+  .secondary-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .secondary-title a:hover {
+    color: var(--accent-highlight);
+  }
+
+  .secondary-summary {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .essay-meta-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .meta-date {
+    color: var(--text-muted);
+  }
+
+  .meta-time {
+    color: var(--text-secondary);
+  }
+
+  /* Aside: Pitch & Bookshelf */
+  .pitch-bookshelf-column {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    border-left: 1px solid var(--border-subtle);
+    padding-left: 32px;
+  }
+
+  .side-module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+
+  .module-title {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .module-tag {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .side-match-list, .side-book-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .side-match-item, .side-book-item {
+    padding-block: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    text-decoration: none;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .side-match-item:hover .match-name,
+  .side-book-item:hover .book-title {
+    color: var(--accent-highlight);
+  }
+
+  .match-name, .book-title {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .match-stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-family: var(--font-mono);
+  }
+
+  .stat-highlight {
+    color: var(--accent-amber);
+    font-weight: 600;
+  }
+
+  .match-time {
+    color: var(--text-muted);
+  }
+
+  .book-author {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+
+  .book-note-snippet {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .module-footer-link {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-blue);
+    text-decoration: none;
+  }
+
+  .module-footer-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 900px) {
+    .masthead-zone {
+      grid-template-columns: 1fr;
+    }
+    .workbench-bento-grid {
+      grid-template-columns: 1fr;
+    }
+    .compact-project-strip {
+      grid-template-columns: 1fr;
+    }
+    .project-strip-card {
+      border-right: none;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .ledger-split-layout {
+      grid-template-columns: 1fr;
+    }
+    .pitch-bookshelf-column {
+      border-left: none;
+      padding-left: 0;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 32px;
+    }
+  }
+</style>

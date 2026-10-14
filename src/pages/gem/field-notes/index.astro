@@ -1,0 +1,382 @@
+---
+import GemLayout from '../../../layouts/GemLayout.astro';
+import { getCuratedWriting, flagshipSlugs } from '../../../data/gem/writing-curated';
+import EssayLedgerTable from '../../../components/gem/catalog/EssayLedgerTable.astro';
+import CricketScorecardList from '../../../components/gem/catalog/CricketScorecardList.astro';
+import BookshelfGrid from '../../../components/gem/catalog/BookshelfGrid.astro';
+
+const allWriting = await getCuratedWriting();
+
+const flagshipItems = flagshipSlugs
+  .map((slug) => allWriting.find((item) => item.slug === slug))
+  .filter(Boolean) as typeof allWriting;
+
+const cricketMatches = allWriting.filter((item) => item.stream === 'cricket');
+const bookReviews = allWriting.filter((item) => item.stream === 'books');
+---
+
+<GemLayout
+  title="Writing Ledger & Research Archive | Essays, Match Logs & Bookshelf · C M Nafi"
+  description="Curated deep dives into corporate capital structures, SEC filings, Tampa league cricket match logs, and annotated books."
+  currentPath="/gem/field-notes/"
+>
+  <div class="field-notes-page" data-stream-container>
+    <!-- Masthead -->
+    <header class="notes-masthead">
+      <span class="eyebrow-tag">Editorial Systems Lab · Research Ledger</span>
+      <h1 class="page-title">Essays, Match Logs & Bookshelf</h1>
+      <p class="masthead-intro">
+        A structured, permanent archive of long-form capital analysis, regulatory investigations, ball-by-ball Tampa cricket logs, and annotated notes across finance, engineering, and literature.
+      </p>
+
+      <!-- Primary Stream Tabs -->
+      <div class="stream-tabs-nav" data-stream-tabs>
+        <button type="button" class="stream-tab active" data-target-stream="all">
+          All Streams ({allWriting.length})
+        </button>
+        <button type="button" class="stream-tab" data-target-stream="flagship">
+          Flagship Deep Dives ({flagshipItems.length})
+        </button>
+        <button type="button" class="stream-tab" data-target-stream="cricket">
+          Tampa Match Logs ({cricketMatches.length})
+        </button>
+        <button type="button" class="stream-tab" data-target-stream="bookshelf">
+          Reading Shelf ({bookReviews.length})
+        </button>
+      </div>
+    </header>
+
+    <!-- SECTION A: Flagship Deep-Research Bento Grid -->
+    <section class="flagship-bento-section" data-stream-panel="flagship">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">Cornerstone Deep Research</span>
+          <h2>Flagship Investigations & Monograph Essays</h2>
+        </div>
+        <span class="bento-meta-badge">6 Flagship Studies</span>
+      </div>
+
+      <div class="flagship-bento-grid">
+        <!-- Lead Spotlight Essay: Uber -->
+        {flagshipItems[0] && (
+          <article class="bento-card lead-card">
+            <div class="bento-header">
+              <span class="stream-tag">Capital Structure Teardown</span>
+              <time class="bento-date data-mono">{flagshipItems[0].publishedAt} · {flagshipItems[0].readingMinutes} min read</time>
+            </div>
+            <h3 class="lead-title">
+              <a href={`/field-notes/${flagshipItems[0].slug}/`}>{flagshipItems[0].title}</a>
+            </h3>
+            <p class="lead-summary">{flagshipItems[0].summary}</p>
+            <div class="lead-callout-pill">
+              <span class="stat-highlight">$32.8B Burned → 75% Refilled in 42 Months</span>
+            </div>
+            <footer class="bento-footer">
+              <a href={`/field-notes/${flagshipItems[0].slug}/`} class="bento-read-link">
+                Read Full Teardown & Cap Table Trace →
+              </a>
+            </footer>
+          </article>
+        )}
+
+        <!-- 5 Secondary Flagships -->
+        <div class="secondary-flagships-column">
+          {flagshipItems.slice(1).map((item) => (
+            <article class="bento-card secondary-card">
+              <div class="bento-header">
+                <span class="stream-tag">{item.subtopic || 'Research'}</span>
+                <time class="bento-date data-mono">{item.publishedAt} · {item.readingMinutes} min</time>
+              </div>
+              <h4 class="secondary-title">
+                <a href={`/field-notes/${item.slug}/`}>{item.title}</a>
+              </h4>
+              <p class="secondary-summary">{item.summary}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION B: Searchable & Filterable Essay Ledger Table -->
+    <section class="ledger-table-section editorial-section" data-stream-panel="ledger">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">Chronological Index</span>
+          <h2>Capital & Systems Research Ledger</h2>
+        </div>
+        <span class="ledger-stat-note">Filterable by thesis & subtopic</span>
+      </div>
+      <EssayLedgerTable items={allWriting} />
+    </section>
+
+    <!-- SECTION C: Tampa Cricket Match Scorecards -->
+    <section class="cricket-logs-section editorial-section" data-stream-panel="cricket">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">From the Pitch · Tampa Bay League</span>
+          <h2>Tactical Match Logs & Scorecards</h2>
+        </div>
+        <a href="/gem/garage/" class="section-link-more">Open Captains View Tactical Engine →</a>
+      </div>
+      <CricketScorecardList matches={cricketMatches} />
+    </section>
+
+    <!-- SECTION D: Annotated Bookshelf Grid -->
+    <section class="bookshelf-section editorial-section" data-stream-panel="bookshelf">
+      <div class="section-head-row">
+        <div>
+          <span class="eyebrow-tag">The Bookshelf · 23 Annotated Volumes</span>
+          <h2>Curated Reading Shelf & Personal Context</h2>
+        </div>
+        <span class="shelf-stat-note">Wall Street · Systems · Craft</span>
+      </div>
+      <BookshelfGrid books={bookReviews} />
+    </section>
+  </div>
+</GemLayout>
+
+<script>
+  function initStreamTabs() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('[data-stream-tabs] .stream-tab');
+    const flagshipSec = document.querySelector<HTMLElement>('[data-stream-panel="flagship"]');
+    const ledgerSec = document.querySelector<HTMLElement>('[data-stream-panel="ledger"]');
+    const cricketSec = document.querySelector<HTMLElement>('[data-stream-panel="cricket"]');
+    const bookshelfSec = document.querySelector<HTMLElement>('[data-stream-panel="bookshelf"]');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const stream = tab.getAttribute('data-target-stream') || 'all';
+
+        tabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        if (stream === 'all') {
+          if (flagshipSec) flagshipSec.style.display = 'block';
+          if (ledgerSec) ledgerSec.style.display = 'block';
+          if (cricketSec) cricketSec.style.display = 'block';
+          if (bookshelfSec) bookshelfSec.style.display = 'block';
+        } else if (stream === 'flagship') {
+          if (flagshipSec) flagshipSec.style.display = 'block';
+          if (ledgerSec) ledgerSec.style.display = 'none';
+          if (cricketSec) cricketSec.style.display = 'none';
+          if (bookshelfSec) bookshelfSec.style.display = 'none';
+        } else if (stream === 'cricket') {
+          if (flagshipSec) flagshipSec.style.display = 'none';
+          if (ledgerSec) ledgerSec.style.display = 'none';
+          if (cricketSec) cricketSec.style.display = 'block';
+          if (bookshelfSec) bookshelfSec.style.display = 'none';
+        } else if (stream === 'bookshelf') {
+          if (flagshipSec) flagshipSec.style.display = 'none';
+          if (ledgerSec) ledgerSec.style.display = 'none';
+          if (cricketSec) cricketSec.style.display = 'none';
+          if (bookshelfSec) bookshelfSec.style.display = 'block';
+        }
+      });
+    });
+  }
+
+  initStreamTabs();
+  document.addEventListener('astro:page-load', initStreamTabs);
+</script>
+
+<style>
+  .field-notes-page {
+    padding-top: 48px;
+  }
+
+  .notes-masthead {
+    margin-bottom: 40px;
+  }
+
+  .page-title {
+    font-size: clamp(38px, 4.5vw, 60px);
+    margin: 0 0 16px;
+    font-weight: 400;
+  }
+
+  .masthead-intro {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: var(--max-w-prose);
+    margin: 0 0 28px;
+  }
+
+  .stream-tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 16px;
+  }
+
+  .stream-tab {
+    padding: 8px 14px;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .stream-tab:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  .stream-tab.active {
+    background: var(--accent-primary);
+    color: var(--bg-canvas);
+    border-color: var(--accent-primary);
+  }
+
+  /* Bento Grid */
+  .flagship-bento-section {
+    margin-bottom: 48px;
+  }
+
+  .bento-meta-badge {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .flagship-bento-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 24px;
+  }
+
+  .bento-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .lead-card {
+    border-left: 4px solid var(--accent-highlight);
+  }
+
+  .bento-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    margin-bottom: 14px;
+  }
+
+  .stream-tag {
+    color: var(--accent-highlight);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .bento-date {
+    color: var(--text-muted);
+  }
+
+  .lead-title {
+    font-family: var(--font-serif);
+    font-size: clamp(28px, 3.2vw, 38px);
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 14px;
+  }
+
+  .lead-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .lead-title a:hover {
+    color: var(--accent-highlight);
+  }
+
+  .lead-summary {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin: 0 0 20px;
+  }
+
+  .lead-callout-pill {
+    background: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 20px;
+  }
+
+  .stat-highlight {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-primary);
+  }
+
+  .bento-read-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent-highlight);
+    text-decoration: none;
+  }
+
+  .bento-read-link:hover {
+    text-decoration: underline;
+  }
+
+  .secondary-flagships-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .secondary-card {
+    padding: 18px 20px;
+    gap: 8px;
+  }
+
+  .secondary-title {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .secondary-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .secondary-title a:hover {
+    color: var(--accent-highlight);
+  }
+
+  .secondary-summary {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .ledger-stat-note, .shelf-stat-note {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 860px) {
+    .flagship-bento-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

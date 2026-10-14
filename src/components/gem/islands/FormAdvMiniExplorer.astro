@@ -1,0 +1,630 @@
+---
+import { sampleAdvisers } from '../../../data/gem/islands/sample-advisers';
+---
+
+<div class="adv-explorer-island" data-adv-island>
+  <p style="padding:16px;margin:0;background:var(--bg-subtle);color:var(--text-secondary);font-size:13px">Illustrative comparison demo. Amounts, client percentages, fee summaries, and filing identities in this sample have not been verified against the linked filings. For verified entity-level snapshots, visit <a href="/codex/garage/">the Codex adviser explorer</a>. No live SEC database or 13F holdings are connected here.</p>
+  <header class="island-masthead">
+    <div class="meta-row">
+      <span class="badge-tag">Adviser comparison demo</span>
+      <span class="stat-pill">8 sample firms</span>
+    </div>
+    <div class="search-row">
+      <input
+        type="text"
+        data-adv-search
+        placeholder="Filter firms (e.g., BlackRock, Citadel, Blackstone)..."
+        aria-label="Search SEC Registered Investment Advisers"
+      />
+    </div>
+    <div class="pill-rack" data-pill-rack>
+      {sampleAdvisers.map((firm, idx) => (
+        <button
+          type="button"
+          class:list={['firm-pill', { active: idx === 0 }]}
+          data-firm-id={firm.id}
+          data-firm-index={idx}
+        >
+          {firm.name}
+        </button>
+      ))}
+    </div>
+  </header>
+
+  <div class="explorer-body">
+    <!-- Comparison Controls -->
+    <div class="compare-toggle-bar">
+      <label class="toggle-control">
+        <input type="checkbox" data-compare-checkbox />
+        <span class="toggle-label">Enable Side-by-Side Diligence Diff</span>
+      </label>
+      <div class="compare-select-wrap" data-compare-picker style="display: none;">
+        <span>Compare with:</span>
+        <select data-compare-select aria-label="Select secondary firm to compare">
+          {sampleAdvisers.map((firm, idx) => (
+            <option value={firm.id} selected={idx === 1}>
+              {firm.name} ({firm.aumFormatted})
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <!-- Active Filing Cards Grid -->
+    <div class="filing-cards-grid" data-filing-grid>
+      <!-- Primary Card -->
+      <article class="filing-card primary-card" data-primary-card>
+        <div class="card-header">
+          <div>
+            <span class="card-crd" data-crd>CRD #{sampleAdvisers[0].crd} · SEC #{sampleAdvisers[0].secNumber}</span>
+            <h4 class="card-title" data-name>{sampleAdvisers[0].name}</h4>
+            <p class="card-legal" data-legal>{sampleAdvisers[0].legalEntity}</p>
+          </div>
+          <div class="aum-badge">
+            <span class="aum-label">Regulatory AUM</span>
+            <span class="aum-val" data-aum>{sampleAdvisers[0].aumFormatted}</span>
+          </div>
+        </div>
+
+        <div class="split-metric-block">
+          <div class="split-labels">
+            <span>Discretionary: <strong data-disc-pct>{sampleAdvisers[0].discretionaryPct}%</strong></span>
+            <span>Non-Discretionary: <strong data-non-disc-pct>{100 - sampleAdvisers[0].discretionaryPct}%</strong></span>
+          </div>
+          <div class="split-bar-track">
+            <div class="split-bar-fill" data-split-bar style={`width: ${sampleAdvisers[0].discretionaryPct}%`}></div>
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <h5>Core Client Distribution</h5>
+          <ul class="client-list" data-clients>
+            {sampleAdvisers[0].clientTypes.map((c) => (
+              <li>
+                <span class="client-name">{c.type}</span>
+                <span class="client-pct">{c.pct}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="spec-section">
+          <h5>Advisory Fee Model & Strategy</h5>
+          <p class="fee-text" data-fees>{sampleAdvisers[0].feeTypes.join(' · ')}</p>
+          <p class="strategy-text" data-strategy>{sampleAdvisers[0].primaryStrategy}</p>
+        </div>
+
+        <div class="card-footer-meta">
+          <span class="location-tag" data-location>HQ: {sampleAdvisers[0].primaryLocation}</span>
+          <a class="source-link" data-source href={sampleAdvisers[0].sourceUrl} target="_blank" rel="noopener noreferrer">
+            SEC Form ADV Filing ↗
+          </a>
+        </div>
+      </article>
+
+      <!-- Secondary Comparison Card (Hidden by default) -->
+      <article class="filing-card comparison-card" data-secondary-card style="display: none;">
+        <div class="card-header">
+          <div>
+            <span class="card-crd" data-sec-crd>CRD #{sampleAdvisers[1].crd} · SEC #{sampleAdvisers[1].secNumber}</span>
+            <h4 class="card-title" data-sec-name>{sampleAdvisers[1].name}</h4>
+            <p class="card-legal" data-sec-legal>{sampleAdvisers[1].legalEntity}</p>
+          </div>
+          <div class="aum-badge">
+            <span class="aum-label">Regulatory AUM</span>
+            <span class="aum-val" data-sec-aum>{sampleAdvisers[1].aumFormatted}</span>
+          </div>
+        </div>
+
+        <div class="split-metric-block">
+          <div class="split-labels">
+            <span>Discretionary: <strong data-sec-disc-pct>{sampleAdvisers[1].discretionaryPct}%</strong></span>
+            <span>Non-Discretionary: <strong data-sec-non-disc-pct>{100 - sampleAdvisers[1].discretionaryPct}%</strong></span>
+          </div>
+          <div class="split-bar-track">
+            <div class="split-bar-fill" data-sec-split-bar style={`width: ${sampleAdvisers[1].discretionaryPct}%`}></div>
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <h5>Core Client Distribution</h5>
+          <ul class="client-list" data-sec-clients>
+            {sampleAdvisers[1].clientTypes.map((c) => (
+              <li>
+                <span class="client-name">{c.type}</span>
+                <span class="client-pct">{c.pct}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="spec-section">
+          <h5>Advisory Fee Model & Strategy</h5>
+          <p class="fee-text" data-sec-fees>{sampleAdvisers[1].feeTypes.join(' · ')}</p>
+          <p class="strategy-text" data-sec-strategy>{sampleAdvisers[1].primaryStrategy}</p>
+        </div>
+
+        <div class="card-footer-meta">
+          <span class="location-tag" data-sec-location>HQ: {sampleAdvisers[1].primaryLocation}</span>
+          <a class="source-link" data-sec-source href={sampleAdvisers[1].sourceUrl} target="_blank" rel="noopener noreferrer">
+            SEC Form ADV Filing ↗
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <footer class="island-footer">
+    <div class="footer-left">
+      <span>Preloaded illustrative records, not a connected <code>FastMCP</code> server</span>
+    </div>
+    <div class="footer-right">
+      <a href="/gem/garage/" class="text-cta">Inspect in Regulatory Lens Workbench →</a>
+      <a href="/gem/field-notes/" class="text-cta">Read "The Universe of Form ADV" Essay →</a>
+    </div>
+  </footer>
+
+  <script is:inline type="application/json" data-advisers-raw set:html={JSON.stringify(sampleAdvisers).replaceAll('<', '\\u003c')} />
+</div>
+
+<script>
+  function initAdvExplorer() {
+    document.querySelectorAll<HTMLElement>('[data-adv-island]').forEach((island) => {
+      if (island.dataset.initialized) return;
+      island.dataset.initialized = 'true';
+
+      const dataScript = island.querySelector('[data-advisers-raw]');
+      if (!dataScript || !dataScript.textContent) return;
+      const advisers = JSON.parse(dataScript.textContent);
+
+      let primaryIdx = 0;
+      let secondaryIdx = 1;
+      let isComparing = false;
+
+      const searchInput = island.querySelector<HTMLInputElement>('[data-adv-search]');
+      const pillRack = island.querySelector('[data-pill-rack]');
+      const compareCheckbox = island.querySelector<HTMLInputElement>('[data-compare-checkbox]');
+      const comparePicker = island.querySelector<HTMLElement>('[data-compare-picker]');
+      const compareSelect = island.querySelector<HTMLSelectElement>('[data-compare-select]');
+      const filingGrid = island.querySelector<HTMLElement>('[data-filing-grid]');
+      const secondaryCard = island.querySelector<HTMLElement>('[data-secondary-card]');
+
+      function renderCard(prefix: string, item: any) {
+        const find = (sel: string) => island.querySelector(sel);
+        const crd = find(`[${prefix}-crd]`);
+        const name = find(`[${prefix}-name]`);
+        const legal = find(`[${prefix}-legal]`);
+        const aum = find(`[${prefix}-aum]`);
+        const discPct = find(`[${prefix}-disc-pct]`);
+        const nonDiscPct = find(`[${prefix}-non-disc-pct]`);
+        const splitBar = island.querySelector<HTMLElement>(`[${prefix}-split-bar]`);
+        const clients = find(`[${prefix}-clients]`);
+        const fees = find(`[${prefix}-fees]`);
+        const strategy = find(`[${prefix}-strategy]`);
+        const location = find(`[${prefix}-location]`);
+        const source = island.querySelector<HTMLAnchorElement>(`[${prefix}-source]`);
+
+        if (crd) crd.textContent = `CRD #${item.crd} · SEC #${item.secNumber}`;
+        if (name) name.textContent = item.name;
+        if (legal) legal.textContent = item.legalEntity;
+        if (aum) aum.textContent = item.aumFormatted;
+        if (discPct) discPct.textContent = `${item.discretionaryPct}%`;
+        if (nonDiscPct) nonDiscPct.textContent = `${100 - item.discretionaryPct}%`;
+        if (splitBar) splitBar.style.width = `${item.discretionaryPct}%`;
+        if (fees) fees.textContent = item.feeTypes.join(' · ');
+        if (strategy) strategy.textContent = item.primaryStrategy;
+        if (location) location.textContent = `HQ: ${item.primaryLocation}`;
+        if (source) source.href = item.sourceUrl;
+
+        if (clients) {
+          clients.innerHTML = item.clientTypes
+            .map((c: any) => `<li><span class="client-name">${c.type}</span><span class="client-pct">${c.pct}%</span></li>`)
+            .join('');
+        }
+      }
+
+      function updateActivePills() {
+        if (!pillRack) return;
+        pillRack.querySelectorAll<HTMLButtonElement>('.firm-pill').forEach((pill, idx) => {
+          pill.classList.toggle('active', idx === primaryIdx);
+        });
+      }
+
+      function updateView() {
+        renderCard('data', advisers[primaryIdx]);
+        if (isComparing) {
+          renderCard('data-sec', advisers[secondaryIdx]);
+          if (secondaryCard) secondaryCard.style.display = 'block';
+          if (comparePicker) comparePicker.style.display = 'flex';
+          if (filingGrid) filingGrid.classList.add('is-comparing');
+        } else {
+          if (secondaryCard) secondaryCard.style.display = 'none';
+          if (comparePicker) comparePicker.style.display = 'none';
+          if (filingGrid) filingGrid.classList.remove('is-comparing');
+        }
+        updateActivePills();
+      }
+
+      pillRack?.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.firm-pill');
+        if (!btn) return;
+        const idx = Number(btn.dataset.firmIndex);
+        if (!isNaN(idx)) {
+          primaryIdx = idx;
+          updateView();
+        }
+      });
+
+      searchInput?.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase().trim();
+        if (!pillRack) return;
+        pillRack.querySelectorAll<HTMLButtonElement>('.firm-pill').forEach((pill) => {
+          const match = pill.textContent?.toLowerCase().includes(query) ?? false;
+          pill.style.display = match ? 'inline-flex' : 'none';
+        });
+      });
+
+      compareCheckbox?.addEventListener('change', () => {
+        isComparing = compareCheckbox.checked;
+        updateView();
+      });
+
+      compareSelect?.addEventListener('change', () => {
+        const firmId = compareSelect.value;
+        const foundIdx = advisers.findIndex((a: any) => a.id === firmId);
+        if (foundIdx >= 0) {
+          secondaryIdx = foundIdx;
+          updateView();
+        }
+      });
+
+      updateView();
+    });
+  }
+
+  initAdvExplorer();
+  document.addEventListener('astro:page-load', initAdvExplorer);
+</script>
+
+<style>
+  .adv-explorer-island {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+  }
+
+  .island-masthead {
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+  }
+
+  .badge-tag {
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  .stat-pill {
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+  }
+
+  .search-row input {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: var(--font-sans);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .search-row input:focus {
+    border-color: var(--accent-blue);
+  }
+
+  .pill-rack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .firm-pill {
+    padding: 5px 11px;
+    font-size: 11px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .firm-pill:hover {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+  }
+
+  .firm-pill.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--bg-canvas);
+  }
+
+  .compare-toggle-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin-bottom: 18px;
+    padding: 8px 12px;
+    background: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .toggle-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .compare-select-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .compare-select-wrap select {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    color: var(--text-primary);
+  }
+
+  .filing-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .filing-cards-grid.is-comparing {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filing-card {
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 12px;
+  }
+
+  .card-crd {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .card-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 500;
+    margin: 4px 0 2px;
+    color: var(--text-primary);
+  }
+
+  .card-legal {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .aum-badge {
+    text-align: right;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  .aum-label {
+    display: block;
+    font-size: 9px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .aum-val {
+    font-size: 15px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--accent-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .split-metric-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .split-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  .split-bar-track {
+    height: 8px;
+    background: var(--border-subtle);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .split-bar-fill {
+    height: 100%;
+    background: var(--accent-primary);
+    transition: width 0.3s ease;
+  }
+
+  .spec-section h5 {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin: 0 0 8px;
+  }
+
+  .client-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .client-list li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    border-bottom: 1px dashed var(--border-subtle);
+    padding-bottom: 3px;
+  }
+
+  .client-name {
+    color: var(--text-secondary);
+  }
+
+  .client-pct {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+  }
+
+  .fee-text, .strategy-text {
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0 0 6px;
+    color: var(--text-secondary);
+  }
+
+  .card-footer-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 12px;
+    margin-top: auto;
+    font-size: 11px;
+  }
+
+  .location-tag {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .source-link {
+    color: var(--accent-blue);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .source-link:hover {
+    text-decoration: underline;
+  }
+
+  .island-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .island-footer code {
+    font-family: var(--font-mono);
+    background: var(--bg-subtle);
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 16px;
+  }
+
+  .text-cta {
+    color: var(--accent-highlight);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .text-cta:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .filing-cards-grid.is-comparing {
+      grid-template-columns: 1fr;
+    }
+    .island-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

@@ -1,0 +1,186 @@
+---
+import type { WritingItem } from '../../../types/gem-site';
+
+interface Props {
+  matches: WritingItem[];
+}
+
+const { matches } = Astro.props;
+---
+
+<div class="cricket-scorecards-grid">
+  {matches.map((m) => {
+    const stats = m.cricketStats;
+    return (
+      <article class="match-scorecard-card">
+        <header class="scorecard-header">
+          <div class="date-venue-row">
+            <time class="match-date">{m.publishedAt}</time>
+            {stats?.venue && <span class="match-venue">📍 {stats.venue}</span>}
+          </div>
+          <h3 class="match-title">
+            <a href={`/field-notes/${m.slug}/`}>{m.title}</a>
+          </h3>
+          <p class="match-opponents">{stats?.matchup || 'Tampa Bay Cricket League'}</p>
+        </header>
+
+        <div class="scorecard-body">
+          <div class="stat-pill-box">
+            <span class="stat-label">Personal Performance Figures</span>
+            <div class="highlight-stat-pill">
+              {stats?.highlightStat || 'Match Summary'}
+            </div>
+          </div>
+
+          <p class="match-summary-text">{m.summary}</p>
+        </div>
+
+        <footer class="scorecard-footer">
+          <span class="outcome-pill">
+            <span class="trophy-dot"></span>
+            {stats?.outcome || 'Match Concluded'}
+          </span>
+          <a href={`/field-notes/${m.slug}/`} class="read-log-link">
+            Match Story & Scorecard →
+          </a>
+        </footer>
+      </article>
+    );
+  })}
+</div>
+
+<style>
+  .cricket-scorecards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    font-family: var(--font-sans);
+  }
+
+  .match-scorecard-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.15s ease;
+  }
+
+  .match-scorecard-card:hover {
+    border-color: var(--accent-amber);
+  }
+
+  .date-venue-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .match-date {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .match-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 4px;
+    line-height: 1.25;
+  }
+
+  .match-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .match-title a:hover {
+    color: var(--accent-highlight);
+  }
+
+  .match-opponents {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0 0 14px;
+    font-weight: 500;
+  }
+
+  .scorecard-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .stat-pill-box {
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+
+  .stat-label {
+    display: block;
+    font-size: 9px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .highlight-stat-pill {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent-amber);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .match-summary-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .scorecard-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 12px;
+    font-size: 11px;
+  }
+
+  .outcome-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    color: var(--accent-primary);
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  .trophy-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+  }
+
+  .read-log-link {
+    color: var(--accent-highlight);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .read-log-link:hover {
+    text-decoration: underline;
+  }
+</style>

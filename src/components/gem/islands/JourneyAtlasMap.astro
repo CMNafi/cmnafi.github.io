@@ -1,0 +1,521 @@
+---
+import { journeyStops, calculateGreatCircleDistance } from '../../../data/gem/islands/journey';
+
+const distance1to2 = calculateGreatCircleDistance(
+  journeyStops[0].coordinates.lat,
+  journeyStops[0].coordinates.lng,
+  journeyStops[1].coordinates.lat,
+  journeyStops[1].coordinates.lng
+);
+
+const distance2to3 = calculateGreatCircleDistance(
+  journeyStops[1].coordinates.lat,
+  journeyStops[1].coordinates.lng,
+  journeyStops[2].coordinates.lat,
+  journeyStops[2].coordinates.lng
+);
+
+const distance3to4 = calculateGreatCircleDistance(
+  journeyStops[2].coordinates.lat,
+  journeyStops[2].coordinates.lng,
+  journeyStops[3].coordinates.lat,
+  journeyStops[3].coordinates.lng
+);
+
+const distances = [
+  { from: 1, to: 2, km: distance1to2.km, mi: distance1to2.miles },
+  { from: 2, to: 3, km: distance2to3.km, mi: distance2to3.miles },
+  { from: 3, to: 4, km: distance3to4.km, mi: distance3to4.miles }
+];
+---
+
+<div class="journey-atlas-island" data-journey-island>
+  <header class="atlas-header">
+    <div class="header-badge-row">
+      <span class="badge-tag">Geographical & Intellectual Trajectory</span>
+      <span class="total-span">4 Chapters · 3 Continents · 10,000+ Miles</span>
+    </div>
+    <div class="chapter-pills-row">
+      {journeyStops.map((stop, idx) => (
+        <button
+          type="button"
+          class:list={['stop-pill', { active: idx === 0 }]}
+          data-stop-id={stop.id}
+          data-stop-index={idx}
+        >
+          <span class="pill-num">0{stop.order}</span>
+          <span class="pill-name">{stop.city}</span>
+        </button>
+      ))}
+    </div>
+  </header>
+
+  <div class="atlas-content-split">
+    <!-- SVG Projection Map Canvas -->
+    <div class="map-viewport">
+      <svg
+        viewBox="0 0 800 360"
+        class="atlas-svg"
+        data-atlas-svg
+        aria-label="Interactive world trajectory map connecting Dinajpur, Changshu, Iowa, and Tampa Bay"
+      >
+        <!-- Minimalist Landmass Background Outlines -->
+        <g class="world-continents">
+          <!-- North America approximate outline -->
+          <path d="M 100,50 L 250,50 L 260,110 L 220,180 L 160,160 L 110,100 Z" class="landmass" />
+          <!-- Eurasia approximate outline -->
+          <path d="M 450,40 L 720,40 L 710,160 L 610,180 L 520,130 L 450,110 Z" class="landmass" />
+          <!-- Latitude grid lines -->
+          <line x1="40" y1="90" x2="760" y2="90" class="lat-grid" />
+          <line x1="40" y1="180" x2="760" y2="180" class="lat-grid" />
+          <line x1="40" y1="270" x2="760" y2="270" class="lat-grid" />
+        </g>
+
+        <!-- Flight / Migration Arcs -->
+        <!-- Arc 1: Dinajpur (597, 143) -> Changshu (668, 130) -->
+        <path
+          d="M 597,143 Q 632,105 668,130"
+          class="trajectory-arc arc-0"
+          data-arc-index="0"
+        />
+        <!-- Arc 2: Changshu (668, 130) -> Iowa (196, 104) [Trans-Pacific wrap depiction] -->
+        <path
+          d="M 668,130 Q 740,90 790,95"
+          class="trajectory-arc arc-1a"
+          data-arc-index="1"
+        />
+        <path
+          d="M 10,95 Q 100,80 196,104"
+          class="trajectory-arc arc-1b"
+          data-arc-index="1"
+        />
+        <!-- Arc 3: Iowa (196, 104) -> Tampa (217, 138) -->
+        <path
+          d="M 196,104 Q 212,118 217,138"
+          class="trajectory-arc arc-2"
+          data-arc-index="2"
+        />
+
+        <!-- Waypoint Nodes -->
+        {journeyStops.map((stop, idx) => (
+          <g
+            class:list={['waypoint-node', { active: idx === 0 }]}
+            transform={`translate(${stop.svgX}, ${stop.svgY})`}
+            data-node-index={idx}
+            data-node-id={stop.id}
+          >
+            <circle r="14" class="node-halo" />
+            <circle r="6" class="node-dot" />
+            <text x="12" y="4" class="node-label">
+              {stop.city}
+            </text>
+          </g>
+        ))}
+      </svg>
+
+      <div class="leg-distance-strip">
+        <span class="distance-text" data-distance-display>
+          Leg 1: Dinajpur → Changshu · 3,193 km (1,984 mi)
+        </span>
+      </div>
+    </div>
+
+    <!-- Stop Details Card -->
+    <article class="stop-detail-card" data-stop-card>
+      <div class="card-chapter-num" data-chapter-num>Chapter 01</div>
+      <h3 class="card-location" data-chapter-city>Dinajpur, Bangladesh</h3>
+      <div class="card-coord" data-chapter-coord>25.6279° N, 88.6332° E · 2000 – 2016</div>
+
+      <div class="detail-section">
+        <span class="section-title">Institution & Role</span>
+        <p class="role-desc" data-chapter-role>Roots & Foundations · Early Mathematics & Cricket</p>
+      </div>
+
+      <div class="detail-section">
+        <span class="section-title">What I Built & Discovered</span>
+        <p class="learnings-desc" data-chapter-learned>
+          Grew up with local mathematics olympiads, notebook physics, and dusty street cricket pitch construction. Formed instincts for probabilistic outcomes and tape-ball bowling variations.
+        </p>
+      </div>
+
+      <div class="detail-section artifacts-sec">
+        <span class="section-title">Related Notes & Projects</span>
+        <ul class="artifact-links" data-chapter-artifacts>
+          <li>
+            <a href="/gem/field-notes/">SWAT vs Royal Phoenix: Seven to Defend ↗</a>
+          </li>
+          <li>
+            <a href="/gem/garage/">Captains View Cricket Engine ↗</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="scroll-action-row">
+        <a href="#chapter-dinajpur" class="scroll-to-story-link" data-story-anchor>
+          Scroll to Chapter Story Section ↓
+        </a>
+      </div>
+    </article>
+  </div>
+
+  <script is:inline type="application/json" data-stops-json set:html={JSON.stringify(journeyStops).replaceAll('<', '\\u003c')} />
+  <script is:inline type="application/json" data-distances-json set:html={JSON.stringify(distances).replaceAll('<', '\\u003c')} />
+</div>
+
+<script>
+  function initJourneyAtlas() {
+    document.querySelectorAll<HTMLElement>('[data-journey-island]').forEach((island) => {
+      if (island.dataset.initialized) return;
+      island.dataset.initialized = 'true';
+
+      const stopsRaw = island.querySelector('[data-stops-json]')?.textContent;
+      const distRaw = island.querySelector('[data-distances-json]')?.textContent;
+      if (!stopsRaw || !distRaw) return;
+
+      const stops = JSON.parse(stopsRaw);
+      const distances = JSON.parse(distRaw);
+      let currentIdx = 0;
+
+      const pills = island.querySelectorAll<HTMLButtonElement>('.stop-pill');
+      const nodes = island.querySelectorAll<SVGGElement>('.waypoint-node');
+      const arcs = island.querySelectorAll<SVGPathElement>('.trajectory-arc');
+
+      const chapterNum = island.querySelector('[data-chapter-num]');
+      const chapterCity = island.querySelector('[data-chapter-city]');
+      const chapterCoord = island.querySelector('[data-chapter-coord]');
+      const chapterRole = island.querySelector('[data-chapter-role]');
+      const chapterLearned = island.querySelector('[data-chapter-learned]');
+      const chapterArtifacts = island.querySelector('[data-chapter-artifacts]');
+      const distanceDisplay = island.querySelector('[data-distance-display]');
+      const storyAnchor = island.querySelector<HTMLAnchorElement>('[data-story-anchor]');
+
+      function selectStop(idx: number) {
+        currentIdx = idx;
+        const stop = stops[idx];
+
+        // Update pills
+        pills.forEach((p, i) => p.classList.toggle('active', i === idx));
+        // Update SVG nodes
+        nodes.forEach((n, i) => n.classList.toggle('active', i === idx));
+        // Highlight corresponding arc
+        arcs.forEach((a) => {
+          const arcIdx = Number(a.getAttribute('data-arc-index'));
+          a.classList.toggle('highlight', arcIdx === idx - 1 || (idx === 0 && arcIdx === 0));
+        });
+
+        // Update info card
+        if (chapterNum) chapterNum.textContent = `Chapter 0${stop.order}`;
+        if (chapterCity) chapterCity.textContent = `${stop.city}, ${stop.country}`;
+        if (chapterCoord) chapterCoord.textContent = `${stop.coordinates.display} · ${stop.years}`;
+        if (chapterRole) chapterRole.textContent = stop.institutionRole;
+        if (chapterLearned) chapterLearned.textContent = stop.whatIBuiltOrLearned;
+        if (storyAnchor) {
+          storyAnchor.href = `#chapter-${stop.id}`;
+          storyAnchor.textContent = `Scroll to Chapter Story: ${stop.city} ↓`;
+        }
+
+        if (chapterArtifacts) {
+          chapterArtifacts.innerHTML = stop.relatedArtifacts
+            .map((art: any) => `<li><a href="${art.href}">${art.title} ↗</a></li>`)
+            .join('');
+        }
+
+        if (distanceDisplay) {
+          if (idx === 0) {
+            distanceDisplay.textContent = `Leg 1: Dinajpur → Changshu · ${distances[0].km.toLocaleString()} km (${distances[0].mi.toLocaleString()} mi)`;
+          } else if (idx === 1) {
+            distanceDisplay.textContent = `Leg 2: Changshu → Iowa · ${distances[1].km.toLocaleString()} km (${distances[1].mi.toLocaleString()} mi) via Transpacific`;
+          } else if (idx === 2) {
+            distanceDisplay.textContent = `Leg 3: Iowa → Tampa Bay · ${distances[2].km.toLocaleString()} km (${distances[2].mi.toLocaleString()} mi)`;
+          } else {
+            distanceDisplay.textContent = `Current Base: Tampa Bay, FL · Total Trajectory: ~18,000+ km`;
+          }
+        }
+      }
+
+      pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          const idx = Number(pill.getAttribute('data-stop-index'));
+          selectStop(idx);
+        });
+      });
+
+      nodes.forEach((node) => {
+        node.addEventListener('click', () => {
+          const idx = Number(node.getAttribute('data-node-index'));
+          selectStop(idx);
+        });
+      });
+
+      selectStop(0);
+    });
+  }
+
+  initJourneyAtlas();
+  document.addEventListener('astro:page-load', initJourneyAtlas);
+</script>
+
+<style>
+  .journey-atlas-island {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+  }
+
+  .atlas-header {
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+
+  .header-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    margin-bottom: 14px;
+  }
+
+  .badge-tag {
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  .total-span {
+    color: var(--text-muted);
+  }
+
+  .chapter-pills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stop-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .stop-pill:hover {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+  }
+
+  .stop-pill.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--bg-canvas);
+  }
+
+  .pill-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    opacity: 0.8;
+  }
+
+  .atlas-content-split {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .map-viewport {
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .atlas-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .landmass {
+    fill: var(--bg-subtle);
+    stroke: var(--border-subtle);
+    stroke-width: 1;
+    opacity: 0.55;
+  }
+
+  .lat-grid {
+    stroke: var(--border-subtle);
+    stroke-dasharray: 4 6;
+    stroke-width: 0.75;
+  }
+
+  .trajectory-arc {
+    fill: none;
+    stroke: var(--accent-amber);
+    stroke-width: 2;
+    stroke-dasharray: 6 4;
+    opacity: 0.6;
+    transition: all 0.25s ease;
+  }
+
+  .trajectory-arc.highlight {
+    stroke: var(--accent-highlight);
+    stroke-width: 3;
+    opacity: 1;
+  }
+
+  .waypoint-node {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .node-halo {
+    fill: var(--accent-primary);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .node-dot {
+    fill: var(--accent-primary);
+    stroke: var(--bg-canvas);
+    stroke-width: 2;
+    transition: fill 0.2s ease;
+  }
+
+  .waypoint-node:hover .node-dot,
+  .waypoint-node.active .node-dot {
+    fill: var(--accent-highlight);
+  }
+
+  .waypoint-node:hover .node-halo,
+  .waypoint-node.active .node-halo {
+    opacity: 0.25;
+  }
+
+  .node-label {
+    font-size: 11px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    fill: var(--text-primary);
+  }
+
+  .leg-distance-strip {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent-highlight);
+  }
+
+  .stop-detail-card {
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card-chapter-num {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-primary);
+    font-weight: 600;
+  }
+
+  .card-location {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .card-coord {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+
+  .detail-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .section-title {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .role-desc, .learnings-desc {
+    font-size: 12px;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--text-secondary);
+  }
+
+  .artifact-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .artifact-links a {
+    font-size: 11px;
+    color: var(--accent-blue);
+    text-decoration: none;
+  }
+
+  .artifact-links a:hover {
+    text-decoration: underline;
+  }
+
+  .scroll-action-row {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .scroll-to-story-link {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent-highlight);
+    text-decoration: none;
+  }
+
+  .scroll-to-story-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 820px) {
+    .atlas-content-split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

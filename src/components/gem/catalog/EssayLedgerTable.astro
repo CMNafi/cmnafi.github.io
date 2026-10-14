@@ -1,0 +1,382 @@
+---
+import type { WritingItem } from '../../../types/gem-site';
+
+interface Props {
+  items: WritingItem[];
+}
+
+const { items } = Astro.props;
+
+// Separate regular essays from the compendium listicles
+const compendiumItems = items.filter((i) => i.featuredTier === 'archive-listicle');
+const standardEssays = items.filter(
+  (i) => i.featuredTier !== 'archive-listicle' && i.stream !== 'cricket' && i.stream !== 'books'
+);
+
+const subtopics = ['All', 'Venture Capital', 'Private Equity', 'Public Equities', 'Macro'];
+---
+
+<div class="essay-ledger-system" data-ledger-system>
+  <header class="ledger-controls-bar">
+    <!-- Search Bar -->
+    <div class="search-wrap">
+      <input
+        type="text"
+        data-essay-search
+        placeholder="Filter ledger by title, thesis keywords, or ticker..."
+        aria-label="Filter essays"
+      />
+    </div>
+
+    <!-- Subtopic Pills -->
+    <div class="subtopic-pills-rack" data-subtopic-rack>
+      {subtopics.map((sub, idx) => (
+        <button
+          type="button"
+          class:list={['subtopic-pill', { active: idx === 0 }]}
+          data-subtopic={sub}
+        >
+          {sub}
+        </button>
+      ))}
+    </div>
+  </header>
+
+  <div class="table-container">
+    <table class="editorial-ledger-table">
+      <thead>
+        <tr>
+          <th class="col-date">Date</th>
+          <th class="col-title">Title & Core Analytical Thesis</th>
+          <th class="col-subtopic">Subtopic</th>
+          <th class="col-time">Read Time</th>
+        </tr>
+      </thead>
+      <tbody data-ledger-tbody>
+        <!-- Collapsible Historical Compendiums Row -->
+        {compendiumItems.length > 0 && (
+          <tr class="compendium-collapsible-row" data-compendium-row>
+            <td class="col-date data-mono">2026-03</td>
+            <td class="col-title" colspan="3">
+              <details class="compendium-details">
+                <summary class="compendium-summary">
+                  <span class="compendium-label">Historical Data Compendiums (3 Reference Rankings)</span>
+                  <span class="compendium-meta">Click to expand VC & PE league rankings</span>
+                </summary>
+                <div class="compendium-inner-links">
+                  {compendiumItems.map((c) => (
+                    <a href={`/field-notes/${c.slug}/`} class="compendium-link">
+                      <span class="comp-title">{c.title}</span>
+                      <span class="comp-date data-mono">{c.publishedAt}</span>
+                    </a>
+                  ))}
+                </div>
+              </details>
+            </td>
+          </tr>
+        )}
+
+        <!-- Standard Curated Rows -->
+        {standardEssays.map((essay) => (
+          <tr
+            class="essay-row-item"
+            data-slug={essay.slug}
+            data-subtopic={essay.subtopic}
+            data-searchable={`${essay.title} ${essay.summary} ${essay.subtopic}`.toLowerCase()}
+          >
+            <td class="col-date data-mono">{essay.publishedAt}</td>
+            <td class="col-title">
+              <a href={`/field-notes/${essay.slug}/`} class="essay-link">
+                <span class="title-text">{essay.title}</span>
+                <span class="summary-text">{essay.summary}</span>
+              </a>
+            </td>
+            <td class="col-subtopic">
+              <span class="subtopic-tag">{essay.subtopic}</span>
+            </td>
+            <td class="col-time data-mono">{essay.readingMinutes} min</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" data-empty-msg style="display: none;">
+    No essays match your current filter. Try adjusting your search query or subtopic pill.
+  </div>
+</div>
+
+<script>
+  function initEssayLedger() {
+    document.querySelectorAll<HTMLElement>('[data-ledger-system]').forEach((system) => {
+      if (system.dataset.initialized) return;
+      system.dataset.initialized = 'true';
+
+      const searchInput = system.querySelector<HTMLInputElement>('[data-essay-search]');
+      const subtopicRack = system.querySelector('[data-subtopic-rack]');
+      const rows = system.querySelectorAll<HTMLTableRowElement>('.essay-row-item');
+      const compendiumRow = system.querySelector<HTMLTableRowElement>('[data-compendium-row]');
+      const emptyMsg = system.querySelector<HTMLElement>('[data-empty-msg]');
+
+      let currentSubtopic = 'All';
+      let currentQuery = '';
+
+      function filterTable() {
+        let visibleCount = 0;
+
+        rows.forEach((row) => {
+          const sub = row.getAttribute('data-subtopic') || '';
+          const searchable = row.getAttribute('data-searchable') || '';
+
+          const matchesSub = currentSubtopic === 'All' || sub === currentSubtopic;
+          const matchesQuery = !currentQuery || searchable.includes(currentQuery);
+
+          const isVisible = matchesSub && matchesQuery;
+          row.style.display = isVisible ? '' : 'none';
+          if (isVisible) visibleCount++;
+        });
+
+        if (compendiumRow) {
+          const matchesSub = currentSubtopic === 'All' || currentSubtopic === 'Venture Capital' || currentSubtopic === 'Private Equity';
+          const matchesQuery = !currentQuery || 'historical data compendiums vc pe venture capital private equity rankings'.includes(currentQuery);
+          compendiumRow.style.display = matchesSub && matchesQuery ? '' : 'none';
+          if (matchesSub && matchesQuery) visibleCount++;
+        }
+
+        if (emptyMsg) {
+          emptyMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+      }
+
+      searchInput?.addEventListener('input', () => {
+        currentQuery = searchInput.value.toLowerCase().trim();
+        filterTable();
+      });
+
+      subtopicRack?.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.subtopic-pill');
+        if (!btn) return;
+
+        subtopicRack.querySelectorAll('.subtopic-pill').forEach((p) => p.classList.remove('active'));
+        btn.classList.add('active');
+
+        currentSubtopic = btn.getAttribute('data-subtopic') || 'All';
+        filterTable();
+      });
+    });
+  }
+
+  initEssayLedger();
+  document.addEventListener('astro:page-load', initEssayLedger);
+</script>
+
+<style>
+  .essay-ledger-system {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-family: var(--font-sans);
+  }
+
+  .ledger-controls-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .search-wrap {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: var(--font-sans);
+  }
+
+  .search-wrap input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+  }
+
+  .subtopic-pills-rack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .subtopic-pill {
+    padding: 6px 12px;
+    font-size: 11px;
+    font-family: var(--font-sans);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .subtopic-pill:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+
+  .subtopic-pill.active {
+    background: var(--accent-primary);
+    color: var(--bg-canvas);
+    border-color: var(--accent-primary);
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .editorial-ledger-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .editorial-ledger-table th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-strong);
+    padding: 10px 12px;
+  }
+
+  .editorial-ledger-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: top;
+  }
+
+  .col-date {
+    width: 110px;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .col-title {
+    min-width: 320px;
+  }
+
+  .essay-link {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .essay-link:hover .title-text {
+    color: var(--accent-highlight);
+  }
+
+  .title-text {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .summary-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+
+  .col-subtopic {
+    width: 140px;
+  }
+
+  .subtopic-tag {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    padding: 3px 6px;
+    border-radius: var(--radius-sm);
+  }
+
+  .col-time {
+    width: 90px;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-align: right;
+  }
+
+  .data-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Compendium Row Styling */
+  .compendium-collapsible-row td {
+    background: var(--bg-subtle);
+  }
+
+  .compendium-details {
+    cursor: pointer;
+  }
+
+  .compendium-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--accent-primary);
+    outline: none;
+  }
+
+  .compendium-meta {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+  }
+
+  .compendium-inner-links {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 12px;
+    border-left: 2px solid var(--accent-primary);
+  }
+
+  .compendium-link {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 12px;
+    padding-block: 4px;
+  }
+
+  .compendium-link:hover .comp-title {
+    color: var(--accent-highlight);
+  }
+
+  .empty-state {
+    padding: 32px;
+    text-align: center;
+    background: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+</style>
