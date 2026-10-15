@@ -9,6 +9,10 @@
 
 ## 0. The one-sentence vision
 
+### October 15, 2026: Field Notes idea atlas
+
+The primary Field Notes index becomes an editorial Canvas/SVG atlas with constellation, chronological river, and six curated reading tracks. A single collection-derived graph supplies all published notes, seven related tools, the synchronized ledger, a homepage preview, and reusable article lineage ribbons. Counts and dates come from content metadata; drafts and Brewing entries stay out. Curated book pairings and tool recommendations are labeled as reading connections, not documented personal influences or project origins. Tool status remains live or R&D as documented. Existing standalone HTML reports move unchanged into data files and receive Astro wrappers so their content and interactive scripts remain intact while adding the shared ribbon. The editorial palette exception extends to the Field Notes index and these scoped components; article styling elsewhere remains intact.
+
 ### October 15, 2026: professional systems timeline
 
 Replace the homepage career-card explorer with `ProfessionalSystemsTimeline.astro`, a five-stage Canvas/SVG dependency graph with 42 capability nodes, industry-only narrative, filters, keyboard inspection, drag, timeline scrubbing, and reduced-motion support. Related technologies may share a capability node. The graph explains conceptual dependencies, not employer architecture, measured flows, proficiency scores, or dates of tool adoption. Career work and later independent research are identified separately; projects retain their documented live or research status. The user supplied the professional stack and credentials in the October 15 brief, supplementing STORY.md. No geography appears in this component. This homepage component uses the editorial palette already established by the homepage exception above.

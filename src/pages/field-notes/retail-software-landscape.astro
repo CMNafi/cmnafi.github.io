@@ -1,4 +1,8 @@
 ---
 import report from '../../data/reports/retail-software-landscape.html?raw';
+import EssayLineageFooter from '../../components/catalog/EssayLineageFooter.astro';
+const head=report.match(/<head[^>]*>([\s\S]*?)<\/head>/i)?.[1];
+const body=report.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1];
+if(!head||!body)throw new Error('Report is missing its document boundaries');
 ---
-<Fragment set:html={report} />
+<!doctype html><html lang="en"><head><Fragment set:html={head} /></head><body><Fragment set:html={body} /><EssayLineageFooter slug="retail-software-landscape" /></body></html>

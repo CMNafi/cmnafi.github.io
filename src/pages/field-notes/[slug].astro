@@ -1,25 +1,28 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import EssayLineageFooter from '@/components/catalog/EssayLineageFooter.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Flag from '@/components/telemetry/Flag.astro';
 import LapTimer from '@/components/telemetry/LapTimer.astro';
 import { siteConfig } from '@/config/site';
 
 export async function getStaticPaths() {
-  const notes = await getCollection('field-notes');
+  const notes: CollectionEntry<'field-notes'>[] = await getCollection('field-notes');
   return notes
-    .filter(note => !['capital-lens-16', 'capital-lens-17', 'retail-software-landscape'].includes(note.slug))
+    .filter(note => !['capital-lens-16', 'capital-lens-17', 'retail-software-landscape', 'adv-universe'].includes(note.slug))
     .map(note => ({
       params: { slug: note.slug },
       props: { note },
     }));
 }
 
+interface Props { note: CollectionEntry<'field-notes'> }
 const { note } = Astro.props;
 const { Content } = await note.render();
 
 // Adjacent published notes for prev/next navigation
-const publishedNotes = (await getCollection('field-notes'))
+const publishedCollection: CollectionEntry<'field-notes'>[] = await getCollection('field-notes');
+const publishedNotes = publishedCollection
   .filter(n =>
     !n.data.draft &&
     n.data.category !== 'Brewing' &&
@@ -80,11 +83,11 @@ const breadcrumbLd = {
     <meta property="article:modified_time" content={modifiedIso} />
     <meta property="article:section" content={note.data.category} />
     <meta property="article:author" content={siteConfig.author} />
-    {note.data.tags.map(tag => <meta property="article:tag" content={tag} />)}
+    {note.data.tags.map((tag: string) => <meta property="article:tag" content={tag} />)}
     {note.data.tags.length > 0 && <meta name="keywords" content={note.data.tags.join(', ')} />}
     <meta name="author" content={siteConfig.author} />
-    <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
   </Fragment>
 
   <div class={`note-detail ${note.data.category === 'Cricket' ? 'theme-cricket' : ''}`}>
@@ -130,12 +133,13 @@ const breadcrumbLd = {
 
       {note.data.tags.length > 0 && (
         <div class="article-tags" aria-label="Article tags">
-          {note.data.tags.map(tag => (
+          {note.data.tags.map((tag: string) => (
             <span class="tag-chip monospace-chip">{tag.toUpperCase()}</span>
           ))}
         </div>
       )}
 
+      <EssayLineageFooter slug={note.slug} />
       <footer class="article-footer">
         <div class="adjacent-notes">
           {olderNote && (
