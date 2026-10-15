@@ -9,6 +9,10 @@
 
 ## 0. The one-sentence vision
 
+### October 15, 2026: professional systems timeline
+
+Replace the homepage career-card explorer with `ProfessionalSystemsTimeline.astro`, a five-stage Canvas/SVG dependency graph with 42 capability nodes, industry-only narrative, filters, keyboard inspection, drag, timeline scrubbing, and reduced-motion support. Related technologies may share a capability node. The graph explains conceptual dependencies, not employer architecture, measured flows, proficiency scores, or dates of tool adoption. Career work and later independent research are identified separately; projects retain their documented live or research status. The user supplied the professional stack and credentials in the October 15 brief, supplementing STORY.md. No geography appears in this component. This homepage component uses the editorial palette already established by the homepage exception above.
+
 ### October 15, 2026: four-act scrollytelling hero
 
 The homepage opens with an accessible Canvas/SVG editorial atlas in `src/components/islands/JourneyScrollytellingHero.astro`. It uses 180 procedural particles, geographic projection and great-circle connections, four narrative acts, direct chapter navigation, optional autoplay, a scrubber, and reduced-motion fallbacks. The notebook, research report, beta links, and job-industry labels remain below. Geography belongs to the requested story; job and school cards elsewhere keep their industry and institution labels. Connections and cumulative distances describe city-centre map geometry, not recorded flights. Biography copy retains the documented degree and solutions-engineer role. Natural Earth land outlines are public domain and attributed.
