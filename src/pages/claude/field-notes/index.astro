@@ -175,19 +175,30 @@ const tabs = [
       }
     };
 
+    // After switching streams, bring the reader back to the top of the filtered content
+    // (the bar's natural position, just under the sticky site header) instead of leaving them mid-page.
+    const hero = root.querySelector<HTMLElement>('.fn-hero');
+    const toStreamTop = () => {
+      if (!hero) return;
+      const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 64;
+      const top = Math.max(0, hero.getBoundingClientRect().bottom + window.scrollY - headerH);
+      if (window.scrollY > top) window.scrollTo({ top, behavior: 'auto' });
+    };
+
     tabs.forEach((tab) =>
       tab.addEventListener('click', () => {
         select(tab.dataset.stream ?? 'all', { updateHash: true });
-        // Keep the reader at the top of the filtered content rather than mid-page.
-        const top = track.getBoundingClientRect().top + window.scrollY - 96;
-        if (window.scrollY > top) window.scrollTo({ top, behavior: 'auto' });
+        toStreamTop();
       }),
     );
 
     // Deep links: /claude/field-notes/#cricket opens that stream.
     const fromHash = () => {
       const id = window.location.hash.slice(1);
-      if (known.has(id)) select(id);
+      if (known.has(id)) {
+        select(id);
+        toStreamTop();
+      }
     };
     window.addEventListener('hashchange', fromHash);
     fromHash();
@@ -237,7 +248,7 @@ const tabs = [
     flex-wrap: wrap;
     gap: 6px 22px;
     font-size: 0.875rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   .fn-num {
@@ -367,7 +378,7 @@ const tabs = [
 
   .fn-sub-note {
     font-size: 0.875rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   #ledger {
@@ -414,7 +425,7 @@ const tabs = [
 
   .fn-note-meta {
     font-size: 0.72rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   .fn-note-meta time {

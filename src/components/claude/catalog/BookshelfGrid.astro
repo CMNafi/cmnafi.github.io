@@ -2,7 +2,6 @@
 // Section D of /claude/field-notes/: the annotated bookshelf, grouped by theme (Agent 2).
 // Authors and themes come from writing-curated.ts; a personal note appears only where the post itself gives one.
 import type { ShelfGroup } from '@/data/claude/writing-curated';
-import { formatMonth, isoDay } from '@/data/claude/format';
 
 interface Props {
   groups: ShelfGroup[];
@@ -42,10 +41,9 @@ const shelfKey = (theme: string) =>
                       {book.bookMeta.personalContextNote}
                     </p>
                   )}
-                  <p class="bs-meta">
-                    <time datetime={isoDay(book.publishedAt)}>{formatMonth(book.publishedAt)}</time>
-                    <span aria-hidden="true"> · </span>{book.readingMinutes} min
-                  </p>
+                  {/* No date here on purpose: the shelf notes carry back-filed publish dates
+                      (e.g. Good to Great is dated Feb 2020 but describes reading it in summer 2021). */}
+                  <p class="bs-meta"><span class="bs-min">{book.readingMinutes}</span> min note</p>
                 </div>
               </article>
             </li>
@@ -102,7 +100,7 @@ const shelfKey = (theme: string) =>
     font-size: 0.75rem;
     font-weight: 400;
     font-variant-numeric: tabular-nums;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     letter-spacing: 0;
   }
 
@@ -198,7 +196,7 @@ const shelfKey = (theme: string) =>
     margin-top: 4px;
     font-size: 0.8125rem;
     line-height: 1.5;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   .bs-note {
@@ -218,17 +216,17 @@ const shelfKey = (theme: string) =>
     font-family: var(--font-sans);
     font-size: 0.72rem;
     font-weight: 500;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   .bs-meta {
     margin-top: auto;
     padding-top: 8px;
     font-size: 0.72rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
-  .bs-meta time {
+  .bs-min {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
   }

@@ -3,10 +3,14 @@ import { sampleAdvisers } from '../../../data/gem/islands/sample-advisers';
 ---
 
 <div class="adv-explorer-island" data-adv-island>
+  <div class="island-intro-card" style="padding:16px;margin:0;background:var(--bg-subtle);border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);font-size:13px;line-height:1.6">
+    <strong style="color:var(--text-primary);display:block;margin-bottom:4px">Why this matters in institutional diligence:</strong>
+    In my work at Dasseti, SkyBridge, and BlackRock, I learned that pitch decks highlight what managers want you to see, but SEC Form ADV Part 1A discloses what is legally true. This interactive sandbox compares 8 registered advisers across regulatory AUM, discretionary mandate splits, client concentrations, and fee structures. Check <em>"Enable Side-by-Side Diligence Diff"</em> below to contrast an index giant like BlackRock against a private equity leader like Blackstone.
+  </div>
   <header class="island-masthead">
     <div class="meta-row">
-      <span class="badge-tag">SEC IARD Bulk Intelligence</span>
-      <span class="stat-pill"><span class="pulse-dot"></span> 56,000+ Advisers Indexed</span>
+      <span class="badge-tag">SEC Form ADV · Due Diligence Sandbox</span>
+      <span class="stat-pill">8 Institutional Advisers</span>
     </div>
     <div class="search-row">
       <input
@@ -155,7 +159,7 @@ import { sampleAdvisers } from '../../../data/gem/islands/sample-advisers';
 
   <footer class="island-footer">
     <div class="footer-left">
-      <span>Relational database store parsed via <code>FastMCP</code> server</span>
+      <span>Preloaded SEC filing disclosures for immediate interactive comparison</span>
     </div>
     <div class="footer-right">
       <a href="/gem/garage/" class="text-cta">Inspect in Regulatory Lens Workbench →</a>

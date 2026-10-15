@@ -18,8 +18,8 @@ const selectedBooks = allWriting.filter((item) => item.stream === 'books').slice
 ---
 
 <GemLayout
-  title="C M Nafi | Editorial Systems Lab"
-  description="Engineering the data infrastructure behind institutional capital—and writing about businesses, filings, and last-over chases."
+  title="C M Nafi | Solutions Engineer & Writing Ledger"
+  description="Solutions Engineer at Dasseti. Writing about institutional capital, SEC filings, and weekend league cricket in Tampa."
   currentPath="/gem/"
 >
   <div class="gem-homepage">
@@ -28,33 +28,33 @@ const selectedBooks = allWriting.filter((item) => item.stream === 'books').slice
       <div class="masthead-main">
         <span class="eyebrow-tag">Editorial Systems Lab · C M Nafi</span>
         <h1 class="headline-statement">
-          Engineering the data infrastructure behind institutional capital—and writing about the businesses, filings, and last-over chases that catch my attention.
+          Bridging investment teams and due diligence software—and writing about the filings, capital structures, and last-over chases that catch my attention.
         </h1>
         <p class="grounded-bio">
-          Solutions Engineer at <strong>Dasseti</strong>. Previously BlackRock, Mayo Clinic, and SkyBridge. I grew up in Dinajpur, moved to Changshu on scholarship at sixteen, studied data science in Iowa, and now build financial systems from Florida.
+          I am a Solutions Engineer at <strong>Dasseti</strong>, sitting between investment teams and the software they use for due diligence on private markets. Previously BlackRock in asset management, SkyBridge in fund of funds, and Mayo Clinic in health data. Left home at twelve for military school, moved to China on scholarship at sixteen, studied data science in Iowa, and now work remotely from Florida.
         </p>
 
         <!-- 4-Stop Trajectory Bar -->
-        <nav class="trajectory-bar" aria-label="Life & Career Trajectory">
+        <nav class="trajectory-bar" aria-label="Education and career trajectory">
           <span class="traj-label">Trajectory:</span>
-          <a href="/gem/story/#chapter-dinajpur" class="traj-stop">Dinajpur <span class="arrow">→</span></a>
-          <a href="/gem/story/#chapter-changshu" class="traj-stop">Changshu <span class="arrow">→</span></a>
-          <a href="/gem/story/#chapter-iowa" class="traj-stop">Iowa <span class="arrow">→</span></a>
-          <a href="/gem/story/#chapter-tampa" class="traj-stop active">Tampa Bay</a>
+          <a href="/gem/story/#chapter-dinajpur" class="traj-stop">Dinajpur & Cadet College <span class="arrow">→</span></a>
+          <a href="/gem/story/#chapter-changshu" class="traj-stop">UWC Changshu <span class="arrow">→</span></a>
+          <a href="/gem/story/#chapter-iowa" class="traj-stop">Luther College <span class="arrow">→</span></a>
+          <a href="/gem/story/#chapter-tampa" class="traj-stop active">Florida & Dasseti</a>
           <a href="/gem/story/" class="traj-full-link">Read the 4-Chapter Story ↗</a>
         </nav>
       </div>
 
       <div class="masthead-aside">
         <div class="dispatch-card">
-          <span class="dispatch-label">Current Dispatch</span>
+          <span class="dispatch-label">Current Role</span>
           <div class="dispatch-body">
             <strong>Solutions Engineering</strong>
-            <p>Parsing raw SEC Form ADV/13F filings into local SQLite stores & LLM/MCP research workflows at Dasseti.</p>
+            <p>At Dasseti, helping institutional allocators streamline due diligence across private equity and debt, while building tools to parse SEC Form ADV and 13F filings.</p>
           </div>
           <div class="dispatch-footer">
             <span class="dot-online"></span>
-            <span>Tampa Bay, FL</span>
+            <span>Remote from Land O' Lakes, FL</span>
           </div>
         </div>
       </div>
@@ -70,12 +70,19 @@ const selectedBooks = allWriting.filter((item) => item.stream === 'books').slice
         <a href="/gem/garage/" class="section-link-more">Explore all 8 projects in the Workbench →</a>
       </div>
 
+      <p class="section-lede" style="color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:var(--max-w-prose);margin:0 0 24px">
+        I turn problems into tools: small applications I wanted that didn't exist yet. Below are two working sandboxes that connect directly to my daily work and weekend matches. Before you click, here is what each tool lets you test:
+      </p>
+
       <div class="workbench-bento-grid">
         <!-- Primary Island: SEC Form ADV Explorer -->
         <div class="island-slot primary-slot">
           <div class="slot-header">
-            <span class="slot-eyebrow">Interactive Tool 01</span>
-            <h3 class="slot-title">SEC Form ADV & 13F Intelligence</h3>
+            <span class="slot-eyebrow">Interactive Tool 01 · Institutional Due Diligence</span>
+            <h3 class="slot-title">SEC Form ADV Adviser Diff</h3>
+            <p class="slot-subtext" style="font-size:13px;color:var(--text-secondary);margin:4px 0 12px;line-height:1.5">
+              Compare sworn regulatory disclosures across 8 major advisers. Toggle the side-by-side diff to see how discretionary mandates, fee models, and client bases diverge between index giants and private buyout shops.
+            </p>
           </div>
           <FormAdvMiniExplorer />
         </div>
@@ -83,8 +90,11 @@ const selectedBooks = allWriting.filter((item) => item.stream === 'books').slice
         <!-- Secondary Island: Cricket Pitch Simulator -->
         <div class="island-slot secondary-slot">
           <div class="slot-header">
-            <span class="slot-eyebrow">Tactical Engine 02</span>
-            <h3 class="slot-title">2D Cricket Field & Last-Over Simulator</h3>
+            <span class="slot-eyebrow">Interactive Tool 02 · Weekend League Cricket</span>
+            <h3 class="slot-title">2D Pitch & Last-Over Tactician</h3>
+            <p class="slot-subtext" style="font-size:13px;color:var(--text-secondary);margin:4px 0 12px;line-height:1.5">
+              Simulate defending tight finishes at Waverly with only 9 fielders and a strict 5-fielder boundary limit. Drag fielders across the circle or reveal our match-tested death-over setup.
+            </p>
           </div>
           <CricketFieldingTactician />
         </div>
@@ -93,21 +103,21 @@ const selectedBooks = allWriting.filter((item) => item.stream === 'books').slice
       <!-- Compact Project Strip -->
       <div class="compact-project-strip">
         <div class="project-strip-card">
-          <span class="strip-cat">Knowledge Systems</span>
-          <h4 class="strip-title"><a href="/worldview/">Worldview ↗</a></h4>
-          <p class="strip-desc">An atlas of everyday choices across psychology, culture, and ethics.</p>
+          <span class="strip-cat">Decision Models</span>
+          <h4 class="strip-title"><a href="/projects/worldview/">Worldview ↗</a></h4>
+          <p class="strip-desc">An atlas of everyday choices across psychology, culture, and ethics born out of UWC Changshu.</p>
         </div>
 
         <div class="project-strip-card">
-          <span class="strip-cat">FinTech & SEC Data</span>
+          <span class="strip-cat">Alternative Investments</span>
           <h4 class="strip-title"><a href="/caia/">CAIA Knowledge Hub ↗</a></h4>
-          <p class="strip-desc">Alternative investments curriculum, portfolio covariance, and factor models.</p>
+          <p class="strip-desc">Portfolio covariance models and efficient frontier curves from my CAIA charter studies.</p>
         </div>
 
         <div class="project-strip-card action-card">
-          <span class="strip-cat">Full Engineering Catalog</span>
+          <span class="strip-cat">Full Project Catalog</span>
           <h4 class="strip-title"><a href="/gem/garage/">Projects Workbench →</a></h4>
-          <p class="strip-desc">Filter all 8 production data pipelines, tactical models, and research tools.</p>
+          <p class="strip-desc">Browse all 8 working tools across regulatory intelligence, cricket tactics, and study hubs.</p>
         </div>
       </div>
     </section>

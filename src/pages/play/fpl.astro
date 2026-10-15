@@ -7,7 +7,7 @@ const entry = season.entry.data;
 const history: Record<string, any>[] = season.history.data.current ?? [];
 const chips: Record<string, any>[] = season.history.data.chips ?? [];
 ---
-<PlayLayout title="My FPL Season" number="01" eyebrow="FANTASY PREMIER LEAGUE" description="One squad. Thirty-eight gameweeks. Plenty of chances to second-guess a captain.">
+<PlayLayout title="My FPL Season" number="01" eyebrow="FANTASY PREMIER LEAGUE" description="Follow my Fantasy Premier League team: the current squad and captain, weekly points, overall rank, and season history. This is the football side of my weekends.">
   <p class="play-stamp">Last updated: <time datetime={season.updatedAt ?? undefined}>{formatTime(season.updatedAt)}</time>. Entry {season.entryId ?? 'not configured'}.</p>
   {season.stale && <p class="play-note">Data may be stale. {season.entry.unavailable ? 'The FPL feed is unavailable right now. My team will appear after a successful refresh.' : 'Showing the most recent data available.'}</p>}
   <div class="play-section-head"><h2>{entry.name ?? 'Waiting for my squad'}</h2><a class="play-link" href={`https://fantasy.premierleague.com/entry/${season.entryId}/`} target="_blank" rel="noopener noreferrer">Official FPL page ↗</a></div>

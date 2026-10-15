@@ -5,7 +5,7 @@ import { formatNumber, formatTime } from '@/lib/play/fetch';
 const rivals = await getRivals();
 const stamps = rivals.filter(r => r.configured).map(r => r.updatedAt).filter((s): s is string => !!s).sort();
 ---
-<PlayLayout title="Rivalry Board" number="05" eyebrow="FPL / FRIENDLY COMPETITION" description="A small table for friends. Enough perspective to celebrate a good week and survive a bad one.">
+<PlayLayout title="Rivalry Board" number="05" eyebrow="FPL / FRIENDLY COMPETITION" description="A friendly Fantasy Premier League comparison of points, rank, and captain choices. My team is connected; friends will appear when their entry IDs are added.">
   <p class="play-stamp">Last updated: <time datetime={stamps[0]}>{formatTime(stamps[0] ?? null)}</time>.</p>
   {rivals.some(r => r.stale) && <p class="play-note">Data may be stale. Unavailable numbers are left blank rather than guessed.</p>}
   {rivals.some(r => !r.configured) && <p class="play-note">The friend row is a placeholder. I will add names and FPL entry IDs before the rivalry really starts.</p>}

@@ -3,7 +3,7 @@ import PlayLayout from '@/components/telemetry/PlayLayout.astro';
 import { myTeams, myFixtures, nextFixture, fixtureTime } from '@/lib/play/cricket';
 const upcoming = myFixtures.filter(f => Date.parse(f.startsAt) > Date.now());
 ---
-<PlayLayout title="Cricket Hub" number="03" eyebrow="AROUND THE WORLD / CLOSE TO HOME" description="The scores I check, and the teams I get to be part of. Different grounds, same game.">
+<PlayLayout title="Cricket Hub" number="03" eyebrow="AROUND THE WORLD / CLOSE TO HOME" description="I play league cricket in Florida. Check scores from around the world, explore my club teams and records, and read the match reports that put those numbers in context.">
   <section aria-labelledby="scores-title"><div class="play-section-head"><div><span class="play-eyebrow">Around the grounds</span><h2 id="scores-title">Scores & fixtures</h2></div><span class="play-stamp" id="cricket-updated">Checking the scoreboards</span></div><p id="cricket-status" class="play-note" aria-live="polite">Looking for cricket matches. The score feed is unofficial and can be unavailable.</p><div class="play-grid" id="cricket-scores"></div><noscript><p class="play-empty">Live scores need JavaScript. My teams and fixtures are available below.</p></noscript></section>
   <section class="play-section" aria-labelledby="my-teams-title"><span class="play-eyebrow">My teams</span><h2 id="my-teams-title">The grounds closer to home.</h2><div class="play-grid">{myTeams.map(team => {
     const next = nextFixture(team);

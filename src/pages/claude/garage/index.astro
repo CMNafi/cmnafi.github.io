@@ -89,7 +89,7 @@ const demos = [
               aria-pressed={i === 0 ? 'true' : 'false'}
             >
               <span>{f.label}</span>
-              <span class="gw-count" aria-label={`${f.count} projects`}>{f.count}</span>
+              <span class="gw-count">{f.count}<span class="cl-sr-only"> projects</span></span>
             </button>
           ))}
         </div>
@@ -240,7 +240,7 @@ const demos = [
 
   .gw-facts dt {
     font-size: 0.8125rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   .gw-facts dd {
@@ -383,7 +383,7 @@ const demos = [
   .gw-demo-for {
     margin-bottom: 6px;
     font-size: 0.8125rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   .gw-demo-project {
@@ -411,7 +411,7 @@ const demos = [
 
   .gw-demo-back {
     font-size: 0.8125rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   .gw-demo-back a {

@@ -1,7 +1,7 @@
 ---
 title: Worldview
-summary: "An atlas of everyday choices. Follow your curiosity into psychology, culture, ethics, and the evidence behind what we know."
-description: "An interactive field guide connecting everyday choices to deeper questions through research, cultural perspectives, and reflection."
+summary: "Start with a choice about what you eat, watch, or buy, then explore its psychology, cultural context, and research sources. It brings the curiosity behind my book notes into an interactive guide."
+description: "Start with a choice about what you eat, watch, or buy, then explore its psychology, cultural context, and research sources. It brings the curiosity behind my book notes into an interactive guide."
 status: live
 category: web app
 stack: [HTML, CSS, JavaScript]

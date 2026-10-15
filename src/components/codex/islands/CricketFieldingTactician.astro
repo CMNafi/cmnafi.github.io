@@ -2,7 +2,7 @@
 import {scenarios} from '../../../data/codex/islands/cricket-scenarios';
 ---
 <section class="cricket" data-tactics aria-label="Cricket field placement simulator">
- <h3>Nine fielders. One decision at a time.</h3><label>Match context<select data-scenario>{scenarios.map((s,i)=><option value={i}>{s.name} · {s.date}</option>)}</select></label><p data-context></p>
+ <h3>Where would you put the field?</h3><label>Match context<select data-scenario>{scenarios.map((s,i)=><option value={i}>{s.name} · {s.date}</option>)}</select></label><p data-context></p>
  <svg data-field viewBox="0 0 400 400" aria-label="Cricket field. Select a fielder and use arrow keys or drag." role="group"><ellipse cx="200" cy="200" rx="180" ry="185" fill="var(--bg-subtle)" stroke="var(--border-subtle)"/><circle cx="200" cy="200" r="95" fill="none" stroke="var(--accent-primary)" stroke-dasharray="5 5"/><rect x="188" y="174" width="24" height="53" fill="var(--bg-elevated)" stroke="var(--border-subtle)"/><circle cx="200" cy="215" r="5" fill="var(--text-secondary)"/><text x="212" y="220">Bowler</text><circle cx="200" cy="165" r="5" fill="var(--text-secondary)"/><text x="211" y="165">Keeper</text><g data-dots></g><text x="200" y="392" text-anchor="middle">Right-handed batter, facing down the pitch</text></svg>
  <p data-rules aria-live="polite"></p><div class="coverage"><span data-boundary></span><span data-single></span></div>
  <label>Selected fielder<select data-selected>{Array.from({length:9},(_,i)=><option value={i}>Fielder {i+1}</option>)}</select></label>

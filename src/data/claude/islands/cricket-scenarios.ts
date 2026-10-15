@@ -224,3 +224,173 @@ export const cricketScenarios: CricketScenario[] = [
       'A new-ball field: two catchers behind the bat, the ring saving singles, and the two allowed boundary riders at third man and fine leg, where edges and glances run. A suggested setup; the post does not record the Blazehawks field.'
   }
 ];
+
+/* ---------- Rule engine and heuristics (shared by server render and client script) ---------- */
+
+const DEG = Math.PI / 180;
+
+/** Inside the 30-yard "circle": two 30-yard semicircles around each set of stumps joined by straight lines. */
+export function isOutsideRing(p: FieldPoint): boolean {
+  const dy = Math.max(0, Math.abs(p.y) - GROUND.halfPitch);
+  return p.x * p.x + dy * dy > GROUND.ringRadius * GROUND.ringRadius;
+}
+
+/** Law 28.4: behind the striker's popping crease on the on (leg) side. */
+export function isLegSideBehindSquare(p: FieldPoint): boolean {
+  return p.x < 0 && p.y > GROUND.strikerPoppingY;
+}
+
+/** Bearing from the striker in degrees: 0 = straight past the bowler, +90 = square on the off side. */
+export function bearingFromStriker(p: FieldPoint): number {
+  const s = GROUND.striker;
+  return Math.atan2(p.x - s.x, -(p.y - s.y)) / DEG;
+}
+
+export function angleGap(a: number, b: number): number {
+  const d = Math.abs(a - b) % 360;
+  return d > 180 ? 360 - d : d;
+}
+
+function distanceFromStriker(p: FieldPoint): number {
+  return Math.hypot(p.x - GROUND.striker.x, p.y - GROUND.striker.y);
+}
+
+/** 1 inside `full` degrees, fading linearly to 0 at `zero` degrees. */
+const cover = (gap: number, full: number, zero: number) => (gap <= full ? 1 : Math.max(0, 1 - (gap - full) / (zero - full)));
+
+const bump = (phi: number, mu: number, sd: number) => Math.exp(-0.5 * (angleGap(phi, mu) / sd) ** 2);
+
+/**
+ * Where we assume a T20 batter tries to hit boundaries: weighted toward the leg side in front of
+ * square and the straight "V". An assumption for the heuristic, not measured data.
+ */
+export function boundaryShotWeight(phi: number): number {
+  return 0.25 + 1.0 * bump(phi, -45, 35) + 0.8 * bump(phi, 0, 25) + 0.6 * bump(phi, 55, 30) + 0.35 * bump(phi, 150, 25) + 0.35 * bump(phi, -150, 25);
+}
+
+/** Singles are mostly pushed in front of square; behind square counts for less. */
+export function singleShotWeight(phi: number): number {
+  return Math.abs(phi) <= 110 ? 1 : 0.35;
+}
+
+export const HEURISTIC_SAMPLES = 72;
+export const HEURISTIC_NOTE =
+  'A simple heuristic, not a statistical model. From the striker we sweep 72 shot directions, weighted toward straight and leg-side hits (an assumption). A direction counts as guarded when a boundary rider stands within about 14° of it (fading to nothing by 32°) for boundary protection, or a ring fielder 8 to 36 yards from the bat stands within about 16° (fading by 34°) for single prevention.';
+
+export interface FieldEvaluation {
+  outside: number;
+  maxOutside: number;
+  outsideLegal: boolean;
+  legBehind: number;
+  legBehindLegal: boolean;
+  legal: boolean;
+  boundary: number;
+  singles: number;
+  /** Bearings (deg) the boundary heuristic considers open */
+  openBearings: number[];
+}
+
+export function evaluateField(points: FieldPoint[], phase: MatchPhase): FieldEvaluation {
+  const outside = points.filter(isOutsideRing).length;
+  const legBehind = points.filter(isLegSideBehindSquare).length;
+  const maxOutside = FIELD_RULES.maxOutside[phase];
+
+  const riders = points
+    .filter((p) => isOutsideRing(p))
+    .map((p) => ({ bearing: bearingFromStriker(p), depth: Math.min(1, Math.max(0, (distanceFromStriker(p) - 30) / 25)) }));
+  const ring = points
+    .filter((p) => !isOutsideRing(p))
+    .map((p) => ({ bearing: bearingFromStriker(p), dist: distanceFromStriker(p) }))
+    .filter((r) => r.dist >= 8 && r.dist <= 36)
+    .map((r) => ({ bearing: r.bearing, reach: r.dist <= 28 ? 1 : Math.max(0, 1 - (r.dist - 28) / 10) }));
+
+  let bNum = 0;
+  let bDen = 0;
+  let sNum = 0;
+  let sDen = 0;
+  const openBearings: number[] = [];
+  for (let i = 0; i < HEURISTIC_SAMPLES; i += 1) {
+    const phi = -180 + (i + 0.5) * (360 / HEURISTIC_SAMPLES);
+    let bc = 0;
+    for (const r of riders) bc = Math.max(bc, cover(angleGap(phi, r.bearing), 14, 32) * r.depth);
+    let sc = 0;
+    for (const r of ring) sc = Math.max(sc, cover(angleGap(phi, r.bearing), 16, 34) * r.reach);
+    const bw = boundaryShotWeight(phi);
+    const sw = singleShotWeight(phi);
+    bNum += bw * bc;
+    bDen += bw;
+    sNum += sw * sc;
+    sDen += sw;
+    if (bc < 0.15) openBearings.push(phi);
+  }
+
+  return {
+    outside,
+    maxOutside,
+    outsideLegal: outside <= maxOutside,
+    legBehind,
+    legBehindLegal: legBehind <= FIELD_RULES.maxLegSideBehindSquare,
+    legal: outside <= maxOutside && legBehind <= FIELD_RULES.maxLegSideBehindSquare,
+    boundary: Math.round((100 * bNum) / bDen),
+    singles: Math.round((100 * sNum) / sDen),
+    openBearings
+  };
+}
+
+/** Point where a shot along `bearing` from the striker meets the boundary rope. */
+export function ropePoint(bearing: number): FieldPoint {
+  const s = GROUND.striker;
+  const dx = Math.sin(bearing * DEG);
+  const dy = -Math.cos(bearing * DEG);
+  const b = s.x * dx + s.y * dy;
+  const c = s.x * s.x + s.y * s.y - GROUND.boundaryRadius * GROUND.boundaryRadius;
+  const t = -b + Math.sqrt(b * b - c);
+  return { x: s.x + t * dx, y: s.y + t * dy };
+}
+
+/** SVG path for the open stretches of rope (each sample drawn as a short arc segment). */
+export function openRopePath(bearings: number[]): string {
+  const half = 180 / HEURISTIC_SAMPLES;
+  return bearings
+    .map((phi) => {
+      const a = ropePoint(phi - half);
+      const m = ropePoint(phi);
+      const b = ropePoint(phi + half);
+      return `M${a.x.toFixed(2)} ${a.y.toFixed(2)}L${m.x.toFixed(2)} ${m.y.toFixed(2)}L${b.x.toFixed(2)} ${b.y.toFixed(2)}`;
+    })
+    .join('');
+}
+
+export function nearestPositionName(p: FieldPoint): string {
+  let best = NAMED_POSITIONS[0];
+  let bestD = Infinity;
+  for (const n of NAMED_POSITIONS) {
+    const d = (n.x - p.x) ** 2 + (n.y - p.y) ** 2;
+    if (d < bestD) {
+      bestD = d;
+      best = n;
+    }
+  }
+  return best.name;
+}
+
+/** Keep a fielder on the ground and off the pitch strip. */
+export function clampToGround(p: FieldPoint): FieldPoint {
+  let { x, y } = p;
+  const r = Math.hypot(x, y);
+  if (r > GROUND.maxFielderRadius) {
+    x = (x / r) * GROUND.maxFielderRadius;
+    y = (y / r) * GROUND.maxFielderRadius;
+  }
+  if (Math.abs(x) < GROUND.pitchHalfWidth + 1.5 && Math.abs(y) < GROUND.halfPitch - 1) {
+    x = x < 0 ? -(GROUND.pitchHalfWidth + 1.5) : GROUND.pitchHalfWidth + 1.5;
+  }
+  return { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
+}
+
+/** 30-yard ring outline as an SVG path. */
+export function ringPath(): string {
+  const r = GROUND.ringRadius;
+  const h = GROUND.halfPitch;
+  return `M${-r} ${-h}A${r} ${r} 0 0 1 ${r} ${-h}L${r} ${h}A${r} ${r} 0 0 1 ${-r} ${h}Z`;
+}

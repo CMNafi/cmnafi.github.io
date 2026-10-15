@@ -1,8 +1,744 @@
 ---
-// STARTER STUB — Agent 3 replaces this with the real interactive island.
-// Contract: default export at this path, accepts IslandProps (compact?: boolean), renders a self-contained block.
-import type { IslandProps } from '@/types/claude-site';
-type Props = IslandProps;
-const { compact = false } = Astro.props;
+/**
+ * JourneyAtlasMap: four stops on a Pacific-centred equirectangular map, joined by great-circle
+ * arcs with real haversine distances. Selecting a stop updates the detail card, scrolls to
+ * #chapter-<id> if present, and dispatches `journey:select`. Listens for `journey:focus`
+ * (and other atlases' `journey:select`) to highlight a stop without scrolling.
+ * Facts: src/data/claude/islands/journey-stops.ts (from STORY.md and src/content/journey).
+ * No-JS: the initial stop's card and all arcs render statically.
+ */
+import type { IslandProps, JourneyStopId } from '@/types/claude-site';
+import { journeyStops, COASTLINES, ATLAS_FRAME } from '@/data/claude/islands/journey-stops';
+import { formatInt } from '@/data/claude/islands/island-format';
+
+interface Props extends IslandProps {
+  /** Stop highlighted on first render (no scroll, no event) */
+  initialStop?: JourneyStopId;
+}
+
+const { compact = false, initialStop = 'dinajpur' } = Astro.props;
+
+const DEG = Math.PI / 180;
+const EARTH_KM = 6371;
+const K = 4;
+const cosRef = Math.cos(ATLAS_FRAME.refLat * DEG);
+const W = Math.round((ATLAS_FRAME.lonMax - ATLAS_FRAME.lonMin) * K * cosRef);
+const H = (ATLAS_FRAME.latMax - ATLAS_FRAME.latMin) * K;
+
+const shiftLon = (lon: number) => (lon < 0 ? lon + 360 : lon);
+const px = (lon: number) => (shiftLon(lon) - ATLAS_FRAME.lonMin) * K * cosRef;
+const py = (lat: number) => (ATLAS_FRAME.latMax - lat) * K;
+const fmt = (n: number) => n.toFixed(1);
+
+function haversineKm(a: { lat: number; lon: number }, b: { lat: number; lon: number }): number {
+  const dLat = (b.lat - a.lat) * DEG;
+  const dLon = (b.lon - a.lon) * DEG;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * DEG) * Math.cos(b.lat * DEG) * Math.sin(dLon / 2) ** 2;
+  return 2 * EARTH_KM * Math.asin(Math.sqrt(h));
+}
+
+/** Great-circle path (spherical linear interpolation), drawn in the shifted-longitude frame. */
+function greatCirclePath(a: { lat: number; lon: number }, b: { lat: number; lon: number }, steps = 72): string {
+  const toVec = (lat: number, lon: number) => [Math.cos(lat * DEG) * Math.cos(lon * DEG), Math.cos(lat * DEG) * Math.sin(lon * DEG), Math.sin(lat * DEG)];
+  const p = toVec(a.lat, a.lon);
+  const q = toVec(b.lat, b.lon);
+  const omega = Math.acos(Math.min(1, Math.max(-1, p[0] * q[0] + p[1] * q[1] + p[2] * q[2])));
+  const pts: string[] = [];
+  for (let i = 0; i <= steps; i += 1) {
+    const t = i / steps;
+    const s1 = Math.sin((1 - t) * omega) / Math.sin(omega);
+    const s2 = Math.sin(t * omega) / Math.sin(omega);
+    const x = s1 * p[0] + s2 * q[0];
+    const y = s1 * p[1] + s2 * q[1];
+    const z = s1 * p[2] + s2 * q[2];
+    const lat = Math.atan2(z, Math.hypot(x, y)) / DEG;
+    const lon = Math.atan2(y, x) / DEG;
+    pts.push(`${i === 0 ? 'M' : 'L'}${fmt(px(lon))} ${fmt(py(lat))}`);
+  }
+  return pts.join('');
+}
+
+const stops = journeyStops.map((s) => ({ ...s, x: px(s.lon), y: py(s.lat) }));
+const legs = stops.slice(1).map((s, i) => {
+  const from = stops[i];
+  return {
+    to: s.id,
+    from: from.id,
+    fromPlace: from.place.split(',')[0],
+    km: Math.round(haversineKm(from, s)),
+    d: greatCirclePath(from, s)
+  };
+});
+const legTo = new Map(legs.map((l) => [l.to, l]));
+const totalKm = legs.reduce((sum, l) => sum + l.km, 0);
+
+const coastPaths = COASTLINES.map(
+  (ring) => ring.map(([lon, lat], i) => `${i === 0 ? 'M' : 'L'}${fmt(px(lon))} ${fmt(py(lat))}`).join('') + 'Z'
+);
+
+const latLines = [15, 30, 45, 60, 75];
+const lonLines = [90, 120, 150, 180, 210, 240, 270, 300];
+const lonLabel = (l: number) => (l === 180 ? '180°' : l < 180 ? `${l}°E` : `${360 - l}°W`);
+
+const coordLabel = (lat: number, lon: number) =>
+  `${Math.abs(lat).toFixed(2)}° ${lat >= 0 ? 'N' : 'S'}, ${Math.abs(lon).toFixed(2)}° ${lon >= 0 ? 'E' : 'W'}`;
+
+const labelPos: Record<JourneyStopId, { dx: number; dy: number; anchor: 'start' | 'end' }> = {
+  dinajpur: { dx: -6, dy: 32, anchor: 'start' },
+  changshu: { dx: 16, dy: 22, anchor: 'start' },
+  iowa: { dx: -16, dy: -16, anchor: 'end' },
+  florida: { dx: -16, dy: 26, anchor: 'end' }
+};
+
+const uid = `atlas-${Math.random().toString(36).slice(2, 8)}`;
 ---
-<div class="cl-island-stub" data-island="JourneyAtlasMap" data-compact={compact ? 'true' : 'false'}>JourneyAtlasMap</div>
+
+<section
+  class:list={['atlas', { 'atlas--compact': compact }]}
+  data-island="JourneyAtlasMap"
+  data-compact={compact ? 'true' : 'false'}
+  data-active={initialStop}
+  aria-label="Atlas of four places: Dinajpur, Changshu, Iowa and Tampa Bay"
+>
+  <figure class="atlas__figure">
+    <svg
+      class="atlas__svg"
+      viewBox={`0 0 ${W} ${H}`}
+      role="img"
+      aria-labelledby={`${uid}-map-title`}
+      data-atlas-svg
+    >
+      <title id={`${uid}-map-title`}>
+        Map from Dinajpur, Bangladesh to Changshu, China, across the Pacific to Decorah, Iowa, and down to Tampa Bay, Florida. Great-circle
+        route, about {formatInt(totalKm)} kilometres in all.
+      </title>
+      <defs>
+        <clipPath id={`${uid}-clip`}>
+          <rect x="0" y="0" width={W} height={H}></rect>
+        </clipPath>
+      </defs>
+      <rect class="atlas__sea" x="0" y="0" width={W} height={H} rx="6"></rect>
+      <g clip-path={`url(#${uid}-clip)`}>
+        <g class="atlas__grid" aria-hidden="true">
+          {latLines.map((lat) => <line x1="0" x2={W} y1={py(lat)} y2={py(lat)} />)}
+          {lonLines.map((lon) => <line y1="0" y2={H} x1={px(lon)} x2={px(lon)} />)}
+        </g>
+        <g class="atlas__land" aria-hidden="true">
+          {coastPaths.map((d) => <path d={d} />)}
+        </g>
+        <g class="atlas__grid-labels" aria-hidden="true">
+          {latLines.slice(0, 4).map((lat) => <text x="6" y={py(lat) - 4}>{`${lat}°N`}</text>)}
+          {lonLines.filter((lon) => px(lon) < W - 50).map((lon) => <text x={px(lon) + 4} y={H - 6}>{lonLabel(lon)}</text>)}
+        </g>
+      </g>
+
+      <g class="atlas__arcs" aria-hidden="true">
+        {
+          legs.map((l, i) => (
+            <path
+              class="atlas__arc"
+              d={l.d}
+              pathLength="1"
+              data-atlas-arc={l.to}
+              data-active={l.to === initialStop ? 'true' : 'false'}
+              style={`--atlas-delay:${i * 0.35}s`}
+            />
+          ))
+        }
+      </g>
+
+      <g class="atlas__nodes">
+        {
+          stops.map((s) => (
+            <g
+              class="atlas__node"
+              data-atlas-node={s.id}
+              data-active={s.id === initialStop ? 'true' : 'false'}
+              transform={`translate(${fmt(s.x)} ${fmt(s.y)})`}
+            >
+              <g class="atlas__node-mark">
+                <circle class="atlas__node-hit" r="18" />
+                <circle class="atlas__node-halo" r="13" />
+                <circle class="atlas__node-dot" r="7" />
+                <text class="atlas__node-num" y="3.4">{s.order}</text>
+              </g>
+              <text
+                class="atlas__node-label"
+                x={labelPos[s.id].dx}
+                y={labelPos[s.id].dy}
+                text-anchor={labelPos[s.id].anchor}
+                data-pos={labelPos[s.id].dy < 0 ? 'above' : 'below'}
+              >
+                {s.mapLabel}
+              </text>
+            </g>
+          ))
+        }
+      </g>
+    </svg>
+    <figcaption class="atlas__caption">
+      Great-circle routes on a simplified outline map. Distances computed with the haversine formula (Earth radius
+      <span class="atlas__fig">6,371</span> km).
+    </figcaption>
+  </figure>
+
+  <ol class="atlas__stops" aria-label="Stops" data-atlas-stops>
+    {
+      stops.map((s) => (
+        <li>
+          <button type="button" class="atlas__stop" data-atlas-stop={s.id} aria-pressed={s.id === initialStop ? 'true' : 'false'}>
+            <span class="atlas__stop-num">{s.order}</span>
+            <span class="atlas__stop-text">
+              <span class="atlas__stop-place">{s.place.replace(', United States', '')}</span>
+              <span class:list={['atlas__stop-years', { 'atlas__fig': s.yearsIsFigure }]}>{s.years}</span>
+            </span>
+          </button>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="atlas__details">
+    {
+      stops.map((s) => {
+        const leg = legTo.get(s.id);
+        return (
+          <article class="atlas__card" data-atlas-card={s.id} hidden={s.id !== initialStop}>
+            <p class="atlas__card-meta">
+              <span class="atlas__fig">{String(s.order).padStart(2, '0')}</span> · <span class="atlas__fig">{coordLabel(s.lat, s.lon)}</span>
+            </p>
+            <p class="atlas__card-place">{s.place}</p>
+            <p class="atlas__card-title">{s.title}</p>
+            <p class="atlas__card-years">
+              <span class:list={{ atlas__fig: s.yearsIsFigure }}>{s.years}</span>
+              {leg ? (
+                <>
+                  {' '}· <span class="atlas__fig">{formatInt(leg.km)} km</span> from {leg.fromPlace}
+                </>
+              ) : (
+                <> · where it starts</>
+              )}
+            </p>
+            <ul class="atlas__roles">
+              {s.roles.map((r) => (
+                <li>
+                  <span class="atlas__role">{r.role}</span>
+                  <span class="atlas__org">{r.org}</span>
+                  {r.years && <span class="atlas__fig atlas__role-years">{r.years}</span>}
+                </li>
+              ))}
+            </ul>
+            <p class="atlas__learned">{s.learned}</p>
+            <p class="atlas__related">
+              {s.related.map((link) => (
+                <a href={link.href}>
+                  {link.label} <span aria-hidden="true">→</span>
+                </a>
+              ))}
+            </p>
+          </article>
+        );
+      })
+    }
+  </div>
+
+  <p class="cl-sr-only" aria-live="polite" data-atlas-live></p>
+</section>
+
+<script>
+  import type { JourneyStopId, JourneyEventDetail } from '@/types/claude-site';
+
+  const STOP_IDS: JourneyStopId[] = ['dinajpur', 'changshu', 'iowa', 'florida'];
+  const isStopId = (v: unknown): v is JourneyStopId => typeof v === 'string' && (STOP_IDS as string[]).includes(v);
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  type Atlas = { highlight: (id: JourneyStopId, announce: boolean) => void };
+  const atlases: Atlas[] = [];
+
+  function initAtlas(root: HTMLElement) {
+    if (root.dataset.atlasReady === 'true') return;
+    root.dataset.atlasReady = 'true';
+
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-atlas-stop]'));
+    const nodes = Array.from(root.querySelectorAll<SVGGElement>('[data-atlas-node]'));
+    const arcs = Array.from(root.querySelectorAll<SVGPathElement>('[data-atlas-arc]'));
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('[data-atlas-card]'));
+    const live = root.querySelector<HTMLElement>('[data-atlas-live]');
+
+    function highlight(id: JourneyStopId, announce: boolean) {
+      const changed = root.dataset.active !== id;
+      root.dataset.active = id;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', b.dataset.atlasStop === id ? 'true' : 'false'));
+      nodes.forEach((n) => (n.dataset.active = n.dataset.atlasNode === id ? 'true' : 'false'));
+      arcs.forEach((a) => {
+        const on = a.dataset.atlasArc === id;
+        if (on && changed && !reducedMotion()) {
+          a.classList.remove('is-drawing');
+          void a.getBoundingClientRect();
+          a.classList.add('is-drawing');
+        }
+        a.dataset.active = on ? 'true' : 'false';
+      });
+      cards.forEach((c) => {
+        c.hidden = c.dataset.atlasCard !== id;
+      });
+      if (announce && live) {
+        const card = cards.find((c) => c.dataset.atlasCard === id);
+        const place = card?.querySelector('.atlas__card-place')?.textContent ?? '';
+        const years = card?.querySelector('.atlas__card-years')?.textContent ?? '';
+        live.textContent = `${place}. ${years.replace(/\s+/g, ' ').trim()}`;
+      }
+    }
+
+    function select(id: JourneyStopId) {
+      highlight(id, true);
+      const target = document.getElementById(`chapter-${id}`);
+      if (target) target.scrollIntoView({ behavior: reducedMotion() ? 'instant' : 'smooth', block: 'start' });
+      const detail: JourneyEventDetail = { id };
+      document.dispatchEvent(new CustomEvent<JourneyEventDetail>('journey:select', { detail }));
+    }
+
+    buttons.forEach((b, i) => {
+      b.addEventListener('click', () => {
+        if (isStopId(b.dataset.atlasStop)) select(b.dataset.atlasStop);
+      });
+      b.addEventListener('keydown', (event) => {
+        let next = -1;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (i + 1) % buttons.length;
+        else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (i - 1 + buttons.length) % buttons.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = buttons.length - 1;
+        if (next < 0) return;
+        event.preventDefault();
+        buttons[next].focus();
+      });
+    });
+
+    nodes.forEach((n) => {
+      n.addEventListener('click', () => {
+        if (isStopId(n.dataset.atlasNode)) select(n.dataset.atlasNode);
+      });
+    });
+
+    atlases.push({ highlight });
+  }
+
+  function onExternal(event: Event) {
+    const id = (event as CustomEvent<Partial<JourneyEventDetail>>).detail?.id;
+    if (!isStopId(id)) return;
+    atlases.forEach((a) => a.highlight(id, false));
+  }
+
+  let listening = false;
+  function boot() {
+    document.querySelectorAll<HTMLElement>('[data-island="JourneyAtlasMap"]').forEach(initAtlas);
+    if (!listening) {
+      listening = true;
+      document.addEventListener('journey:focus', onExternal);
+      document.addEventListener('journey:select', onExternal);
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  else boot();
+  document.addEventListener('astro:page-load', boot);
+</script>
+
+<style>
+  .atlas {
+    container-type: inline-size;
+    display: grid;
+    gap: 14px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    min-width: 0;
+  }
+
+  .atlas__figure {
+    margin: 0;
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .atlas__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .atlas__sea {
+    fill: var(--bg-subtle);
+  }
+
+  .atlas__grid line {
+    stroke: var(--border-subtle);
+    stroke-width: 1;
+  }
+
+  .atlas__land path {
+    fill: var(--bg-elevated);
+    stroke: var(--border-strong);
+    stroke-opacity: 0.35;
+    stroke-width: 0.8;
+    stroke-linejoin: round;
+  }
+
+  .atlas__grid-labels text {
+    fill: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+  }
+
+  @container (max-width: 560px) {
+    .atlas__grid-labels {
+      display: none;
+    }
+  }
+
+  .atlas__arc {
+    fill: none;
+    stroke: var(--text-secondary);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    opacity: 0.6;
+  }
+
+  .atlas__arc[data-active='true'] {
+    stroke: var(--accent-highlight);
+    stroke-width: 3;
+    stroke-dasharray: none;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .atlas__arc {
+      animation: atlas-fade 0.9s ease both;
+      animation-delay: var(--atlas-delay, 0s);
+    }
+
+    .atlas__arc[data-active='true'] {
+      stroke-dasharray: 1;
+      animation: atlas-draw 1.4s cubic-bezier(0.3, 0.1, 0.2, 1) both;
+      animation-delay: var(--atlas-delay, 0s);
+    }
+
+    .atlas__arc.is-drawing[data-active='true'] {
+      animation: atlas-draw 1.1s cubic-bezier(0.3, 0.1, 0.2, 1) both;
+      animation-delay: 0s;
+    }
+  }
+
+  @keyframes atlas-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes atlas-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .atlas__node {
+    cursor: pointer;
+  }
+
+  .atlas__node-mark {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @container (max-width: 560px) {
+    .atlas__node-mark {
+      transform: scale(1.7);
+    }
+
+    .atlas .atlas__node-label {
+      font-size: 26px;
+      stroke-width: 6px;
+    }
+
+    .atlas .atlas__node-label[data-pos='below'] {
+      transform: translateY(12px);
+    }
+
+    .atlas .atlas__node-label[data-pos='above'] {
+      transform: translateY(-8px);
+    }
+
+    .atlas__arc {
+      stroke-width: 2.6;
+    }
+
+    .atlas__arc[data-active='true'] {
+      stroke-width: 5;
+    }
+  }
+
+  .atlas__node-hit {
+    fill: transparent;
+  }
+
+  .atlas__node-halo {
+    fill: none;
+    stroke: var(--accent-highlight);
+    stroke-width: 2;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .atlas__node-dot {
+    fill: var(--bg-surface);
+    stroke: var(--text-primary);
+    stroke-width: 2;
+    transition: fill 0.2s ease;
+  }
+
+  .atlas__node-num {
+    fill: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 9px;
+    font-weight: 700;
+    text-anchor: middle;
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .atlas__node-label {
+    fill: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    paint-order: stroke;
+    stroke: var(--bg-subtle);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+  }
+
+  .atlas__node[data-active='true'] .atlas__node-dot {
+    fill: var(--accent-highlight);
+    stroke: var(--accent-highlight);
+  }
+
+  .atlas__node[data-active='true'] .atlas__node-num {
+    fill: var(--bg-surface);
+  }
+
+  .atlas__node[data-active='true'] .atlas__node-halo {
+    opacity: 0.6;
+  }
+
+  .atlas__caption {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+
+  .atlas__fig {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.92em;
+  }
+
+  .atlas__stops {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  @container (min-width: 640px) {
+    .atlas__stops {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .atlas__stop {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    text-align: left;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .atlas__stop:hover {
+    border-color: var(--text-secondary);
+  }
+
+  .atlas__stop[aria-pressed='true'] {
+    border-color: var(--text-primary);
+    background: var(--bg-subtle);
+  }
+
+  .atlas__stop:focus-visible,
+  .atlas a:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+  }
+
+  .atlas__stop-num {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-grid;
+    place-items: center;
+    border: 1.5px solid var(--text-primary);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .atlas__stop[aria-pressed='true'] .atlas__stop-num {
+    background: var(--text-primary);
+    color: var(--bg-surface);
+  }
+
+  .atlas__stop-text {
+    display: grid;
+    min-width: 0;
+  }
+
+  .atlas__stop-place {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .atlas__stop-years {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .atlas__card {
+    display: grid;
+    gap: 6px;
+    padding: 16px 18px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+  }
+
+  .atlas__card[hidden] {
+    display: none;
+  }
+
+  .atlas__card-meta,
+  .atlas__card-years {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .atlas__card-place {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .atlas__card-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--text-secondary);
+  }
+
+  .atlas__roles {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+
+  .atlas__roles li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .atlas__role {
+    font-weight: 500;
+    font-size: 14.5px;
+  }
+
+  .atlas__org {
+    grid-column: 1;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .atlas__role-years {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .atlas__learned {
+    margin: 4px 0 0;
+  }
+
+  .atlas__related {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    font-size: 14px;
+  }
+
+  .atlas a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  /* ---- Compact ---- */
+  .atlas--compact .atlas__learned,
+  .atlas--compact .atlas__caption,
+  .atlas--compact .atlas__card-title {
+    display: none;
+  }
+
+  .atlas--compact .atlas__card {
+    padding: 12px 14px;
+  }
+
+  .atlas--compact .atlas__card-place {
+    font-size: 20px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atlas__stop,
+    .atlas__node-dot,
+    .atlas__node-halo {
+      transition: none;
+    }
+  }
+</style>

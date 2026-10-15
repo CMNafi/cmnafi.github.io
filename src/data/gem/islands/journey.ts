@@ -28,8 +28,8 @@ export const journeyStops: JourneyStop[] = [
       display: '25.6279° N, 88.6332° E'
     },
     years: '2000 – 2016',
-    institutionRole: 'Roots & Foundations · Early Mathematics & Cricket',
-    whatIBuiltOrLearned: 'Grew up with local mathematics olympiads, notebook physics, and dusty street cricket pitch construction. Formed instincts for probabilistic outcomes and tape-ball bowling variations.',
+    institutionRole: 'Dinajpur & Rangpur Cadet College · Reading & Military School',
+    whatIBuiltOrLearned: 'Left home at twelve for military school at Rangpur Cadet College (66 km away), where reading was the antidote to boredom. Formed early instincts for probability on dusty pitches with tape-wrapped tennis balls.',
     relatedArtifacts: [
       { title: 'SWAT vs Royal Phoenix: Seven to Defend', href: '/gem/field-notes/', type: 'essay' },
       { title: 'Captains View Cricket Engine', href: '/gem/garage/', type: 'project' }
@@ -49,7 +49,7 @@ export const journeyStops: JourneyStop[] = [
     },
     years: '2016 – 2018',
     institutionRole: 'United World College (UWC) Changshu China · International Scholar',
-    whatIBuiltOrLearned: 'Moved across continents on full scholarship at sixteen into a campus of students from 100+ countries on Kuncheng Lake. Immersed in economics, systems philosophy, and cross-cultural decision modeling.',
+    whatIBuiltOrLearned: 'Moved to China on full scholarship at sixteen without knowing the language, into a community of students from 100+ countries on Kuncheng Lake. Learned how quickly one must adapt to a new room.',
     relatedArtifacts: [
       { title: 'Worldview: An Atlas of Everyday Choices', href: '/gem/garage/', type: 'project' },
       { title: 'The Open Syllabus: 55 YouTube Channels', href: '/gem/field-notes/', type: 'essay' }
@@ -68,8 +68,8 @@ export const journeyStops: JourneyStop[] = [
       display: '43.3017° N, 91.7896° W'
     },
     years: '2018 – 2022',
-    institutionRole: 'Data Science & Quantitative Economics · BlackRock, SkyBridge, Mayo Clinic',
-    whatIBuiltOrLearned: 'Studied quantitative modeling and data science in the Midwest. Internships across health informatics at Mayo Clinic, alternative investments research at SkyBridge Capital (reading Good to Great), and institutional asset systems at BlackRock.',
+    institutionRole: 'Luther College · Data Science & Financial Apprenticeships',
+    whatIBuiltOrLearned: 'Studied Data Science in Decorah, Iowa (~8,000 people). Hands-on work at Mayo Clinic ("messy data is the job"), hedge fund due diligence at SkyBridge ("narrative is translation"), and institutional risk at BlackRock ("a trillion dollars is a storytelling problem").',
     relatedArtifacts: [
       { title: 'I Applied to Blackstone. I Interviewed at BlackRock.', href: '/gem/field-notes/', type: 'essay' },
       { title: 'CAIA Knowledge Hub', href: '/gem/garage/', type: 'project' }
@@ -88,8 +88,8 @@ export const journeyStops: JourneyStop[] = [
       display: '27.9506° N, 82.4572° W'
     },
     years: '2022 – Present',
-    institutionRole: 'Solutions Engineer at Dasseti · Institutional Private Markets & League Cricket',
-    whatIBuiltOrLearned: 'Architecting regulatory data infrastructure, SEC Form ADV & 13F parsing pipelines, LLM/MCP research engines, and playing weekly weekend cricket league matches across Tampa Bay (Waverly, Evans Park).',
+    institutionRole: 'Solutions Engineer at Dasseti · Private Markets Diligence & League Cricket',
+    whatIBuiltOrLearned: 'Working between investment teams and due diligence software at Dasseti. Building tools with AI to parse SEC filings, writing long-form capital analysis, and bowling death overs in weekend league cricket at Waverly and Evans Park.',
     relatedArtifacts: [
       { title: 'Regulatory Lens Engine', href: '/gem/garage/', type: 'project' },
       { title: 'The Universe of Form ADV (56,000+ Advisers)', href: '/gem/field-notes/', type: 'essay' },

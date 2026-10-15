@@ -1,8 +1,823 @@
 ---
-// STARTER STUB — Agent 3 replaces this with the real interactive island.
-// Contract: default export at this path, accepts IslandProps (compact?: boolean), renders a self-contained block.
+/**
+ * CaiaFrontierSandbox: linked allocation sliders over five sleeves, an efficient frontier
+ * computed at build time from illustrative capital-market assumptions, and live portfolio
+ * figures (expected return, volatility, Sharpe, weighted average pairwise correlation, a
+ * heuristic drawdown and the less-liquid share).
+ * Assumptions and math: src/data/claude/islands/caia-assumptions.ts
+ * No-JS: the default preset's figures and chart render statically.
+ */
 import type { IslandProps } from '@/types/claude-site';
-type Props = IslandProps;
-const { compact = false } = Astro.props;
+import {
+  SLEEVES,
+  CORRELATIONS,
+  RISK_FREE,
+  DRAWDOWN_MULTIPLE,
+  PRESETS,
+  DEFAULT_PRESET_ID,
+  portfolioStats,
+  efficientFrontier
+} from '@/data/claude/islands/caia-assumptions';
+
+interface Props extends IslandProps {
+  /** Preset to start from: 'sixty-forty' | 'endowment' | 'private-credit' */
+  presetId?: string;
+}
+
+const { compact = false, presetId = DEFAULT_PRESET_ID } = Astro.props;
+const preset = PRESETS.find((p) => p.id === presetId) ?? PRESETS[0];
+const weights = [...preset.weights];
+const stats = portfolioStats(weights);
+const { frontier, maxSharpe } = efficientFrontier(2);
+
+/* ---- Chart geometry (SVG user units) ---- */
+const VW = 560;
+const VH = 340;
+const M = { l: 46, r: 18, t: 30, b: 42 };
+const VOL_MAX = 24;
+const RET_MIN = 2;
+const RET_MAX = 10.5;
+const sx = (v: number) => M.l + (v / VOL_MAX) * (VW - M.l - M.r);
+const sy = (r: number) => VH - M.b - ((r - RET_MIN) / (RET_MAX - RET_MIN)) * (VH - M.t - M.b);
+const f1 = (n: number) => n.toFixed(1);
+
+const thinned = frontier.filter((_, i) => i === 0 || i === frontier.length - 1 || i % 3 === 0);
+const frontierD = thinned.map((p, i) => `${i === 0 ? 'M' : 'L'}${f1(sx(p.volatility))} ${f1(sy(p.expectedReturn))}`).join('');
+
+const maxSharpeValue = (maxSharpe.expectedReturn - RISK_FREE) / maxSharpe.volatility;
+// Capital market line: from cash through the max-Sharpe portfolio, clipped to the plot
+const cmlEndVol = Math.min(VOL_MAX, (RET_MAX - RISK_FREE) / maxSharpeValue);
+const cmlEndRet = RISK_FREE + maxSharpeValue * cmlEndVol;
+
+const volTicks = [0, 5, 10, 15, 20];
+const retTicks = [2, 4, 6, 8, 10];
+
+const sleeveLabelPos: Record<string, { dx: number; dy: number; anchor: 'start' | 'end' | 'middle' }> = {
+  'public-equity': { dx: 8, dy: 4, anchor: 'start' },
+  'fixed-income': { dx: 8, dy: 4, anchor: 'start' },
+  'private-equity': { dx: -8, dy: 4, anchor: 'end' },
+  'private-debt': { dx: 0, dy: 20, anchor: 'middle' },
+  'real-assets-hf': { dx: 10, dy: 24, anchor: 'start' }
+};
+
+const fmtPct = (n: number) => `${n.toFixed(1)}%`;
+const fmtRatio = (n: number | null) => (n === null ? '—' : n.toFixed(2));
+const groups = ['Public markets', 'Private equity & private debt', 'Real assets & hedge funds'] as const;
+const uid = `cf-${Math.random().toString(36).slice(2, 8)}`;
 ---
-<div class="cl-island-stub" data-island="CaiaFrontierSandbox" data-compact={compact ? 'true' : 'false'}>CaiaFrontierSandbox</div>
+
+<section
+  class:list={['cf', { 'cf--compact': compact }]}
+  data-island="CaiaFrontierSandbox"
+  data-compact={compact ? 'true' : 'false'}
+  data-preset={preset.id}
+  aria-label="Alternative-portfolio frontier sandbox"
+>
+  <div class="cf__presets" role="group" aria-label="Allocation presets">
+    {
+      PRESETS.map((p) => (
+        <button type="button" class="cf__preset" data-cf-preset={p.id} aria-pressed={p.id === preset.id ? 'true' : 'false'}>
+          {p.label}
+        </button>
+      ))
+    }
+  </div>
+  <p class="cf__preset-note" data-cf-preset-note>{preset.note}</p>
+
+  <div class="cf__layout">
+    <div class="cf__controls">
+      {
+        groups.map((g) => (
+          <fieldset class="cf__group">
+            <legend class="cf__legend">{g}</legend>
+            {SLEEVES.map((s, i) =>
+              s.group === g ? (
+                <div class="cf__slider">
+                  <label class="cf__slider-label" for={`${uid}-${s.id}`}>
+                    {s.label}
+                  </label>
+                  <output class="cf__slider-value" for={`${uid}-${s.id}`} data-cf-out={i}>
+                    {weights[i]}%
+                  </output>
+                  <input
+                    class="cf__range"
+                    id={`${uid}-${s.id}`}
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={weights[i]}
+                    aria-valuetext={`${weights[i]} percent`}
+                    data-cf-range={i}
+                  />
+                </div>
+              ) : null
+            )}
+          </fieldset>
+        ))
+      }
+      <p class="cf__total">
+        Sliders are linked: moving one rescales the others so the total stays at <span class="cf__fig">100%</span>.
+      </p>
+    </div>
+
+    <figure class="cf__figure">
+      <svg class="cf__svg" viewBox={`0 0 ${VW} ${VH}`} role="img" aria-labelledby={`${uid}-chart-title`} data-cf-svg>
+        <title id={`${uid}-chart-title`}>
+          Efficient frontier of expected return against annualized volatility under the illustrative assumptions, with the current mix
+          marked.
+        </title>
+        <rect class="cf__plot-bg" x="0" y="0" width={VW} height={VH} rx="8"></rect>
+        <g class="cf__grid" aria-hidden="true">
+          {retTicks.map((r) => <line x1={M.l} x2={VW - M.r} y1={sy(r)} y2={sy(r)} />)}
+          {volTicks.map((v) => <line y1={M.t} y2={VH - M.b} x1={sx(v)} x2={sx(v)} />)}
+        </g>
+        <g class="cf__ticks" aria-hidden="true">
+          {retTicks.map((r) => <text x={M.l - 8} y={sy(r) + 4} text-anchor="end">{r}</text>)}
+          {volTicks.map((v) => <text x={sx(v)} y={VH - M.b + 18} text-anchor="middle">{v}</text>)}
+        </g>
+        <text class="cf__axis-title" x={M.l} y="16">Expected return, % a year</text>
+        <text class="cf__axis-title" x={VW - M.r} y={VH - 6} text-anchor="end">Annualized volatility, %</text>
+
+        <line class="cf__cml" x1={sx(0)} y1={sy(RISK_FREE)} x2={sx(cmlEndVol)} y2={sy(cmlEndRet)}></line>
+        <path class="cf__frontier" d={frontierD}></path>
+
+        <g class="cf__cash">
+          <circle cx={sx(0)} cy={sy(RISK_FREE)} r="4"></circle>
+          <text x={sx(0) + 8} y={sy(RISK_FREE) + 14}>Cash {RISK_FREE.toFixed(1)}%</text>
+        </g>
+
+        <g class="cf__sleeves">
+          {
+            SLEEVES.map((s) => (
+              <g class="cf__sleeve">
+                <circle cx={sx(s.volatility)} cy={sy(s.expectedReturn)} r="4.5">
+                  <title>{`${s.label}: ${s.expectedReturn.toFixed(1)}% expected return, ${s.volatility}% volatility (assumption)`}</title>
+                </circle>
+                <text
+                  x={sx(s.volatility) + sleeveLabelPos[s.id].dx}
+                  y={sy(s.expectedReturn) + sleeveLabelPos[s.id].dy}
+                  text-anchor={sleeveLabelPos[s.id].anchor}
+                >
+                  {s.short}
+                </text>
+              </g>
+            ))
+          }
+        </g>
+
+        <g class="cf__max">
+          <rect
+            x={sx(maxSharpe.volatility) - 4}
+            y={sy(maxSharpe.expectedReturn) - 4}
+            width="8"
+            height="8"
+            transform={`rotate(45 ${f1(sx(maxSharpe.volatility))} ${f1(sy(maxSharpe.expectedReturn))})`}
+          >
+            <title>{`Highest Sharpe ratio on this frontier: ${maxSharpeValue.toFixed(2)}`}</title>
+          </rect>
+          <text x={sx(maxSharpe.volatility) - 10} y={sy(maxSharpe.expectedReturn) - 10} text-anchor="end">
+            Max Sharpe {maxSharpeValue.toFixed(2)}
+          </text>
+        </g>
+
+        <g class="cf__current" data-cf-point>
+          <line class="cf__guide" data-cf-guide-x x1={sx(stats.volatility)} x2={sx(stats.volatility)} y1={sy(stats.expectedReturn)} y2={VH - M.b}></line>
+          <line class="cf__guide" data-cf-guide-y x1={M.l} x2={sx(stats.volatility)} y1={sy(stats.expectedReturn)} y2={sy(stats.expectedReturn)}></line>
+          <circle class="cf__dot" data-cf-dot cx={sx(stats.volatility)} cy={sy(stats.expectedReturn)} r="7"></circle>
+        </g>
+      </svg>
+      <figcaption class="cf__caption">
+        <span class="cf__keys">
+          <span><span class="cf__key cf__key--mix" aria-hidden="true"></span>Your mix</span>
+          <span><span class="cf__key cf__key--frontier" aria-hidden="true"></span>Efficient frontier</span>
+          <span><span class="cf__key cf__key--sleeve" aria-hidden="true"></span>Single sleeve</span>
+          <span><span class="cf__key cf__key--max" aria-hidden="true"></span>Highest Sharpe</span>
+        </span>
+        <span>
+          Long-only frontier from a <span class="cf__fig">2%</span> weight grid. The dashed line runs from cash through the highest-Sharpe
+          mix.
+        </span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <dl class="cf__metrics" data-cf-metrics>
+    <div class="cf__metric">
+      <dt>Expected return</dt>
+      <dd class="cf__metric-fig" data-cf-m="ret">{fmtPct(stats.expectedReturn)}</dd>
+    </div>
+    <div class="cf__metric">
+      <dt>Volatility</dt>
+      <dd class="cf__metric-fig" data-cf-m="vol">{fmtPct(stats.volatility)}</dd>
+    </div>
+    <div class="cf__metric">
+      <dt>Sharpe ratio</dt>
+      <dd class="cf__metric-fig" data-cf-m="sharpe">{fmtRatio(stats.sharpe)}</dd>
+      <dd class="cf__metric-note">(return − <span class="cf__fig">{RISK_FREE.toFixed(1)}%</span> cash) ÷ volatility</dd>
+    </div>
+    <div class="cf__metric">
+      <dt>Cross-asset correlation</dt>
+      <dd class="cf__metric-fig" data-cf-m="corr">{fmtRatio(stats.avgCorrelation)}</dd>
+      <dd class="cf__metric-note">Weighted average pairwise ρ: Σ wᵢwⱼρᵢⱼ ÷ Σ wᵢwⱼ over sleeve pairs</dd>
+    </div>
+    <div class="cf__metric">
+      <dt>Severe drawdown, rough</dt>
+      <dd class="cf__metric-fig" data-cf-m="dd">≈ {fmtPct(stats.drawdown)}</dd>
+      <dd class="cf__metric-note">Heuristic: <span class="cf__fig">{DRAWDOWN_MULTIPLE}</span> × volatility, not a forecast</dd>
+    </div>
+    <div class="cf__metric">
+      <dt>Private and less-liquid</dt>
+      <dd class="cf__metric-fig" data-cf-m="illiquid">{stats.lessLiquidShare.toFixed(0)}%</dd>
+      <dd class="cf__metric-note">PE + private debt + real assets & hedge funds</dd>
+    </div>
+  </dl>
+
+  <details class="cf__assumptions" open={!compact}>
+    <summary>Illustrative assumptions, not forecasts</summary>
+    <p class="cf__assumptions-note">
+      Round teaching numbers chosen for this widget, not any provider’s capital-market assumptions. Private-market and real-asset
+      volatilities are meant to be de-smoothed: closer to economic risk than appraisal-based reported returns. Fixed income is added so a
+      60/40 portfolio can exist.
+    </p>
+    <div class="cf__table-wrap">
+      <table class="cf__table">
+        <caption class="cl-sr-only">Expected return and volatility assumptions by sleeve</caption>
+        <thead>
+          <tr>
+            <th scope="col">Sleeve</th>
+            <th scope="col">Expected return</th>
+            <th scope="col">Volatility</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            SLEEVES.map((s) => (
+              <tr>
+                <th scope="row">{s.label}</th>
+                <td>{s.expectedReturn.toFixed(1)}%</td>
+                <td>{s.volatility.toFixed(1)}%</td>
+              </tr>
+            ))
+          }
+          <tr>
+            <th scope="row">Cash (risk-free)</th>
+            <td>{RISK_FREE.toFixed(1)}%</td>
+            <td>0.0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <details class="cf__corr">
+      <summary>Correlation matrix</summary>
+      <div class="cf__table-wrap">
+        <table class="cf__table cf__table--corr">
+          <caption class="cl-sr-only">Assumed correlations between sleeves</caption>
+          <thead>
+            <tr>
+              <th scope="col"><span class="cl-sr-only">Sleeve</span></th>
+              {SLEEVES.map((s) => <th scope="col">{s.short}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {
+              SLEEVES.map((s, i) => (
+                <tr>
+                  <th scope="row">{s.short}</th>
+                  {CORRELATIONS[i].map((c) => (
+                    <td>{c.toFixed(2)}</td>
+                  ))}
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </details>
+
+  <p class="cl-sr-only" aria-live="polite" data-cf-live></p>
+
+  <p class="cf__links">
+    <a href="/caia">CAIA Knowledge Hub <span aria-hidden="true">→</span></a>
+    <a href="/caia/level-2/asset-allocation">Endowment, Norway and risk parity <span aria-hidden="true">→</span></a>
+    <a href="/caia/formulas">Sharpe and Sortino formulas <span aria-hidden="true">→</span></a>
+  </p>
+</section>
+
+<script>
+  import { PRESETS, portfolioStats, rebalance } from '@/data/claude/islands/caia-assumptions';
+
+  const VW = 560;
+  const VH = 340;
+  const M = { l: 46, r: 18, t: 30, b: 42 };
+  const VOL_MAX = 24;
+  const RET_MIN = 2;
+  const RET_MAX = 10.5;
+  const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
+  const sx = (v: number) => M.l + (clamp(v, 0, VOL_MAX) / VOL_MAX) * (VW - M.l - M.r);
+  const sy = (r: number) => VH - M.b - ((clamp(r, RET_MIN, RET_MAX) - RET_MIN) / (RET_MAX - RET_MIN)) * (VH - M.t - M.b);
+  const fmtPct = (n: number) => `${n.toFixed(1)}%`;
+  const fmtRatio = (n: number | null) => (n === null ? '—' : n.toFixed(2));
+
+  function initFrontier(root: HTMLElement) {
+    if (root.dataset.cfReady === 'true') return;
+    root.dataset.cfReady = 'true';
+
+    const ranges = Array.from(root.querySelectorAll<HTMLInputElement>('[data-cf-range]'));
+    const outputs = Array.from(root.querySelectorAll<HTMLOutputElement>('[data-cf-out]'));
+    const presetButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-cf-preset]'));
+    const presetNote = root.querySelector<HTMLElement>('[data-cf-preset-note]');
+    const dot = root.querySelector<SVGCircleElement>('[data-cf-dot]');
+    const guideX = root.querySelector<SVGLineElement>('[data-cf-guide-x]');
+    const guideY = root.querySelector<SVGLineElement>('[data-cf-guide-y]');
+    const live = root.querySelector<HTMLElement>('[data-cf-live]');
+    const metric = (key: string) => root.querySelector<HTMLElement>(`[data-cf-m="${key}"]`);
+
+    const initial = PRESETS.find((p) => p.id === root.dataset.preset) ?? PRESETS[0];
+    let weights = [...initial.weights];
+
+    function render(announce: boolean) {
+      ranges.forEach((r, i) => {
+        r.value = String(weights[i]);
+        r.setAttribute('aria-valuetext', `${weights[i]} percent`);
+      });
+      outputs.forEach((o, i) => {
+        o.textContent = `${weights[i]}%`;
+      });
+
+      const s = portfolioStats(weights);
+      const set = (key: string, text: string) => {
+        const el = metric(key);
+        if (el) el.textContent = text;
+      };
+      set('ret', fmtPct(s.expectedReturn));
+      set('vol', fmtPct(s.volatility));
+      set('sharpe', fmtRatio(s.sharpe));
+      set('corr', fmtRatio(s.avgCorrelation));
+      set('dd', `≈ ${fmtPct(s.drawdown)}`);
+      set('illiquid', `${s.lessLiquidShare.toFixed(0)}%`);
+
+      const x = sx(s.volatility);
+      const y = sy(s.expectedReturn);
+      dot?.setAttribute('cx', x.toFixed(1));
+      dot?.setAttribute('cy', y.toFixed(1));
+      guideX?.setAttribute('x1', x.toFixed(1));
+      guideX?.setAttribute('x2', x.toFixed(1));
+      guideX?.setAttribute('y1', y.toFixed(1));
+      guideY?.setAttribute('x2', x.toFixed(1));
+      guideY?.setAttribute('y1', y.toFixed(1));
+      guideY?.setAttribute('y2', y.toFixed(1));
+
+      const match = PRESETS.find((p) => p.weights.every((w, i) => w === weights[i]));
+      presetButtons.forEach((b) => b.setAttribute('aria-pressed', match && b.dataset.cfPreset === match.id ? 'true' : 'false'));
+      if (presetNote) presetNote.textContent = match ? match.note : 'Custom mix.';
+
+      if (announce && live) {
+        live.textContent = `Expected return ${fmtPct(s.expectedReturn)}, volatility ${fmtPct(s.volatility)}, Sharpe ratio ${fmtRatio(
+          s.sharpe
+        )}, rough severe drawdown ${fmtPct(s.drawdown)}.`;
+      }
+    }
+
+    ranges.forEach((range, i) => {
+      range.addEventListener('input', () => {
+        weights = rebalance(weights, i, Number(range.value));
+        render(false);
+      });
+      range.addEventListener('change', () => render(true));
+    });
+
+    presetButtons.forEach((b) => {
+      b.addEventListener('click', () => {
+        const p = PRESETS.find((x) => x.id === b.dataset.cfPreset);
+        if (!p) return;
+        weights = [...p.weights];
+        render(true);
+      });
+    });
+
+    render(false);
+  }
+
+  function boot() {
+    document.querySelectorAll<HTMLElement>('[data-island="CaiaFrontierSandbox"]').forEach(initFrontier);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  else boot();
+  document.addEventListener('astro:page-load', boot);
+</script>
+
+<style>
+  .cf {
+    container-type: inline-size;
+    display: grid;
+    gap: 14px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    min-width: 0;
+  }
+
+  .cf__presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .cf__preset {
+    min-height: 36px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .cf__preset:hover {
+    border-color: var(--text-secondary);
+  }
+
+  .cf__preset[aria-pressed='true'] {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--bg-surface);
+  }
+
+  .cf__preset:focus-visible,
+  .cf__range:focus-visible,
+  .cf a:focus-visible,
+  .cf summary:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+  }
+
+  .cf__preset-note {
+    margin: -4px 0 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .cf__layout {
+    display: grid;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  @container (min-width: 720px) {
+    .cf__layout {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      align-items: start;
+    }
+  }
+
+  .cf__controls {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .cf__group {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .cf__legend {
+    padding: 0;
+    margin-bottom: 2px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .cf__slider {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 12px;
+    align-items: baseline;
+  }
+
+  .cf__slider-label {
+    font-size: 14.5px;
+  }
+
+  .cf__slider-value {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 14px;
+    min-width: 4ch;
+    text-align: right;
+  }
+
+  .cf__range {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 0;
+    min-height: 28px;
+    accent-color: var(--accent-primary);
+    cursor: pointer;
+  }
+
+  .cf__total {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .cf__fig {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.92em;
+  }
+
+  .cf__figure {
+    margin: 0;
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .cf__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+
+  .cf__plot-bg {
+    fill: var(--bg-surface);
+    stroke: var(--border-subtle);
+  }
+
+  .cf__grid line {
+    stroke: var(--border-subtle);
+    stroke-width: 1;
+  }
+
+  .cf__ticks text {
+    fill: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+  }
+
+  .cf__axis-title {
+    fill: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+  }
+
+  .cf__frontier {
+    fill: none;
+    stroke: var(--accent-primary);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .cf__cml {
+    stroke: var(--text-secondary);
+    stroke-width: 1.2;
+    stroke-dasharray: 5 4;
+  }
+
+  .cf__cash circle {
+    fill: var(--text-secondary);
+  }
+
+  .cf__cash text,
+  .cf__sleeve text,
+  .cf__max text {
+    fill: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    paint-order: stroke;
+    stroke: var(--bg-surface);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+  }
+
+  .cf__sleeve circle {
+    fill: var(--bg-surface);
+    stroke: var(--text-secondary);
+    stroke-width: 1.5;
+  }
+
+  .cf__max rect {
+    fill: var(--accent-primary);
+    stroke: var(--bg-surface);
+    stroke-width: 1.5;
+  }
+
+  .cf__guide {
+    stroke: var(--text-muted);
+    stroke-width: 1;
+    stroke-dasharray: 2 3;
+  }
+
+  .cf__dot {
+    fill: var(--accent-highlight);
+    stroke: var(--bg-surface);
+    stroke-width: 2.5;
+  }
+
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cf__dot {
+      transition: cx 0.18s ease, cy 0.18s ease;
+    }
+  }
+
+  @container (max-width: 520px) {
+    .cf__ticks text,
+    .cf__axis-title,
+    .cf__cash text,
+    .cf__sleeve text,
+    .cf__max text {
+      font-size: 17px;
+    }
+
+  }
+
+  .cf__caption {
+    display: grid;
+    gap: 4px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+
+  .cf__keys {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 14px;
+    font-size: 13px;
+  }
+
+  .cf__key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+    vertical-align: -1px;
+    border-radius: 50%;
+  }
+
+  .cf__key--mix {
+    background: var(--accent-highlight);
+  }
+
+  .cf__key--frontier {
+    width: 16px;
+    height: 3px;
+    border-radius: 2px;
+    vertical-align: 3px;
+    background: var(--accent-primary);
+  }
+
+  .cf__key--sleeve {
+    border: 1.5px solid var(--text-secondary);
+    background: var(--bg-surface);
+  }
+
+  .cf__key--max {
+    width: 8px;
+    height: 8px;
+    border-radius: 1px;
+    transform: rotate(45deg);
+    background: var(--accent-primary);
+  }
+
+  .cf__metrics {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+    gap: 1px;
+    background: var(--border-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .cf__metric {
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    min-width: 0;
+  }
+
+  .cf__metric dt {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .cf__metric dd {
+    margin: 0;
+  }
+
+  .cf__metric-fig {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 22px;
+    line-height: 1.25;
+  }
+
+  .cf__metric-note {
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--text-secondary);
+    margin-top: 2px !important;
+  }
+
+  .cf__assumptions,
+  .cf__corr {
+    font-size: 14px;
+  }
+
+  .cf__assumptions summary,
+  .cf__corr summary {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .cf__assumptions-note {
+    margin: 6px 0 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .cf__corr {
+    margin-top: 8px;
+  }
+
+  .cf__table-wrap {
+    overflow-x: auto;
+    min-width: 0;
+  }
+
+  .cf__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  .cf__table th,
+  .cf__table td {
+    padding: 6px 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .cf__table thead th {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+  }
+
+  .cf__table tbody th {
+    font-weight: 400;
+  }
+
+  .cf__table td {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+  }
+
+  .cf__table--corr th,
+  .cf__table--corr td {
+    white-space: nowrap;
+  }
+
+  .cf__links {
+    margin: 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-size: 14px;
+  }
+
+  .cf a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  /* ---- Compact ---- */
+  .cf--compact .cf__controls {
+    display: none;
+  }
+
+  .cf--compact .cf__metric-fig {
+    font-size: 19px;
+  }
+</style>

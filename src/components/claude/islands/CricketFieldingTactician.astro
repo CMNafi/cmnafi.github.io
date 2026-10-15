@@ -1,8 +1,977 @@
 ---
-// STARTER STUB — Agent 3 replaces this with the real interactive island.
-// Contract: default export at this path, accepts IslandProps (compact?: boolean), renders a self-contained block.
+/**
+ * CricketFieldingTactician: a top-down field you can set for three real finishes from Nafi's
+ * Tampa league match reports. Fielders drag (pointer) or move with arrow keys; a small rule
+ * engine checks the T20 fielding restrictions and Law 28.4, and two heuristic indices show the
+ * trade-off between guarding the rope and saving singles.
+ * Data, rules and heuristics: src/data/claude/islands/cricket-scenarios.ts
+ * No-JS: the first scenario's starting field and its evaluation render statically.
+ */
 import type { IslandProps } from '@/types/claude-site';
-type Props = IslandProps;
-const { compact = false } = Astro.props;
+import {
+  cricketScenarios,
+  GROUND,
+  FIELD_RULES,
+  HEURISTIC_NOTE,
+  evaluateField,
+  isOutsideRing,
+  nearestPositionName,
+  openRopePath,
+  ringPath
+} from '@/data/claude/islands/cricket-scenarios';
+import { formatIsoDate } from '@/data/claude/islands/island-format';
+
+interface Props extends IslandProps {
+  /** Scenario to open on: 'seven-to-defend' | 'five-runs' | 'four-wickets' */
+  scenarioId?: string;
+}
+
+const { compact = false, scenarioId } = Astro.props;
+const initial = cricketScenarios.find((s) => s.id === scenarioId) ?? cricketScenarios[0];
+const evalNow = evaluateField(initial.startField, initial.phase);
+
+function badgeText(e: ReturnType<typeof evaluateField>, phase: string): string {
+  if (!e.outsideLegal) return phase === 'powerplay' ? 'Powerplay violation' : 'Too many outside the circle';
+  if (!e.legBehindLegal) return 'Too many behind square on the leg side';
+  return 'Legal field';
+}
+
+function fielderLabel(i: number, x: number, y: number): string {
+  const where = isOutsideRing({ x, y }) ? 'outside the circle' : 'inside the circle';
+  return `Fielder ${i + 1}: ${nearestPositionName({ x, y })}, ${where}. Drag, or use the arrow keys to move.`;
+}
+
+const r = GROUND.boundaryRadius;
+const half = GROUND.halfPitch;
 ---
-<div class="cl-island-stub" data-island="CricketFieldingTactician" data-compact={compact ? 'true' : 'false'}>CricketFieldingTactician</div>
+
+<section
+  class:list={['ft', { 'ft--compact': compact }]}
+  data-island="CricketFieldingTactician"
+  data-compact={compact ? 'true' : 'false'}
+  data-scenario={initial.id}
+  aria-label="Fielding tactician: set a field for a real match situation"
+>
+  <div class="ft__switch" role="group" aria-label="Match situation">
+    {
+      cricketScenarios.map((s) => (
+        <button type="button" class="ft__tab" data-ft-scenario={s.id} aria-pressed={s.id === initial.id ? 'true' : 'false'}>
+          {s.title}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="ft__layout">
+    <figure class="ft__figure">
+      <svg
+        class="ft__svg"
+        viewBox="-72 -72 144 144"
+        role="group"
+        aria-label="Top-down cricket ground. The bowler runs in from the top, the striker is at the bottom, and the off side of a right-handed batter is on the right."
+        data-ft-svg
+      >
+        <circle class="ft__ground" cx="0" cy="0" r={r}></circle>
+        <path class="ft__ring" d={ringPath()}></path>
+        <path class="ft__open" d={openRopePath(evalNow.openBearings)} data-ft-open></path>
+        <rect class="ft__pitch" x={-GROUND.pitchHalfWidth} y={-half - 1.2} width={GROUND.pitchHalfWidth * 2} height={half * 2 + 2.4} rx="0.4"></rect>
+        <line class="ft__crease" x1="-2.6" x2="2.6" y1={GROUND.strikerPoppingY} y2={GROUND.strikerPoppingY}></line>
+        <line class="ft__crease" x1="-2.6" x2="2.6" y1={-GROUND.strikerPoppingY} y2={-GROUND.strikerPoppingY}></line>
+        <rect class="ft__stumps" x="-0.5" y={half - 0.25} width="1" height="0.5"></rect>
+        <rect class="ft__stumps" x="-0.5" y={-half - 0.25} width="1" height="0.5"></rect>
+
+        <text class="ft__side" x="-70" y="-64" text-anchor="start">Leg side</text>
+        <text class="ft__side" x="70" y="-64" text-anchor="end">Off side</text>
+        <text class="ft__side ft__side--small" x="0" y="-69.5" text-anchor="middle" aria-hidden="true">Bowler’s end</text>
+
+        <g class="ft__fixed" aria-hidden="true">
+          <circle class="ft__striker" cx={GROUND.striker.x} cy={GROUND.striker.y} r="1.3"></circle>
+          <g transform={`translate(${GROUND.keeper.x} ${GROUND.keeper.y})`}>
+            <circle class="ft__fixed-dot" r="2.6"></circle>
+            <text class="ft__num" y="0.95">WK</text>
+          </g>
+          <g transform={`translate(${GROUND.bowler.x} ${GROUND.bowler.y})`}>
+            <circle class="ft__fixed-dot" r="2.6"></circle>
+            <text class="ft__num" y="0.95">B</text>
+          </g>
+        </g>
+
+        {
+          initial.startField.map((p, i) => (
+            <g
+              class="ft__fielder"
+              data-ft-fielder={i}
+              data-out={isOutsideRing(p) ? 'true' : 'false'}
+              transform={`translate(${p.x} ${p.y})`}
+              tabindex="0"
+              role="button"
+              aria-label={fielderLabel(i, p.x, p.y)}
+            >
+              <circle class="ft__hit" r="6" />
+              <circle class="ft__focus" r="4.2" />
+              <circle class="ft__dot" r="2.7" />
+              <text class="ft__num" y="0.95">{i + 1}</text>
+            </g>
+          ))
+        }
+      </svg>
+      <figcaption class="ft__legend">
+        <span><span class="ft__key ft__key--in" aria-hidden="true"></span>Inside the circle</span>
+        <span><span class="ft__key ft__key--out" aria-hidden="true"></span>Outside the circle</span>
+        <span><span class="ft__key ft__key--open" aria-hidden="true"></span>Rope left open</span>
+        <span class="ft__hint">Drag a fielder, or focus one and use the arrow keys (Shift for bigger steps).</span>
+      </figcaption>
+    </figure>
+
+    <div class="ft__panel">
+      {
+        cricketScenarios.map((s) => (
+          <div class="ft__scenario" data-ft-panel={s.id} hidden={s.id !== initial.id}>
+            <p class="ft__eyebrow">
+              <span class="ft__fig">{formatIsoDate(s.date)}</span> · {s.matchup}
+              {s.venue && <> · {s.venue}</>}
+            </p>
+            <p class="ft__title">{s.title}</p>
+            <p class="ft__phase">
+              {s.phaseLabel} · {s.format}
+            </p>
+            <p class="ft__situation">{s.situation}</p>
+            <p class="ft__question">{s.question}</p>
+            <details class="ft__facts">
+              <summary>From the match report</summary>
+              <ul>
+                {s.facts.map((f) => (
+                  <li>{f}</li>
+                ))}
+              </ul>
+              <p class="ft__result">{s.result}.</p>
+            </details>
+            <p class="ft__links">
+              <a href={`/field-notes/${s.essaySlug}`}>
+                Read the match report <span aria-hidden="true">→</span>
+              </a>
+            </p>
+          </div>
+        ))
+      }
+
+      <div class="ft__rules">
+        <div class="ft__rule">
+          <span class="ft__rule-label">Outside the 30-yard circle</span>
+          <span class="ft__rule-fig"
+            ><span data-ft-out>{evalNow.outside}</span> / <span data-ft-max>{evalNow.maxOutside}</span> allowed</span
+          >
+        </div>
+        <div class="ft__rule">
+          <span class="ft__rule-label">Behind square on the leg side</span>
+          <span class="ft__rule-fig"
+            ><span data-ft-leg>{evalNow.legBehind}</span> / {FIELD_RULES.maxLegSideBehindSquare} allowed</span
+          >
+        </div>
+        <p class="ft__badge" data-ft-badge data-state={evalNow.legal ? 'ok' : 'bad'}>
+          <span class="ft__badge-dot" aria-hidden="true"></span>
+          <span data-ft-badge-text>{badgeText(evalNow, initial.phase)}</span>
+        </p>
+      </div>
+
+      <div class="ft__indices">
+        <div class="ft__index">
+          <span class="ft__index-label">Boundary protection</span>
+          <span class="ft__index-fig"><span data-ft-boundary>{evalNow.boundary}</span><span class="ft__index-of">/100</span></span>
+          <span class="ft__meter" aria-hidden="true"><span class="ft__meter-fill" data-ft-boundary-bar style={`width:${evalNow.boundary}%`}></span></span>
+        </div>
+        <div class="ft__index">
+          <span class="ft__index-label">Single prevention</span>
+          <span class="ft__index-fig"><span data-ft-singles>{evalNow.singles}</span><span class="ft__index-of">/100</span></span>
+          <span class="ft__meter" aria-hidden="true"><span class="ft__meter-fill ft__meter-fill--alt" data-ft-singles-bar style={`width:${evalNow.singles}%`}></span></span>
+        </div>
+        <details class="ft__how">
+          <summary>Simple heuristic, not a model. How it’s computed</summary>
+          <p>{HEURISTIC_NOTE}</p>
+        </details>
+      </div>
+
+      <div class="ft__actions">
+        <button type="button" class="ft__btn ft__btn--primary" data-ft-suggest>Show a suggested field</button>
+        <button type="button" class="ft__btn" data-ft-reset>Reset</button>
+      </div>
+      <p class="ft__suggestion" data-ft-suggestion hidden></p>
+
+      <p class="ft__statement">{FIELD_RULES.statement}</p>
+      <p class="ft__links ft__links--tools">
+        <a href="/garage/captains-view">Captains View <span aria-hidden="true">→</span></a>
+        <a href="/garage/style-fielding">Fielding Style Playbook <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </div>
+
+  <ol class="ft__list" data-ft-list aria-label="Where each fielder is standing">
+    {
+      initial.startField.map((p, i) => (
+        <li class="ft__item" data-ft-item={i}>
+          <span class="ft__item-num">{i + 1}</span>
+          <span data-ft-item-name>{nearestPositionName(p)}</span>
+          <span class="ft__item-zone" data-ft-item-zone>{isOutsideRing(p) ? 'out' : 'in'}</span>
+        </li>
+      ))
+    }
+  </ol>
+
+  <p class="cl-sr-only" aria-live="polite" data-ft-live></p>
+</section>
+
+<script>
+  import {
+    cricketScenarios,
+    evaluateField,
+    clampToGround,
+    nearestPositionName,
+    isOutsideRing,
+    openRopePath,
+    type CricketScenario,
+    type FieldPoint,
+    type FieldEvaluation
+  } from '@/data/claude/islands/cricket-scenarios';
+
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function badgeText(e: FieldEvaluation, s: CricketScenario): string {
+    if (!e.outsideLegal) return s.phase === 'powerplay' ? 'Powerplay violation' : 'Too many outside the circle';
+    if (!e.legBehindLegal) return 'Too many behind square on the leg side';
+    return 'Legal field';
+  }
+
+  function initField(root: HTMLElement) {
+    if (root.dataset.ftReady === 'true') return;
+    root.dataset.ftReady = 'true';
+
+    const svg = root.querySelector<SVGSVGElement>('[data-ft-svg]');
+    const groups = Array.from(root.querySelectorAll<SVGGElement>('[data-ft-fielder]'));
+    if (!svg || groups.length === 0) return;
+
+    const q = <T extends Element>(sel: string) => root.querySelector<T>(sel);
+    const openPath = q<SVGPathElement>('[data-ft-open]');
+    const outEl = q<HTMLElement>('[data-ft-out]');
+    const maxEl = q<HTMLElement>('[data-ft-max]');
+    const legEl = q<HTMLElement>('[data-ft-leg]');
+    const badge = q<HTMLElement>('[data-ft-badge]');
+    const badgeTextEl = q<HTMLElement>('[data-ft-badge-text]');
+    const boundaryEl = q<HTMLElement>('[data-ft-boundary]');
+    const singlesEl = q<HTMLElement>('[data-ft-singles]');
+    const boundaryBar = q<HTMLElement>('[data-ft-boundary-bar]');
+    const singlesBar = q<HTMLElement>('[data-ft-singles-bar]');
+    const suggestBtn = q<HTMLButtonElement>('[data-ft-suggest]');
+    const resetBtn = q<HTMLButtonElement>('[data-ft-reset]');
+    const suggestion = q<HTMLElement>('[data-ft-suggestion]');
+    const live = q<HTMLElement>('[data-ft-live]');
+    const items = Array.from(root.querySelectorAll<HTMLElement>('[data-ft-item]'));
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-ft-scenario]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-ft-panel]'));
+
+    let scenario: CricketScenario = cricketScenarios.find((s) => s.id === root.dataset.scenario) ?? cricketScenarios[0];
+    let points: FieldPoint[] = scenario.startField.map((p) => ({ ...p }));
+    let frame = 0;
+    let animation = 0;
+    let announceTimer = 0;
+
+    function place(i: number) {
+      const p = points[i];
+      const g = groups[i];
+      if (!g) return;
+      const out = isOutsideRing(p);
+      const name = nearestPositionName(p);
+      g.setAttribute('transform', `translate(${p.x} ${p.y})`);
+      g.dataset.out = out ? 'true' : 'false';
+      g.setAttribute(
+        'aria-label',
+        `Fielder ${i + 1}: ${name}, ${out ? 'outside' : 'inside'} the circle. Drag, or use the arrow keys to move.`
+      );
+      const item = items[i];
+      if (item) {
+        const n = item.querySelector<HTMLElement>('[data-ft-item-name]');
+        const z = item.querySelector<HTMLElement>('[data-ft-item-zone]');
+        if (n) n.textContent = name;
+        if (z) z.textContent = out ? 'out' : 'in';
+      }
+    }
+
+    function summary(e: FieldEvaluation): string {
+      return `${badgeText(e, scenario)}. ${e.outside} of ${e.maxOutside} allowed outside the circle, ${e.legBehind} behind square on the leg side. Boundary protection ${e.boundary}, single prevention ${e.singles}.`;
+    }
+
+    function evaluate(announce: boolean) {
+      const e = evaluateField(points, scenario.phase);
+      if (outEl) outEl.textContent = String(e.outside);
+      if (maxEl) maxEl.textContent = String(e.maxOutside);
+      if (legEl) legEl.textContent = String(e.legBehind);
+      if (badge) badge.dataset.state = e.legal ? 'ok' : 'bad';
+      if (badgeTextEl) badgeTextEl.textContent = badgeText(e, scenario);
+      if (boundaryEl) boundaryEl.textContent = String(e.boundary);
+      if (singlesEl) singlesEl.textContent = String(e.singles);
+      if (boundaryBar) boundaryBar.style.width = `${e.boundary}%`;
+      if (singlesBar) singlesBar.style.width = `${e.singles}%`;
+      if (openPath) openPath.setAttribute('d', openRopePath(e.openBearings));
+      if (announce && live) live.textContent = summary(e);
+    }
+
+    function scheduleEvaluate() {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        evaluate(false);
+      });
+    }
+
+    function scheduleAnnounce() {
+      window.clearTimeout(announceTimer);
+      announceTimer = window.setTimeout(() => evaluate(true), 450);
+    }
+
+    function setAll(next: FieldPoint[]) {
+      points = next.map((p) => ({ ...p }));
+      points.forEach((_, i) => place(i));
+    }
+
+    function stopAnimation() {
+      if (animation) cancelAnimationFrame(animation);
+      animation = 0;
+    }
+
+    function animateTo(target: FieldPoint[], done: () => void) {
+      stopAnimation();
+      if (reducedMotion()) {
+        setAll(target);
+        done();
+        return;
+      }
+      const from = points.map((p) => ({ ...p }));
+      const start = performance.now();
+      const duration = 700;
+      const step = (now: number) => {
+        const t = Math.min(1, (now - start) / duration);
+        const k = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        points = from.map((p, i) => ({ x: p.x + (target[i].x - p.x) * k, y: p.y + (target[i].y - p.y) * k }));
+        points.forEach((_, i) => place(i));
+        evaluate(false);
+        if (t < 1) animation = requestAnimationFrame(step);
+        else {
+          animation = 0;
+          setAll(target);
+          done();
+        }
+      };
+      animation = requestAnimationFrame(step);
+    }
+
+    function hideSuggestion() {
+      if (suggestion) {
+        suggestion.hidden = true;
+        suggestion.textContent = '';
+      }
+    }
+
+    function toSvgPoint(event: PointerEvent): FieldPoint | null {
+      const ctm = svg!.getScreenCTM();
+      if (!ctm) return null;
+      const pt = new DOMPoint(event.clientX, event.clientY).matrixTransform(ctm.inverse());
+      return { x: pt.x, y: pt.y };
+    }
+
+    groups.forEach((g, i) => {
+      let dragging = false;
+      let offset: FieldPoint = { x: 0, y: 0 };
+
+      g.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        stopAnimation();
+        const pt = toSvgPoint(event);
+        if (!pt) return;
+        offset = { x: points[i].x - pt.x, y: points[i].y - pt.y };
+        dragging = true;
+        hideSuggestion();
+        g.setPointerCapture(event.pointerId);
+        g.classList.add('is-dragging');
+        g.focus({ preventScroll: true });
+      });
+
+      g.addEventListener('pointermove', (event) => {
+        if (!dragging) return;
+        const pt = toSvgPoint(event);
+        if (!pt) return;
+        points[i] = clampToGround({ x: pt.x + offset.x, y: pt.y + offset.y });
+        place(i);
+        scheduleEvaluate();
+      });
+
+      const end = (event: PointerEvent) => {
+        if (!dragging) return;
+        dragging = false;
+        g.classList.remove('is-dragging');
+        if (g.hasPointerCapture(event.pointerId)) g.releasePointerCapture(event.pointerId);
+        evaluate(true);
+      };
+      g.addEventListener('pointerup', end);
+      g.addEventListener('pointercancel', end);
+
+      g.addEventListener('keydown', (event) => {
+        const stepSize = event.shiftKey ? 6 : 2;
+        let dx = 0;
+        let dy = 0;
+        if (event.key === 'ArrowLeft') dx = -stepSize;
+        else if (event.key === 'ArrowRight') dx = stepSize;
+        else if (event.key === 'ArrowUp') dy = -stepSize;
+        else if (event.key === 'ArrowDown') dy = stepSize;
+        else return;
+        event.preventDefault();
+        stopAnimation();
+        hideSuggestion();
+        points[i] = clampToGround({ x: points[i].x + dx, y: points[i].y + dy });
+        place(i);
+        evaluate(false);
+        scheduleAnnounce();
+      });
+    });
+
+    suggestBtn?.addEventListener('click', () => {
+      animateTo(scenario.suggestedField, () => {
+        evaluate(false);
+        if (suggestion) {
+          suggestion.textContent = scenario.suggestionNote;
+          suggestion.hidden = false;
+        }
+        if (live) {
+          const e = evaluateField(points, scenario.phase);
+          live.textContent = `Suggested field shown. ${summary(e)}`;
+        }
+      });
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      stopAnimation();
+      setAll(scenario.startField);
+      hideSuggestion();
+      evaluate(true);
+    });
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const next = cricketScenarios.find((s) => s.id === tab.dataset.ftScenario);
+        if (!next || next.id === scenario.id) return;
+        stopAnimation();
+        scenario = next;
+        root.dataset.scenario = next.id;
+        tabs.forEach((t) => t.setAttribute('aria-pressed', t === tab ? 'true' : 'false'));
+        panels.forEach((p) => {
+          p.hidden = p.dataset.ftPanel !== next.id;
+        });
+        setAll(next.startField);
+        hideSuggestion();
+        evaluate(true);
+      });
+    });
+
+    evaluate(false);
+  }
+
+  function boot() {
+    document.querySelectorAll<HTMLElement>('[data-island="CricketFieldingTactician"]').forEach(initField);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  else boot();
+  document.addEventListener('astro:page-load', boot);
+</script>
+
+<style>
+  .ft {
+    container-type: inline-size;
+    display: grid;
+    gap: 14px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    min-width: 0;
+  }
+
+  .ft__switch {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .ft__tab,
+  .ft__btn {
+    min-height: 36px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .ft__tab:hover,
+  .ft__btn:hover {
+    border-color: var(--text-secondary);
+  }
+
+  .ft__tab[aria-pressed='true'] {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--bg-surface);
+  }
+
+  .ft__btn--primary {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--bg-surface);
+  }
+
+  .ft__btn--primary:hover {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+  }
+
+  .ft__tab:focus-visible,
+  .ft__btn:focus-visible,
+  .ft a:focus-visible,
+  .ft summary:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+  }
+
+  .ft__layout {
+    display: grid;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  @container (min-width: 700px) {
+    .ft__layout {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  .ft__figure {
+    margin: 0;
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .ft__svg {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    margin: 0 auto;
+    overflow: visible;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .ft__ground {
+    fill: var(--bg-subtle);
+    stroke: var(--text-secondary);
+    stroke-width: 0.7;
+  }
+
+  .ft__ring {
+    fill: var(--bg-surface);
+    stroke: var(--text-muted);
+    stroke-width: 0.45;
+    stroke-dasharray: 2 1.6;
+  }
+
+  .ft__open {
+    fill: none;
+    stroke: var(--accent-highlight);
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ft__pitch {
+    fill: var(--bg-elevated);
+  }
+
+  .ft__crease {
+    stroke: var(--text-muted);
+    stroke-width: 0.25;
+  }
+
+  .ft__stumps {
+    fill: var(--text-secondary);
+  }
+
+  .ft__side {
+    fill: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 4.4px;
+  }
+
+  .ft__side--small {
+    font-size: 3.4px;
+  }
+
+  .ft__striker {
+    fill: var(--text-primary);
+  }
+
+  .ft__fixed-dot {
+    fill: var(--text-secondary);
+  }
+
+  .ft__num {
+    fill: var(--bg-surface);
+    font-family: var(--font-sans);
+    font-size: 2.7px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ft__fielder {
+    cursor: grab;
+    touch-action: none;
+    outline: none;
+  }
+
+  .ft__fielder.is-dragging {
+    cursor: grabbing;
+  }
+
+  .ft__hit {
+    fill: transparent;
+  }
+
+  .ft__focus {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 0.9;
+  }
+
+  .ft__fielder:focus-visible .ft__focus,
+  .ft__fielder.is-dragging .ft__focus {
+    stroke: var(--accent-blue);
+  }
+
+  .ft__dot {
+    fill: var(--accent-primary);
+    stroke: var(--bg-surface);
+    stroke-width: 0.5;
+    transition: fill 0.15s ease;
+  }
+
+  .ft__fielder[data-out='true'] .ft__dot {
+    fill: var(--accent-amber);
+  }
+
+  .ft__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .ft__key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+    border-radius: 50%;
+    vertical-align: -1px;
+  }
+
+  .ft__key--in {
+    background: var(--accent-primary);
+  }
+
+  .ft__key--out {
+    background: var(--accent-amber);
+  }
+
+  .ft__key--open {
+    width: 14px;
+    height: 3px;
+    border-radius: 2px;
+    vertical-align: 3px;
+    background: var(--accent-highlight);
+  }
+
+  .ft__hint {
+    flex-basis: 100%;
+  }
+
+  .ft__panel {
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .ft__scenario {
+    display: grid;
+    gap: 6px;
+  }
+
+  .ft__scenario[hidden] {
+    display: none;
+  }
+
+  .ft__eyebrow,
+  .ft__phase {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .ft__fig {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.95em;
+  }
+
+  .ft__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .ft__situation {
+    margin: 4px 0 0;
+  }
+
+  .ft__question {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+
+  .ft__facts,
+  .ft__how {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .ft__facts summary,
+  .ft__how summary {
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 14px;
+  }
+
+  .ft__facts ul {
+    margin: 6px 0 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 4px;
+  }
+
+  .ft__result {
+    margin: 6px 0 0;
+    color: var(--text-primary);
+  }
+
+  .ft__how p {
+    margin: 6px 0 0;
+  }
+
+  .ft__links {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    font-size: 14px;
+  }
+
+  .ft a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .ft__rules {
+    display: grid;
+    gap: 6px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+  }
+
+  .ft__rule {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .ft__rule-label {
+    color: var(--text-secondary);
+  }
+
+  .ft__rule-fig {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .ft__badge {
+    margin: 4px 0 0;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    border: 1px solid var(--accent-primary);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .ft__badge-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+  }
+
+  .ft__badge[data-state='bad'] {
+    border-color: var(--accent-highlight);
+    border-width: 2px;
+  }
+
+  .ft__badge[data-state='bad'] .ft__badge-dot {
+    background: var(--accent-highlight);
+  }
+
+  .ft__indices {
+    display: grid;
+    gap: 10px;
+  }
+
+  .ft__index {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 12px;
+    align-items: baseline;
+  }
+
+  .ft__index-label {
+    font-size: 14px;
+  }
+
+  .ft__index-fig {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 20px;
+  }
+
+  .ft__index-of {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .ft__meter {
+    grid-column: 1 / -1;
+    display: block;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--bg-subtle);
+    overflow: hidden;
+  }
+
+  .ft__meter-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--accent-amber);
+    transition: width 0.2s ease;
+  }
+
+  .ft__meter-fill--alt {
+    background: var(--accent-primary);
+  }
+
+  .ft__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .ft__suggestion {
+    margin: 0;
+    padding-left: 10px;
+    border-left: 2px solid var(--accent-amber);
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .ft__statement {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+
+  .ft__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 4px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .ft__item {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .ft__item-num,
+  .ft__item-zone {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ft__item-zone {
+    margin-left: auto;
+  }
+
+  /* ---- Compact (bento) ---- */
+  .ft--compact .ft__list,
+  .ft--compact .ft__facts,
+  .ft--compact .ft__hint {
+    display: none;
+  }
+
+  .ft--compact .ft__title {
+    font-size: 20px;
+  }
+
+  .ft--compact .ft__svg {
+    max-width: 380px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ft__dot,
+    .ft__meter-fill {
+      transition: none;
+    }
+  }
+</style>

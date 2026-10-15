@@ -6,25 +6,25 @@ import FormAdvMiniExplorer from '../../../components/gem/islands/FormAdvMiniExpl
 import CaiaFrontierSandbox from '../../../components/gem/islands/CaiaFrontierSandbox.astro';
 
 const categories = [
-  { id: 'all', label: `All Systems (${projects.length})` },
+  { id: 'all', label: `All Projects (${projects.length})` },
   { id: 'fintech-sec', label: `FinTech & SEC Data (${projects.filter((p) => p.category === 'fintech-sec').length})` },
   { id: 'cricket-sports', label: `Cricket & Sports (${projects.filter((p) => p.category === 'cricket-sports').length})` },
-  { id: 'knowledge-systems', label: `Knowledge Systems (${projects.filter((p) => p.category === 'knowledge-systems').length})` }
+  { id: 'knowledge-systems', label: `Decision Models (${projects.filter((p) => p.category === 'knowledge-systems').length})` }
 ];
 ---
 
 <GemLayout
-  title="The Systems Workbench | Projects & Architecture · C M Nafi"
-  description="Eight production financial data systems, cricket tactical planners, and decision atlases built by C M Nafi."
+  title="Projects & Tools | The Systems Workbench · C M Nafi"
+  description="Eight working tools across SEC regulatory intelligence, alternative investments, league cricket tactics, and decision models."
   currentPath="/gem/garage/"
 >
   <div class="workbench-page">
     <!-- Masthead -->
     <header class="workbench-masthead">
-      <span class="eyebrow-tag">Editorial Systems Lab · Engineering Catalog</span>
+      <span class="eyebrow-tag">Editorial Systems Lab · Tools & Projects</span>
       <h1 class="page-title">The Systems Workbench</h1>
       <p class="masthead-intro">
-        A working ledger of eight production data applications, SEC regulatory engines, cricket tactical planners, and decision atlases. Every system is built around real datasets, declarative schemas, and verified quantitative logic.
+        I build tools to answer problems I run into in my work and life. As a solutions engineer, my skill is describing exactly what should exist and shaping it with modern AI tools. Below are eight working projects spanning SEC regulatory due diligence, alternative investments, cricket field planning, and cultural decision models.
       </p>
 
       <!-- Category Filter Tabs -->
@@ -52,22 +52,28 @@ const categories = [
     <section class="workbench-islands-section editorial-section">
       <div class="section-head-row">
         <div>
-          <span class="eyebrow-tag">Embedded Micro-Tool 01</span>
+          <span class="eyebrow-tag">Interactive Micro-Tool 01 · Institutional Due Diligence</span>
           <h2>SEC Form ADV & 13F Intelligence Sandbox</h2>
         </div>
         <a href="/gem/field-notes/" class="section-link-more">Read "The Universe of Form ADV" Essay →</a>
       </div>
+      <p style="color:var(--text-secondary);font-size:14px;line-height:1.7;margin:0 0 20px;max-width:var(--max-w-prose)">
+        In institutional diligence at Dasseti, understanding an investment adviser begins with Form ADV Part 1A. This sandbox lets you examine entity structure, regulatory AUM, and fee models across 8 major firms, with a side-by-side diff to compare traditional asset managers against private equity allocators.
+      </p>
       <FormAdvMiniExplorer />
     </section>
 
     <section class="workbench-islands-section editorial-section">
       <div class="section-head-row">
         <div>
-          <span class="eyebrow-tag">Embedded Micro-Tool 02</span>
+          <span class="eyebrow-tag">Interactive Micro-Tool 02 · Alternative Asset Allocation</span>
           <h2>CAIA Portfolio Frontier & Covariance Engine</h2>
         </div>
         <a href="/caia/" class="section-link-more">Open CAIA Knowledge Hub →</a>
       </div>
+      <p style="color:var(--text-secondary);font-size:14px;line-height:1.7;margin:0 0 20px;max-width:var(--max-w-prose)">
+        Developed during my CAIA charter studies and alternative investment research at SkyBridge. Adjust the allocation weights across equities, private debt, and real assets to see how non-correlated returns bend the Markowitz efficient frontier upward, expanding return for given levels of volatility.
+      </p>
       <CaiaFrontierSandbox />
     </section>
   </div>

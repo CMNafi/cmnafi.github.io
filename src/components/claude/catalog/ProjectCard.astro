@@ -45,7 +45,7 @@ const badgeParts = splitFigures(project.keyMetricBadge);
   </p>
 
   <div class="pc-pipeline">
-    <p class="pc-label" id={`${titleId}-pipe`}>How it fits together</p>
+    <p class="pc-label" id={`${titleId}-pipe`}>Architecture</p>
     <ol class="pc-pipe" aria-labelledby={`${titleId}-pipe`}>
       {project.pipeline.map((stage, i) => (
         <li>
@@ -111,7 +111,7 @@ const badgeParts = splitFigures(project.keyMetricBadge);
     justify-content: space-between;
     gap: 4px 12px;
     font-size: 0.8125rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   .pc-meta {
@@ -189,7 +189,7 @@ const badgeParts = splitFigures(project.keyMetricBadge);
     margin-bottom: 6px;
     font-size: 0.75rem;
     font-weight: 500;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   .pc-pipe {
@@ -222,7 +222,7 @@ const badgeParts = splitFigures(project.keyMetricBadge);
 
   .pc-arrow {
     padding: 0 5px;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     font-size: 0.8rem;
   }
 
@@ -325,7 +325,7 @@ const badgeParts = splitFigures(project.keyMetricBadge);
 
   .pc-note {
     font-size: 0.8125rem;
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -3,6 +3,10 @@ import { cricketScenarios } from '../../../data/gem/islands/cricket-scenarios';
 ---
 
 <div class="cricket-tactician-island" data-cricket-island>
+  <div class="island-intro-card" style="padding:16px;margin:0;background:var(--bg-subtle);border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);font-size:13px;line-height:1.6">
+    <strong style="color:var(--text-primary);display:block;margin-bottom:4px">Why this matters in the death overs:</strong>
+    On weekend mornings in Florida league cricket (playing for SWAT and TB Bengal Tigers), defending seven runs in the final over at Waverly is the ultimate test of risk management under strict rules. You only have 9 fielders, and the laws strictly forbid having more than 5 outside the 30-yard circle. Select a match scenario below, drag any of the 9 fielders on the field to test boundary coverage, or click <em>"Reveal Suggested Formation"</em> to see how we cut off angles and forced mistimed lofted shots.
+  </div>
   <header class="island-header">
     <div class="header-meta">
       <span class="badge-tag">Tactical Engine · Tampa League Cricket</span>
@@ -38,11 +42,11 @@ import { cricketScenarios } from '../../../data/gem/islands/cricket-scenarios';
     </div>
     <div class="coverage-metrics">
       <div class="metric-item">
-        <span class="m-label">Boundary Save %</span>
+        <span class="m-label">Boundary Coverage Index</span>
         <span class="m-val" data-boundary-metric>78%</span>
       </div>
       <div class="metric-item">
-        <span class="m-label">Single Prevention %</span>
+        <span class="m-label">Single Coverage Index</span>
         <span class="m-val" data-single-metric>84%</span>
       </div>
     </div>
@@ -95,7 +99,7 @@ import { cricketScenarios } from '../../../data/gem/islands/cricket-scenarios';
   <footer class="tactician-controls">
     <div class="action-buttons">
       <button type="button" class="action-btn reveal-btn" data-reveal-btn>
-        ★ Reveal Nafi's Actual Match Setup
+        Reveal Suggested Formation
       </button>
       <button type="button" class="action-btn reset-btn" data-reset-btn>
         Reset Default Positions

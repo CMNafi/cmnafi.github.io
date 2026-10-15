@@ -9,6 +9,30 @@
 
 ## 0. The one-sentence vision
 
+### October 15, 2026: descriptions and story connections
+
+Keep the existing visuals, component structure, CSS, artwork, and interaction engines. Clarify what visitors can do before opening a tool, connect research tools to Nafi’s professional questions and cricket tools to match reports, explain the archive views in plain language, and distinguish interactive tools, project write-ups, and work in development. Project previews and article recommendations describe the destination rather than imply unsupported functionality or direct project origins. Independent work remains separate from employer work.
+
+### October 15, 2026: unified four-act story and archive continuity
+
+The homepage opens with `UnifiedStoryStage.astro`: finite attention and childhood, small experiments, professional fit, and the connected archive. It replaces the two separate homepage scrollytelling mounts while reusing their documented geographic and professional data. The shared `FieldNotesConstellation` element and canvas persist through Astro ClientRouter navigation to the archive; its ledger lives outside the persisted stage. Named reading-track URLs accept both slugs and the original numeric values. The tour runs for 45 seconds, pauses on human input, and respects reduced motion. Typed coordinate buffers are prepared once; performance is measured with real Playwright tests and reported, rather than guaranteeing 0 ms navigation or a hardware-independent frame rate. Browser speculation is progressive enhancement. The archive retains its audited 64 notes, seven related tools, actual dates, and R&D statuses. Future reading and cricket totals are adjustable planning scenarios, not lifespan predictions. Philosophical prompts are attributed to Tim Urban and Eric Barker and linked to Nafi's own writing. Editorial tokens are added to the shared token file without replacing legacy aliases. The new user-supplied professional boundaries apply only to the focus exercise.
+
+### October 15, 2026: Field Notes idea atlas
+
+The primary Field Notes index becomes an editorial Canvas/SVG atlas with constellation, chronological river, and six curated reading tracks. A single collection-derived graph supplies all published notes, seven related tools, the synchronized ledger, a homepage preview, and reusable article lineage ribbons. Counts and dates come from content metadata; drafts and Brewing entries stay out. Curated book pairings and tool recommendations are labeled as reading connections, not documented personal influences or project origins. Tool status remains live or R&D as documented. Existing standalone HTML reports move unchanged into data files and receive Astro wrappers so their content and interactive scripts remain intact while adding the shared ribbon. The editorial palette exception extends to the Field Notes index and these scoped components; article styling elsewhere remains intact.
+
+### October 15, 2026: professional systems timeline
+
+Replace the homepage career-card explorer with `ProfessionalSystemsTimeline.astro`, a five-stage Canvas/SVG dependency graph with 42 capability nodes, industry-only narrative, filters, keyboard inspection, drag, timeline scrubbing, and reduced-motion support. Related technologies may share a capability node. The graph explains conceptual dependencies, not employer architecture, measured flows, proficiency scores, or dates of tool adoption. Career work and later independent research are identified separately; projects retain their documented live or research status. The user supplied the professional stack and credentials in the October 15 brief, supplementing STORY.md. No geography appears in this component. This homepage component uses the editorial palette already established by the homepage exception above.
+
+### October 15, 2026: four-act scrollytelling hero
+
+The homepage opens with an accessible Canvas/SVG editorial atlas in `src/components/islands/JourneyScrollytellingHero.astro`. It uses 180 procedural particles, geographic projection and great-circle connections, four narrative acts, direct chapter navigation, optional autoplay, a scrubber, and reduced-motion fallbacks. The notebook, research report, beta links, and job-industry labels remain below. Geography belongs to the requested story; job and school cards elsewhere keep their industry and institution labels. Connections and cumulative distances describe city-centre map geometry, not recorded flights. Biography copy retains the documented degree and solutions-engineer role. Natural Earth land outlines are public domain and attributed.
+
+### October 14, 2026: production homepage beta hub
+
+The production homepage adopts the user-supplied warm paper/dark beta-hub reference: editorial masthead, current notebook, three live redesign links, interactive career chapters, grounded domain demos, and a filterable writing ledger. Homepage-only styles and shell supersede the telemetry-only primitive rule on `/`; other routes retain their existing layouts. The supplied retail software report is published intact as an interactive Field Notes article with collection metadata and a canonical URL.
+
 ### October 14, 2026: isolated Editorial Systems Lab preview
 
 The requested three-agent redesign is published exclusively under `/codex/`, with its own layout, scoped design tokens, shell, catalog, and interactive islands. Its five routes are `/codex/`, `/codex/garage/`, `/codex/field-notes/`, `/codex/story/`, and `/codex/connect/`. Existing production routes, global tokens, and telemetry components remain unchanged. The preview intentionally replaces telemetry metaphors with a paper/dark editorial design. This scoped implementation supersedes the telemetry-only component directive within the preview. Existing essays and applications remain linked at their canonical URLs. Illustrative models and unavailable source data are clearly identified.

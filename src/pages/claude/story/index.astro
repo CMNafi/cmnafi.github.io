@@ -445,7 +445,7 @@ const byId = Object.fromEntries(chapters.map((c) => [c.id, c])) as Record<Journe
 </script>
 
 <style>
-  :global(html) {
+  :global(html[data-theme]) {
     scroll-padding-top: calc(var(--header-h) + 72px);
   }
 
@@ -554,8 +554,7 @@ const byId = Object.fromEntries(chapters.map((c) => [c.id, c])) as Record<Journe
 
   /* Chapters */
   .st-chapter {
-    padding-top: clamp(56px, 8vw, 104px);
-    scroll-margin-top: calc(var(--header-h) + 56px);
+    margin-top: clamp(56px, 8vw, 104px);
   }
 
   .st-chapter + .st-chapter .st-chapter__head {

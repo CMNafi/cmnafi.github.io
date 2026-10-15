@@ -39,13 +39,13 @@ const { project } = Astro.props;
 
     <!-- Core Problem Statement -->
     <div class="problem-block">
-      <span class="spec-label">System Problem Solved</span>
+      <span class="spec-label">Why I built this</span>
       <p class="problem-text">{project.problem}</p>
     </div>
 
     <!-- Architecture Pipeline Flow Pill -->
     <div class="architecture-block">
-      <span class="spec-label">System Architecture Pipeline</span>
+      <span class="spec-label">How it works</span>
       <div class="pipeline-capsule">
         <code>{project.architectureSummary}</code>
       </div>
@@ -53,7 +53,7 @@ const { project } = Astro.props;
 
     <!-- Tech Stack Tags -->
     <div class="stack-block">
-      <span class="spec-label">Implementation Stack</span>
+      <span class="spec-label">Stack & Tools</span>
       <ul class="stack-tags">
         {project.stack.map((item) => (
           <li>{item}</li>
@@ -66,7 +66,7 @@ const { project } = Astro.props;
     <span class="updated-time">Updated: {project.updatedAt}</span>
     {project.href && (
       <a href={project.href} class="launch-btn" target={project.href.startsWith('http') ? '_blank' : '_self'}>
-        Launch Application ↗
+        Open Tool ↗
       </a>
     )}
   </footer>

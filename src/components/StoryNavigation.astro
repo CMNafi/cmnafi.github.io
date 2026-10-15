@@ -1,0 +1,12 @@
+---
+import '../styles/tokens.css';
+import {ClientRouter} from 'astro:transitions';
+const routes=['/field-notes/','/garage/','/story/','/connect/','/claude/','/gem/','/codex/'];
+const rules={prerender:[{source:'document',where:{or:routes.map(href=>({href_matches:href}))},eagerness:'moderate'}],prefetch:[{source:'document',where:{and:[{href_matches:'/*'},{not:{selector_matches:'a[download], a[target="_blank"], a[data-no-prefetch]'}}]},eagerness:'conservative'}]};
+---
+<ClientRouter />
+<script is:inline type="speculationrules" set:html={JSON.stringify(rules)} />
+<script>
+function restoreStoryTheme(){try{document.documentElement.dataset.theme=localStorage.getItem('cmnafi.home.theme')==='dark'?'dark':'paper';}catch{}}
+document.addEventListener('astro:after-swap',restoreStoryTheme);
+</script>

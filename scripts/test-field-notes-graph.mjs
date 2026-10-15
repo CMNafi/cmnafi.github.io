@@ -1,0 +1,19 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import YAML from 'yaml';
+import ts from 'typescript';
+const source=fs.readFileSync('src/data/field-notes-graph.ts','utf8');
+const {buildFieldNotesGraph,connectionsFor,filterNodes}=await import('data:text/javascript;base64,'+Buffer.from(ts.transpile(source,{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022})).toString('base64'));
+const inputs=fs.readdirSync('src/content/field-notes').filter(f=>f.endsWith('.mdx')||f.endsWith('.md')).map(f=>({slug:f.replace(/\.mdx?$/,''),data:YAML.parse(fs.readFileSync('src/content/field-notes/'+f,'utf8').split('---')[1])}));
+const graph=buildFieldNotesGraph(inputs),expected=inputs.filter(p=>!p.data.draft&&p.data.category!=='Brewing');
+assert.equal(graph.nodes.filter(n=>n.nodeType!=='tool').length,expected.length);assert.equal(new Set(graph.nodes.map(n=>n.id)).size,graph.nodes.length);assert.equal(graph.nodes.filter(n=>n.nodeType==='tool').length,7);
+assert.equal(graph.nodes.filter(n=>n.nodeType==='book').length,23);assert.equal(graph.nodes.filter(n=>n.nodeType==='cricket').length,5);
+const ids=new Set(graph.nodes.map(n=>n.id));for(const edge of graph.edges){assert(ids.has(edge.sourceId)&&ids.has(edge.targetId));assert.notEqual(edge.sourceId,edge.targetId);assert(edge.annotation.length>20);}
+for(const track of graph.tracks)for(const id of track.ids)assert(ids.has(id),'Missing curated track node '+id);
+for(const id of ['uber-the-32-billion-hole','the-open-syllabus','spacex-s1-teardown','does-caia-cover-mutual-funds'])assert(ids.has(id));
+const figma=connectionsFor(graph,'figma-the-billion-dollar-bet');for(const id of ['blackbird-ventures','canva-vs-figma','the-covered-call-playbook','capital-lens-earnings-swings'])assert(figma.some(c=>c.node.id===id));assert.equal(new Set(figma.map(c=>c.node.id)).size,figma.length);
+const duplicates=buildFieldNotesGraph([...inputs,inputs[0]]);assert.equal(duplicates.nodes.length,graph.nodes.length);
+assert(filterNodes(graph.nodes,{stream:'cricket'}).every(n=>n.nodeType==='cricket'));assert(filterNodes(graph.nodes,{entity:'$FIG'}).every(n=>n.sharedEntities.includes('$FIG')));assert(filterNodes(graph.nodes,{spine:3}).every(n=>n.spineIds.includes(3)));assert(filterNodes(graph.nodes,{throughYear:2024}).every(n=>n.publishedAt<'2025'));assert.equal(filterNodes(graph.nodes,{query:'gibberishnotfound123'}).length,0);
+assert.equal(graph.nodes.find(n=>n.id==='tool-manager-search').status,'R&D');assert.equal(graph.nodes.find(n=>n.id==='tool-adv-screener').status,'R&D');
+if(process.argv.includes('--built')){const archive=fs.readFileSync('dist/field-notes/index.html','utf8');const rows=[...archive.matchAll(/data-atlas-row="([^"]+)"/g)].map(m=>m[1]);assert.equal(rows.length,graph.nodes.length);assert.equal(new Set(rows).size,rows.length);for(const node of graph.nodes){assert(fs.existsSync('dist'+node.href+'index.html'),'Missing route '+node.href);if(node.nodeType!=='tool'){const html=fs.readFileSync('dist'+node.href+'index.html','utf8');assert.equal((html.match(/data-essay-lineage=/g)||[]).length,1,'Expected one lineage ribbon for '+node.id);assert(/<!doctype html>/i.test(html));}}for(const slug of ['capital-lens-16','capital-lens-17','adv-universe','retail-software-landscape']){const original=fs.readFileSync('src/data/reports/'+slug+'.html','utf8'),built=fs.readFileSync('dist/field-notes/'+slug+'/index.html','utf8');const scriptBodies=[...original.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m=>m[1].trim()).filter(Boolean);for(const script of scriptBodies)assert(built.includes(script),'Report script changed: '+slug);}}
+console.log(`Archive graph passed: ${expected.length} unique published notes, 7 tools, six complete tracks, Figma lineage, synchronized filters, project statuses${process.argv.includes('--built')?', all built routes and article ribbons, preserved report scripts':''}.`);

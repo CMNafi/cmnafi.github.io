@@ -1,0 +1,388 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>Retail Software Research Report, End-to-End Landscape</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbfaf7; --card:#ffffff; --card2:#f3f1eb; --ink:#171a1f; --muted:#5b6572; --faint:#8a94a3;
+  --line:#e3ded2; --line2:#d6d0c2;
+  --teal:#0f766e; --teal-bg:#e6f4f1; --teal-dark:#115e59;
+  --amber:#92400e; --amber-bg:#fef3c7;
+  --red:#991b1b; --red-bg:#fef2f2;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#121417; --card:#1a1d21; --card2:#1f2226; --ink:#ece9e2; --muted:#a8b0bc; --faint:#7d8796; --line:#2b2f36; --line2:#363c45; --teal:#2dd4bf; --teal-bg:#132a27; --teal-dark:#5eead4; --amber:#fbbf24; --amber-bg:#2a2110; --red:#fca5a5; --red-bg:#2a1515; }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.6;font-size:16px}
+a{color:var(--teal);text-decoration-thickness:1px;text-underline-offset:3px}
+h1,h2,h3{font-family:"IBM Plex Serif",Georgia,serif;line-height:1.15;letter-spacing:-.01em}
+h1{font-size:clamp(2.1rem,5vw,3.6rem);margin:0}
+h2{font-size:1.85rem;margin:0 0 .6rem}
+h3{font-size:1.2rem;margin:0 0 .4rem}
+p{margin:.5rem 0 1rem}
+.mono{font-family:"IBM Plex Mono",monospace}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px 64px}
+.topmeta{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:18px 0 14px;border-bottom:1px solid var(--line);font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.topmeta span:last-child{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:400}
+.hero{padding:36px 0 28px}
+.hero .kicker{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:14px}
+.hero .lede{font-size:1.18rem;line-height:1.55;color:var(--muted);max-width:760px;margin-top:16px}
+.hero .lede strong{color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px 0 8px}
+@media(max-width:800px){.stats{grid-template-columns:1fr 1fr}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.stat b{font-family:"IBM Plex Serif",serif;font-size:1.9rem;display:block;line-height:1}
+.stat span{font-size:.84rem;color:var(--muted);display:block;margin-top:6px;line-height:1.4}
+.stat em{font-style:normal;font-size:.72rem;color:var(--faint);display:block;margin-top:6px}
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb, var(--bg) 92%, transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:20px -20px 0;padding:0 20px;display:flex;flex-wrap:wrap}
+@media(max-width:640px){.nav{position:static}}
+.nav a{display:inline-block;padding:12px 14px;color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:600;border-bottom:2px solid transparent}
+.nav a:hover,.nav a.active{color:var(--ink);border-bottom-color:var(--teal)}
+section{padding:44px 0 8px;border-top:1px solid var(--line);margin-top:36px}
+section:first-of-type{border-top:none;margin-top:0}
+.sec-head{max-width:760px;margin-bottom:22px}
+.sec-head p{color:var(--muted)}
+.callout{background:var(--teal-bg);border:1px solid color-mix(in srgb, var(--teal) 25%, var(--line));border-radius:var(--radius);padding:20px 22px;margin:20px 0}
+.callout p:last-child{margin-bottom:0}
+.warn{background:var(--amber-bg);border:1px solid #fde68a;border-radius:var(--radius);padding:16px 18px;font-size:.92rem}
+@media(prefers-color-scheme:dark){.warn{border-color:#574a1f}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.card p{font-size:.94rem;color:var(--muted)}
+.card p strong{color:var(--ink)}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+.tag.teal{background:var(--teal-bg);color:var(--teal-dark);border-color:transparent}
+.tag.amber{background:var(--amber-bg);color:var(--amber);border-color:transparent}
+table{width:100%;border-collapse:collapse;font-size:.92rem;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+th{text-align:left;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--card2);padding:11px 13px;border-bottom:1px solid var(--line)}
+td{padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td strong{font-weight:600}
+.small{font-size:.84rem;color:var(--muted)}
+.src{font-size:.75rem;color:var(--faint)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.tabbtn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--muted);padding:9px 14px;border-radius:999px;font-weight:600;font-size:.9rem;cursor:pointer}
+.tabbtn[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tabpanel{display:none}
+.tabpanel.active{display:block}
+.searchrow{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.searchrow input{flex:1;min-width:220px;padding:11px 13px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+.searchrow select{padding:11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.bar-row{display:grid;grid-template-columns:170px 1fr 90px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+@media(max-width:640px){.bar-row{grid-template-columns:1fr;gap:4px}}
+.bar{height:10px;background:var(--card2);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--teal)}
+.rank{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.ranknum{width:36px;height:36px;flex:0 0 36px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:700;font-family:"IBM Plex Mono",monospace;font-size:.9rem}
+.stars{color:var(--teal);letter-spacing:2px;font-size:.9rem;white-space:nowrap}
+details{border:1px solid var(--line);background:var(--card);border-radius:var(--radius);padding:0;margin:10px 0;overflow:hidden}
+details summary{cursor:pointer;padding:16px 18px;font-weight:600;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details .inner{padding:0 18px 16px;color:var(--muted);font-size:.94rem}
+.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0}
+@media(max-width:860px){.timeline{grid-template-columns:1fr 1fr}}
+.tstep{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--teal);padding:14px;border-radius:6px}
+.tstep b{font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}
+.tstep p{font-size:.86rem;color:var(--muted);margin:6px 0 0}
+footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+.checklist{list-style:none;padding:0;margin:0}
+.checklist li{padding:9px 0 9px 26px;position:relative;border-bottom:1px solid var(--line)}
+.checklist li:before{content:",";position:absolute;left:2px;color:var(--teal);font-weight:700}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+.kv span:first-child{color:var(--muted)}
+@media(max-width:640px){ table,thead,tbody,tr,td,th{display:block;width:100%} thead{display:none} tr{padding:10px 0;border-bottom:1px solid var(--line)} td{border:none;padding:6px 13px} }
+</style>
+<link rel="canonical" href="https://www.cmnafi.com/field-notes/retail-software-landscape/" /><meta name="description" content="An end-to-end map of independent retail software: POS, payments, vendor pricing, market structure and AI workflows." /><meta name="author" content="C M Nafi" /><meta property="og:type" content="article" /><meta property="og:title" content="The Retail Software Landscape" /><meta property="og:url" content="https://www.cmnafi.com/field-notes/retail-software-landscape/" /><style>.report-table-scroll{overflow-x:auto;max-width:100%;margin:18px 0}.report-table-scroll table{min-width:620px}.report-site-nav{display:flex;flex-wrap:wrap;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);font-size:14px}.report-site-nav a{color:var(--muted)}:focus-visible{outline:2px solid var(--teal);outline-offset:4px}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}</style><meta property="article:published_time" content="2026-10-14T12:00:00-04:00" /><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Retail software: who runs the till, the pumps, and the back office","datePublished":"2026-10-14","author":{"@type":"Person","name":"C M Nafi","url":"https://www.cmnafi.com/"},"mainEntityOfPage":"https://www.cmnafi.com/field-notes/retail-software-landscape/"}</script><link rel="stylesheet" href="/_astro/_slug_.BmWQVD1B.css"></head><body>
+<div class="wrap"><nav class="report-site-nav" aria-label="Site navigation"><a href="/">C M Nafi</a><a href="/field-notes/">All Field Notes</a><a href="/garage/">Projects</a><a href="/play/">Play</a><time datetime="2026-10-14">Published October 14, 2026</time></nav>
+  <div class="topmeta"><span>Research Report</span><span>Retail &amp; Hospitality Software</span><span>United States · Independent / SMB</span><span>Researched 13 Oct 2026</span></div>
+
+  <header class="hero">
+    <div class="kicker">End-to-end landscape • Pricing • Revenue • AI white space</div>
+    <h1>Who runs the till, the pumps, and the back office, and where it breaks</h1>
+    <p class="lede">Independent shops don’t run on one system. They run on a patchwork: a POS at the counter, a forecourt controller at the pumps, a price book in Excel, invoices on paper, and a distributor on the phone. <strong>This report maps that whole stack</strong>, smoke &amp; vape, gas stations &amp; c-stores, restaurants, liquor, grocery/deli, and boutiques, what each tool costs, how much its maker earns, what is still manual, and where AI can credibly take over.</p>
+    <div class="stats">
+      <div class="stat"><b>$2–6B / yr</b><span>US SMB POS + inventory SaaS TAM, bottom-up estimate</span><em>1.3–1.6M locations × $100–300/mo. See § TAM.</em></div>
+      <div class="stat"><b>$19.2B</b><span>Global POS software market, 2026</span><em>Market Research Future, Aug 2026; → $58.5B by 2035, ~13.2% CAGR</em></div>
+      <div class="stat"><b>164,000</b><span>Toast locations, ~20% of US restaurants</span><em>$2.05B ARR · $6.15B FY2025 revenue · $195.1B GPV</em></div>
+      <div class="stat"><b>200K+</b><span>PDI locations, the c-store / fuel back-office incumbent</span><em>Private, Insight Partners; $4.5B+ sale explored (Bloomberg, Mar 2025)</em></div>
+    </div>
+    <p class="small">All pricing and revenue figures are as published / reported in October 2026 unless flagged as older, estimated, or unverified. Hedges from the source research are carried in-line, look for “flag” and “unverified” notes.</p>
+  </header>
+
+  <nav class="nav" aria-label="Contents">
+    <a href="#summary">Summary</a><a href="#verticals">Verticals</a><a href="#categories">Categories &amp; Pricing</a><a href="#vendors">Vendors &amp; Money</a><a href="#tam">TAM</a><a href="#ai">Manual → AI</a><a href="#disruption">White Space</a><a href="#gaps">Open Questions</a><a href="#sources">Sources</a>
+  </nav>
+
+  <section id="summary">
+    <div class="sec-head"><h2>Executive summary</h2><p>The headline is not that retail lacks software. It’s that the software stops at the seams.</p></div>
+    <div class="grid2">
+      <div class="card"><h3>The winners are vertical, not horizontal</h3><p><strong>Toast</strong> owns independent restaurants. <strong>Block / Square</strong> is the broadest SMB platform (4M+ sellers, $250B GPV). <strong>Fiserv / Clover</strong> is largest by volume ($310B+ annualized GPV) but sells opaquely through ISOs and banks. <strong>PDI</strong> owns the independent c-store / fuel back office. Each wins inside one workflow, not across all of retail.</p></div>
+      <div class="card"><h3>Payments is 10× the software</h3><p>Toast monetises at ~98 bps of GPV. Its $2.05B ARR across 164K locations is ~$12.5K per location per year, but most of that is processing net revenue, not subscription. Any entrant pricing only SaaS is fighting for the smaller pool while incumbents defend the larger one with contracts and bundled hardware.</p></div>
+      <div class="card"><h3>The manual wedges are identical everywhere</h3><p>Distributor ordering by phone/text, paper invoice reconciliation, physical inventory counts, shift cash audits, Excel price books, and SOP binders appear in <strong>every</strong> vertical. They persist because no vendor owns “receiving → price book → reorder” end-to-end for independents.</p></div>
+      <div class="card"><h3>AI is arriving at the edges, not the centre</h3><p>Invoice digitisation, auto-POs, demand forecasting, AI marketing and ID scanning are already productised, mostly by specialists: <strong>Cigars POS, Bottle POS, FTx, Toast IQ, PDI’s PDIQ layer (2026)</strong>. There is still no single cross-vertical AI back-office platform. That integration gap is the white space.</p></div>
+    </div>
+    <div class="callout"><strong>The one-sentence thesis:</strong><p>Build the connective tissue independents still do by hand, invoices in, price book updated, reorder out, cash and shrink reconciled, processor-agnostic, without a 1–3 year lock-in, and you undercut Toast, Aloha and QuickBooks at once.</p></div>
+  </section>
+
+  <section id="verticals">
+    <div class="sec-head"><h2>1 &nbsp; Vertical deep dives, a day in the life</h2><p>Pick a vertical. Each view follows the same day: open → receive → stock → sell → shift change → close → reorder → books / payroll / marketing.</p></div>
+    <div class="tabs" role="tablist" aria-label="Verticals">
+      <button class="tabbtn" role="tab" aria-selected="true" data-tab="smoke">💨 Smoke / Vape</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="gas">⛽ Gas &amp; C-Store</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="restaurant">🍽️ Restaurants</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="liquor">🍾 Liquor</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="grocery">🥪 Grocery / Deli</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-tab="boutique">🛍️ Boutique / Specialty</button>
+    </div>
+
+    <div class="tabpanel active" id="tab-smoke">
+      <p><strong>Leading POS:</strong> SuperSonic POS (rebranded from Petro Outlet, Sept 2026), Cigars POS, FTx POS, KORONA POS, POS Nation, Quickvee, Lightspeed. <span class="tag amber">Mercury POS, unverified</span></p>
+      <p class="small">On “Mercury”: research could not verify a standalone Mercury POS company. Searches returned only Mercury Payment Systems (acquired by Worldpay / Vantiv, 2014) and Mercury Retail Services (a tobacco distributor). Treat the name as a possible reseller-branded product until confirmed.</p>
+      <div class="report-table-scroll" role="region" aria-label="Scrollable research table" tabindex="0"><table><thead><tr><th>Step</th><th>Software &amp; problem solved</th><th>Vendors + pricing</th></tr></thead><tbody>
+      <tr><td><strong>Opening</strong></td><td>POS shift / clerk functions, drawer accountability</td><td>SuperSonic (quote); Cigars POS (quote); KORONA $59/mo</td></tr>
+      <tr><td><strong>Receiving</strong></td><td>Handheld scanner + POS receiving, catch DSD shorts</td><td>Cigars POS <strong>AI-powered auto-PO</strong>: scan / digitise paper &amp; PDF invoices instantly, verified live on vendor site, Oct 2026</td></tr>
+      <tr><td><strong>Stocking / price book</strong></td><td>POS price book, label printing, margin accuracy</td><td>KORONA custom barcode labels; Lightspeed from $109/mo</td></tr>
+      <tr><td><strong>Ringing sales</strong></td><td>POS + processing, fast checkout, tax compliance</td><td>SuperSonic category tax logic (cigarettes / cigars / vape juice / devices / smokeless) + multi-unit pricing singles → packs → cartons; Quickvee $0/mo with own processing</td></tr>
+      <tr><td><strong>Age verification</strong></td><td>ID scanners + POS prompts, FDA rule: ID check if under 30, 21+ to buy</td><td>MinorDecliner tablet ~£1,283; IDScan.net VeriScan $35/mo; FTx Identity $25/mo; SuperSonic built-in scan</td></tr>
+      <tr><td><strong>Tobacco scan-data rebates</strong></td><td>Scan-data submission, manufacturer buydown revenue</td><td>SuperSonic auto-capture; SKUPOS $20/mo (Digital Trade Program + Altria API); Smokin’ Rebates</td></tr>
+      <tr><td><strong>Shift change / closing</strong></td><td>Blind drawer counts, clerk reports, EOD margin reports</td><td>POS-native reports; SuperSonic loss-prevention alerts + transaction-linked video; Cloud back office; Excel exports</td></tr>
+      <tr><td><strong>Reordering / books / payroll / marketing</strong></td><td>Low-stock alerts; QuickBooks sync; scheduling; loyalty &amp; signage</td><td>SuperSonic low-stock alerts; QuickBooks Plus $140/mo; Homebase free ≤10 staff, Deputy from $5/user/mo; FTx digital signage + DoorDash / Uber Direct</td></tr>
+      </tbody></table></div>
+      <p style="margin-top:12px"><strong>Pricing anchors:</strong> FTx POS $0/mo (+ processing), POS Core $99, POS Pro $179, verified Sept 2026. POS Nation tobacco starter $69/mo. &nbsp; <strong>Still manual:</strong> distributor ordering by phone/text, hand invoice entry (Cigars POS AI is the exception), excise-tax maintenance, shelf counts, ID-override judgment, cash handling.</p>
+    </div>
+
+    <div class="tabpanel" id="tab-gas">
+      <p><strong>Leading vendors:</strong> Gilbarco Veeder-Root (Passport POS, forecourt), Verifone (Ruby2 / Commander), PDI Technologies (Envoy back office, fuel pricing, loyalty), Petrosoft, ADD Systems, SuperSonic, NRS ($19.95/mo with NRS Pay), POS Nation ($39/mo c-store starter), KORONA.</p>
+      <div class="report-table-scroll" role="region" aria-label="Scrollable research table" tabindex="0"><table><thead><tr><th>Step</th><th>Software</th><th>Vendors / pricing</th></tr></thead><tbody>
+      <tr><td><strong>Forecourt open</strong></td><td>Forecourt controller, price-sign software</td><td>Gilbarco Passport (quote; cashier AIO hardware $3,625 via NW Pump, Oct 2026); Verifone Commander (quote)</td></tr>
+      <tr><td><strong>Fuel price changes</strong></td><td>Fuel pricing software</td><td>PDI fuel pricing (quote); manual sign changes still common</td></tr>
+      <tr><td><strong>Receiving</strong> <span class="small">wholesaler 2–3×/wk + DSD daily</span></td><td>Handheld receiving, e-invoice import</td><td>PDI Envoy; e-invoice import saved ~$23K/yr for one vendor example (E-Z Stop, Conexxus webinar)</td></tr>
+      <tr><td><strong>Price book</strong></td><td>Price-book software</td><td>PDI price book; still Excel / manual in many independents</td></tr>
+      <tr><td><strong>Ringing sales</strong></td><td>POS + forecourt integration</td><td>Passport POS (fault-tolerant forecourt, EMV/NFC); NRS; KORONA</td></tr>
+      <tr><td><strong>Lottery &amp; scan data</strong></td><td>State lottery terminals; scan-data apps</td><td>SKUPOS $20/mo</td></tr>
+      <tr><td><strong>Shift / cash audit, closing</strong></td><td>Drawer counts, safe drops, EOD reports, deposit prep</td><td>Manual spot audits (best practice); POS reports; manual deposit runs; PDI back-office close</td></tr>
+      <tr><td><strong>Fuel reconciliation</strong></td><td>Tank gauge vs sales</td><td>Veeder-Root ATG (automatic tank gauging); manual dip-stick still used by small operators</td></tr>
+      <tr><td><strong>Reorder / books / loyalty</strong></td><td>Suggested orders, HQ force-outs; accounting; loyalty</td><td>PDI suggested ordering; QuickBooks Plus $140/mo; PDI Fuel Rewards + GasBuddy (30M+ users combined, quote pricing)</td></tr>
+      </tbody></table></div>
+      <p style="margin-top:12px"><strong>Still manual:</strong> physical counts (daily for high-theft items), delivery-short audits, fuel dips, price-sign changes, paper DSD invoices, cash deposit runs, SOP training, most independents have no written ops manual (NRS, Oct 2026).</p>
+    </div>
+
+    <div class="tabpanel" id="tab-restaurant">
+      <p><strong>Leading vendors:</strong> Toast, Square for Restaurants, Clover, SpotOn, Lightspeed (retreating from US hospitality, sold Upserve to Skyview Equity, Apr 2026), NCR Aloha, Otter, Chowly, Deliverect, Owner.com.</p>
+      <div class="report-table-scroll" role="region" aria-label="Scrollable research table" tabindex="0"><table><thead><tr><th>Step</th><th>Software</th><th>Vendors / pricing</th></tr></thead><tbody>
+      <tr><td><strong>Opening</strong></td><td>POS station mgmt, KDS, cash banks</td><td>Toast Starter $0/mo (processing ~2.99–3.09% + 15¢) / $69/mo/location (+ ~2.49% + 15¢); Square Free $0 / Plus $49 / Premium $149 per location</td></tr>
+      <tr><td><strong>Online ordering</strong></td><td>Direct ordering stack</td><td>Toast Online Ordering $50/mo add-on; Square Online free–$149; Owner.com from $299/mo; Incentivio $249/mo base</td></tr>
+      <tr><td><strong>Delivery marketplaces</strong></td><td>Aggregators</td><td>Otter Order Manager from $30/mo (site claim); Chowly; Deliverect from $69/mo</td></tr>
+      <tr><td><strong>Scheduling</strong></td><td>Scheduling apps</td><td>7shifts free (≤15 staff) / $39.99/location/mo; Homebase free (≤10) / $30–120/location/mo; Deputy $5–9/user/mo</td></tr>
+      <tr><td><strong>Service</strong></td><td>POS, handhelds, KDS</td><td>Toast handheld $499, KDS $799; Square Terminal $299, Handheld $399, Register $899; KDS app $30 / $20 per device/mo</td></tr>
+      <tr><td><strong>Inventory / food cost</strong></td><td>Recipe-level inventory</td><td>MarketMan $99/mo/location (Square integration, Apr 2026); MarginEdge; Restaurant365 $249/mo/location; Toast xtraCHEF add-on</td></tr>
+      <tr><td><strong>Invoicing / AP</strong></td><td>Invoice capture</td><td>MarginEdge; Restaurant365; manual entry still dominant</td></tr>
+      <tr><td><strong>Payroll</strong></td><td>Payroll + tip pooling</td><td>Toast Payroll $50 + $5/employee per 2026 review, <em>flag: one 2026 source cites $9/employee for a bundle</em>; Homebase Payroll $39 + $6/emp; Gusto $49 + $6/emp</td></tr>
+      <tr><td><strong>Marketing</strong></td><td>Loyalty, SMS/email</td><td>Toast Marketing Essentials ~$185/mo (loyalty + gift cards + SMS/email); Thanx / Punchh quote; Incentivio $0.03 / SMS segment</td></tr>
+      </tbody></table></div>
+      <div class="warn" style="margin-top:14px"><strong>Structural note:</strong> Toast contracts run 1–3 years with auto-renewal and reported early-termination fees. All-in real-world cost: $300–700/mo (café) to $1,000–2,000+/mo (full-service). Square restructured Oct 2025 (18 à-la-carte subs → 3 plans/location), no contracts. NCR Aloha Cloud Pro ~$175/terminal/mo and <strong>mandates NCR Voyix processing</strong> (~2.6% + 10¢ card-present), the largest cost can’t be shopped.</div>
+    </div>
+
+    <div class="tabpanel" id="tab-liquor">
+      <p><strong>Vendors:</strong> Bottle POS ($59/mo starter; hardware $999 / ~$499 with processing rebate), mPower Beverage ($1,000 upfront + $120/mo/register), KORONA ($59/mo, processor-agnostic), FTx POS ($0/mo with processing), NRS ($19.95/mo + NRS Pay), POS Nation ($59/mo), Cheers ($79/mo/register).</p>
+      <div class="grid2">
+        <div class="card"><h3>What’s different here</h3><p>Case-break tracking (bottle / case / keg units), mix-and-match promos, distributor EDI / Fintech invoice integration, automated PO / receiving / reconciliation, age verification, and state reporting (TX wholesale, PA beer distributor).</p></div>
+        <div class="card"><h3>Live migration wave</h3><p>Heartland LiquorPOS is winding down, a migration wave is in progress (KORONA, 2026). Bottle POS auto-invoicing and FTx’s EDI add-on are the clearest examples of the invoice loop being productised in a single vertical.</p></div>
+      </div>
+      <p><strong>Still manual:</strong> distributor rep ordering, invoice matching by hand, physical inventory, shelf-price maintenance.</p>
+    </div>
+
+    <div class="tabpanel" id="tab-grocery">
+      <p><strong>Vendors:</strong> IT Retail ($49/mo), LOC SMS, KORONA, SuperSonic, NRS, Truno / Hobart scales, PDI (larger operators).</p>
+      <div class="grid2">
+        <div class="card"><h3>Deli-specific workflow</h3><p>Scale integration with price-embedded barcodes, fresh-food shrink tracking, label printing, and EBT / SNAP acceptance. The scale PLU list is the price book, and it’s maintained by hand in most small stores.</p></div>
+        <div class="card"><h3>Still manual</h3><p>Fresh shrink logs, scale PLU maintenance, vendor credits, and prep lists on paper. No vendor in the research owns fresh-shrink + scale + POS as one loop for independents.</p></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="tab-boutique">
+      <p><strong>Vendors:</strong> Shopify POS (Basic $39/mo + POS Pro $89/mo/location; in-person 2.6% + 10¢), Lightspeed Retail (from $69/mo/register, note other Lightspeed tiers start at $109/mo for smoke-shop use in §1.1), Square Retail (Plus $89/mo/location, 2.5% + 10¢), Clover.</p>
+      <p><strong>Still manual:</strong> purchase orders via email to reps, manual inventory counts, spreadsheet buy plans, Instagram / manual marketing. The gap is buying, not selling, the POS is solved, the buy plan isn’t.</p>
+    </div>
+  </section>
+
+  <section id="categories">
+    <div class="sec-head"><h2>2 &nbsp; Cross-cutting categories, who charges what</h2><p>Every independent buys most of these 16 categories, whether they realise it or not. Search to filter.</p></div>
+    <div class="searchrow"><input id="catSearch" aria-label="Search software categories" type="search" placeholder="Search category or vendor, e.g. Toast, Helcim, Otter, KORONA…"><select id="catFilter" aria-label="Filter software categories"><option value="">All categories</option><option>POS &amp; Hardware</option><option>Money</option><option>Operations</option><option>Growth &amp; Compliance</option></select></div>
+    <div id="catTableWrap">
+    <div class="report-table-scroll" role="region" aria-label="Scrollable research table" tabindex="0"><table id="catTable"><thead><tr><th>Category</th><th>Leading vendors</th><th>Published pricing, verified Oct 2026 unless flagged</th></tr></thead><tbody>
+    <tr data-group="POS & Hardware"><td><strong>POS terminals</strong></td><td>Toast, Square, Clover, Lightspeed, NCR Aloha, KORONA, Shopify</td><td>Toast Starter kit $799, handheld $499, KDS $799, kiosk $1,499; Square Reader $59, Stand $149, Terminal $299, Handheld $399, Register $899; Shopify Tap &amp; Chip $49, Terminal $349; Clover Mini ~$749 <span class="src">(older figure, flag)</span></td></tr>
+    <tr data-group="Money"><td><strong>Payment processing</strong></td><td>Helcim, Square, Stripe, Chase, Fiserv/Clover, Toast, PaymentCloud (high-risk)</td><td>In-person: Helcim interchange + 0.40% + 8¢; Chase 2.6% + 10¢; Square 2.6% + 15¢ (free plan); Clover 2.3% + 10¢; Stripe 2.7% + 5¢. Online: Stripe 2.9% + 30¢; Square 3.3% + 30¢. High-risk (vape): 2.95–5.00% (PaymentCloud)</td></tr>
+    <tr data-group="Operations"><td><strong>Inventory</strong></td><td>Cin7, inFlow, MarketMan, Zoho, POS-native</td><td>Cin7 Core $349 / $599 / $999/mo; inFlow from $99/mo annual; MarketMan $99/mo/location; Zoho free / $29+</td></tr>
+    <tr data-group="Operations"><td><strong>Purchasing / reordering</strong></td><td>Fintech (liquor EDI), SKUPOS, PDI, EDI add-ons</td><td>SKUPOS $20/mo; FTx EDI add-on (quote); PDI (quote)</td></tr>
+    <tr data-group="Operations"><td><strong>Scheduling / time / payroll / HR</strong></td><td>7shifts, Homebase, Deputy, When I Work, Sling, Gusto, Push</td><td>7shifts $39.99/location/mo; Homebase $30–120/location/mo; Deputy $5–9/user/mo; Gusto $49 + $6/emp</td></tr>
+    <tr data-group="Money"><td><strong>Accounting</strong></td><td>QuickBooks, Xero, Restaurant365</td><td>QBO: Solopreneur $20, Simple Start $38, Essentials $85, Plus $140, Advanced $340 (Aug 2026 increase, 6th straight year); Restaurant365 $249/mo/location</td></tr>
+    <tr data-group="Growth & Compliance"><td><strong>Loyalty / CRM / marketing</strong></td><td>Toast, Square, Thanx, Punchh, Owner.com, Incentivio, Klaviyo, Attentive</td><td>Toast Marketing Essentials ~$185/mo/location; Owner.com from $299/mo; Incentivio $249/mo + $0.03/SMS; Klaviyo from $20/mo; Thanx / Punchh quote</td></tr>
+    <tr data-group="Growth & Compliance"><td><strong>Online ordering / e-commerce</strong></td><td>Shopify, Square Online, Toast, Owner.com, Bottle</td><td>Shopify $39–399/mo + POS Pro $89/location/mo; Square Online free–$149/mo; Toast OO $50/mo add-on; Bottle liquor web store free</td></tr>
+    <tr data-group="Operations"><td><strong>Delivery aggregation</strong></td><td>Otter, Chowly, Deliverect, ItsaCheckmate, Orders.co</td><td>Otter from $30/mo (site claim); Deliverect from $69/mo + setup; Chowly (quote)</td></tr>
+    <tr data-group="Growth & Compliance"><td><strong>Loss prevention / video</strong></td><td>DTiQ, Envysion, Solink, Rhombus</td><td>Quote-based (multi-unit); historical Envysion ~$150–160/store/mo; DTiQ claims 1–2% bottom-line savings</td></tr>
+    <tr data-group="Growth & Compliance"><td><strong>Age verification / compliance</strong></td><td>Intellicheck, BlueCheck, IDScan.net, FTx Identity, MinorDecliner</td><td>AgeChecker $25/mo; FTx Identity $25/mo; VeriScan $35/mo; BlueCheck ~$1,000/mo (e-comm custom); MinorDecliner ~£1,283 HW</td></tr>
+    <tr data-group="Money"><td><strong>Gift cards</strong></td><td>Square, Toast, Givex, Blackhawk</td><td>Square ~$1.50/card flat (older); Toast zero load fees; third-party $0.75–1/card + $20–40/mo contracts</td></tr>
+    <tr data-group="POS & Hardware"><td><strong>Self-checkout / kiosks</strong></td><td>Toast, Square, GRUBBRR, Clover, Gilbarco (fuel)</td><td>Toast kiosk HW $1,499; Square Kiosk app $50 / $30 per device/mo; GRUBBRR ~$299/mo <span class="src">(unverified, flag)</span></td></tr>
+    <tr data-group="POS & Hardware"><td><strong>Fuel / forecourt</strong></td><td>Gilbarco Veeder-Root, Dover (Wayne), Invenco</td><td>Gilbarco + Wayne = Western dispenser duopoly; Passport HW $3,625+; software quote-based</td></tr>
+    <tr data-group="Operations"><td><strong>Analytics / reporting</strong></td><td>Toast IQ / benchmarking, Lightspeed Insights, PDI, Envysion Insight</td><td>Mostly add-ons: Toast benchmarking (add-on); Lightspeed Insights (kept after Upserve sale)</td></tr>
+    </tbody></table></div>
+    <p class="small" id="catEmpty" style="display:none;padding:14px">No category matches that search, try “Toast”, “processing”, or clear the filter.</p>
+    </div>
+    <div class="timeline">
+      <div class="tstep"><b>Open</b><p>Drawer, pumps, KDS, price signs, POS + forecourt controllers</p></div>
+      <div class="tstep"><b>Receive</b><p>Handhelds + paper invoices, the least digitised step</p></div>
+      <div class="tstep"><b>Sell</b><p>POS + processing + ID scan + loyalty, the most digitised step</p></div>
+      <div class="tstep"><b>Close</b><p>EOD reports, blind counts, deposits, half software, half cash</p></div>
+      <div class="tstep"><b>Reorder &amp; Books</b><p>Suggested orders, EDI in pockets, QuickBooks everywhere</p></div>
+    </div>
+  </section>
+
+  <section id="vendors">
+    <div class="sec-head"><h2>3 &nbsp; Major vendors, revenue, scale, and leverage</h2><p>Public figures are FY2025 / FY2026 as reported. Private revenue is undisclosed unless an estimate is explicitly labelled.</p></div>
+    <div class="report-table-scroll" role="region" aria-label="Scrollable research table" tabindex="0"><table><thead><tr><th>Vendor</th><th>Revenue / run-rate</th><th>Customers / scale</th><th>Note</th></tr></thead><tbody>
+    <tr><td><strong>Toast (TOST)</strong></td><td>ARR $2,047M; FY2025 rev ~$6.15B; GPV $195.1B; net income $342M; FCF $608M; mkt cap ~$19B ($31.38, 13 Oct 2026)</td><td>~164,000 locations (+30K net adds in 2025)</td><td>~20% of US restaurants (analyst est.)</td></tr>
+    <tr><td><strong>Block / Square (XYZ)</strong></td><td>FY2025 rev $24.19B; gross profit $10.36B; Square GPV $250.5B; mkt cap $45.3B ($76.59)</td><td>4M+ Square sellers; 59M Cash App MAUs</td><td>Broadest SMB platform</td></tr>
+    <tr><td><strong>Fiserv / Clover (FI)</strong></td><td>Company TTM ~$21.2B; <strong>Clover target $4.5B revenue by 2026</strong>; Clover rev +27–30% YoY (2025); mkt cap ~$24.3B (stock −60% 1y)</td><td>6M+ merchant locations; ~10K FIs; Clover GPV $310–313B annualised (2025)</td><td>Largest by volume; ISO pricing opaque</td></tr>
+    <tr><td><strong>Lightspeed (LSPD)</strong></td><td>FY2026 rev $1,227M (+14%); GTV $98.1B (+7%); $10.85 (−9% 1y)</td><td>100+ countries; retail NA + hospitality EU focus</td><td>Sold US hospitality (Upserve, ~3,200 locations) to Skyview Equity, Apr 2026</td></tr>
+    <tr><td><strong>NCR Voyix / Aloha</strong></td><td><em>Not captured, verify</em></td><td>Legacy enterprise + SMB via Aloha Cloud</td><td>Pricing opaque; mandatory processing lock-in</td></tr>
+    <tr><td><strong>Intuit / QuickBooks (INTU)</strong></td><td>FY2025 $18.8B (+16%); Global Business Solutions $11.1B; QBO Online Ecosystem $8.3B (+20%); $309.08 (−53% 1y)</td><td>Dominant SMB accounting share</td><td>6th straight annual QBO price increase</td></tr>
+    <tr><td><strong>Vontier / Gilbarco (VNT)</strong></td><td>FY2025 $3.1B; net income $406M; Invenco ~$650M (+22% organic); mkt cap ~$4.3B</td><td>Gilbarco + Wayne dispenser duopoly (West)</td><td>Passport POS + ATG + EV charging</td></tr>
+    <tr><td><strong>Verifone</strong></td><td>~$1.9B FY2017 (pre-takeover); current undisclosed</td><td>150 countries</td><td>Private: Francisco Partners, $3.4B take-private (2018); +$235M investment Apr 2025; Stripe partnership May 2025</td></tr>
+    <tr><td><strong>PDI Technologies</strong></td><td>Undisclosed</td><td>200K+ locations, 60+ countries; Fuel Rewards + GasBuddy 30M+ users</td><td>Private: Insight Partners since 2019, <em>correction: not Thoma Bravo</em>; $4.5B+ sale explored (Bloomberg, Mar 2025); PDIQ AI layer (2026)</td></tr>
+    <tr><td><strong>Otter / CloudKitchens</strong></td><td>~$100M ARR (third-party est., Sept 2026)</td><td>100K+ restaurants (company claim)</td><td>CloudKitchens: $400M at $5B valuation (2019, stale). Rivals: Deliverect ($1.4–1.9B val.), Owner.com ($2.3B val., $100M+ ARR)</td></tr>
+    <tr><td><strong>Homebase</strong></td><td>Undisclosed; $169M raised; $60M Series D Apr 2024 (L Catterton); 2021 val. $500–600M</td><td>100K+ businesses; 2M+ workers</td><td>Hourly-work “everything app”</td></tr>
+    <tr><td><strong>7shifts / Deputy</strong></td><td>Undisclosed</td><td>7shifts ~1M+ restaurant workers <span class="src">(unverified)</span></td><td>Funding figures recalled in research are <strong>unverified</strong>, ~$80M+ (7shifts, 2022) and $111M / ~$900M val. (Deputy, 2021)</td></tr>
+    <tr><td><strong>SpotOn</strong></td><td>~$250M+ ARR (third-party est.)</td><td>,</td><td>$3.6B valuation (Series F); $900M+ raised; All-In $0/station (2-yr term) / Essentials $55/station/mo</td></tr>
+    <tr><td><strong>Shift4 / Revel</strong></td><td>Shift4 public (FOUR)</td><td>,</td><td>Revel acquired for $250M (2024); Shift4 Dine $29.99/terminal/mo (36-mo processing)</td></tr>
+    <tr><td><strong>SuperSonic POS</strong></td><td>Undisclosed (private)</td><td>C-store, fuel, liquor, grocery, QSR, smoke/vape</td><td>Rebrand from Petro Outlet, Sept 2026; scan-data rebates; loss prevention; 24/7 US support</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="tam">
+    <div class="sec-head"><h2>4 &nbsp; TAM, how big is the prize, honestly?</h2><p>Two lenses, and they answer different questions. Global POS software tells you the category is large. The bottom-up US SMB count tells you what an entrant focused on independents can actually sell into.</p></div>
+    <div class="grid2">
+      <div class="card"><h3>Published, global POS software</h3>
+        <div class="bar-row"><span>2025</span><div class="bar"><i style="width:29%"></i></div><span class="mono">$16.9B</span></div>
+        <div class="bar-row"><span>2026</span><div class="bar"><i style="width:33%"></i></div><span class="mono">$19.2B</span></div>
+        <div class="bar-row"><span>2035 (forecast)</span><div class="bar"><i style="width:100%"></i></div><span class="mono">$58.5B</span></div>
+        <p class="small">Market Research Future, Aug 2026 (~13.2% CAGR). Alternate estimate: $14.8B → $36.1B (MarkWide). POS terminals separately: $19.2B → $21.3B (2026). Directional only, definitions vary by firm.</p>
+      </div>
+      <div class="card"><h3>Bottom-up, US SMB (author estimate, flagged)</h3>
+        <p><strong>~1.3–1.6M locations:</strong> restaurants ~800K+, c-stores 150K, liquor ~50K, smoke/vape ~30–40K, small grocery/deli ~40K, specialty ~300K.</p>
+        <p>At <strong>$100–300/mo/location</strong> for POS + inventory + adjacent modules: <strong style="font-size:1.25rem">$2–6B / yr</strong> in software-subscription TAM.</p>
+        <p class="small">Payments net revenue on the same base is ~10× larger. Sanity check: Toast’s $2.05B ARR ÷ 164K locations ≈ $12.5K/location/yr including processing, consistent with that multiplier.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="ai">
+    <div class="sec-head"><h2>5 &nbsp; Analysis A, Manual steps, ranked by AI automatability</h2><p>★★★★★ = productisable today with OCR / LLM / time-series on data the shop already generates. Lower stars need cameras, physical counts, or human judgment that regulation won’t delegate.</p></div>
+    <div id="aiList"></div>
+    <div class="callout"><strong>The gap in one line:</strong><p>Invoice-to-reorder and distributor EDI are productised only in pockets, liquor via Fintech, smoke via Cigars POS AI-PO. No cross-vertical vendor owns “receiving → price book → reorder” end-to-end for independents.</p></div>
+  </section>
+
+  <section id="disruption">
+    <div class="sec-head"><h2>6 &nbsp; Analysis B, Disruption white space</h2><p>Where incumbents are structurally weak, not just missing a feature.</p></div>
+    <div class="grid2">
+      <div class="card"><span class="tag teal">01 · Business model</span><h3 style="margin-top:10px">Lock-in is the product</h3><p>Toast (1–3 yr terms, early-termination fees), Aloha Cloud (mandatory NCR processing), Clover ISO contracts (opaque, reseller-variable), FTx / Bottle $0 plans (locked to own processing). The #1 owner complaint pattern: pricing complexity, surprise fees (Toast PCI ~$9.95/mo, statement/batch fees), inability to shop processing.</p></div>
+      <div class="card"><span class="tag teal">02 · Biggest opening</span><h3 style="margin-top:10px">“Toast for gas stations” doesn’t exist yet</h3><p>The fuel / c-store stack is technologically ancient: Passport POS hardware still ships on Embedded POSReady 7, distributor-bundled quote-only pricing, no modern API ecosystem. A cloud-native, API-first forecourt + back-office suite is the clearest opening in the whole report.</p></div>
+      <div class="card"><span class="tag teal">03 · Pricing umbrella</span><h3 style="margin-top:10px">QuickBooks, Toast, Aloha</h3><p>QuickBooks: 6 straight annual increases (Plus $140/mo, Advanced $340/mo) justified by AI features, room for a retail-native ledger at $30–60/mo. Toast’s $69/terminal/mo + $50–185/mo add-on stack (≈$1–2K/mo all-in full-service) and Aloha’s $175/terminal/mo are the other umbrellas. KORONA’s processor-agnostic $59/mo proves “bring your own processing” works at SMB price points; Helcim’s interchange-plus model proves transparency sells.</p></div>
+      <div class="card"><span class="tag teal">04 · Breadth gap</span><h3 style="margin-top:10px">Specialists win workflow, lose breadth</h3><p>SuperSonic, Cigars POS, Bottle POS, mPower each nail one vertical’s receiving / rebate / EDI loop. None spans verticals; none offers a credible multi-vertical back office. Delivery-tablet chaos is only partially solved too, Otter (from $30/mo) aggregates orders, but menu-sync, fee reconciliation and marketplace P&amp;L remain manual for most independents.</p></div>
+    </div>
+    <h3 style="margin:26px 0 10px">Top owner complaints (2026 review / comparison sources)</h3>
+    <ul class="checklist"><li>Contract lock-in &amp; termination fees</li><li>Processing-rate opacity, especially Clover ISO variance</li><li>Per-terminal / per-location fee stacking (Toast $69/terminal, Aloha $175/terminal)</li><li>Support quality variance (POS Nation, Toast)</li><li>Hardware-first bundling; mandatory add-ons (KDS / kiosk per-device fees)</li></ul>
+    <h3 style="margin:26px 0 10px">Why they don’t switch anyway</h3>
+    <p>Menu / SKU catalog rebuild (thousands of SKUs), hardware investment ($3–10K/site), staff retraining, gift-card liability migration, loyalty member migration, processor contract overlap, and integration rewiring (accounting, payroll, delivery). Real switching clusters around lease renewals and new-store openings, time your entry to those moments.</p>
+    <h3 style="margin:22px 0 10px">Integration gaps &amp; underserved verticals</h3>
+    <div class="grid2">
+      <div class="card"><h3>Integration gaps</h3><p>POS ↔ accounting still often needs a paid intermediary (e.g. Bottle POS QBO sync); distributor EDI is vertical-siloed; fuel POS doesn’t talk to a modern back office; age-verification logs don’t flow to audit / compliance reporting; loyalty data is fragmented across Toast / Square / Thanx / Punchh.</p></div>
+      <div class="card"><h3>Underserved</h3><p><strong>Smoke/vape</strong> (high-risk processing 3–5%, FDA under-30 ID rule, scan-data rebates, only specialists serve it); <strong>independent c-stores</strong> (price book, DSD receiving, fuel reconciliation); <strong>liquor</strong> (distributor EDI, case-break); <strong>small grocery/deli</strong> (scale integration, SNAP/EBT, fresh shrink).</p></div>
+    </div>
+  </section>
+
+  <section id="gaps">
+    <div class="sec-head"><h2>What could not be verified</h2><p>Named plainly, so no decision rests on a phantom number.</p></div>
+    <div class="warn"><ul style="margin:0;padding-left:18px;line-height:1.9">
+      <li><strong>“Mercury POS”</strong> as a standalone smoke-shop POS company, no verifiable company found (see §1.1).</li>
+      <li><strong>PDI Technologies</strong> annual revenue (private, undisclosed) and <strong>Verifone</strong> current run-rate (private).</li>
+      <li><strong>Otter / CloudKitchens</strong> current valuation, the $5B figure is from 2019 and stale.</li>
+      <li><strong>7shifts and Deputy</strong> funding / valuation, recalled figures unverified.</li>
+      <li><strong>Square Loyalty</strong> standalone pricing; <strong>GRUBBRR</strong> kiosk pricing; <strong>Envysion / Solink</strong> current pricing.</li>
+      <li><strong>NCR Voyix</strong> revenue; <strong>Clover</strong> terminal hardware list prices.</li>
+      <li>Precise SMB POS market-share percentages, only Toast’s ~20% of US restaurants is company-cited.</li>
+      <li>Conflicting Toast Payroll per-employee figure ($5 vs $9 bundle), flagged in the restaurant table.</li>
+    </ul></div>
+  </section>
+
+  <section id="sources">
+    <div class="sec-head"><h2>Sources</h2><p>Publication + date for every major claim. All read 13 Oct 2026 via web index unless noted. Full per-source notes underpin this report; key sources:</p></div>
+    <p class="small" style="line-height:2">
+    Toast FY2025 results, investors.toasttab.com, 12 Feb 2026; marketchameleon.com, 13 Feb 2026 · Toast pricing, blog.corbeaulab.com (2026), joinhomebase.com (Oct 2026), g2.com (30 Apr 2026) · Square stats, expandedramblings.com (Feb 2026, citing Block SEC exhibits); Square pricing, posusa.com (Oct 2026), chowly.com (Jun 2026), bitsreview.com (Sept 2026), koronapos.com · Fiserv/Clover, coinlaw.io (Aug 2026), fintechmagazine.com (2025), pymnts.com, ainvest.com (Q1 2025) · Lightspeed FY2026 MD&A, cdn.prod.nntech.io (FY26 Q4); Upserve sale, aijourn.com, 29 Apr 2026 · NCR Aloha pricing, gingerserve.com (2026) · QuickBooks pricing, werxapp.com (2 Sept 2026), fourlane.com (Aug 2026), basis365.com (Oct 2026); Intuit FY2025, businesswire.com, 21 Aug 2025 · Vontier, stocktitan.net; Wikipedia; themarketsdaily.com, 12 Feb 2026 · Verifone, Wikipedia; globenewswire.com (Apr–May 2025) · PDI, news.bloomberglaw.com (Mar 2025); rss.globenewswire.com (4 Sept 2026); cstoredecisions.com · Otter, tryotter.com (Oct 2026); venturebeat.com (2019) · Scheduling, joinhomebase.com (Aug–Sept 2026), connecteam.com (Jul 2026); Homebase funding, techcrunch.com, 3 Apr 2024 · SuperSonic, supersonicpos.com (Oct 2026); einnews.com (~30 Sept 2026) · Smoke/vape POS, koronapos.com (Apr 2026), cigarspos.com (Oct 2026), fastraxpos.com (Sept 2026), lightspeedhq.com · Liquor POS, bottlepos.com (Oct 2026), koronapos.com (Aug 2026), technologyadvice.com (2026) · Processing, koronapos.com (Sept 2026), nerdwallet.com, airwallex.com (Oct 2026), shopify.com · Age verification, ftxidentity.com (Sept 2026); pulmonologyadvisor.com (Aug 2024, FDA rule) · Loss prevention, retailtouchpoints.com; darkreading.com; thetechoutlook.com (DTiQ / Church’s) · Inventory, cin7.com (Oct 2026); techrepublic.com (Sept 2026) · Loyalty, thanx.com (Sept 2026); saasworthy.com (Oct 2026) · TAM, Market Research Future via organicfood.einnews.com (27 Aug 2026); marketdataforecast.com (2026) · C-store workflows, cstoredecisions.com (2024–Aug 2026); nrsplus.com (Oct 2026) · Fuel POS, ad-hoc-news.de (Jun 2026); shop.nwpump.com (Oct 2026); hostmerchantservices.com (Dec 2025) · Market data files fetched 13 Oct 2026, 15:42 UTC (Toast, Block, Lightspeed, Vontier, Intuit).
+    </p>
+  </section>
+
+  <footer>
+    <p><strong>How to use this report:</strong> Start with §5 and §6 if you’re choosing a wedge, invoice digitisation (★★★★★) in c-store / smoke, where EDI is weakest, is the highest-automatability, lowest-hardware-risk entry. Validate the unverified items in “Open Questions” before pricing against them.</p>
+    <p>Researched 13 October 2026. Pricing moves fast in this market, QuickBooks alone has raised prices six years running, so re-verify any figure before quoting it to a customer or investor.</p>
+  </footer>
+</div>
+<script>
+(function(){
+  // Vertical tabs
+  var btns=document.querySelectorAll('.tabbtn');
+  btns.forEach(function(b){ b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-selected','false')});
+    document.querySelectorAll('.tabpanel').forEach(function(p){p.classList.remove('active')});
+    b.setAttribute('aria-selected','true');
+    document.getElementById('tab-'+b.getAttribute('data-tab')).classList.add('active');
+  });});
+  // Category search/filter
+  var q=document.getElementById('catSearch'), f=document.getElementById('catFilter'), rows=document.querySelectorAll('#catTable tbody tr'), empty=document.getElementById('catEmpty');
+  function apply(){ var term=(q.value||'').toLowerCase(), grp=f.value, vis=0;
+    rows.forEach(function(r){ var ok=(!term||r.textContent.toLowerCase().indexOf(term)>-1)&&(!grp||r.getAttribute('data-group')===grp); r.style.display=ok?'':'none'; if(ok)vis++; });
+    empty.style.display=vis?'none':'block';
+  }
+  q.addEventListener('input',apply); f.addEventListener('change',apply);
+  // AI ranking
+  var data=[
+    [1,"Invoice digitisation / AP matching","All",5,"OCR + LLM on paper/PDF invoices; match to PO/receipt","Cigars POS (AI auto-PO); MarginEdge; Restaurant365; PDI+REPAY; Bottle POS auto-invoicing"],
+    [2,"Demand forecasting / suggested ordering","C-store, restaurant, liquor",5,"Time-series on scan data","mPower; SuperSonic low-stock alerts; 7shifts labour forecasting; Cin7 ForesightAI; PDI force-outs"],
+    [3,"Labour scheduling from demand","Restaurant, c-store",5,"Forecast → auto-schedule + compliance rules","7shifts; Deputy (AI auto-scheduling); Homebase"],
+    [4,"Automated reordering / distributor EDI","Liquor, c-store, smoke",4,"Par levels → EDI/API orders; phone/text still dominant","Fintech (liquor EDI); FTx EDI add-on; SKUPOS; PDI suggested ordering"],
+    [5,"Price-book management","C-store, grocery, smoke",4,"E-invoice cost changes → auto price updates","E-Z Stop e-invoice import; KORONA mass updates; Passport ESL integration"],
+    [6,"Review response / marketing content","Restaurant, specialty",4,"LLM draft responses, campaigns","Toast IQ Grow (AI marketing agent); Owner.com; Incentivio churn scoring"],
+    [7,"Shrinkage / fraud detection","All",3,"POS + video exception analytics; needs data volume","DTiQ; Envysion; SuperSonic alerts; Church’s Texas Chicken pilot showed measurable shrink reduction"],
+    [8,"Receiving / delivery-short audits","C-store, restaurant",3,"Computer-vision counts; e-invoice pre-match","Handheld receiving; E-Z Stop discrepancy-at-delivery (partially)"],
+    [9,"Shift cash reconciliation","All",3,"Blind counts still physical; software assists","POS drawer reports; NRS / POS Nation blind-count workflows"],
+    [10,"Age-verification judgment calls","Smoke, liquor, c-store",2,"Scanning automated; human override remains","Intellicheck; IDScan.net; FTx Identity; SuperSonic built-in scanning"],
+    [11,"Bookkeeping close / categorisation","All",4,"Bank-feed + receipt AI","QuickBooks (AI cited in Aug 2026 increase); Xero; Shogo"],
+    [12,"Ops-manual / SOP training","Multi-unit independents",3,"AI-generated SOPs from best practices","Mostly absent; NRS ops-manual guidance (manual)"],
+    [13,"Fuel reconciliation / tank dips","Gas stations",3,"ATG automation exists; small sites still manual","Veeder-Root ATG"],
+    [14,"Menu / catalog engineering","Restaurant",3,"Margin analytics on sales mix","Toast benchmarking; MarginEdge; Lightspeed Insights"]
+  ];
+  var host=document.getElementById('aiList');
+  data.forEach(function(d){
+    var stars=''; for(var i=0;i<5;i++) stars+=(i<d[3]?'★':'☆');
+    var el=document.createElement('div'); el.className='rank';
+    el.innerHTML='<div class="ranknum">'+d[0]+'</div><div style="flex:1"><div style="display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between"><strong>'+d[1]+'</strong><span class="stars" aria-label="'+d[3]+' of 5">'+stars+'</span></div><div class="small">'+d[2]+' · '+d[4]+'</div><div class="small" style="margin-top:2px">Already productised by: '+d[5]+'</div></div>';
+    host.appendChild(el);
+  });
+  // Nav active state
+  var links=document.querySelectorAll('.nav a');
+  window.addEventListener('scroll',function(){
+    var cur=''; document.querySelectorAll('section[id]').forEach(function(s){ if(window.scrollY>=s.offsetTop-120) cur=s.id; });
+    links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+cur); });
+  },{passive:true});
+})();
+</script>
+<section class="essay-lineage" aria-labelledby="lineage-retail-software-landscape" data-essay-lineage="retail-software-landscape" data-astro-cid-w6muogqu><div class="lineage-heading" data-astro-cid-w6muogqu><div data-astro-cid-w6muogqu><p data-astro-cid-w6muogqu>Keep the question moving</p><h2 id="lineage-retail-software-landscape" data-astro-cid-w6muogqu>This note belongs to a larger thread.</h2></div><a href="/field-notes/?node=retail-software-landscape" data-astro-cid-w6muogqu>See related writing & tools ↗</a></div><svg class="lineage-mini" viewBox="0 0 700 105" role="img" aria-label="A reading connection between Shoe Dog, this note, The Dutch Bros Effect: When Founder Culture Scales, and Worldview" data-astro-cid-w6muogqu><path id="lineage-path-retail-software-landscape" d="M45 52 C150 12 150 92 255 52 S420 12 475 52 S580 92 655 52" data-astro-cid-w6muogqu></path><g class="lineage-seed" data-astro-cid-w6muogqu><path d="M45 44L53 52 45 60 37 52Z" data-astro-cid-w6muogqu></path><text x="45" y="85" data-astro-cid-w6muogqu>Seed</text></g><g class="lineage-current" data-astro-cid-w6muogqu><circle cx="255" cy="52" r="10" data-astro-cid-w6muogqu></circle><text x="255" y="85" data-astro-cid-w6muogqu>This note</text></g><g class="lineage-next" data-astro-cid-w6muogqu><circle cx="475" cy="52" r="7" data-astro-cid-w6muogqu></circle><text x="475" y="85" data-astro-cid-w6muogqu>Next reading</text></g><g class="lineage-tool" data-astro-cid-w6muogqu><rect x="647" y="44" width="16" height="16" data-astro-cid-w6muogqu></rect><text x="655" y="85" data-astro-cid-w6muogqu>Related tool</text></g><circle class="lineage-pulse" r="3" data-astro-cid-w6muogqu><animateMotion dur="7s" repeatCount="indefinite" path="M45 52 C150 12 150 92 255 52 S420 12 475 52 S580 92 655 52" data-astro-cid-w6muogqu></animateMotion></circle></svg><div class="lineage-cards" data-astro-cid-w6muogqu><a href="/field-notes/shoe-dog/" data-astro-cid-w6muogqu><span data-astro-cid-w6muogqu>01 / A book to pair with this</span><h3 data-astro-cid-w6muogqu>Shoe Dog<span aria-hidden="true" data-astro-cid-w6muogqu>↗</span></h3><p data-astro-cid-w6muogqu>Pair with Shoe Dog: Founder culture meets the operating details of businesses people use every day.</p></a><a href="/field-notes/dutch-bros-effect/" data-astro-cid-w6muogqu><span data-astro-cid-w6muogqu>02 / Next in the thread</span><h3 data-astro-cid-w6muogqu>The Dutch Bros Effect: When Founder Culture Scales<span aria-hidden="true" data-astro-cid-w6muogqu>↗</span></h3><p data-astro-cid-w6muogqu>Another reading in founders &amp; infrastructure; an editorial companion, not a chronological sequel.</p></a><a href="/garage/worldview/" data-astro-cid-w6muogqu><span data-astro-cid-w6muogqu>03 / Related tool · Live</span><h3 data-astro-cid-w6muogqu>Worldview<span aria-hidden="true" data-astro-cid-w6muogqu>↗</span></h3><p data-astro-cid-w6muogqu>Choose an everyday question, then follow its research, cultural perspectives, and reflection prompts. An interactive companion to the curiosity in my book notes.</p></a></div><p class="lineage-context" data-astro-cid-w6muogqu>A curated reading path. Book pairings offer another perspective; related tools let you explore a similar question. Development projects are marked R&D.</p></section></body></html>

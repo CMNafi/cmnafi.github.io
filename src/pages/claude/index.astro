@@ -62,10 +62,10 @@ const worldview = projects.find((p) => p.slug === 'worldview');
 const worldviewUpdated = worldview?.data.updatedAt ?? worldview?.data.startedAt;
 
 const route = [
-  { id: 'dinajpur', place: 'Dinajpur', when: 'Childhood', figure: false },
-  { id: 'changshu', place: 'Changshu', when: '2016', figure: true },
-  { id: 'iowa', place: 'Iowa', when: '2018–2022', figure: true },
-  { id: 'florida', place: 'Tampa', when: 'Now', figure: false },
+  { id: 'dinajpur', place: 'Early learning', when: 'Childhood', figure: false },
+  { id: 'changshu', place: 'UWC Changshu', when: '2016', figure: true },
+  { id: 'iowa', place: 'Luther College', when: '2018–2022', figure: true },
+  { id: 'florida', place: 'Institutional fintech', when: 'Now', figure: false },
 ];
 
 const noteHref = (note: Note) => `/field-notes/${note.slug}`;
@@ -87,12 +87,12 @@ const kicker = (note: Note) =>
 
     <div class="hm-mast__lower">
       <p class="hm-mast__bio">
-        Solutions Engineer at Dasseti. Previously BlackRock, Mayo Clinic, and SkyBridge. I grew up in
-        Dinajpur, moved to Changshu on scholarship at sixteen, studied data science in Iowa, and now build
-        financial systems from Florida.
+        Solutions Engineer at Dasseti in institutional fintech. Previously BlackRock in asset management,
+        Mayo Clinic in healthcare and research, and SkyBridge in alternative investments. I attended
+        Rangpur Cadet College and UWC Changshu before studying data science at Luther College.
       </p>
 
-      <nav class="hm-route" aria-label="The story in four places">
+      <nav class="hm-route" aria-label="Education and industry">
         <ol class="hm-route__stops" role="list">
           {route.map((stop, i) => (
             <li class:list={['hm-route__stop', { 'is-now': i === route.length - 1 }]}>

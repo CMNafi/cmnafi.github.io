@@ -1,0 +1,8 @@
+---
+import report from '../../data/reports/capital-lens-16.html?raw';
+import EssayLineageFooter from '../../components/catalog/EssayLineageFooter.astro';
+const head=report.match(/<head[^>]*>([\s\S]*?)<\/head>/i)?.[1];
+const body=report.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1];
+if(!head||!body)throw new Error('Report is missing its document boundaries');
+---
+<!doctype html><html lang="en"><head><Fragment set:html={head} /></head><body><Fragment set:html={body} /><EssayLineageFooter slug="capital-lens-16" /></body></html>
