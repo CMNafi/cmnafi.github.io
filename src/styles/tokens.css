@@ -1,4 +1,16 @@
 :root {
+  /* Shared editorial story and archive surfaces. Legacy aliases below remain available. */
+  --bg-canvas: #FAF8F5;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #F2EFE9;
+  --text-primary: #141618;
+  --text-secondary: #454A50;
+  --text-muted: #727880;
+  --ink-forest: #1E3A2F;
+  --ink-vermilion: #C84B31;
+  --ink-amber: #B87D14;
+  --ink-blue: #1D4ED8;
+  --border-hairline: #E5E0D5;
   /* Surfaces */
   --surface-base:        #120f0d;   /* page background */
   --surface-raised:      #1a1714;   /* cards, panels */
@@ -63,4 +75,18 @@
   --ease-spring:         var(--ease-instrument);
   --ease-launch:         var(--ease-instrument);
   --ease-tire:           var(--ease-mechanical);
+}
+
+[data-theme="dark"] {
+  --bg-canvas: #0D0F12;
+  --bg-surface: #14171C;
+  --bg-subtle: #1B1F26;
+  --text-primary: #F1F3F5;
+  --text-secondary: #A6AEB7;
+  --text-muted: #6E7681;
+  --ink-forest: #34D399;
+  --ink-vermilion: #FB923C;
+  --ink-amber: #FBBF24;
+  --ink-blue: #60A5FA;
+  --border-hairline: #222730;
 }

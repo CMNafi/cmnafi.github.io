@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import { siteConfig } from '@/config/site';
 import Footer from '@/components/Footer.astro';
-import { ViewTransitions } from 'astro:transitions';
+import StoryNavigation from '../components/StoryNavigation.astro';
 import { execSync } from 'child_process';
 import LapTimer from '@/components/telemetry/LapTimer.astro';
 import AbExperimentEngine from '@/components/telemetry/AbExperimentEngine.astro';
@@ -63,7 +63,7 @@ const buildDate = new Date().toISOString();
     <meta name="twitter:image" content={imageUrl} />
     <meta name="theme-color" content="#120f0d" />
     <slot name="head" />
-    <ViewTransitions />
+    <StoryNavigation />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-W7QGKS85CP"></script>
     <script is:inline>
