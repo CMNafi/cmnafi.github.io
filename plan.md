@@ -9,6 +9,10 @@
 
 ## 0. The one-sentence vision
 
+### October 15, 2026: four-act scrollytelling hero
+
+The homepage opens with an accessible Canvas/SVG editorial atlas in `src/components/islands/JourneyScrollytellingHero.astro`. It uses 180 procedural particles, geographic projection and great-circle connections, four narrative acts, direct chapter navigation, optional autoplay, a scrubber, and reduced-motion fallbacks. The notebook, research report, beta links, and job-industry labels remain below. Geography belongs to the requested story; job and school cards elsewhere keep their industry and institution labels. Connections and cumulative distances describe city-centre map geometry, not recorded flights. Biography copy retains the documented degree and solutions-engineer role. Natural Earth land outlines are public domain and attributed.
+
 ### October 14, 2026: production homepage beta hub
 
 The production homepage adopts the user-supplied warm paper/dark beta-hub reference: editorial masthead, current notebook, three live redesign links, interactive career chapters, grounded domain demos, and a filterable writing ledger. Homepage-only styles and shell supersede the telemetry-only primitive rule on `/`; other routes retain their existing layouts. The supplied retail software report is published intact as an interactive Field Notes article with collection metadata and a canonical URL.
