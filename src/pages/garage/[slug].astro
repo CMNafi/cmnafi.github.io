@@ -37,8 +37,8 @@ const { Content } = await project.render();
               updated={(project.data.updatedAt || project.data.startedAt)?.toLocaleDateString() || '--'}
               status={project.data.status as any}
               stack={project.data.stack?.join(', ') || 'N/A'}
-              link={project.data.liveUrl || project.data.repoUrl}
-              linkLabel={project.data.liveUrl ? "OPEN PROD →" : "GITHUB →"}
+              link={project.data.status === 'live' ? project.data.liveUrl || project.data.repoUrl : project.data.repoUrl}
+              linkLabel={project.data.status === "live" && project.data.liveUrl ? "VIEW PROJECT →" : "VIEW SOURCE →"}
             />
         </div>
       </header>

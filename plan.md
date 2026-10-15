@@ -9,6 +9,10 @@
 
 ## 0. The one-sentence vision
 
+### October 15, 2026: descriptions and story connections
+
+Keep the existing visuals, component structure, CSS, artwork, and interaction engines. Clarify what visitors can do before opening a tool, connect research tools to Nafi’s professional questions and cricket tools to match reports, explain the archive views in plain language, and distinguish interactive tools, project write-ups, and work in development. Project previews and article recommendations describe the destination rather than imply unsupported functionality or direct project origins. Independent work remains separate from employer work.
+
 ### October 15, 2026: unified four-act story and archive continuity
 
 The homepage opens with `UnifiedStoryStage.astro`: finite attention and childhood, small experiments, professional fit, and the connected archive. It replaces the two separate homepage scrollytelling mounts while reusing their documented geographic and professional data. The shared `FieldNotesConstellation` element and canvas persist through Astro ClientRouter navigation to the archive; its ledger lives outside the persisted stage. Named reading-track URLs accept both slugs and the original numeric values. The tour runs for 45 seconds, pauses on human input, and respects reduced motion. Typed coordinate buffers are prepared once; performance is measured with real Playwright tests and reported, rather than guaranteeing 0 ms navigation or a hardware-independent frame rate. Browser speculation is progressive enhancement. The archive retains its audited 64 notes, seven related tools, actual dates, and R&D statuses. Future reading and cricket totals are adjustable planning scenarios, not lifespan predictions. Philosophical prompts are attributed to Tim Urban and Eric Barker and linked to Nafi's own writing. Editorial tokens are added to the shared token file without replacing legacy aliases. The new user-supplied professional boundaries apply only to the focus exercise.

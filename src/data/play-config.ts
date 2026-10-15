@@ -10,9 +10,9 @@ export const playConfig = {
 };
 
 export const playLinks = [
-  { href: '/play/fpl', number: '01', title: 'My FPL Season', short: 'FPL', description: 'The squad, the captain, and the decisions I have to live with.' },
-  { href: '/play/f1', number: '02', title: 'Race Center', short: 'Formula 1', description: 'The next lights out, the season so far, and the people chasing it.' },
-  { href: '/play/cricket', number: '03', title: 'Cricket Hub', short: 'Cricket', description: 'Scores around the world. The teams closer to home.' },
-  { href: '/play/predict', number: '04', title: 'Prediction Games', short: 'Predictions', description: 'Make a call before the start. See how well it ages.' },
-  { href: '/play/rivals', number: '05', title: 'Rivalry Board', short: 'Rivals', description: 'A small FPL table for friends and a little perspective.' }
+  { href: '/play/fpl', number: '01', title: 'My FPL Season', short: 'FPL', description: 'See my Fantasy Premier League squad, captain, points, and season history. A weekly record of the football decisions I have to live with.' },
+  { href: '/play/f1', number: '02', title: 'Race Center', short: 'Formula 1', description: 'Check the next Formula 1 race, the season calendar, and driver and constructor standings. This is where I follow the sport behind the Garage name.' },
+  { href: '/play/cricket', number: '03', title: 'Cricket Hub', short: 'Cricket', description: 'Check international scores and explore my Florida club teams and match records. The on-field counterpart to the cricket stories in Field Notes.' },
+  { href: '/play/predict', number: '04', title: 'Prediction Games', short: 'Predictions', description: 'Pick a race podium or match winner before the start, then revisit your call. Your predictions stay on this device.' },
+  { href: '/play/rivals', number: '05', title: 'Rivalry Board', short: 'Rivals', description: 'Compare my FPL season with friends once their team IDs are added. For now, the friend entries are clearly marked placeholders.' }
 ];

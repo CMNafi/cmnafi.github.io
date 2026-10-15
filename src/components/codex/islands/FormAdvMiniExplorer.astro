@@ -3,7 +3,7 @@ import { advisers } from '../../../data/codex/islands/sample-advisers';
 ---
 <section class="adv-island" data-adv aria-label="SEC adviser explorer">
  <h3>Read the entity, then the numbers.</h3>
- <p>A brand can contain many advisers. Compare exact legal entities without confusing their regulatory assets with group AUM.</p>
+ <p>Start with BlackRock or Blackstone, then compare assets and clients for the exact registered advisers. The same question behind my Form ADV essay: what sits beneath a familiar firm name?</p>
  <label>Search eight manager brands<input type="search" data-search placeholder="Try BlackRock or Citadel" /></label>
  <div class="pills">{advisers.map((a,i)=><button type="button" data-firm={i} aria-pressed={i===0?'true':'false'}>{a.name}</button>)}</div>
  <p data-empty hidden>No matching manager. Try another name.</p>
@@ -11,7 +11,7 @@ import { advisers } from '../../../data/codex/islands/sample-advisers';
  <label data-second-label hidden>Compare with<select data-second>{advisers.map((a,i)=><option value={i} selected={i===1}>{a.name}</option>)}</select></label>
  <div class="cards"><article data-card></article><article data-other hidden></article></div>
  <p class="note">Official Form ADV snapshots, checked October 14, 2026. Figures cover each named legal adviser and its filing perimeter, not the parent group's assets. Item 5.F reports regulatory AUM; Item 5.D reports client types. Fee schedules require separate Part 2 review and remain unverified. No 13F holdings are loaded.</p>
- <nav><a href="/garage/form-adv-data-finder/">Open Regulatory Lens</a><a href="/field-notes/adv-universe/">Read The Universe of Form ADV</a></nav>
+ <nav><a href="/garage/form-adv-data-finder/">How I built Regulatory Lens</a><a href="/field-notes/adv-universe/">Read The Universe of Form ADV</a></nav>
  <script is:inline type="application/json" data-advisers set:html={JSON.stringify(advisers).replaceAll('<','\\u003c')} />
 </section>
 <script>

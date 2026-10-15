@@ -1,7 +1,7 @@
 ---
 title: Play
-summary: "The games I follow, the teams I turn up for, and a few predictions to keep me honest."
-description: "A sports corner for my FPL season, Formula 1, Florida cricket, local prediction games, and a friendly FPL rivalry board."
+summary: "Follow my Fantasy Premier League squad, Formula 1, and cricket in one place. Check season dashboards, see my Florida teams, or save your own match and podium predictions on this device."
+description: "Follow my Fantasy Premier League squad, Formula 1, and cricket in one place. Check season dashboards, see my Florida teams, or save your own match and podium predictions on this device."
 status: live
 category: web app
 stack: [Astro, TypeScript, OpenF1, FPL]

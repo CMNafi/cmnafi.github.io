@@ -5,7 +5,7 @@ import { formatTime, formatNumber } from '@/lib/play/fetch';
 import { fixtureTime } from '@/lib/play/cricket';
 const f1 = await getF1();
 ---
-<PlayLayout title="Race Center" number="02" eyebrow={`FORMULA 1 / ${f1.year}`} description="The next lights out, the season so far, and an excuse to keep Sunday free.">
+<PlayLayout title="Race Center" number="02" eyebrow={`FORMULA 1 / ${f1.year}`} description="I follow Formula 1 closely; it is where the Garage name comes from. Check the next race, calendar, and championship standings here, then make a podium prediction in Play.">
   <p class="play-stamp">Last updated: <time datetime={f1.updatedAt ?? undefined}>{formatTime(f1.updatedAt)}</time>.</p>
   {f1.stale && <p class="play-note">Data may be stale. {f1.unavailable ? 'The race feed is unavailable. The calendar will return after a successful refresh.' : 'Showing the most recent available snapshot.'}</p>}
   <section class="play-card"><span class="play-eyebrow">Next lights out</span><h2>{f1.nextRace ? f1.nextRaceName : f1.unavailable ? 'Waiting for the calendar' : 'No upcoming race listed'}</h2><p>{f1.nextRace ? fixtureTime(f1.nextRace.date_start) : 'I will pick this up when the next race is on the calendar.'}</p><div class="play-countdown" id="race-countdown" data-start={f1.nextRace?.date_start ?? ''}>Checking the clock</div><a class="play-link" href="/play/predict">Make a podium prediction →</a></section>

@@ -9,7 +9,7 @@ const payload = { race: f1.nextRace ? { id: String(f1.nextRace.session_key), sta
   drivers: f1.drivers.map(d => ({ id: String(d.driver_number), name: d.full_name })), fixtures,
   results: [...f1.results.map(r => ({kind:'f1',eventId:r.id,picks:r.podium})), ...myFixtures.filter(f => f.winner && [f.home,f.opponent].includes(f.winner)).map(f => ({kind:'cricket',eventId:f.id,picks:[f.winner]}))] };
 ---
-<PlayLayout title="Make a call" number="04" eyebrow="PREDICTIONS / NO STAKES" description="A podium, a match winner, and a record of how sure I was before anything happened.">
+<PlayLayout title="Make a call" number="04" eyebrow="PREDICTIONS / NO STAKES" description="Pick a Formula 1 podium or cricket match winner and save your call before the start. Your picks stay in this browser, ready to revisit after the result.">
   <p class="play-note">This is a local game. Names, picks, and the leaderboard stay in this browser. They are not shared with other visitors or synced across devices.</p>
   {f1.stale && <p class="play-note">F1 data may be stale. Calendar and result updates depend on the most recent successful feed refresh. Unavailable results stay pending.</p>}
   <div class="play-field play-card"><label for="prediction-name">Your name on this device</label><input id="prediction-name" maxlength="40" placeholder="A name for the leaderboard" autocomplete="nickname" /><p class="play-muted">Friends can take turns on the same device. Use the same name to revise your own picks before the start.</p></div>
