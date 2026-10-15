@@ -38,7 +38,7 @@ const chapters: Chapter[] = [
     short: 'Dinajpur',
     period: 'Childhood',
     periodIsFigure: false,
-    theme: 'Early curiosities, mathematics, and weekend cricket.',
+    theme: 'A house where reading was the answer to boredom.',
     facts: [
       { label: 'Home', value: 'Dinajpur, northern Bangladesh' },
       { label: 'At twelve', value: 'Rangpur Cadet College' },
@@ -109,7 +109,8 @@ const byId = Object.fromEntries(chapters.map((c) => [c.id, c])) as Record<Journe
       <p class="st-intro__dek">
         I have been the newest person in the room since I was twelve: military school in Rangpur, then China at
         sixteen without the language, then a town of eight thousand in Iowa. Each time, the job was the same. Work out
-        how the room actually talks, then make myself useful in it.
+        how the room actually talks, then make myself useful in it. The map follows the route; tap a stop to jump
+        to its chapter.
       </p>
     </header>
 
@@ -294,6 +295,11 @@ const byId = Object.fromEntries(chapters.map((c) => [c.id, c])) as Record<Journe
               the building: a trillion dollars is a spreadsheet problem, a risk problem and a storytelling problem, all
               at once.
             </p>
+            <p>
+              The <a href="/claude/garage/#demo-form-adv">Form ADV explorer</a> grows out of these years. It lets you
+              look up BlackRock, Blackstone and six other advisers in their own SEC filings, the same public record
+              manager selection starts from.
+            </p>
           </div>
         </div>
       </section>
@@ -349,7 +355,8 @@ const byId = Object.fromEntries(chapters.map((c) => [c.id, c])) as Record<Journe
               all-rounder who bowls right-arm fast. I write up the close finishes.
               <a href="/field-notes/seven-to-defend-swat-vs-royal-phoenix">Seven runs to defend</a> in the last over.
               <a href="/field-notes/four-wickets-and-a-chase-blazehawks-vs-go-leopards">Four wickets and a chase</a>. I
-              still replay them.
+              still replay them, and you can too: three of these matches are set up in the
+              <a href="/claude/garage/#demo-fielding">fielding tactician</a>, where you choose the field.
             </p>
             <blockquote class="st-pull st-pull--close">
               <p>Numbers into stories, problems into tools, matches into memory. It’s all translation.</p>
@@ -371,7 +378,7 @@ const byId = Object.fromEntries(chapters.map((c) => [c.id, c])) as Record<Journe
         <li>
           <a href="/claude/garage/">
             <span class="st-next__label">Projects</span>
-            <span class="st-next__hint">Small tools I wanted and couldn’t find.</span>
+            <span class="st-next__hint">The tools that grew out of these chapters.</span>
           </a>
         </li>
         <li>

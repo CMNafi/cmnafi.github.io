@@ -12,9 +12,9 @@ import wcMatches from '@/data/wc-matches.json';
 import type { ProjectCategory, ProjectItem, ProjectLifecycle } from '@/types/claude-site';
 
 export const CATEGORY_LABELS: Record<ProjectCategory, string> = {
-  'fintech-sec': 'FinTech & SEC Data',
-  'cricket-sports': 'Cricket & Sports Analytics',
-  'knowledge-systems': 'Knowledge Systems',
+  'fintech-sec': 'Finance & investing',
+  'cricket-sports': 'Cricket & sports',
+  'knowledge-systems': 'Curiosity',
 };
 
 export const LIFECYCLE_LABELS: Record<ProjectLifecycle, string> = {
@@ -31,13 +31,13 @@ export const projects: ProjectItem[] = [
     id: 'form-adv-data-finder',
     title: 'Regulatory Lens',
     tagline:
-      "An investment adviser's registration, brochure and 13F holdings, joined into one profile you can search or ask questions of.",
+      'Look up any SEC-registered investment adviser and see its registration, brochure and 13F holdings in one profile you can search or ask questions of.',
     category: 'fintech-sec',
     lifecycle: 'live',
     updatedAt: '2026-06-03',
     stack: ['Astro', 'Python', 'SQLite', 'PostgreSQL', 'FastMCP', 'FastAPI', 'QLoRA / TinyLlama'],
     problem:
-      'Adviser details live in three disconnected SEC datasets: Form ADV Part 1 registrations, Part 2A brochure PDFs and quarterly 13F holdings. Pulling them together by hand is slow, and none of it is structured for AI agents.',
+      'Due diligence on an investment manager starts with public filings, and my work has always sat close to it: screening hedge funds at SkyBridge, and now software for diligence teams at Dasseti. But an adviser’s registration (Form ADV Part 1), brochure (Part 2A) and 13F holdings live in three separate SEC datasets, slow to pull together by hand and not structured for AI agents. I wanted them joined into one profile.',
     architectureSummary:
       'A Python pipeline streams the SEC bulk files into SQLite, joins all three sources on the CRD number, and exposes the result through a seven-tool FastMCP server and a TinyLlama model fine-tuned with QLoRA on the brochures.',
     pipeline: ['SEC bulk files: ADV, 2A, 13F', 'Python ingest', 'SQLite, joined on CRD', 'FastMCP tools + TinyLlama', 'Search workspace'],
@@ -59,7 +59,7 @@ export const projects: ProjectItem[] = [
     updatedAt: '2026-10-08',
     stack: ['HTML', 'CSS', 'JavaScript'],
     problem:
-      'Everyday preferences open interesting questions, but the connections between behavior, culture, and evidence can be hard to explore.',
+      'I grew up in a house where reading was the answer to boredom, and one question usually leads to the next. Everyday preferences open interesting questions, but the links between behavior, culture and evidence are hard to follow. Worldview lays them out as a map you can wander.',
     architectureSummary:
       'A single static page. Each everyday choice opens a question page with research sources, their limitations, a cultural lens and a reflection prompt, and a trail keeps your path through the atlas.',
     pipeline: ['Everyday choice', 'Question page', 'Research + limits', 'Cultural lens', 'Reflection prompt'],
@@ -73,13 +73,13 @@ export const projects: ProjectItem[] = [
     id: 'captains-view',
     title: 'Captains View',
     tagline:
-      'An interactive, tactical 2D cricket fielding planner and roster engine with real-time rule enforcement.',
+      'Plan a cricket field by dragging players onto the ground. It checks the fielding rules on every move and mirrors the field for a left-handed batter.',
     category: 'cricket-sports',
     lifecycle: 'live',
     updatedAt: '2026-05-22',
     stack: ['Astro', 'TypeScript', 'Vanilla CSS', 'SVG'],
     problem:
-      'Captains map fielding plans on scraps of paper or generic boards that know nothing about match format, powerplays, or mirroring the field for a left-handed batter.',
+      'I play league cricket across Tampa Bay. Captains still map fields on scraps of paper or generic boards that know nothing about match format, powerplays, or mirroring the field for a left-handed batter. I wanted a board that knows the rules.',
     architectureSummary:
       'An SVG ground with pointer-event dragging. A rules check runs on every drop: one bowler, one keeper, eleven on the field, and the powerplay limit on fielders outside the 30-yard circle (measured as distance from the pitch centre).',
     pipeline: ['12-player roster', 'Drag onto SVG ground', 'Role + powerplay check', 'Mirror for left-hander'],
@@ -94,13 +94,13 @@ export const projects: ProjectItem[] = [
     id: 'caia',
     title: 'CAIA Knowledge Hub',
     tagline:
-      'An exam-aligned study tool and public knowledge hub for hedge funds, private equity, private debt, real assets and portfolio allocation.',
+      'Plain study notes, a formula sheet and a glossary for the CAIA alternative-investments curriculum: hedge funds, private equity, private debt, real assets and portfolio allocation.',
     category: 'fintech-sec',
     lifecycle: 'live',
     updatedAt: '2026-05-04',
     stack: ['Astro', 'MDX', 'KaTeX'],
     problem:
-      'Alternative-investment study material is scattered across textbooks, PDFs and formula sheets, with no single place to read, search and revise by topic.',
+      'SkyBridge was my first close look at hedge funds and the wider world of alternative investments. The CAIA curriculum is the formal map of that world, but the material is scattered across textbooks, PDFs and formula sheets, with no single place to read, search and revise by topic.',
     architectureSummary:
       'Topic notes are written in MDX and grouped by CAIA level, with a master formula sheet and a searchable A-Z glossary alongside.',
     pipeline: ['MDX topic notes', 'Level I + II study paths', 'Formula sheet', 'A-Z glossary'],
@@ -115,13 +115,13 @@ export const projects: ProjectItem[] = [
     id: 'style-fielding',
     title: 'Fielding Style Playbook',
     tagline:
-      'An interactive playbook of cricket fielding variations across match phases, powerplays and left-handed strike.',
+      'Watch a cricket field move between plans as a match goes on, from the powerplay to the last overs, with notes on why each change happens.',
     category: 'cricket-sports',
     lifecycle: 'live',
     updatedAt: '2026-05-22',
     stack: ['Astro', 'JavaScript', 'Vanilla CSS', 'SVG'],
     problem:
-      'Standard layouts like slip traps, mid-over rings or death-over shields are hard to explain to players without seeing the field move between them.',
+      'The same weekend cricket, a different question. Standard plans like slip traps, mid-over rings or death-over shields are hard to explain to teammates without seeing the field move between them.',
     architectureSummary:
       'A timeline slider morphs eleven fielders between four presets on an SVG ground, with a manual panel for strike handedness, powerplay and a 41-position grid.',
     pipeline: ['4 field presets', 'Timeline slider', 'Fielders glide between plans', 'Phase notes'],
@@ -142,7 +142,7 @@ export const projects: ProjectItem[] = [
     dateKind: 'launched',
     stack: ['Astro', 'TypeScript', 'CSS', 'Vanilla JS'],
     problem:
-      'Big sports sites bury the World Cup under ads and generic data dumps. Fans need a clean, opinionated companion.',
+      'The 2026 World Cup came to North America, and the big sports sites buried it under ads and generic data dumps. I wanted a clean, opinionated companion.',
     architectureSummary:
       'A static Astro section built from a match file and one Markdown profile per team, with group standings and the bracket simulator running in the browser.',
     pipeline: ['Match file + team profiles', 'Static Astro pages', 'Group tables', 'Bracket simulator'],
@@ -158,7 +158,8 @@ export const projects: ProjectItem[] = [
     lifecycle: 'live',
     updatedAt: '2026-10-13',
     stack: ['Astro', 'TypeScript', 'OpenF1', 'FPL'],
-    problem: 'My FPL team, race weekends, and club fixtures were scattered across different tabs.',
+    problem:
+      'My FPL team, race weekends and club fixtures were scattered across different tabs. Play keeps the games I follow in one place, including my own Florida cricket teams.',
     architectureSummary:
       'Season dashboards fed by the FPL and OpenF1 data, club records for my Florida cricket teams, and prediction games whose picks stay in the visitor’s browser.',
     pipeline: ['FPL + OpenF1 data', 'Season dashboards', 'Club fixtures', 'Picks saved on your device'],
@@ -170,13 +171,13 @@ export const projects: ProjectItem[] = [
     id: 'adv-screener',
     title: 'ADV Screener',
     tagline:
-      'Adviser disclosures are public but tedious to compare. This filters Form ADV data by AUM bracket, client type and disclosures, and lines firms up side by side.',
+      'Filter investment advisers by size, client type and disclosures, then line them up side by side.',
     category: 'fintech-sec',
     lifecycle: 'active-r&d',
     updatedAt: '2026-03-21',
     stack: ['Astro', 'TypeScript', 'MDX', 'SEC data'],
     problem:
-      'Adviser data is technically public, but reading it well still means too much clicking, too much cleanup, and too little useful comparison.',
+      'The teams I work with at Dasseti evaluate investment managers for a living. Adviser data is public, but reading it well still means too much clicking, too much cleanup and too little side-by-side comparison.',
     architectureSummary:
       'SEC adviser data is mapped into strict TypeScript shapes and compiled into a static Astro build, so screening is instant without a heavy single-page app. Year-over-year change tracking is next on the list.',
     pipeline: ['SEC adviser data', 'Typed models', 'Static Astro build', 'Filter + compare view'],
@@ -188,13 +189,13 @@ export const projects: ProjectItem[] = [
     id: 'manager-search',
     title: 'Manager Search',
     tagline:
-      'A manager research tool for getting from a name to the filings, holdings, and context I actually want to see.',
+      'Type a fund manager’s name and get its filings, top 13F holdings and a summary grounded in those filings.',
     category: 'fintech-sec',
     lifecycle: 'active-r&d',
     updatedAt: '2026-03-21',
     stack: ['Next.js', 'TypeScript', 'SEC API', 'OpenAI', 'Form ADV', 'Form 13F'],
     problem:
-      'Public filings contain the answers, but it still takes too much manual stitching to turn a manager name into a usable diligence snapshot.',
+      'A diligence question usually starts with a name. Public filings contain the answers, but it still takes too much manual stitching to turn a manager’s name into a usable snapshot.',
     architectureSummary:
       'A debounced search resolves a firm name to its CRD and CIK, pulls Form ADV context and top 13F holdings, and writes a summary grounded only in those labelled filings.',
     pipeline: ['Manager name', 'CRD + CIK resolution', 'ADV context + 13F holdings', 'Grounded summary'],

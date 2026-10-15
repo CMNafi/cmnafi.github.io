@@ -33,6 +33,7 @@ The homepage opens with an accessible Canvas/SVG editorial atlas in `src/compone
 
 The production homepage adopts the user-supplied warm paper/dark beta-hub reference: editorial masthead, current notebook, three live redesign links, interactive career chapters, grounded domain demos, and a filterable writing ledger. Homepage-only styles and shell supersede the telemetry-only primitive rule on `/`; other routes retain their existing layouts. The supplied retail software report is published intact as an interactive Field Notes article with collection metadata and a canonical URL.
 
+
 ### October 14, 2026: isolated Editorial Systems Lab preview
 
 The requested three-agent redesign is published exclusively under `/codex/`, with its own layout, scoped design tokens, shell, catalog, and interactive islands. Its five routes are `/codex/`, `/codex/garage/`, `/codex/field-notes/`, `/codex/story/`, and `/codex/connect/`. Existing production routes, global tokens, and telemetry components remain unchanged. The preview intentionally replaces telemetry metaphors with a paper/dark editorial design. This scoped implementation supersedes the telemetry-only component directive within the preview. Existing essays and applications remain linked at their canonical URLs. Illustrative models and unavailable source data are clearly identified.

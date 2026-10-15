@@ -80,7 +80,7 @@ const kicker = (note: Note) =>
   <!-- Zone 1: masthead -->
   <section class="hm-mast cl-container" aria-labelledby="hm-title">
     <h1 id="hm-title" class="hm-mast__title">
-      Engineering the data infrastructure behind institutional capital—<em
+      Translating between institutional capital and the software that runs it—<em
         >and writing about the businesses, filings, and last-over chases that catch my attention.</em
       >
     </h1>
@@ -114,16 +114,19 @@ const kicker = (note: Note) =>
     <div class="cl-container">
       <header class="hm-sechead">
         <h2 id="hm-bench-title" class="hm-sechead__title">Workbench</h2>
-        <p class="hm-sechead__dek">Small tools I wanted and couldn’t find. Two of them run right here.</p>
+        <p class="hm-sechead__dek">
+          Small tools that grew out of my story: the investment filings behind my day job, and the cricket I play on
+          weekends. Two of them run right here, so you can try them before clicking through.
+        </p>
       </header>
 
       <div class="hm-bento">
         <article class="hm-tool hm-tool--primary" aria-labelledby="hm-tool-adv">
           <header class="hm-tool__bar">
             <h3 id="hm-tool-adv" class="hm-tool__label">
-              <span class="hm-tool__kind">Interactive Tool</span>
+              <span class="hm-tool__kind">From the day job</span>
               <span class="hm-tool__sep" aria-hidden="true">·</span>
-              <span class="hm-tool__name">SEC Form ADV &amp; 13F Intelligence</span>
+              <span class="hm-tool__name">Look inside an investment adviser’s SEC filing</span>
             </h3>
             <a class="hm-tool__link" href="/claude/garage/">
               Projects<span class="cl-sr-only">: see this tool alongside the rest</span>
@@ -131,6 +134,12 @@ const kicker = (note: Note) =>
             </a>
           </header>
           <div class="hm-tool__body">
+            <p class="hm-tool__intro">
+              Every SEC-registered investment adviser files a Form ADV: how much it manages, for whom, and how.
+              Reading these filings is where due diligence starts. It is the work my clients at Dasseti do, and the
+              work I first did screening hedge funds at SkyBridge. Pick a firm, or compare BlackRock with Blackstone,
+              the two names I once mixed up.
+            </p>
             <FormAdvMiniExplorer />
           </div>
         </article>
@@ -138,12 +147,17 @@ const kicker = (note: Note) =>
         <article class="hm-tool hm-tool--secondary" aria-labelledby="hm-tool-cricket">
           <header class="hm-tool__bar">
             <h3 id="hm-tool-cricket" class="hm-tool__label">
-              <span class="hm-tool__kind">Tactical Engine</span>
+              <span class="hm-tool__kind">From the weekends</span>
               <span class="hm-tool__sep" aria-hidden="true">·</span>
-              <span class="hm-tool__name">2D Cricket Field &amp; Last-Over Simulator</span>
+              <span class="hm-tool__name">Set the field in three of my matches</span>
             </h3>
           </header>
           <div class="hm-tool__body">
+            <p class="hm-tool__intro">
+              I play league cricket across Tampa Bay and bowl right-arm fast. Each scenario is built from one of
+              my match reports, like seven runs to defend in the final over. Move the fielders, check the field
+              is legal, then compare it with a suggested one.
+            </p>
             <CricketFieldingTactician compact />
           </div>
         </article>
@@ -152,7 +166,10 @@ const kicker = (note: Note) =>
       <ul class="hm-strip" role="list" aria-label="More projects">
         <li class="hm-card">
           <h3 class="hm-card__title"><a href="/projects/worldview/">Worldview</a></h3>
-          <p class="hm-card__text">An atlas of everyday choices across psychology, culture, and ethics</p>
+          <p class="hm-card__text">
+            An atlas of everyday choices. Pick one and follow it into psychology, culture, ethics and the research
+            behind them: the reading habit from Dinajpur, made clickable.
+          </p>
           {worldviewUpdated && (
             <p class="hm-card__meta">
               Updated <time class="cl-mono" datetime={isoDay(worldviewUpdated)}>{formatDate(worldviewUpdated)}</time>
@@ -162,9 +179,10 @@ const kicker = (note: Note) =>
         <li class="hm-card">
           <h3 class="hm-card__title"><a href="/caia">CAIA Knowledge Hub</a></h3>
           <p class="hm-card__text">
-            A structured study hub and public knowledge resource for alternative investments, CAIA Levels I and II.
+            SkyBridge was my first close look at hedge funds and alternative investments. This hub maps that world,
+            CAIA Levels I and II, in plain notes.
           </p>
-          <p class="hm-card__meta">Study notes, formulas and a glossary</p>
+          <p class="hm-card__meta">Topic notes, formulas and a glossary</p>
         </li>
         <li class="hm-card hm-card--all">
           <a class="hm-card__all" href="/claude/garage/">
@@ -497,6 +515,15 @@ const kicker = (note: Note) =>
 
   .hm-tool__body {
     padding: var(--space-md);
+  }
+
+  /* One-paragraph "what this is and why it's here" above each tool; same type as the card text. */
+  .hm-tool__intro {
+    max-width: 62ch;
+    margin: 0 0 var(--space-md);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.5;
   }
 
   /* Project strip */

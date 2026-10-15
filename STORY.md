@@ -83,6 +83,10 @@ describe a person or a job.
 
 The user explicitly requested a professional systems timeline that includes the languages, tools, concepts, and credentials supplied in that brief. Within that component, these can be described as the stack behind career work and independent projects, supplementing the earlier restriction on listing programming skills. Keep the solutions-engineer title. Do not imply that independent Garage projects, later essays, or proposed infrastructure were delivered for an employer. Node connections represent conceptual dependencies, not employer systems or measured production flows. Project status comes from the project catalog; adviser counts describe the published research universe, not a live tally. The credential list was supplied by the user, rather than independently verified from LinkedIn.
 
+### Professional architecture brief, October 15, 2026
+
+The user explicitly requested a professional systems timeline that includes the languages, tools, concepts, and credentials supplied in that brief. Within that component, these can be described as the stack behind career work and independent projects, supplementing the earlier restriction on listing programming skills. Keep the solutions-engineer title. Do not imply that independent Garage projects, later essays, or proposed infrastructure were delivered for an employer. Node connections represent conceptual dependencies, not employer systems or measured production flows. Project status comes from the project catalog; adviser counts describe the published research universe, not a live tally. The credential list was supplied by the user, rather than independently verified from LinkedIn.
+
 Use only these. If a claim isn't here or in his own writing, don't publish it.
 
 - **Name:** C M Nafi. Goes by Nafi. Email `nafi@cmnafi.com`.
