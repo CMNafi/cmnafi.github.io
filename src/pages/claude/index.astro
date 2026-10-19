@@ -1,933 +1,198 @@
 ---
 /**
- * /claude/ homepage: masthead, interactive workbench, curated writing ledger.
- * Every essay title, date, reading time and excerpt is read from the field-notes collection
- * by slug, so this page always matches the source files.
+ * /claude/ homepage: a short hello and a clean index of links.
+ * Everything lives on its own page; this page only points to it.
  */
-import { getCollection, type CollectionEntry } from 'astro:content';
 import ClaudeLayout from '@/layouts/ClaudeLayout.astro';
-import FormAdvMiniExplorer from '@/components/claude/islands/FormAdvMiniExplorer.astro';
-import CricketFieldingTactician from '@/components/claude/islands/CricketFieldingTactician.astro';
-import { formatDate, isoDay, shortReadingTime } from '@/components/claude/shell/format';
 
-type Note = CollectionEntry<'field-notes'>;
+type LinkItem = { label: string; note: string; href: string };
+type Group = { id: string; title: string; links: LinkItem[] };
 
-const notes = await getCollection('field-notes', ({ data }) => !data.draft);
-const bySlug = new Map(notes.map((note) => [note.slug, note]));
-
-function pick(slug: string): Note | undefined {
-  const note = bySlug.get(slug);
-  if (!note) console.warn(`[claude/home] field note "${slug}" not found; skipping it.`);
-  return note;
-}
-
-const lead = pick('uber-the-32-billion-hole');
-
-const deepDives = [
-  'the-open-syllabus',
-  'adv-universe',
-  'gamestop-bid-for-ebay',
-  'the-streetcar-conspiracy',
-  'capital-lens-16',
-]
-  .map(pick)
-  .filter((n): n is Note => Boolean(n));
-
-// The highlight stat for each match report is the figure the report itself leads with.
-const matchReports = [
-  { slug: 'four-wickets-and-a-chase-blazehawks-vs-go-leopards', stat: '4 wkts & 44 (24)' },
-  { slug: 'five-runs-tb-bengals-vs-mustangs', stat: '5-run defense' },
-  { slug: 'one-of-those-days-swat-vs-tampa-telugu-titans', stat: '54 runs & 5 wkts' },
-]
-  .map((m) => ({ ...m, note: pick(m.slug) }))
-  .filter((m): m is typeof m & { note: Note } => Boolean(m.note));
-
-const bookNotes = [
-  { slug: 'going-infinite', author: 'Michael Lewis' },
-  { slug: 'liars-poker', author: 'Michael Lewis' },
+const groups: Group[] = [
   {
-    slug: 'good-to-great',
-    author: 'Jim Collins',
-    context:
-      'Read in the summer of 2021 while interning at Skybridge Associates, on the recommendation of my mentor and the firm’s CEO.',
+    id: 'about',
+    title: 'About me',
+    links: [
+      { label: 'My story', note: 'From Dinajpur to Florida, in four chapters', href: '/claude/story/' },
+      { label: 'Get in touch', note: 'Email, LinkedIn, GitHub and X', href: '/claude/connect/' },
+    ],
   },
-  { slug: 'shoe-dog', author: 'Phil Knight' },
-]
-  .map((b) => ({ ...b, note: pick(b.slug) }))
-  .filter((b): b is typeof b & { note: Note } => Boolean(b.note));
-
-// Project strip: Worldview's freshness comes from its own project file.
-const projects = await getCollection('projects');
-const worldview = projects.find((p) => p.slug === 'worldview');
-const worldviewUpdated = worldview?.data.updatedAt ?? worldview?.data.startedAt;
-
-const route = [
-  { id: 'dinajpur', place: 'Early learning', when: 'Childhood', figure: false },
-  { id: 'changshu', place: 'UWC Changshu', when: '2016', figure: true },
-  { id: 'iowa', place: 'Luther College', when: '2018–2022', figure: true },
-  { id: 'florida', place: 'Institutional fintech', when: 'Now', figure: false },
+  {
+    id: 'writing',
+    title: 'Writing',
+    links: [
+      { label: 'Essays & notes', note: 'Everything I have written, in one place', href: '/claude/field-notes/' },
+      { label: 'Finance essays', note: 'How money moves, one big number at a time', href: '/claude/field-notes/#essays' },
+      { label: 'Cricket match reports', note: 'The close finishes from league cricket', href: '/claude/field-notes/#cricket' },
+      { label: 'Reading shelf', note: 'Notes on the books that stayed with me', href: '/claude/field-notes/#shelf' },
+    ],
+  },
+  {
+    id: 'try',
+    title: 'Try on this site',
+    links: [
+      { label: 'Form ADV explorer', note: 'Look inside an investment adviser’s SEC filing', href: '/claude/garage/#demo-form-adv' },
+      { label: 'Fielding tactician', note: 'Set the field in three of my matches', href: '/claude/garage/#demo-fielding' },
+      { label: 'Portfolio sandbox', note: 'See how private markets change risk and return', href: '/claude/garage/#demo-caia' },
+      { label: 'Journey map', note: 'Four places, about 16,000 km', href: '/claude/story/' },
+    ],
+  },
+  {
+    id: 'projects',
+    title: 'Projects',
+    links: [
+      { label: 'All projects', note: 'Small tools I wanted and couldn’t find', href: '/claude/garage/' },
+      { label: 'Regulatory Lens', note: 'Every adviser’s filings in one profile', href: '/garage/form-adv-data-finder/' },
+      { label: 'Captains View', note: 'A cricket fielding planner', href: '/garage/captains-view/' },
+      { label: 'CAIA Knowledge Hub', note: 'Study notes for alternative investments', href: '/caia/' },
+      { label: 'Worldview', note: 'An atlas of everyday choices', href: '/projects/worldview/' },
+      { label: 'Play', note: 'The games and teams I follow', href: '/play/' },
+    ],
+  },
 ];
-
-const noteHref = (note: Note) => `/field-notes/${note.slug}`;
-const kicker = (note: Note) =>
-  [note.data.series, note.data.subCategory].filter(Boolean).join(' · ') || note.data.category;
 ---
 <ClaudeLayout
   title="C M Nafi · Systems & Capital"
-  description="Solutions Engineer at Dasseti. Previously BlackRock, Mayo Clinic, and SkyBridge. Writing about businesses, filings, and last-over chases."
+  description="Hi, I’m Nafi, a solutions engineer with a few interests: finance, small tools, cricket and books. Start here."
   activePath="/claude/"
 >
-  <!-- Zone 1: masthead -->
-  <section class="hm-mast cl-container" aria-labelledby="hm-title">
-    <h1 id="hm-title" class="hm-mast__title">
-      Translating between institutional capital and the software that runs it—<em
-        >and writing about the businesses, filings, and last-over chases that catch my attention.</em
-      >
-    </h1>
-
-    <div class="hm-mast__lower">
-      <p class="hm-mast__bio">
-        Solutions Engineer at Dasseti in institutional fintech. Previously BlackRock in asset management,
-        Mayo Clinic in healthcare and research, and SkyBridge in alternative investments. I attended
-        Rangpur Cadet College and UWC Changshu before studying data science at Luther College.
+  <div class="hm cl-container">
+    <header class="hm-hello">
+      <h1 class="hm-hello__title">Hi, welcome to my personal website.</h1>
+      <p class="hm-hello__text">
+        I’m Nafi, a solutions engineer at Dasseti, living in Florida. I have a few interests I keep coming back to:
+        how money moves, small tools that make data easier to read, cricket, and books. Everything is one click
+        away.
       </p>
+    </header>
 
-      <nav class="hm-route" aria-label="Education and industry">
-        <ol class="hm-route__stops" role="list">
-          {route.map((stop, i) => (
-            <li class:list={['hm-route__stop', { 'is-now': i === route.length - 1 }]}>
-              <a href={`/claude/story/#chapter-${stop.id}`}>
-                <span class="hm-route__dot" aria-hidden="true"></span>
-                <span class="hm-route__place">{stop.place}</span>
-                <span class:list={['hm-route__when', { 'cl-mono': stop.figure }]}>{stop.when}</span>
-              </a>
-            </li>
-          ))}
-        </ol>
-        <a class="hm-route__more" href="/claude/story/">Read the story <span aria-hidden="true">→</span></a>
-      </nav>
-    </div>
-  </section>
-
-  <!-- Zone 2: interactive workbench -->
-  <section class="hm-section" aria-labelledby="hm-bench-title">
-    <div class="cl-container">
-      <header class="hm-sechead">
-        <h2 id="hm-bench-title" class="hm-sechead__title">Workbench</h2>
-        <p class="hm-sechead__dek">
-          Small tools that grew out of my story: the investment filings behind my day job, and the cricket I play on
-          weekends. Two of them run right here, so you can try them before clicking through.
-        </p>
-      </header>
-
-      <div class="hm-bento">
-        <article class="hm-tool hm-tool--primary" aria-labelledby="hm-tool-adv">
-          <header class="hm-tool__bar">
-            <h3 id="hm-tool-adv" class="hm-tool__label">
-              <span class="hm-tool__kind">From the day job</span>
-              <span class="hm-tool__sep" aria-hidden="true">·</span>
-              <span class="hm-tool__name">Look inside an investment adviser’s SEC filing</span>
-            </h3>
-            <a class="hm-tool__link" href="/claude/garage/">
-              Projects<span class="cl-sr-only">: see this tool alongside the rest</span>
-              <span aria-hidden="true">→</span>
-            </a>
-          </header>
-          <div class="hm-tool__body">
-            <p class="hm-tool__intro">
-              Every SEC-registered investment adviser files a Form ADV: how much it manages, for whom, and how.
-              Reading these filings is where due diligence starts. It is the work my clients at Dasseti do, and the
-              work I first did screening hedge funds at SkyBridge. Pick a firm, or compare BlackRock with Blackstone,
-              the two names I once mixed up.
-            </p>
-            <FormAdvMiniExplorer />
-          </div>
-        </article>
-
-        <article class="hm-tool hm-tool--secondary" aria-labelledby="hm-tool-cricket">
-          <header class="hm-tool__bar">
-            <h3 id="hm-tool-cricket" class="hm-tool__label">
-              <span class="hm-tool__kind">From the weekends</span>
-              <span class="hm-tool__sep" aria-hidden="true">·</span>
-              <span class="hm-tool__name">Set the field in three of my matches</span>
-            </h3>
-          </header>
-          <div class="hm-tool__body">
-            <p class="hm-tool__intro">
-              I play league cricket across Tampa Bay and bowl right-arm fast. Each scenario is built from one of
-              my match reports, like seven runs to defend in the final over. Move the fielders, check the field
-              is legal, then compare it with a suggested one.
-            </p>
-            <CricketFieldingTactician compact />
-          </div>
-        </article>
-      </div>
-
-      <ul class="hm-strip" role="list" aria-label="More projects">
-        <li class="hm-card">
-          <h3 class="hm-card__title"><a href="/projects/worldview/">Worldview</a></h3>
-          <p class="hm-card__text">
-            An atlas of everyday choices. Pick one and follow it into psychology, culture, ethics and the research
-            behind them: the reading habit from Dinajpur, made clickable.
-          </p>
-          {worldviewUpdated && (
-            <p class="hm-card__meta">
-              Updated <time class="cl-mono" datetime={isoDay(worldviewUpdated)}>{formatDate(worldviewUpdated)}</time>
-            </p>
-          )}
-        </li>
-        <li class="hm-card">
-          <h3 class="hm-card__title"><a href="/caia">CAIA Knowledge Hub</a></h3>
-          <p class="hm-card__text">
-            SkyBridge was my first close look at hedge funds and alternative investments. This hub maps that world,
-            CAIA Levels I and II, in plain notes.
-          </p>
-          <p class="hm-card__meta">Topic notes, formulas and a glossary</p>
-        </li>
-        <li class="hm-card hm-card--all">
-          <a class="hm-card__all" href="/claude/garage/">
-            Explore all projects in the Workbench <span aria-hidden="true">→</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- Zone 3: writing ledger -->
-  <section class="hm-section" aria-labelledby="hm-writing-title">
-    <div class="cl-container">
-      <header class="hm-sechead">
-        <h2 id="hm-writing-title" class="hm-sechead__title">Writing</h2>
-        <p class="hm-sechead__dek">
-          Long-form pieces on how capital actually moves. Every big number has a story behind it.
-        </p>
-      </header>
-
-      <div class="hm-ledger">
-        <div class="hm-ledger__main">
-          <h3 class="cl-sr-only">Deep dives</h3>
-          {lead && (
-            <article class="hm-lead">
-              <p class="hm-lead__kicker">{kicker(lead)}</p>
-              <h4 class="hm-lead__title">
-                <a href={noteHref(lead)}>{lead.data.title}</a>
-              </h4>
-              <p class="hm-lead__excerpt">{lead.data.excerpt}</p>
-              <p class="hm-meta">
-                <time class="cl-mono" datetime={isoDay(lead.data.publishedAt)}>{formatDate(lead.data.publishedAt)}</time>
-                <span class="hm-meta__sep" aria-hidden="true">·</span>
-                <span class="cl-mono">{shortReadingTime(lead.data.readingTime)}</span>
-                <span class="cl-sr-only">read</span>
-              </p>
-            </article>
-          )}
-
-          <ol class="hm-rows" role="list">
-            {deepDives.map((note) => (
-              <li class="hm-row">
-                <time class="hm-row__date cl-mono" datetime={isoDay(note.data.publishedAt)}>
-                  {formatDate(note.data.publishedAt)}
-                </time>
-                <div class="hm-row__body">
-                  <h4 class="hm-row__title">
-                    <a href={noteHref(note)}>{note.data.title}</a>
-                  </h4>
-                  <p class="hm-row__excerpt">{note.data.excerpt}</p>
-                  <p class="hm-meta hm-row__meta">
-                    <span>{kicker(note)}</span>
-                    <span class="hm-meta__sep" aria-hidden="true">·</span>
-                    <span class="cl-mono">{shortReadingTime(note.data.readingTime)}</span>
-                    <span class="cl-sr-only">read</span>
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <aside class="hm-ledger__side" aria-labelledby="hm-side-title">
-          <h3 id="hm-side-title" class="hm-side__title">From the pitch &amp; the bookshelf</h3>
-
-          <h4 class="hm-side__sub">Match reports</h4>
-          <ol class="hm-side__list" role="list">
-            {matchReports.map(({ note, stat }) => (
-              <li class="hm-match">
-                <a href={noteHref(note)}>
-                  <span class="hm-match__stat cl-mono">{stat}</span>
-                  <span class="hm-match__title">{note.data.title}</span>
-                  <span class="hm-side__meta">
-                    <time class="cl-mono" datetime={isoDay(note.data.publishedAt)}>{formatDate(note.data.publishedAt)}</time>
-                    <span aria-hidden="true"> · </span>
-                    <span class="cl-mono">{shortReadingTime(note.data.readingTime)}</span>
+    <nav class="hm-index" aria-label="Everything on this site">
+      {groups.map((group) => (
+        <section class="hm-group" aria-labelledby={`hm-${group.id}`}>
+          <h2 id={`hm-${group.id}`} class="hm-group__title">{group.title}</h2>
+          <ul class="hm-links" role="list">
+            {group.links.map((link) => (
+              <li>
+                <a class="hm-link" href={link.href}>
+                  <span class="hm-link__label">
+                    {link.label} <span class="hm-link__arrow" aria-hidden="true">→</span>
                   </span>
+                  <span class="hm-link__note">{link.note}</span>
                 </a>
               </li>
             ))}
-          </ol>
-
-          <h4 class="hm-side__sub">Book notes</h4>
-          <ol class="hm-side__list" role="list">
-            {bookNotes.map(({ note, author, context }) => (
-              <li class="hm-book">
-                <a href={noteHref(note)}>
-                  <span class="hm-book__title">{note.data.title}</span>
-                  <span class="hm-book__author">{author}</span>
-                  <span class="hm-book__excerpt">{note.data.excerpt}</span>
-                  {context && <span class="hm-book__context">{context}</span>}
-                  <span class="hm-side__meta">
-                    <time class="cl-mono" datetime={isoDay(note.data.publishedAt)}>{formatDate(note.data.publishedAt)}</time>
-                    <span aria-hidden="true"> · </span>
-                    <span class="cl-mono">{shortReadingTime(note.data.readingTime)}</span>
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ol>
-
-          <a class="hm-archive" href="/claude/field-notes/">Browse full archive <span aria-hidden="true">→</span></a>
-        </aside>
-      </div>
-    </div>
-  </section>
+          </ul>
+        </section>
+      ))}
+    </nav>
+  </div>
 </ClaudeLayout>
 
 <style>
-  /* ---------- Zone 1: masthead ---------- */
-  .hm-mast {
-    padding-top: clamp(40px, 7vw, 96px);
-    padding-bottom: clamp(48px, 7vw, 88px);
+  .hm {
+    padding-top: clamp(48px, 9vw, 112px);
+    padding-bottom: clamp(56px, 9vw, 120px);
   }
 
-  .hm-mast__title {
-    max-width: 19em;
-    font-size: clamp(2rem, 1.25rem + 3vw, 3.5rem);
+  /* Hello */
+  .hm-hello {
+    max-width: 40rem;
+    margin-bottom: clamp(48px, 7vw, 88px);
+  }
+
+  .hm-hello__title {
+    margin: 0 0 20px;
+    font-family: var(--font-serif);
     font-weight: 400;
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
     line-height: 1.08;
-    letter-spacing: -0.025em;
-    text-wrap: pretty;
-  }
-
-  .hm-mast__title em {
-    color: var(--text-secondary);
-    font-style: italic;
-  }
-
-  .hm-mast__lower {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: var(--space-2xl);
-    align-items: end;
-    margin-top: clamp(32px, 5vw, 56px);
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--border-subtle);
-  }
-
-  .hm-mast__bio {
-    max-width: 52ch;
-    color: var(--text-secondary);
-    font-family: var(--font-serif);
-    font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.3rem);
-    line-height: 1.5;
-  }
-
-  /* Trajectory bar */
-  .hm-route__stops {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .hm-route__stops::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    right: calc(25% - 5px);
-    height: 1px;
-    background: var(--border-strong);
-    opacity: 0.35;
-  }
-
-  .hm-route__stop a {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding-top: 22px;
-    padding-right: 8px;
-    color: var(--text-primary);
-    text-decoration: none;
-  }
-
-  .hm-route__dot {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 11px;
-    height: 11px;
-    border: 1px solid var(--text-primary);
-    border-radius: 50%;
-    background: var(--bg-canvas);
-    transition: background-color var(--duration-fast) var(--ease-standard),
-      transform var(--duration-fast) var(--ease-standard);
-  }
-
-  .hm-route__stop.is-now .hm-route__dot {
-    border-color: var(--accent-highlight);
-    background: var(--accent-highlight);
-  }
-
-  .hm-route__stop a:hover .hm-route__dot {
-    background: var(--text-primary);
-  }
-
-  .hm-route__stop.is-now a:hover .hm-route__dot {
-    background: var(--accent-highlight);
-    transform: scale(1.15);
-  }
-
-  .hm-route__place {
-    font-family: var(--font-serif);
-    font-size: 1.05rem;
-    line-height: 1.2;
-  }
-
-  .hm-route__stop a:hover .hm-route__place {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
-  }
-
-  .hm-route__when {
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-  }
-
-  .hm-route__more {
-    display: inline-flex;
-    gap: 6px;
-    margin-top: var(--space-lg);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-decoration: none;
-  }
-
-  .hm-route__more:hover {
-    color: var(--accent-primary);
-  }
-
-  /* ---------- Shared section chrome ---------- */
-  .hm-section {
-    padding-bottom: clamp(56px, 8vw, 112px);
-  }
-
-  .hm-sechead {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: var(--space-md) var(--space-2xl);
-    align-items: baseline;
-    margin-bottom: var(--space-xl);
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--border-strong);
-  }
-
-  .hm-sechead__title {
-    font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
-  }
-
-  .hm-sechead__dek {
-    max-width: 48ch;
-    color: var(--text-secondary);
-    font-size: 1rem;
-  }
-
-  /* ---------- Zone 2: workbench bento ---------- */
-  .hm-bento {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: var(--space-lg);
-    align-items: start;
-  }
-
-  .hm-tool {
-    min-width: 0;
-    overflow: hidden;
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    background: var(--bg-surface);
-    box-shadow: var(--shadow-card);
-  }
-
-  .hm-tool__bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-md);
-    min-height: 48px;
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border-subtle);
-    background: var(--bg-subtle);
-  }
-
-  .hm-tool__label {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 2px 8px;
-    min-width: 0;
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.4;
-  }
-
-  .hm-tool__kind {
-    color: var(--text-secondary);
-  }
-
-  .hm-tool__sep {
-    color: var(--text-muted);
-  }
-
-  .hm-tool__name {
-    color: var(--text-primary);
-    font-weight: 500;
-  }
-
-  .hm-tool__link {
-    flex: none;
-    display: inline-flex;
-    gap: 6px;
-    color: var(--text-secondary);
-    font-size: 0.8125rem;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .hm-tool__link:hover {
-    color: var(--accent-primary);
-  }
-
-  .hm-tool__body {
-    padding: var(--space-md);
-  }
-
-  /* One-paragraph "what this is and why it's here" above each tool; same type as the card text. */
-  .hm-tool__intro {
-    max-width: 62ch;
-    margin: 0 0 var(--space-md);
-    color: var(--text-secondary);
-    font-size: 0.9375rem;
-    line-height: 1.5;
-  }
-
-  /* Project strip */
-  .hm-strip {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-lg);
-    margin: var(--space-lg) 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .hm-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 0;
-    padding: var(--space-lg);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    background: var(--bg-surface);
-    transition: border-color var(--duration-fast) var(--ease-standard);
-  }
-
-  .hm-card:hover {
-    border-color: var(--text-muted);
-  }
-
-  .hm-card__title {
-    font-size: 1.3rem;
-    font-weight: 500;
-  }
-
-  .hm-card__title a {
-    color: var(--text-primary);
-    text-decoration: none;
-  }
-
-  /* Whole card is the click target; the link text stays the accessible name. */
-  .hm-card__title a::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-  }
-
-  /* Move the focus ring from the link text to the whole card where :has() is supported. */
-  @supports selector(:has(*)) {
-    .hm-card__title a:focus-visible,
-    .hm-card__all:focus-visible {
-      outline: none;
-    }
-
-    .hm-card:has(a:focus-visible) {
-      outline: 2px solid var(--focus-ring);
-      outline-offset: 3px;
-    }
-  }
-
-  .hm-card__text {
-    color: var(--text-secondary);
-    font-size: 0.9375rem;
-    line-height: 1.5;
-  }
-
-  .hm-card__meta {
-    margin-top: auto;
-    padding-top: 8px;
-    color: var(--text-secondary);
-    font-size: 0.8125rem;
-  }
-
-  .hm-card__meta time {
-    font-size: 0.75rem;
-  }
-
-  .hm-card--all {
-    justify-content: center;
-    background: var(--bg-subtle);
-  }
-
-  .hm-card__all {
-    color: var(--text-primary);
-    font-family: var(--font-serif);
-    font-size: 1.3rem;
-    line-height: 1.3;
-    text-decoration: none;
-  }
-
-  .hm-card__all::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-  }
-
-  .hm-card--all:hover .hm-card__all {
-    color: var(--accent-primary);
-  }
-
-  /* ---------- Zone 3: writing ledger ---------- */
-  .hm-ledger {
-    display: grid;
-    grid-template-columns: minmax(0, 65fr) minmax(0, 35fr);
-    gap: var(--space-2xl);
-    align-items: start;
-  }
-
-  .hm-lead {
-    padding-bottom: var(--space-xl);
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .hm-lead__kicker {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: var(--space-sm);
-    color: var(--text-secondary);
-    font-size: 0.8125rem;
-  }
-
-  .hm-lead__kicker::before {
-    content: '';
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent-highlight);
-  }
-
-  .hm-lead__title {
-    max-width: 18em;
-    font-family: var(--font-serif);
-    font-size: clamp(2rem, 1.4rem + 2.2vw, 3.1rem);
-    font-weight: 400;
-    line-height: 1.05;
-    letter-spacing: -0.025em;
-  }
-
-  .hm-lead__title a,
-  .hm-row__title a {
-    color: var(--text-primary);
-    text-decoration: none;
-    background-image: linear-gradient(currentColor, currentColor);
-    background-size: 0 1px;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition: background-size var(--duration-base) var(--ease-standard);
-  }
-
-  .hm-lead__title a:hover,
-  .hm-row__title a:hover {
-    background-size: 100% 1px;
-  }
-
-  .hm-lead__excerpt {
-    max-width: 58ch;
-    margin-top: var(--space-md);
-    color: var(--text-secondary);
-    font-family: var(--font-serif);
-    font-size: clamp(1.1rem, 1.05rem + 0.3vw, 1.3rem);
-    line-height: 1.5;
-  }
-
-  .hm-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 8px;
-    margin-top: var(--space-md);
-    color: var(--text-secondary);
-    font-size: 0.8125rem;
-  }
-
-  .hm-meta .cl-mono {
-    font-size: 0.75rem;
-  }
-
-  .hm-meta__sep {
-    color: var(--text-muted);
-  }
-
-  .hm-rows {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .hm-row {
-    display: grid;
-    grid-template-columns: 7.5rem minmax(0, 1fr);
-    gap: var(--space-lg);
-    padding: var(--space-lg) 0;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .hm-row__date {
-    padding-top: 6px;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-  }
-
-  .hm-row__title {
-    font-family: var(--font-serif);
-    font-size: 1.35rem;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -0.015em;
-  }
-
-  .hm-row__excerpt {
-    display: -webkit-box;
-    margin-top: 6px;
-    overflow: hidden;
-    color: var(--text-secondary);
-    font-size: 0.9375rem;
-    line-height: 1.55;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-  }
-
-  .hm-row__meta {
-    margin-top: 8px;
-  }
-
-  /* Side column */
-  .hm-ledger__side {
-    padding: var(--space-lg);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    background: var(--bg-surface);
-  }
-
-  .hm-side__title {
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    font-weight: 400;
     letter-spacing: -0.02em;
+    color: var(--text-primary);
   }
 
-  .hm-side__sub {
-    margin-top: var(--space-xl);
-    padding-bottom: 8px;
+  .hm-hello__text {
+    margin: 0;
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  /* Link index: two columns on wide screens, one on phones */
+  .hm-index {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(36px, 5vw, 56px) clamp(32px, 6vw, 80px);
+  }
+
+  .hm-group__title {
+    margin: 0 0 4px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--border-strong);
-    color: var(--text-primary);
     font-family: var(--font-sans);
     font-size: 0.8125rem;
     font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-secondary);
   }
 
-  .hm-side__sub:first-of-type {
-    margin-top: var(--space-lg);
-  }
-
-  .hm-side__list {
+  .hm-links {
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .hm-side__list li {
+  .hm-links li {
     border-bottom: 1px solid var(--border-subtle);
   }
 
-  .hm-side__list a {
+  .hm-link {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
     padding: 14px 0;
     color: var(--text-primary);
     text-decoration: none;
   }
 
-  .hm-side__meta {
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-  }
-
-  .hm-match__stat {
-    align-self: flex-start;
-    padding: 1px 7px;
-    border-left: 2px solid var(--accent-amber);
-    background: var(--bg-subtle);
-    color: var(--text-primary);
-    font-size: 0.8125rem;
-    font-weight: 500;
-  }
-
-  .hm-match__title,
-  .hm-book__title {
+  .hm-link__label {
     font-family: var(--font-serif);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     line-height: 1.3;
+    letter-spacing: -0.01em;
   }
 
-  .hm-match a:hover .hm-match__title,
-  .hm-book a:hover .hm-book__title {
-    color: var(--accent-primary);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.18em;
-  }
-
-  .hm-book__title {
-    font-style: italic;
-  }
-
-  .hm-book__author {
+  .hm-link__arrow {
+    display: inline-block;
     color: var(--text-secondary);
-    font-size: 0.8125rem;
+    transition: transform 0.2s ease, color 0.2s ease;
   }
 
-  .hm-book__excerpt {
-    margin-top: 2px;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-    line-height: 1.5;
-  }
-
-  .hm-book__context {
-    margin-top: 4px;
-    padding-left: 10px;
-    border-left: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
-    font-family: var(--font-serif);
-    font-size: 0.95rem;
-    font-style: italic;
+  .hm-link__note {
+    font-size: 0.9375rem;
     line-height: 1.45;
+    color: var(--text-secondary);
   }
 
-  .hm-archive {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: var(--space-lg);
-    padding: 12px 16px;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background-color var(--duration-fast) var(--ease-standard),
-      color var(--duration-fast) var(--ease-standard);
+  .hm-link:hover .hm-link__label,
+  .hm-link:focus-visible .hm-link__label {
+    color: var(--accent-primary);
   }
 
-  .hm-archive:hover {
-    background: var(--text-primary);
-    color: var(--bg-canvas);
+  .hm-link:hover .hm-link__arrow,
+  .hm-link:focus-visible .hm-link__arrow {
+    transform: translateX(4px);
+    color: var(--accent-primary);
   }
 
-  /* ---------- Responsive ---------- */
-  @media (max-width: 1023px) {
-    .hm-bento {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .hm-ledger {
+  @media (max-width: 720px) {
+    .hm-index {
       grid-template-columns: minmax(0, 1fr);
     }
   }
 
-  @media (max-width: 899px) {
-    .hm-mast__lower {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--space-xl);
-    }
-
-    .hm-sechead {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .hm-strip {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--space-md);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .hm-row {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 6px;
-    }
-
-    .hm-row__date {
-      padding-top: 0;
-    }
-
-    .hm-tool__bar {
-      align-items: flex-start;
-    }
-
-    .hm-tool__body {
-      padding: 12px;
-    }
-
-    .hm-ledger__side {
-      padding: var(--space-md);
-    }
-
-    .hm-route__place {
-      font-size: 0.95rem;
+  @media (prefers-reduced-motion: reduce) {
+    .hm-link__arrow {
+      transition: none;
     }
   }
 </style>
