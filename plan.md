@@ -9,6 +9,12 @@
 
 ## 0. The one-sentence vision
 
+### October 19, 2026: minimal Codex homepage
+
+Only /codex/ becomes a short personal welcome and a plain list of links to the existing story, writing, projects, sports, Worldview, CAIA, World Cup, and contact pages. Remove embedded demos and article previews from this homepage. Keep the shared Codex shell and every other page unchanged.
+
+
+
 ### October 15, 2026: descriptions and story connections
 
 Keep the existing visuals, component structure, CSS, artwork, and interaction engines. Clarify what visitors can do before opening a tool, connect research tools to Nafi’s professional questions and cricket tools to match reports, explain the archive views in plain language, and distinguish interactive tools, project write-ups, and work in development. Project previews and article recommendations describe the destination rather than imply unsupported functionality or direct project origins. Independent work remains separate from employer work.
