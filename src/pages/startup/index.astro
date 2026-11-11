@@ -1,0 +1,921 @@
+---
+/**
+ * /startup: open-source tools for every job a service startup has to do.
+ * Data lives in src/data/startupTools.ts. Charter: plan.md, "November 11, 2026: Startup".
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectorBadge from '@/components/telemetry/SectorBadge.astro';
+import { licenceClass, startupStages, startupToolsCheckedOn } from '@/data/startupTools';
+
+const stages = startupStages;
+const toolCount = stages.reduce((sum, s) => sum + s.tools.length, 0);
+const allTools = stages.flatMap((s) => s.tools);
+const counts = {
+  open: allTools.filter((t) => licenceClass(t.licence) === 'open').length,
+  mixed: allTools.filter((t) => licenceClass(t.licence) === 'mixed').length,
+  restricted: allTools.filter((t) => licenceClass(t.licence) === 'restricted').length,
+  starter: allTools.filter((t) => t.starter).length
+};
+
+const pad = (n: number) => String(n).padStart(2, '0');
+const stars = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '')}k` : String(n));
+const checked = new Date(`${startupToolsCheckedOn}T00:00:00Z`).toLocaleDateString('en-US', {
+  month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'
+});
+
+const filters = [
+  { id: 'all', label: 'All', count: toolCount },
+  { id: 'starter', label: 'Starter set', count: counts.starter },
+  { id: 'open', label: 'Open source', count: counts.open },
+  { id: 'mixed', label: 'Mixed licence', count: counts.mixed },
+  { id: 'restricted', label: 'Source-available', count: counts.restricted }
+];
+---
+
+<BaseLayout
+  title="Startup"
+  description={`${toolCount} open-source tools from GitHub for every job a service startup has to do, from testing the idea to passing a security review, including AI and automation.`}
+  canonical="/startup"
+>
+  <div class="su" data-su>
+    <header class="su-head">
+      <div>
+        <p class="su-eyebrow">Startup <span aria-hidden="true">/</span> the open-source stack</p>
+        <h1 class="su-title">Everything a startup needs, <em>open source.</em></h1>
+      </div>
+      <div class="su-intro">
+        <p class="su-lede">
+          A service startup has about {stages.length} jobs to do, from testing the idea to passing a client’s security
+          review. For each job, these are the open-source tools I found on GitHub that can do it.
+        </p>
+        <p class="su-fine">
+          This is a research list, not a list of tools I have run in production. Stars and licences are as GitHub
+          reported them on {checked}.
+        </p>
+      </div>
+    </header>
+
+    <dl class="su-stats">
+      <div><dt>Tools</dt><dd>{toolCount}</dd></div>
+      <div><dt>Jobs</dt><dd>{stages.length}</dd></div>
+      <div><dt>AI tools</dt><dd>{stages.find((s) => s.id === 'ai')?.tools.length}</dd></div>
+      <div><dt>Automation</dt><dd>{stages.find((s) => s.id === 'automate')?.tools.length}</dd></div>
+      <div><dt>Checked</dt><dd>{checked}</dd></div>
+    </dl>
+
+    <!-- The pipeline: one stop per job, in the order a company meets them -->
+    <div class="su-rail-slot" data-su-rail-slot>
+    <nav class="su-rail" aria-label="Jobs, in order" data-su-rail>
+      <ol class="su-rail__list" role="list">
+        {stages.map((s, i) => (
+          <li>
+            <a class="su-stop" href={`#${s.id}`} data-su-stop={s.id}>
+              <span class="su-stop__dot" aria-hidden="true"></span>
+              <span class="su-stop__index">{pad(i + 1)}</span>
+              <span class="su-stop__name">{s.title}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+    </div>
+
+    <div class="su-controls">
+      <label class="su-search">
+        <span class="su-search__label">Search</span>
+        <input
+          type="search"
+          placeholder="Try CRM, invoices, agents, Zapier…"
+          autocomplete="off"
+          spellcheck="false"
+          data-su-search
+        />
+      </label>
+      <div class="su-filters" role="group" aria-label="Filter tools">
+        {filters.map((f) => (
+          <button class="su-chip" type="button" data-su-filter={f.id} aria-pressed={f.id === 'all' ? 'true' : 'false'}>
+            {f.label}<span class="su-chip__count">{f.count}</span>
+          </button>
+        ))}
+      </div>
+      <p class="su-result" aria-live="polite" data-su-result>Showing all {toolCount} tools</p>
+    </div>
+
+    <p class="su-key">
+      <span><i class="su-lic su-lic--open"></i>Open source: one open licence covers the whole repository.</span>
+      <span><i class="su-lic su-lic--mixed"></i>Mixed: several licences, usually an open core plus a paid edition.</span>
+      <span><i class="su-lic su-lic--restricted"></i>Source-available: the code is public, but the licence limits how you can use it.</span>
+    </p>
+
+    {stages.map((s, i) => (
+      <section class="su-stage" id={s.id} data-su-stage={s.id} aria-labelledby={`${s.id}-title`}>
+        <header class="su-stage__head">
+          <SectorBadge variant="sector2" label={`Job ${pad(i + 1)}`} />
+          <h2 class="su-stage__title" id={`${s.id}-title`}>{s.title}</h2>
+          <p class="su-stage__job">{s.job}</p>
+          <span class="su-stage__count" data-su-stage-count>{s.tools.length} tools</span>
+        </header>
+        <ul class="su-grid" role="list">
+          {s.tools.map((t) => {
+            const cls = licenceClass(t.licence);
+            return (
+              <li
+                class="su-card-wrap"
+                data-su-tool
+                data-lic={cls}
+                data-starter={t.starter ? 'true' : 'false'}
+                data-text={`${t.name} ${t.repo} ${t.kind} ${t.does} ${t.insteadOf ?? ''} ${s.title}`.toLowerCase()}
+              >
+                <a class="su-card" href={`https://github.com/${t.repo}`} target="_blank" rel="noopener noreferrer">
+                  <span class="su-card__top">
+                    <span class="su-card__kind">{t.kind}</span>
+                    {t.starter && <span class="su-card__starter">Starter</span>}
+                  </span>
+                  <span class="su-card__name">{t.name}<span class="su-card__arrow" aria-hidden="true">↗</span></span>
+                  <span class="su-card__does">{t.does}</span>
+                  {t.insteadOf && <span class="su-card__instead">Instead of <b>{t.insteadOf}</b></span>}
+                  <span class="su-card__meta">
+                    <span class="su-card__repo">{t.repo}</span>
+                    <span class="su-card__stars" title={`${t.stars.toLocaleString('en-US')} stars`}>★ {stars(t.stars)}</span>
+                    <span class={`su-card__lic su-card__lic--${cls}`}>{t.licence}</span>
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))}
+
+    <p class="su-empty" data-su-empty hidden>
+      Nothing matches that. Try a job like “billing”, or a product you want to replace, like “Slack”.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .su {
+    width: min(calc(100% - 2rem), 1400px);
+    margin-inline: auto;
+    padding-top: clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  /* ---------- Heading ---------- */
+  .su-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: end;
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+  }
+
+  .su-eyebrow {
+    margin: 0 0 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .su-eyebrow span {
+    margin-inline: 0.5em;
+    color: var(--ink-tertiary);
+  }
+
+  .su-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(2.3rem, 5.2vw, 4.2rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--ink-primary);
+  }
+
+  .su-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .su-lede {
+    margin: 0 0 0.7rem;
+    font-size: clamp(1rem, 1.25vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--ink-secondary);
+  }
+
+  .su-fine {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: var(--ink-tertiary);
+  }
+
+  /* ---------- Stats ---------- */
+  .su-stats {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
+    border: 1px solid var(--surface-line);
+    border-radius: var(--radius-card);
+    background: var(--surface-raised);
+    font-family: var(--font-mono);
+  }
+
+  .su-stats div {
+    padding: 0.9rem 1.1rem;
+    border-right: 1px dashed var(--surface-line);
+  }
+
+  .su-stats div:last-child {
+    border-right: 0;
+  }
+
+  .su-stats dt {
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+  }
+
+  .su-stats dd {
+    margin: 0.35rem 0 0;
+    font-size: 1.15rem;
+    color: var(--ink-primary);
+  }
+
+  /* ---------- Pipeline rail ---------- */
+  .su-rail-slot {
+    margin-top: 1.25rem;
+  }
+
+  /* The page shell clips overflow, so sticky positioning is unavailable here;
+     the script pins the rail once it reaches the top of the window. */
+  .su-rail.is-pinned {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 30;
+    margin: 0;
+    padding-inline: max(1rem, calc((100vw - 1400px) / 2));
+  }
+
+  .su-rail {
+    margin: 0 -1rem;
+    padding: 0.9rem 1rem 0.7rem;
+    background: color-mix(in srgb, var(--surface-base) 90%, transparent);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--surface-line);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .su-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .su-rail__list {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(84px, 1fr);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-width: max-content;
+  }
+
+  /* the line the stops sit on, with a pulse running along it */
+  .su-rail__list::before,
+  .su-rail__list::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 0;
+    height: 1px;
+  }
+
+  .su-rail__list::before {
+    right: 0;
+    background: var(--surface-line);
+  }
+
+  .su-rail__list::after {
+    width: 90px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: su-run 7s linear infinite;
+  }
+
+  @keyframes su-run {
+    from { transform: translateX(-90px); }
+    to { transform: translateX(min(1400px, 100vw)); }
+  }
+
+  .su-stop {
+    position: relative;
+    display: grid;
+    gap: 0.3rem;
+    padding: 0 0.75rem 0.2rem 0;
+    font-family: var(--font-mono);
+    color: var(--ink-tertiary);
+    transition: color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .su-stop__dot {
+    position: relative;
+    z-index: 1;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid var(--ink-tertiary);
+    background: var(--surface-base);
+    transition:
+      background-color var(--dur-fast) var(--ease-mechanical),
+      border-color var(--dur-fast) var(--ease-mechanical),
+      box-shadow var(--dur-base) var(--ease-mechanical);
+  }
+
+  .su-stop__index {
+    margin-top: 0.35rem;
+    font-size: 0.5625rem;
+    letter-spacing: 0.14em;
+  }
+
+  .su-stop__name {
+    font-size: 0.6875rem;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+    color: var(--ink-secondary);
+    transition: color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .su-stop:hover .su-stop__name,
+  .su-stop:focus-visible .su-stop__name,
+  .su-stop.is-current .su-stop__name {
+    color: var(--ink-primary);
+  }
+
+  .su-stop:hover .su-stop__dot,
+  .su-stop:focus-visible .su-stop__dot {
+    border-color: var(--accent);
+  }
+
+  .su-stop.is-current .su-stop__dot {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-dim), 0 0 14px var(--accent-glow);
+  }
+
+  .su-stop.is-current .su-stop__index {
+    color: var(--accent);
+  }
+
+  .su-stop.is-empty {
+    opacity: 0.35;
+  }
+
+  /* ---------- Controls ---------- */
+  .su-controls {
+    display: grid;
+    grid-template-columns: minmax(220px, 340px) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.9rem 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .su-search {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 0.9rem;
+    border: 1px solid var(--surface-line);
+    border-radius: var(--radius-card);
+    background: var(--surface-raised);
+    transition: border-color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .su-search:focus-within {
+    border-color: var(--accent);
+  }
+
+  .su-search__label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+  }
+
+  .su-search input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.75rem 0;
+    border: 0;
+    outline: 0;
+    background: none;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ink-primary);
+  }
+
+  .su-search input::placeholder {
+    color: var(--ink-tertiary);
+  }
+
+  .su-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .su-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--surface-line);
+    border-radius: var(--radius-chip);
+    background: none;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-secondary);
+    transition:
+      color var(--dur-fast) var(--ease-mechanical),
+      border-color var(--dur-fast) var(--ease-mechanical),
+      background-color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .su-chip:hover {
+    color: var(--ink-primary);
+    border-color: var(--ink-tertiary);
+  }
+
+  .su-chip[aria-pressed='true'] {
+    color: var(--surface-base);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .su-chip__count {
+    font-size: 0.625rem;
+    opacity: 0.7;
+  }
+
+  .su-result {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-tertiary);
+    white-space: nowrap;
+  }
+
+  .su-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+    margin: 1.1rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: var(--ink-tertiary);
+  }
+
+  .su-key span {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.55rem;
+  }
+
+  .su-lic {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .su-lic--mixed {
+    background: var(--status-warn);
+  }
+
+  .su-lic--restricted {
+    background: var(--ink-secondary);
+  }
+
+  /* ---------- Stages ---------- */
+  .su-stage {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+    scroll-margin-top: 5.5rem;
+  }
+
+  .su-stage[hidden],
+  .su-card-wrap[hidden] {
+    display: none;
+  }
+
+  .su-stage__head {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.5rem 1.1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--surface-line);
+  }
+
+  .su-stage__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink-primary);
+  }
+
+  .su-stage__job {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-secondary);
+  }
+
+  .su-stage__count {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+    white-space: nowrap;
+  }
+
+  .su-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .su-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1rem 1rem 0.9rem;
+    border: 1px solid var(--surface-line);
+    border-radius: var(--radius-card);
+    background: var(--surface-raised);
+    overflow: hidden;
+    transition:
+      border-color var(--dur-fast) var(--ease-mechanical),
+      transform var(--dur-base) var(--ease-instrument),
+      box-shadow var(--dur-base) var(--ease-mechanical);
+  }
+
+  /* a line that draws across the top edge on hover */
+  .su-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-slow) var(--ease-instrument);
+  }
+
+  .su-card:hover,
+  .su-card:focus-visible {
+    border-color: var(--accent-glow);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
+  }
+
+  .su-card:hover::before,
+  .su-card:focus-visible::before {
+    transform: scaleX(1);
+  }
+
+  .su-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .su-card__kind {
+    color: var(--accent);
+  }
+
+  .su-card__starter {
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--accent-glow);
+    border-radius: var(--radius-chip);
+    color: var(--accent);
+    background: var(--accent-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .su-card__name {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--ink-primary);
+  }
+
+  .su-card__arrow {
+    display: inline-block;
+    margin-left: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-tertiary);
+    transition: transform var(--dur-base) var(--ease-instrument), color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .su-card:hover .su-card__arrow,
+  .su-card:focus-visible .su-card__arrow {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+
+  .su-card__does {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink-secondary);
+  }
+
+  .su-card__instead {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ink-tertiary);
+  }
+
+  .su-card__instead b {
+    font-weight: 500;
+    color: var(--ink-secondary);
+  }
+
+  .su-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem 0.8rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--surface-line);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ink-tertiary);
+  }
+
+  .su-card__repo {
+    flex: 1 1 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .su-card__stars {
+    color: var(--ink-primary);
+  }
+
+  .su-card__lic {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .su-card__lic::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .su-card__lic--mixed::before {
+    background: var(--status-warn);
+  }
+
+  .su-card__lic--restricted::before {
+    background: var(--ink-secondary);
+  }
+
+  /* cards rise in as each job scrolls into view */
+  .su--live .su-card-wrap {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity var(--dur-slow) var(--ease-instrument),
+      transform var(--dur-slow) var(--ease-instrument);
+    transition-delay: calc(var(--i, 0) * 28ms);
+  }
+
+  .su--live .su-card-wrap.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  .su-empty {
+    margin: 3rem 0 0;
+    padding: 2rem;
+    border: 1px dashed var(--surface-line);
+    border-radius: var(--radius-card);
+    font-size: 1rem;
+    color: var(--ink-secondary);
+    text-align: center;
+  }
+
+  @media (max-width: 899px) {
+    .su-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .su-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .su-stats div {
+      border-bottom: 1px dashed var(--surface-line);
+    }
+
+    .su-stats div:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .su-stats div:last-child {
+      grid-column: 1 / -1;
+      border-bottom: 0;
+    }
+
+    .su-controls {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .su-stage__head {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .su-stage__job {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .su-rail__list::after {
+      animation: none;
+      opacity: 0;
+    }
+
+    .su--live .su-card-wrap {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .su-card,
+    .su-card::before,
+    .su-card__arrow {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  let teardown: (() => void) | null = null;
+
+  function initStartup(root: HTMLElement) {
+    const abort = new AbortController();
+    const { signal } = abort;
+    const tools = Array.from(root.querySelectorAll<HTMLElement>('[data-su-tool]'));
+    const stages = Array.from(root.querySelectorAll<HTMLElement>('[data-su-stage]'));
+    const stops = new Map(
+      Array.from(root.querySelectorAll<HTMLElement>('[data-su-stop]')).map((el) => [el.dataset.suStop || '', el])
+    );
+    const search = root.querySelector<HTMLInputElement>('[data-su-search]');
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-su-filter]'));
+    const result = root.querySelector<HTMLElement>('[data-su-result]');
+    const empty = root.querySelector<HTMLElement>('[data-su-empty]');
+    const rail = root.querySelector<HTMLElement>('[data-su-rail]');
+    let filter = 'all';
+
+    // stagger index inside each job
+    for (const stage of stages) {
+      stage.querySelectorAll<HTMLElement>('[data-su-tool]').forEach((el, i) => el.style.setProperty('--i', String(Math.min(i, 14))));
+    }
+
+    function apply() {
+      const words = (search?.value || '').toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      for (const tool of tools) {
+        const text = tool.dataset.text || '';
+        const matchText = words.every((w) => text.includes(w));
+        const matchFilter =
+          filter === 'all' ||
+          (filter === 'starter' ? tool.dataset.starter === 'true' : tool.dataset.lic === filter);
+        const on = matchText && matchFilter;
+        tool.hidden = !on;
+        if (on) shown += 1;
+      }
+      for (const stage of stages) {
+        const visible = stage.querySelectorAll('[data-su-tool]:not([hidden])').length;
+        stage.hidden = visible === 0;
+        const count = stage.querySelector('[data-su-stage-count]');
+        if (count) count.textContent = `${visible} ${visible === 1 ? 'tool' : 'tools'}`;
+        stops.get(stage.dataset.suStage || '')?.classList.toggle('is-empty', visible === 0);
+      }
+      if (empty) empty.hidden = shown !== 0;
+      if (result) {
+        result.textContent =
+          shown === tools.length ? `Showing all ${shown} tools` : `Showing ${shown} of ${tools.length} tools`;
+      }
+    }
+
+    search?.addEventListener('input', apply, { signal });
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        filter = chip.dataset.suFilter || 'all';
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        apply();
+      }, { signal });
+    }
+
+    // reveal cards as their job scrolls in
+    root.classList.add('su--live');
+    const reveal = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add('is-in');
+        reveal.unobserve(entry.target);
+      }
+    }, { rootMargin: '0px 0px -6% 0px' });
+    tools.forEach((tool) => reveal.observe(tool));
+
+    // highlight the current job on the rail
+    let current = '';
+    const spy = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const id = (entry.target as HTMLElement).dataset.suStage || '';
+        if (id === current) continue;
+        current = id;
+        stops.forEach((el, key) => el.classList.toggle('is-current', key === id));
+        const stop = stops.get(id);
+        if (stop && rail && rail.scrollWidth > rail.clientWidth) {
+          rail.scrollTo({ left: stop.offsetLeft - rail.clientWidth / 2 + stop.offsetWidth / 2, behavior: 'smooth' });
+        }
+      }
+    }, { rootMargin: '-25% 0px -65% 0px' });
+    stages.forEach((stage) => spy.observe(stage));
+
+    // pin the rail once it reaches the top of the window
+    const slot = root.querySelector<HTMLElement>('[data-su-rail-slot]');
+    function pin() {
+      if (!slot || !rail) return;
+      const past = slot.getBoundingClientRect().top <= 0;
+      if (past === rail.classList.contains('is-pinned')) return;
+      slot.style.minHeight = past ? `${rail.offsetHeight}px` : '';
+      rail.classList.toggle('is-pinned', past);
+    }
+    window.addEventListener('scroll', pin, { passive: true, signal });
+    window.addEventListener('resize', pin, { passive: true, signal });
+    pin();
+
+    apply();
+
+    return () => {
+      abort.abort();
+      reveal.disconnect();
+      spy.disconnect();
+    };
+  }
+
+  function boot() {
+    teardown?.();
+    teardown = null;
+    const root = document.querySelector<HTMLElement>('[data-su]');
+    if (root) teardown = initStartup(root);
+  }
+
+  document.addEventListener('astro:page-load', boot);
+  document.addEventListener('astro:before-swap', () => {
+    teardown?.();
+    teardown = null;
+  });
+</script>
