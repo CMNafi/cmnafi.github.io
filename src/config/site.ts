@@ -5,11 +5,10 @@ export const siteConfig = {
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',
   nav: [
-    { id: 'pit-wall', label: 'Home', href: '/' },
+    { id: 'story', label: 'Story', href: '/story' },
+    { id: 'field-notes', label: 'Field Notes', href: '/field-notes' },
     { id: 'garage', label: 'Garage', href: '/garage' },
     { id: 'play', label: 'Play', href: '/play' },
-    { id: 'field-notes', label: 'Field Notes', href: '/field-notes' },
-    { id: 'story', label: 'Story', href: '/story' },
     { id: 'connect', label: 'Connect', href: '/connect' }
   ],
   socialLinks: [

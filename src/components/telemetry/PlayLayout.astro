@@ -6,13 +6,7 @@ interface Props { title: string; description: string; number?: string; eyebrow?:
 const { title, description, eyebrow = 'A LITTLE SKIN IN THE GAME' } = Astro.props;
 const current = Astro.url.pathname.replace(/\/$/, '');
 ---
-<BaseLayout title={`${title} | Play`} description={description} hideHeader={true}>
-  <header class="play-site-header">
-    <a class="play-wordmark" href="/">C M Nafi</a>
-    <nav aria-label="Primary navigation">
-      <a href="/field-notes">Field Notes</a><a href="/garage">Garage</a><a href="/play" aria-current="page">Play</a><a href="/story">Story</a><a href="/connect">Connect</a>
-    </nav>
-  </header>
+<BaseLayout title={`${title} | Play`} description={description}>
   <div class="play-shell">
     <div class="play-topline"><a href="/garage">Garage /</a><a href="/play" aria-current={current === '/play' ? 'page' : undefined}>Play</a><span>Off the clock</span></div>
     <header class="play-heading">

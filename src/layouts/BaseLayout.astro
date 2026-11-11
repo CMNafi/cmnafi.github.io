@@ -1,11 +1,10 @@
 ---
 import '../styles/global.css';
+import '../styles/site.css';
 import { siteConfig } from '@/config/site';
 import Footer from '@/components/Footer.astro';
 import StoryNavigation from '../components/StoryNavigation.astro';
-import { execSync } from 'child_process';
-import LapTimer from '@/components/telemetry/LapTimer.astro';
-import AbExperimentEngine from '@/components/telemetry/AbExperimentEngine.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
 
 interface Props {
   title?: string;
@@ -28,16 +27,8 @@ const {
 const pageTitle = title === siteConfig.title ? title : `${title} - ${siteConfig.title}`;
 const canonicalUrl = canonical ? new URL(canonical, siteConfig.siteUrl).toString() : Astro.url.toString();
 const imageUrl = new URL(image, siteConfig.siteUrl).toString();
-const currentPath = Astro.url.pathname;
 
-// Dynamic Git hash and build timestamp compilation
-let commitSha = 'unknown';
-try {
-  commitSha = execSync('git rev-parse HEAD', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim().slice(0, 7);
-} catch (e) {}
-const buildDate = new Date().toISOString();
 ---
-<!-- [SYSTEM TELEMETRY] COMMIT: {commitSha} | COMPILED: {buildDate} | CHASSIS LOGGED -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -79,62 +70,15 @@ const buildDate = new Date().toISOString();
       <div class="ambient ambient--one"></div>
       <div class="ambient ambient--two"></div>
       <div class="grain"></div>
-      {!hideHeader && (
-        <header class="site-header">
-          <a class="site-mark" href="/">
-            <span>C M Nafi</span>
-            <small>Solutions engineer · Florida</small>
-          </a>
-          <nav aria-label="Primary navigation" class="nav-container">
-            <ul class="nav-list">
-              {siteConfig.nav.map((item) => {
-                const isCurrent = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(`${item.href}/`));
-
-                return (
-                  <li>
-                    <a
-                      href={item.href}
-                      data-nav-item={item.id}
-                      aria-current={isCurrent ? 'page' : undefined}
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-            <div class="header-timer-wrap">
-              <LapTimer id="global-header-timer" isLive={true} />
-            </div>
-          </nav>
-        </header>
-      )}
-      <main>
+      {!hideHeader && <SiteHeader />}
+      <main id="main">
         <slot />
       </main>
       <Footer />
     </div>
 
     <style is:global>
-      /* Primary Navigation Layout & Timer */
-      .nav-container {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-      }
-      .header-timer-wrap {
-        display: inline-flex;
-        align-items: center;
-      }
-      @media (max-width: 768px) {
-        .nav-container {
-          flex-direction: column;
-          gap: 1rem;
-          align-items: center;
-        }
-      }
-
-      /* Jony Ive-style Elegant Page Transitions */
+      /* Page fade between navigations */
       .page-shell {
         opacity: 0;
         transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -178,21 +122,5 @@ const buildDate = new Date().toISOString();
       });
     </script>
 
-    <!-- Pit Wall startup ascii banner -->
-    <script define:vars={{ commitSha, buildDate }}>
-      console.log(`%c
-   ___ __  __   _  _   _   ___ ___ 
-  / __|  \\/  | | \\| | /_\\ | __|_ _|
- | (__| |\\/| | | .\` |/ _ \\| _| | | 
-  \\___|_|  |_| |_|\\_/_/ \\_\\_| |___|
-                                   
- [ SYSTEM ACTIVE SPECIMEN ]
- TELEMETRY: SECTOR-2 ONLINE
- GIT COMMIT: ${commitSha}
- COMPILED: ${buildDate}
-`, "color: #7dd3a0; font-family: monospace; font-weight: bold;");
-    </script>
-    <!-- A/B Testing & GA4 Telemetry Engine -->
-    <AbExperimentEngine />
   </body>
 </html>

@@ -1,0 +1,207 @@
+/*
+ * Shared page furniture for the redesigned pages (home, Field Notes, Garage,
+ * Connect). One container, one heading style, one kind of list row.
+ * Everything reads from tokens.css. Classes are prefixed s- so they cannot
+ * collide with the older rules in global.css.
+ */
+
+.s-page {
+  width: min(calc(100% - 2rem), var(--max-width));
+  margin-inline: auto;
+  padding-top: clamp(2.5rem, 6vw, 5rem);
+}
+
+.s-eyebrow {
+  margin: 0 0 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.s-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(2.5rem, 5.8vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--ink-primary);
+  text-wrap: balance;
+}
+
+.s-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.s-lede {
+  margin: 1.5rem 0 0;
+  max-width: 38rem;
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+  line-height: 1.65;
+  color: var(--ink-secondary);
+}
+
+.s-lede a,
+.s-prose a {
+  color: var(--ink-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-glow);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--dur-fast) var(--ease-mechanical);
+}
+
+.s-lede a:hover,
+.s-prose a:hover {
+  text-decoration-color: var(--accent);
+}
+
+.s-section {
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+}
+
+.s-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--surface-line);
+}
+
+.s-section-head h2 {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+
+.s-more {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.s-more:hover,
+.s-more:focus-visible {
+  color: var(--ink-primary);
+}
+
+/* A list row: meta on the left, title and note in the middle, tag on the right */
+.s-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.s-row {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.3rem 1.75rem;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--surface-line);
+  color: inherit;
+}
+
+.s-row__meta,
+.s-row__tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+  white-space: nowrap;
+}
+
+.s-row__title {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink-primary);
+  transition: color var(--dur-fast) var(--ease-mechanical);
+}
+
+.s-row__note {
+  display: block;
+  margin-top: 0.35rem;
+  max-width: 44rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--ink-secondary);
+}
+
+a.s-row:hover .s-row__title,
+a.s-row:focus-visible .s-row__title {
+  color: var(--accent);
+}
+
+.s-row__tag--live {
+  color: var(--accent);
+}
+
+.s-row__tag--wip {
+  color: var(--status-warn);
+}
+
+.s-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.s-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--surface-line);
+  border-radius: var(--radius-chip);
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+  transition:
+    color var(--dur-fast) var(--ease-mechanical),
+    border-color var(--dur-fast) var(--ease-mechanical),
+    background-color var(--dur-fast) var(--ease-mechanical);
+}
+
+.s-chip:hover {
+  color: var(--ink-primary);
+  border-color: var(--ink-tertiary);
+}
+
+.s-chip[aria-pressed='true'],
+.s-chip[aria-current='page'] {
+  color: var(--surface-base);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.s-chip span {
+  opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+  .s-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .s-row__meta {
+    grid-column: 1 / -1;
+  }
+}

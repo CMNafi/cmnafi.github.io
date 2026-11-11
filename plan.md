@@ -9,6 +9,19 @@
 
 ## 0. The one-sentence vision
 
+### November 12, 2026: one clean site
+
+The site had drifted into two visual systems and four different headers. This redesign makes it one. It supersedes the October 14 homepage beta hub, the October 15 four-act and unified-story homepage entries, and the "lap-time counter in the corner" through-line in section 2.
+
+- **One shell.** `src/components/SiteHeader.astro` is the only header: the wordmark links home, then Story, Field Notes, Garage, Play, Connect. BaseLayout, Play, articles, category pages, Brewing and 404 all use it. The lap timer, the build-hash comment, the console banner and the footer "Telemetry" link are gone.
+- **One look.** Every main page uses the dark tokens in `src/styles/tokens.css` (most of the site already did, and about 2,700 hard-coded colours in tools and reports assume it). Shared page furniture lives in `src/styles/site.css`: one container, one heading style, one list row, one chip.
+- **Homepage.** A short page on BaseLayout: who Nafi is (the STORY.md logline), the habit table from STORY.md §1, the five latest notes, the live tools, and an email link. No embedded demos, scroll acts, redesign banner or theme toggle.
+- **Field Notes.** The index is a plain list, newest first, grouped by year, with a category filter. The idea atlas keeps its own page at `/field-notes/atlas` and is linked from the index. Category pages and Brewing use the same list row.
+- **Articles.** Same header, a one-line meta row, serif section headings. `AbExperimentEngine` is no longer loaded: it swapped article titles and injected an "Executive AI takeaways" box for some visitors. The component and its data remain in the repo, unused.
+- **Garage.** One list of every project with its documented status.
+- **Voice.** F1 vocabulary is now limited to the name "Garage", as STORY.md §4 already asked. No "pit wall", "radio logs", "telemetry readouts", "previous lap".
+- **Left alone.** `/claude`, `/codex` and `/gem` are no longer linked from the homepage but still exist. CAIA, World Cup, the Play sub-pages, the Garage tools and the long interactive reports keep their own layouts. `telemetry/` now holds `SectorBadge`, `StatusDot`, `TelemetryGrid`, `PlayLayout` and the unused `AbExperimentEngine`; `LapTimer`, `Flag` and `ProjectFeature` were deleted along with 42 other files nothing imported.
+
 ### November 11, 2026: Startup, the open-source stack
 
 `/startup` lists open-source tools for every job a service startup has to do, in thirteen stages: test the idea, brand and website, build the product, the AI layer, automation, win customers, serve customers, run the work, money, people, data and internal tools, ship and run, security and compliance. All tool data lives in `src/data/startupTools.ts`. Every repository, star count and licence was read from the GitHub search API on November 11, 2026; archived repositories were left out, and the date is shown on the page. Licences are shown in three honest classes: a single open-source licence, "Mixed" (several licences, usually an open core plus a paid edition), and "Source-available" (public code with a restrictive licence). The page states that it is a research list, not a list of tools Nafi has run in production, and the "Starter" marks are one reasonable starting set, not endorsements. The page uses BaseLayout, the dark tokens, and `SectorBadge`; search, filters, the pinned job rail and card reveals are progressive enhancement and respect reduced motion. Linked from the footer and the sitemap.

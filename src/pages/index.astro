@@ -1,61 +1,279 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
-import FormAdvMiniExplorer from '@/components/codex/islands/FormAdvMiniExplorer.astro';
-import CricketFieldingTactician from '@/components/codex/islands/CricketFieldingTactician.astro';
-import '@/styles/home-hub.css';
-import UnifiedStoryStage from '@/components/islands/UnifiedStoryStage.astro';
-import StoryNavigation from '@/components/StoryNavigation.astro';
-const entries: CollectionEntry<'field-notes'>[] = await getCollection('field-notes');
-const notes = entries.filter(n => !n.data.draft).sort((a,b) => b.data.publishedAt.valueOf()-a.data.publishedAt.valueOf());
-const latest = notes[0];
-const builds = [
-  {id:'claude',name:'The editorial monograph',description:'A warm reading-first version, with generous margins and a curated research archive.',focus:'Narrative pacing and long-form reading'},
-  {id:'gem',name:'The interactive systems lab',description:'An experiment in bringing the tools and the stories behind them into the same room.',focus:'Interactive demos and structured ledgers'},
-  {id:'codex',name:'The editorial workbench',description:'A paper-and-dark workspace for source-linked adviser snapshots, cricket tactics, and thoughtful writing.',focus:'Real data, simple controls, and a clear index'}
-];
-const title='C M Nafi | Curiosities, Systems & Stories';
-const description='Solutions engineer at Dasseti in institutional fintech. Notes on capital, books and cricket, tools from the Garage, and three live website redesign experiments.';
----
-<!doctype html>
-<html lang="en" data-theme="paper">
-<head>
-  <StoryNavigation />
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{title}</title><meta name="description" content={description} /><link rel="canonical" href="https://www.cmnafi.com/" />
-  <meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content="https://www.cmnafi.com/" /><meta property="og:type" content="website" /><meta property="og:image" content="https://www.cmnafi.com/og-default.svg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet" />
-  <meta name="twitter:card" content="summary_large_image" /><meta name="theme-color" content="#FAF8F5" />
-  <script is:inline>try{document.documentElement.dataset.theme=localStorage.getItem('cmnafi.home.theme')==='dark'?'dark':'paper'}catch{}</script>
-  <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-W7QGKS85CP"></script>
-  <script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-W7QGKS85CP');</script>
-</head>
-<body id="top">
-  <a class="home-skip" href="#main">Skip to content</a>
-  <div class="beta-ribbon"><div class="beta-ribbon-inner"><div><span class="beta-badge">The redesign notebook</span><span class="ribbon-copy">One brief. Three different versions. Take a look.</span></div><nav class="beta-links" aria-label="Beta builds">{builds.map(build=><a class="beta-pill" href={`/${build.id}/`}>/{build.id} ↗</a>)}</nav></div></div>
-  <header class="site-header"><div class="brand"><a href="/" class="brand-name">C M Nafi</a><span class="brand-tag">Curiosities, systems & stories</span></div><nav class="nav-row" aria-label="Primary navigation"><a href="/garage/">The Garage</a><a href="/field-notes/">Field Notes</a><a href="/play/">Play</a><a href="/story/">My Story</a><a href="/connect/">Connect</a><button class="theme-btn" id="home-theme-toggle" type="button">Theme: Paper</button></nav></header>
-  <main id="main">
-    <UnifiedStoryStage />
-    <section class="hero" id="home-notebook" aria-labelledby="hero-title"><div><div class="hero-kicker">Solutions engineer · Numbers, tools, and matches</div><h2 class="hero-title" id="hero-title">Building the tools I wish existed.<br />Writing down what I learn <em>along the way.</em></h2><p class="hero-prose">I’m Nafi, a solutions engineer at <strong>Dasseti</strong> in institutional fintech. Before this, I worked at <strong>BlackRock</strong> in asset management, <strong>SkyBridge Associates</strong> in alternative investments, and <strong>Mayo Clinic</strong> in healthcare and research. Different rooms, the same habit: understand the question before trying to answer it.</p><p class="hero-prose">I left home at twelve for <strong>Rangpur Cadet College</strong>, moved to <strong>UWC Changshu</strong> on a full scholarship at sixteen, and studied data science at <strong>Luther College</strong>. These days I translate between investment teams and software, write about capital, and turn up for weekend cricket.</p><blockquote class="hero-quote">Learn the room. Then translate.</blockquote></div><aside class="now-card" aria-label="Current notebook"><div class="now-header"><span>Current notebook</span><span>Institutional fintech</span></div><ul class="now-list"><li><span class="now-item-label">Day job</span><div class="now-item-val">Solutions Engineer at Dasseti</div><div class="now-item-sub">Investment teams, due diligence, and the software they use.</div><a class="section-link" href="#professional">Explore professional practice ↓</a></li><li><span class="now-item-label">On the workbench</span><a class="now-item-val" href="/garage/">Regulatory Lens & cricket tools ↗</a><div class="now-item-sub">Adviser research write-ups and hands-on cricket fielding planners.</div></li><li><span class="now-item-label">Latest field note</span><a class="now-item-val" href={`/field-notes/${latest.slug}/`}>{latest.data.title} ↗</a><div class="now-item-sub">{latest.data.excerpt}</div></li><li><span class="now-item-label">Off the clock</span><a class="now-item-val" href="/play/">Cricket, FPL, and Formula 1 ↗</a><div class="now-item-sub">Follow my fantasy squad, check races and scores, or save a prediction.</div></li></ul></aside></section>
-    <section class="section-block latest-report" aria-labelledby="latest-report-title"><div class="section-head"><div><span class="hero-kicker">New research · October 14, 2026</span><h2 class="section-title" id="latest-report-title">The retail software stack.</h2><p class="section-subtitle">Who runs the till, the pumps, and the back office, and where the workflow breaks. A full report across six retail verticals, with searchable pricing tables and an analysis of the manual steps AI could help with.</p></div><a class="btn-launch" href="/field-notes/retail-software-landscape/">Read the interactive report ↗</a></div></section>
-    <section class="section-block" id="beta-lab" aria-labelledby="beta-title"><div class="section-head"><div><h2 class="section-title" id="beta-title">Three ways to tell the same story.</h2><p class="section-subtitle">I gave Claude, Gemini, and Codex the same redesign brief. Their builds are here to explore. Which one feels most like a place you would come back to?</p></div><span class="section-link" id="home-vote-status" role="status">Save a preference in this browser.</span></div><div class="beta-grid">{builds.map((build,i)=><article class="beta-card"><div><div class="beta-card-top"><span class="beta-route">cmnafi.com/{build.id}</span><span class="beta-status">Build {i+1}</span></div><h3>{build.name}</h3><p>{build.description}</p><p class="beta-traits">{build.focus}</p></div><div class="beta-card-actions"><a class="btn-launch" href={`/${build.id}/`}>Open /{build.id} ↗</a><button class="btn-vote" data-build={build.id} aria-pressed="false" type="button">My favorite</button></div></article>)}</div><p class="local-choice-note">Your choice stays on this device. It is not a public vote tally.</p></section>
+/**
+ * Homepage: who Nafi is, the three things he keeps doing, the latest writing,
+ * the tools that are live, and how to reach him. Copy follows STORY.md.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { siteConfig } from '@/config/site';
 
-    <section class="section-block" id="garage" aria-labelledby="tools-title"><div class="section-head"><div><h2 class="section-title" id="tools-title">Try the question for yourself.</h2><p class="section-subtitle">At SkyBridge, I learned to look beyond a manager’s headline numbers. In cricket, I learned how one field change can matter. Try both ideas below: compare adviser snapshots, then move fielders and check the rules.</p></div><a class="section-link" href="/garage/">All tools & project notes →</a></div><div class="workbench-grid"><div class="island-card"><FormAdvMiniExplorer /></div><div class="island-card"><CricketFieldingTactician /></div></div></section>
+const notes = (await getCollection('field-notes'))
+  .filter((n) => !n.data.draft && n.data.category.trim() !== 'Brewing')
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const recent = notes.slice(0, 5);
 
-    <section class="section-block home-contact" id="connect" aria-labelledby="hello-title"><div class="section-head"><div><h2 class="section-title" id="hello-title">Say hello.</h2><p class="section-subtitle">Happy to talk about allocator workflows, a good book, a close finish in cricket, or which beta build you liked best.</p></div><div><button class="btn-launch" id="home-copy-email" type="button">Copy nafi@cmnafi.com</button><p id="home-copy-status" role="status"></p></div></div><a class="section-link" href="/connect/">More ways to connect →</a></section>
-  </main>
-  <footer class="site-footer"><div>© {new Date().getFullYear()} C M Nafi · Notes, tools & weekend cricket</div><nav class="footer-links" aria-label="Footer"><a href="/sitemap/">Sitemap</a><a href="https://www.linkedin.com/in/cm-nafi/">LinkedIn ↗</a><a href="https://github.com/CMNafi">GitHub ↗</a><a href="mailto:nafi@cmnafi.com">Email</a></nav></footer>
-</body></html>
-<script>
-  function initHomeShell(){
-  const shell=document.querySelector<HTMLElement>('#home-theme-toggle');if(!shell||shell.dataset.ready)return;shell.dataset.ready='true';
-  const themeButton=document.querySelector<HTMLButtonElement>('#home-theme-toggle');
-  const showTheme=()=>{if(themeButton)themeButton.textContent=document.documentElement.dataset.theme==='dark'?'Theme: Dark':'Theme: Paper';};
-  showTheme();themeButton?.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'paper':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('cmnafi.home.theme',next)}catch{}showTheme();});
-  const votes=[...document.querySelectorAll<HTMLButtonElement>('[data-build]')];
-  const choose=(id:string)=>{votes.forEach(button=>{const active=button.dataset.build===id;button.classList.toggle('voted',active);button.setAttribute('aria-pressed',String(active));button.textContent=active?'Saved as my favorite':'My favorite';});const status=document.querySelector('#home-vote-status');if(status)status.textContent=`Your local preference: /${id}.`;};
-  try{const saved=localStorage.getItem('cmnafi.home.build');if(saved&&votes.some(b=>b.dataset.build===saved))choose(saved)}catch{}
-  votes.forEach(button=>button.addEventListener('click',()=>{const id=button.dataset.build!;choose(id);try{localStorage.setItem('cmnafi.home.build',id)}catch{const status=document.querySelector('#home-vote-status');if(status)status.textContent='Preference selected. This browser cannot save it.';}}));
-  document.querySelector('#home-copy-email')?.addEventListener('click',async()=>{const status=document.querySelector('#home-copy-status')!;try{await navigator.clipboard.writeText('nafi@cmnafi.com');status.textContent='Email copied.'}catch{status.textContent='Email: nafi@cmnafi.com';}});
+const tools = (await getCollection('projects'))
+  .filter((p) => p.data.status === 'live' && !['play', 'world-cup-corner'].includes(p.slug))
+  .sort((a, b) => b.data.priority - a.data.priority || a.data.title.localeCompare(b.data.title))
+  .slice(0, 4);
+
+const day = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric', timeZone: 'UTC' });
+const firstSentence = (text: string) => text.match(/^.*?[.?!](?=\s|$)/)?.[0] ?? text;
+
+const habits = [
+  {
+    habit: 'Numbers into stories',
+    name: 'Field Notes',
+    href: '/field-notes',
+    note: `${notes.length} notes on how capital moves, the books I read, and the close finishes in league cricket.`
+  },
+  {
+    habit: 'Problems into tools',
+    name: 'Garage',
+    href: '/garage',
+    note: 'Small tools I wanted and couldn’t find. I build them with AI coding tools; the skill is describing exactly what should exist.'
+  },
+  {
+    habit: 'Matches into memory',
+    name: 'Play',
+    href: '/play',
+    note: 'League cricket in Florida, Formula 1, and a fantasy football squad I have to live with every week.'
   }
-  initHomeShell();document.addEventListener('astro:page-load',initHomeShell);
-</script>
+];
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: siteConfig.author,
+  url: siteConfig.siteUrl,
+  jobTitle: 'Solutions Engineer',
+  worksFor: { '@type': 'Organization', name: 'Dasseti' },
+  sameAs: siteConfig.socialLinks.filter((l) => l.href.startsWith('http')).map((l) => l.href)
+};
+---
+
+<BaseLayout canonical="/">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(personLd)} />
+  </Fragment>
+
+  <div class="s-page home">
+    <section class="home-intro">
+      <div class="home-intro__text">
+        <p class="s-eyebrow">Solutions engineer · Land O’ Lakes, Florida</p>
+        <h1 class="s-title">Learn the room. <em>Then translate.</em></h1>
+        <p class="s-lede">
+          I’m Nafi. I work at Dasseti, where I sit between investment teams and the software they run due
+          diligence on, and translate in both directions. Before that I worked at BlackRock, SkyBridge and
+          Mayo Clinic.
+        </p>
+        <p class="s-lede">
+          I left home at twelve for military school and have been the newest person in the room ever since.
+          <a href="/story">Read the story</a>, or <a href={`mailto:${siteConfig.email}`}>send me an email</a>.
+        </p>
+      </div>
+      <img
+        class="home-intro__photo"
+        src="/profile.jpg"
+        alt="C M Nafi"
+        width="1080"
+        height="1080"
+        decoding="async"
+      />
+    </section>
+
+    <section class="s-section" aria-labelledby="home-habits">
+      <div class="s-section-head">
+        <h2 id="home-habits">The same habit, three places</h2>
+      </div>
+      <div class="home-habits">
+        {habits.map((h) => (
+          <a class="home-habit" href={h.href}>
+            <span class="home-habit__habit">{h.habit}</span>
+            <span class="home-habit__name">{h.name} <span aria-hidden="true">→</span></span>
+            <span class="home-habit__note">{h.note}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="s-section" aria-labelledby="home-writing">
+      <div class="s-section-head">
+        <h2 id="home-writing">Recent writing</h2>
+        <a class="s-more" href="/field-notes">All {notes.length} notes</a>
+      </div>
+      <ul class="s-rows" role="list">
+        {recent.map((note) => (
+          <li>
+            <a class="s-row" href={`/field-notes/${note.slug}`}>
+              <time class="s-row__meta" datetime={note.data.publishedAt.toISOString()}>{day(note.data.publishedAt)}</time>
+              <span>
+                <span class="s-row__title">{note.data.title}</span>
+                <span class="s-row__note">{note.data.excerpt}</span>
+              </span>
+              <span class="s-row__tag">{note.data.category.trim()}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="s-section" aria-labelledby="home-tools">
+      <div class="s-section-head">
+        <h2 id="home-tools">Tools you can try</h2>
+        <a class="s-more" href="/garage">The whole Garage</a>
+      </div>
+      <ul class="s-rows" role="list">
+        {tools.map((tool) => (
+          <li>
+            <a class="s-row" href={tool.slug === 'form-adv-data-finder' ? `/garage/${tool.slug}` : tool.data.liveUrl || `/garage/${tool.slug}`}>
+              <span class="s-row__meta">{tool.data.category}</span>
+              <span>
+                <span class="s-row__title">{tool.data.title}</span>
+                <span class="s-row__note">{firstSentence(tool.data.summary)}</span>
+              </span>
+              <span class="s-row__tag s-row__tag--live">Live</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="s-section home-contact" aria-labelledby="home-contact">
+      <h2 class="home-contact__title" id="home-contact">Say hello.</h2>
+      <p class="s-lede">
+        I’m most useful on due diligence and how investment teams adopt software, but a question about a
+        Field Note or a cricket match is just as welcome.
+      </p>
+      <a class="home-contact__email" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .home-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(200px, 26vw, 320px);
+    align-items: end;
+    gap: 2rem clamp(2rem, 6vw, 5rem);
+  }
+
+  .home-intro__photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 20%;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--surface-line);
+  }
+
+  .home-habits {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .home-habit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.6rem 1.75rem 1.75rem 0;
+    border-bottom: 1px solid var(--surface-line);
+  }
+
+  .home-habit + .home-habit {
+    padding-left: 1.75rem;
+    border-left: 1px solid var(--surface-line);
+  }
+
+  .home-habit__habit {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+  }
+
+  .home-habit__name {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink-primary);
+    transition: color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .home-habit__name span {
+    display: inline-block;
+    font-size: 0.7em;
+    color: var(--ink-tertiary);
+    transition: transform var(--dur-base) var(--ease-instrument), color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .home-habit:hover .home-habit__name,
+  .home-habit:focus-visible .home-habit__name,
+  .home-habit:hover .home-habit__name span,
+  .home-habit:focus-visible .home-habit__name span {
+    color: var(--accent);
+  }
+
+  .home-habit:hover .home-habit__name span,
+  .home-habit:focus-visible .home-habit__name span {
+    transform: translateX(4px);
+  }
+
+  .home-habit__note {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--ink-secondary);
+  }
+
+  .home-contact__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ink-primary);
+  }
+
+  .home-contact__email {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid var(--accent);
+    font-family: var(--font-serif);
+    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+    color: var(--ink-primary);
+    transition: color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .home-contact__email:hover,
+  .home-contact__email:focus-visible {
+    color: var(--accent);
+  }
+
+  @media (max-width: 760px) {
+    .home-intro {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .home-intro__photo {
+      order: -1;
+      width: 132px;
+      aspect-ratio: 1;
+    }
+
+    .home-habits {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .home-habit,
+    .home-habit + .home-habit {
+      padding: 1.4rem 0;
+      border-left: 0;
+    }
+  }
+</style>

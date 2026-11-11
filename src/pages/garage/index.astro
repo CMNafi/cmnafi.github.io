@@ -1,54 +1,108 @@
 ---
+/**
+ * Garage index: every project in one list, with its honest status.
+ * Live tools open the tool; everything else opens its write-up.
+ */
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import ProjectFeature from '@/components/telemetry/ProjectFeature.astro';
-import SectorBadge from '@/components/telemetry/SectorBadge.astro';
-const projects = (await getCollection('projects')).sort((a,b) => b.data.priority - a.data.priority || a.data.title.localeCompare(b.data.title));
-const featured = projects.find(p => p.data.featured && p.data.status === 'live');
-const filters = ['all', 'live', 'brewing', 'parked'];
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) =>
+    Number(b.data.status === 'live') - Number(a.data.status === 'live') ||
+    b.data.priority - a.data.priority ||
+    a.data.title.localeCompare(b.data.title)
+);
+
+const statusLabel = { live: 'Live', brewing: 'In development', parked: 'Paused' } as const;
+const filters = (['live', 'brewing', 'parked'] as const).filter((s) => projects.some((p) => p.data.status === s));
+const hrefOf = (p: (typeof projects)[number]) =>
+  p.slug !== 'form-adv-data-finder' && p.data.status === 'live' && p.data.liveUrl ? p.data.liveUrl : `/garage/${p.slug}`;
 ---
-<BaseLayout title="The Garage. Projects & experiments" description="Independent tools and project notes from C M Nafi: adviser research, cricket fielding, sports dashboards, and a guide to everyday choices.">
-  <div class="collection-shell">
-    <header class="collection-intro">
-      <div><SectorBadge variant="p1" label="THE GARAGE / INDEPENDENT PROJECTS" /><h1>Curiosity,<br />made <em>tangible.</em></h1></div>
-      <div class="intro-aside"><p>At work, I translate between investors and software. Here I use AI coding tools to try out my own ideas: clearer adviser research, better fielding decisions, and questions from my reading.</p><a href="#collection">Explore the collection <span aria-hidden="true">↓</span></a><span class="collection-count">{String(projects.length).padStart(2,'0')} PROJECTS / ALWAYS EVOLVING</span></div>
+
+<BaseLayout
+  title="Garage"
+  description="Independent tools and project notes from C M Nafi: adviser research, cricket fielding, sports dashboards, and a guide to everyday choices."
+  canonical="/garage"
+>
+  <div class="s-page" data-garage>
+    <header>
+      <p class="s-eyebrow">Garage · {projects.length} projects</p>
+      <h1 class="s-title">Small tools I wanted and <em>couldn’t find.</em></h1>
+      <p class="s-lede">
+        At work I translate between investors and software. Here I try my own ideas: clearer adviser research,
+        better fielding decisions, questions from my reading. I build these with AI coding tools, on my own time;
+        none of them were made for an employer.
+      </p>
     </header>
-    {featured && <ProjectFeature project={featured} />}
-    <section class="collection" id="collection" aria-labelledby="collection-title">
-      <div class="collection-heading"><div><span class="eyebrow">THE COLLECTION</span><h2 id="collection-title">Find something to try.</h2></div><p>Research an adviser. Plan a cricket field. Explore a choice.<br />Live tools, project write-ups, and development plans are described below.</p></div>
-      <div class="filter-row" aria-label="Filter projects">
-        {filters.map(filter => <button type="button" data-filter={filter} aria-pressed={filter==='all'}>{filter==='all'?'All projects':filter==='live'?'Available now':filter==='brewing'?'In development':'Paused'}<span>{filter==='all'?projects.length:projects.filter(p=>p.data.status===filter).length}</span></button>)}
-        <span class="result-count" aria-live="polite" id="project-count">{projects.length} projects</span>
+
+    <div class="garage-controls">
+      <div class="s-chips" role="group" aria-label="Filter projects">
+        <button class="s-chip" type="button" data-garage-filter="all" aria-pressed="true">All <span>{projects.length}</span></button>
+        {filters.map((s) => (
+          <button class="s-chip" type="button" data-garage-filter={s} aria-pressed="false">
+            {statusLabel[s]} <span>{projects.filter((p) => p.data.status === s).length}</span>
+          </button>
+        ))}
       </div>
-      <div class="project-grid">
-        {projects.map((project,index) => <article class="project-card" data-project-status={project.data.status}>
-          <a class="project-link" href={project.data.status==='live' && project.data.liveUrl ? project.data.liveUrl : `/garage/${project.slug}`} data-astro-reload>
-            <div class="card-art">{project.data.image ? <img src={project.data.image} alt="" loading="lazy" /> : <div class="card-diagram" aria-hidden="true"><span class="diagram-number">{String(index+1).padStart(2,'0')}</span><span class="diagram-line"></span><span class="diagram-category">{project.data.category}</span></div>}<span class="open-arrow" aria-hidden="true">↗</span></div>
-            <div class="card-copy"><div class="card-meta"><span>{project.data.category}</span><span class:list={['project-state',project.data.status]}>{project.data.status==='live'?'Available now':project.data.status==='brewing'?'In development':'Paused'}</span></div><h3>{project.data.title}</h3><p>{project.data.summary}</p><span class="card-action">{project.slug==='form-adv-data-finder'?'Read the project write-up':project.data.status==='live'?'Open the tool':'Read the development notes'} <span aria-hidden="true">→</span></span></div>
+    </div>
+
+    <ul class="s-rows garage-rows" role="list">
+      {projects.map((project) => (
+        <li data-garage-project data-status={project.data.status}>
+          <a class="s-row" href={hrefOf(project)} data-astro-reload>
+            <span class="s-row__meta">{project.data.category}</span>
+            <span>
+              <span class="s-row__title">{project.data.title}</span>
+              <span class="s-row__note">{project.data.summary}</span>
+            </span>
+            <span class:list={['s-row__tag', project.data.status === 'live' ? 's-row__tag--live' : 's-row__tag--wip']}>
+              {statusLabel[project.data.status]}
+            </span>
           </a>
-        </article>)}
-      </div>
-      <p class="empty-message" hidden>No projects in this category yet. Explore the rest of the collection.</p>
-    </section>
-    <aside class="collection-note"><span class="eyebrow">AN OPEN WORKSHOP</span><p>The questions come from work, books, and the cricket field.<br />These are independent projects, built with AI coding tools.</p><a href="/connect">Have a thought? Let’s talk ↗</a></aside>
+        </li>
+      ))}
+    </ul>
+
+    <p class="s-lede garage-note">
+      Have a thought on any of these? <a href="/connect">Tell me</a>.
+    </p>
   </div>
 </BaseLayout>
-<script>
-function initProjectFilters() {
-  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
-  const cards = document.querySelectorAll<HTMLElement>('[data-project-status]');
-  buttons.forEach(button => { button.onclick = () => {
-    const filter = button.dataset.filter;
-    buttons.forEach(item => item.setAttribute('aria-pressed',String(item===button)));
-    let count=0;
-    cards.forEach(card => {card.hidden=filter!=='all' && card.dataset.projectStatus!==filter;if(!card.hidden) count++;});
-    const output=document.getElementById('project-count');if(output) output.textContent=`${count} ${count===1?'project':'projects'}`;
-    const empty=document.querySelector<HTMLElement>('.empty-message');if(empty) empty.hidden=count!==0;
-  };});
-}
-document.addEventListener('astro:page-load',initProjectFilters);
-initProjectFilters();
-</script>
+
 <style>
-.collection-shell{max-width:1240px;margin:auto;padding:70px 32px 80px}.collection-intro{display:grid;grid-template-columns:1.3fr 1fr;align-items:end;gap:70px;margin-bottom:64px}h1{font:400 clamp(54px,7.5vw,104px)/1.02 var(--font-serif);letter-spacing:-.065em;margin:28px 0 0}h1 em{font-weight:400;color:var(--accent)}.intro-aside{padding-bottom:8px}.intro-aside p{font-size:19px;line-height:1.75;color:var(--ink-secondary);margin:0 0 24px}.intro-aside a{font:12px var(--font-mono);display:flex;gap:35px}.collection-count{display:block;font:10px var(--font-mono);letter-spacing:.12em;color:var(--ink-secondary);margin-top:40px}.collection{padding-top:100px;scroll-margin-top:30px}.collection-heading{display:flex;justify-content:space-between;gap:25px;align-items:end;margin-bottom:34px}.eyebrow{font:10px var(--font-mono);letter-spacing:.13em;color:var(--accent)}h2{font:400 clamp(32px,4vw,48px)/1.15 var(--font-serif);letter-spacing:-.04em;margin:13px 0 0}.collection-heading p{color:var(--ink-secondary);font-size:15px;line-height:1.7;margin:0}.filter-row{display:flex;align-items:center;gap:8px;border-top:1px solid var(--surface-line);padding:22px 0 30px;flex-wrap:wrap}.filter-row button{padding:10px 14px;background:transparent;border:1px solid var(--surface-line);border-radius:2px;color:var(--ink-secondary);font:11px var(--font-mono);text-transform:capitalize}.filter-row button span{margin-left:14px;opacity:.65}.filter-row button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--surface-base)}.result-count{margin-left:auto;font:10px var(--font-mono);color:var(--ink-secondary)}.project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.project-card{border:1px solid var(--surface-line);border-radius:var(--radius-card);overflow:hidden;background:var(--surface-raised);transition:transform var(--dur-base),border-color var(--dur-base)}.project-card:hover{transform:translateY(-4px);border-color:var(--accent)}.project-card[hidden]{display:none}.project-link{display:flex;flex-direction:column;height:100%}.card-art{height:215px;position:relative;overflow:hidden;border-bottom:1px solid var(--surface-line);background:var(--surface-base)}.card-art img{width:100%;height:100%;object-fit:cover}.open-arrow{position:absolute;right:17px;top:15px;color:var(--accent);font-size:22px}.card-diagram{height:100%;padding:24px 30px;display:flex;flex-direction:column;justify-content:center;background-image:linear-gradient(var(--surface-line) 1px,transparent 1px),linear-gradient(90deg,var(--surface-line) 1px,transparent 1px);background-size:35px 35px}.diagram-number{font:italic 74px/1 var(--font-serif);color:var(--ink-secondary)}.diagram-line{width:55%;height:1px;background:var(--accent);margin:20px 0 14px}.diagram-category{font:9px var(--font-mono);text-transform:uppercase;letter-spacing:.2em;color:var(--accent)}.card-copy{padding:24px;display:flex;flex-direction:column;flex:1}.card-meta{display:flex;justify-content:space-between;gap:10px;font:9px var(--font-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-secondary)}.project-state.live{color:var(--accent)}.project-state.brewing{color:var(--status-warn)}h3{font:400 27px/1.2 var(--font-serif);letter-spacing:-.03em;margin:22px 0 14px}.card-copy p{font-size:15px;line-height:1.75;color:var(--ink-secondary);margin:0 0 26px}.card-action{font:11px var(--font-mono);display:flex;justify-content:space-between;margin-top:auto;padding-top:20px;border-top:1px solid var(--surface-line)}.card-action span{color:var(--accent)}.collection-note{margin-top:80px;padding:46px 0 0;border-top:1px solid var(--surface-line)}.collection-note p{font:400 clamp(27px,4vw,42px)/1.3 var(--font-serif);letter-spacing:-.035em}.collection-note a{font:12px var(--font-mono);color:var(--ink-secondary)}.empty-message{color:var(--ink-secondary);padding:30px 0}@media(max-width:960px){.project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.collection-intro{gap:30px;grid-template-columns:1fr 1fr}}@media(max-width:700px){.collection-shell{padding:38px 20px 60px}.collection-intro{grid-template-columns:1fr;gap:26px;margin-bottom:35px}.collection-count{margin-top:25px}.collection-heading{display:block}.collection-heading p{margin-top:18px}.collection{padding-top:60px}.project-grid{grid-template-columns:1fr}.result-count{width:100%;margin:10px 0 0}.card-art{height:230px}.collection-note{margin-top:50px}}@media(prefers-reduced-motion:reduce){.project-card{transition:none}.project-card:hover{transform:none}}
+  .garage-controls {
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  .garage-rows {
+    margin-top: 1.25rem;
+    border-top: 1px solid var(--surface-line);
+  }
+
+  [data-garage-project][hidden] {
+    display: none;
+  }
+
+  .garage-note {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
 </style>
+
+<script>
+  function initGarage() {
+    const root = document.querySelector<HTMLElement>('[data-garage]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = 'true';
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-garage-filter]'));
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-garage-project]'));
+    chips.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        const filter = chip.dataset.garageFilter;
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        rows.forEach((row) => (row.hidden = filter !== 'all' && row.dataset.status !== filter));
+      })
+    );
+  }
+
+  document.addEventListener('astro:page-load', initGarage);
+</script>

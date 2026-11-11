@@ -1,17 +1,151 @@
 ---
-import StoryNavigation from '../../components/StoryNavigation.astro';
-import FieldNotesLedger from '../../components/catalog/FieldNotesLedger.astro';
-import FieldNotesConstellation from '../../components/islands/FieldNotesConstellation.astro';
-import {getFieldNotesGraph} from '../../lib/field-notes-graph';
-import '../../styles/home-hub.css';
-const graph=await getFieldNotesGraph(),notes=graph.nodes.filter(n=>n.nodeType!=='tool');
-const description='Read C M Nafi’s investment research, book notes, and cricket reports. Find related essays and tools through a map, timeline, or six guided reading lists.';
-const collectionLd={'@context':'https://schema.org','@type':'CollectionPage',name:'Field Notes',url:'https://www.cmnafi.com/field-notes/',description,author:{'@type':'Person',name:'C M Nafi',url:'https://www.cmnafi.com/'},hasPart:notes.map(n=>({'@type':'BlogPosting',headline:n.title,url:'https://www.cmnafi.com'+n.href,datePublished:n.publishedAt}))};
+/**
+ * Field Notes index: every published note, newest first, grouped by year,
+ * with one filter. The idea map lives at /field-notes/atlas.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const notes = (await getCollection('field-notes'))
+  .filter((n) => !n.data.draft && n.data.category.trim() !== 'Brewing')
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const categories = ['Finance', 'Books', 'Cricket'];
+const countOf = (c: string) => notes.filter((n) => n.data.category.trim() === c).length;
+
+const years = [...new Set(notes.map((n) => n.data.publishedAt.getUTCFullYear()))];
+const byYear = years.map((year) => ({
+  year,
+  notes: notes.filter((n) => n.data.publishedAt.getUTCFullYear() === year)
+}));
+
+const day = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', timeZone: 'UTC' });
+const description =
+  'Field Notes by C M Nafi: how capital moves, the books that stayed with me, and match reports from league cricket.';
+
+const collectionLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Field Notes',
+  url: 'https://www.cmnafi.com/field-notes/',
+  description,
+  hasPart: notes.map((n) => ({
+    '@type': 'BlogPosting',
+    headline: n.data.title,
+    url: `https://www.cmnafi.com/field-notes/${n.slug}/`,
+    datePublished: n.data.publishedAt.toISOString()
+  }))
+};
 ---
-<!doctype html><html lang="en" data-theme="paper"><head><StoryNavigation /><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Field Notes | C M Nafi</title><meta name="description" content={description}/><link rel="canonical" href="https://www.cmnafi.com/field-notes/"/><meta property="og:title" content="Field Notes | C M Nafi"/><meta property="og:description" content={description}/><meta property="og:type" content="website"/><meta property="og:url" content="https://www.cmnafi.com/field-notes/"/><meta property="og:image" content="https://www.cmnafi.com/og-default.svg"/><meta name="twitter:card" content="summary_large_image"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/><script is:inline>try{document.documentElement.dataset.theme=localStorage.getItem('cmnafi.home.theme')==='dark'?'dark':'paper'}catch{}</script><script is:inline type="application/ld+json" set:html={JSON.stringify(collectionLd).replaceAll('<','\u003c')}/><script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-W7QGKS85CP"></script><script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-W7QGKS85CP');</script></head><body><a class="home-skip" href="#main">Skip to archive</a><header class="site-header"><div class="brand"><a href="/" class="brand-name">C M Nafi</a><span class="brand-tag">Curiosities, systems & stories</span></div><nav class="nav-row" aria-label="Primary navigation"><a href="/garage/">The Garage</a><a href="/field-notes/" aria-current="page">Field Notes</a><a href="/play/">Play</a><a href="/story/">My Story</a><a href="/connect/">Connect</a><button class="theme-btn" data-archive-theme type="button">Theme: Paper</button></nav></header><main id="main"><header class="archive-intro"><p class="archive-kicker">Field Notes / {notes.length} published notes</p><h1>Follow an idea.<br/><em>See what it becomes.</em></h1><div><p>I started with book notes. Work at SkyBridge and BlackRock gave me questions about managers, markets, and how money moves. Weekend cricket gave me close finishes worth remembering. Those interests meet here.</p><p>Choose the idea map to find related pieces, the timeline to browse by year, or a reading list for a suggested starting point. Select a title to preview it before opening. The full index is below.</p></div></header><FieldNotesConstellation/><FieldNotesLedger/></main><footer class="site-footer"><span>© {new Date().getFullYear()} C M Nafi · Notes, tools & weekend cricket</span><nav aria-label="Footer"><a href="/">Home</a><a href="/garage/">The Garage</a><a href="/connect/">Connect</a></nav></footer></body></html>
+
+<BaseLayout title="Field Notes" description={description} canonical="/field-notes">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(collectionLd).replaceAll('<', '\\u003c')} />
+  </Fragment>
+
+  <div class="s-page" data-fn>
+    <header>
+      <p class="s-eyebrow">Field Notes · {notes.length} published</p>
+      <h1 class="s-title">Every big number has a <em>story behind it.</em></h1>
+      <p class="s-lede">
+        I started with book notes. Work gave me questions about managers, markets and how money moves.
+        Weekend cricket gave me close finishes worth remembering. All of it is here, newest first.
+      </p>
+    </header>
+
+    <div class="fn-controls">
+      <div class="s-chips" role="group" aria-label="Filter notes">
+        <button class="s-chip" type="button" data-fn-filter="all" aria-pressed="true">All <span>{notes.length}</span></button>
+        {categories.map((c) => (
+          <button class="s-chip" type="button" data-fn-filter={c} aria-pressed="false">{c} <span>{countOf(c)}</span></button>
+        ))}
+      </div>
+      <a class="s-more" href="/field-notes/atlas">Browse as an idea map</a>
+    </div>
+
+    {byYear.map((group) => (
+      <section class="fn-year" data-fn-year aria-labelledby={`fn-${group.year}`}>
+        <div class="s-section-head">
+          <h2 id={`fn-${group.year}`}>{group.year}</h2>
+          <span class="fn-year__count" data-fn-count>{group.notes.length}</span>
+        </div>
+        <ul class="s-rows" role="list">
+          {group.notes.map((note) => (
+            <li data-fn-note data-cat={note.data.category.trim()}>
+              <a class="s-row" href={`/field-notes/${note.slug}`}>
+                <time class="s-row__meta" datetime={note.data.publishedAt.toISOString()}>{day(note.data.publishedAt)}</time>
+                <span>
+                  <span class="s-row__title">{note.data.title}</span>
+                  <span class="s-row__note">{note.data.excerpt}</span>
+                </span>
+                <span class="s-row__tag">{note.data.subCategory && note.data.subCategory !== 'General' ? note.data.subCategory : note.data.category.trim()} · {note.data.readingTime.replace(' read', '')}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .fn-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  .fn-year {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .fn-year[hidden],
+  [data-fn-note][hidden] {
+    display: none;
+  }
+
+  .fn-year :global(.s-section-head h2) {
+    font-size: 0.8125rem;
+    color: var(--ink-primary);
+  }
+
+  .fn-year__count {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ink-tertiary);
+  }
+</style>
+
 <script>
-function initArchiveShell(){const existing=document.querySelector<HTMLElement>('[data-archive-theme]');if(!existing||existing.dataset.ready)return;existing.dataset.ready='true';const button=document.querySelector<HTMLButtonElement>('[data-archive-theme]');if(button){const apply=(value:string)=>{document.documentElement.dataset.theme=value;button.textContent=`Theme: ${value==='dark'?'Dark':'Paper'}`;};apply(document.documentElement.dataset.theme??'paper');button.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'paper':'dark';apply(next);try{localStorage.setItem('cmnafi.home.theme',next);}catch{}});}
-}
-initArchiveShell();document.addEventListener('astro:page-load',initArchiveShell);
+  function initFieldNotes() {
+    const root = document.querySelector<HTMLElement>('[data-fn]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = 'true';
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-fn-filter]'));
+    const years = Array.from(root.querySelectorAll<HTMLElement>('[data-fn-year]'));
+
+    function apply(filter: string) {
+      chips.forEach((chip) => chip.setAttribute('aria-pressed', String(chip.dataset.fnFilter === filter)));
+      for (const year of years) {
+        let shown = 0;
+        year.querySelectorAll<HTMLElement>('[data-fn-note]').forEach((note) => {
+          note.hidden = filter !== 'all' && note.dataset.cat !== filter;
+          if (!note.hidden) shown += 1;
+        });
+        year.hidden = shown === 0;
+        const count = year.querySelector('[data-fn-count]');
+        if (count) count.textContent = String(shown);
+      }
+    }
+
+    chips.forEach((chip) => chip.addEventListener('click', () => apply(chip.dataset.fnFilter || 'all')));
+    const wanted = new URLSearchParams(location.search).get('category');
+    const match = chips.find((chip) => chip.dataset.fnFilter?.toLowerCase() === wanted?.toLowerCase());
+    if (match) apply(match.dataset.fnFilter || 'all');
+  }
+
+  document.addEventListener('astro:page-load', initFieldNotes);
 </script>
-<style>.archive-intro{padding:4rem 0 3.5rem;display:grid;grid-template-columns:1.2fr 1fr;gap:1rem 4rem;border-bottom:1px solid var(--border-hairline);margin-bottom:3rem}.archive-kicker{grid-column:1/-1;font:10px 'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-primary)}.archive-intro h1{font:450 clamp(3.5rem,7vw,6rem)/.98 'Newsreader',Georgia,serif;letter-spacing:-.04em}.archive-intro h1 em{font-weight:400}.archive-intro>div{align-self:end;max-width:420px}.archive-intro>div p{font-size:14px;line-height:1.8;color:var(--text-secondary);margin-top:1rem}@media(max-width:700px){.archive-intro{padding:2.5rem 0;grid-template-columns:1fr;gap:1rem;margin-bottom:2rem}.archive-intro h1{font-size:3.4rem}.archive-intro>div p{font-size:13px}.archive-kicker{font-size:9px}}</style>
