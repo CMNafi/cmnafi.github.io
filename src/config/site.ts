@@ -1,6 +1,6 @@
 export const siteConfig = {
   title: 'C M Nafi',
-  description: "Solutions engineer living in Land O' Lakes, Florida. I left home at twelve and have been learning new rooms ever since. Field notes on how capital moves, small tools, and cricket.",
+  description: "Still learning how things work. Notes on how money moves, books and cricket, and a few small tools, by C M Nafi, a solutions engineer in Land O' Lakes, Florida.",
   author: 'C M Nafi',
   siteUrl: 'https://cmnafi.com',
   email: 'nafi@cmnafi.com',

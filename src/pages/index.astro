@@ -1,6 +1,6 @@
 ---
 /**
- * Homepage: who Nafi is, the three things he keeps doing, the latest writing,
+ * Homepage: what the site is, who Nafi is, the three sections, the latest writing,
  * the tools that are live, and how to reach him. Copy follows STORY.md.
  */
 import { getCollection } from 'astro:content';
@@ -23,19 +23,19 @@ const firstSentence = (text: string) => text.match(/^.*?[.?!](?=\s|$)/)?.[0] ?? 
 
 const habits = [
   {
-    habit: 'Numbers into stories',
+    habit: 'Writing',
     name: 'Field Notes',
     href: '/field-notes',
     note: `${notes.length} notes on how capital moves, the books I read, and the close finishes in league cricket.`
   },
   {
-    habit: 'Problems into tools',
+    habit: 'Tools',
     name: 'Garage',
     href: '/garage',
     note: 'Small tools I wanted and couldn’t find. I build them with AI coding tools.'
   },
   {
-    habit: 'Matches into memory',
+    habit: 'Sport',
     name: 'Play',
     href: '/play',
     note: 'League cricket in Florida, Formula 1, and a fantasy football squad I have to live with every week.'
@@ -62,15 +62,15 @@ const personLd = {
     <section class="home-intro">
       <div class="home-intro__text">
         <p class="s-eyebrow">Solutions engineer · Land O’ Lakes, Florida</p>
-        <h1 class="s-title">Learn the room. <em>Then translate.</em></h1>
+        <h1 class="s-title">Still learning <em>how things work.</em></h1>
         <p class="s-lede">
-          I’m Nafi. I work at Dasseti, where I sit between investment teams and the software they run due
-          diligence on, and translate in both directions. Before that I worked at BlackRock, SkyBridge and
-          Mayo Clinic.
+          I’m Nafi. This is where I keep my notes: how money moves, the books I read, and the cricket
+          matches I play in. Sometimes a note turns into a small tool, and those are here too.
         </p>
         <p class="s-lede">
-          I left home at twelve for military school and have been learning new places since.
-          <a href="/story">Read the story</a>, or <a href={`mailto:${siteConfig.email}`}>send me an email</a>.
+          By day I work at Dasseti, between investment teams and the software they use. I left home at
+          twelve and have been learning new places since. <a href="/story">Read the story</a>, or
+          <a href={`mailto:${siteConfig.email}`}>send me an email</a>.
         </p>
       </div>
       <img
@@ -85,7 +85,7 @@ const personLd = {
 
     <section class="s-section" aria-labelledby="home-habits">
       <div class="s-section-head">
-        <h2 id="home-habits">The same habit, three places</h2>
+        <h2 id="home-habits">What’s here</h2>
       </div>
       <div class="home-habits">
         {habits.map((h) => (

@@ -33,7 +33,7 @@ test.describe('Shared shell', () => {
 test.describe('Homepage', () => {
   test('introduces Nafi and links to writing and tools', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('h1')).toContainText('Learn the room');
+    await expect(page.locator('h1')).toContainText('Still learning');
     await expect(page.locator('#home-writing ~ ul a, [aria-labelledby="home-writing"] .s-row')).toHaveCount(5);
     const hrefs = await page.locator('.s-row').evaluateAll((els) => els.map((el) => el.getAttribute('href')));
     for (const href of hrefs) expect(href).toMatch(/^\/(field-notes|garage|projects|play)/);

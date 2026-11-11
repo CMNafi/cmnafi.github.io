@@ -9,6 +9,19 @@
 
 ## 1. The logline
 
+### Homepage line (November 12, 2026)
+
+**Still learning how things work.**
+
+Nafi asked for a headline that is humble, has some weight, and tells a visitor
+what the site is. This is it. The homepage says what is here in one sentence
+(notes on how money moves, books, and cricket, plus a few small tools), then
+who he is. "Learn the room. Then translate." below remains the thread of the
+Story page, but it is no longer the site's headline: it describes him, and the
+homepage should describe the site.
+
+### The thread of the story
+
 **Learn the room. Then translate.**
 
 Nafi has been the newest person in the room since he was twelve: military
