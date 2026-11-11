@@ -1,0 +1,1420 @@
+---
+/**
+ * /fab: the whole site as one animated node map.
+ * Every node is a real link, so the page works as a plain index without
+ * JavaScript; the script below lays the links out and draws the lines.
+ * Charter: plan.md, "November 11, 2026: Fab".
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectorBadge from '@/components/telemetry/SectorBadge.astro';
+import { siteConfig } from '@/config/site';
+
+type Sat = { id: string; label: string; href: string; note: string; count?: number };
+type Hub = { id: string; label: string; href: string; note: string; angle: number; step: number; sats: Sat[] };
+
+const notes = (await getCollection('field-notes')).filter((n) => !n.data.draft);
+const countOf = (category: string) => notes.filter((n) => n.data.category.trim() === category).length;
+const finance = countOf('Finance');
+const books = countOf('Books');
+const cricket = countOf('Cricket');
+const published = finance + books + cricket;
+
+const linkOf = (label: string) => siteConfig.socialLinks.find((l) => l.label === label)?.href ?? '/connect';
+
+const core = {
+  id: 'home',
+  label: 'C M Nafi',
+  href: '/',
+  note: 'The front page. Start here if you are new.'
+};
+
+// angle: where the hub sits around the middle (degrees, 0 = right, 90 = down).
+// step: how wide its links fan out.
+const hubs: Hub[] = [
+  {
+    id: 'story', label: 'Story', href: '/story', angle: -90, step: 40,
+    note: 'Nine chapters, from Dinajpur to Land O’ Lakes.',
+    sats: [
+      { id: 'story-dinajpur', label: 'Dinajpur', href: '/story#dinajpur-foundation', note: 'Childhood. A house where reading was the answer to boredom.' },
+      { id: 'story-changshu', label: 'Changshu', href: '/story#changshu-uwc', note: '2016, age 16. A country, and a language, I didn’t know.' },
+      { id: 'story-decorah', label: 'Decorah', href: '/story#decorah-luther', note: 'Eight thousand people and a long winter.' },
+      { id: 'story-dasseti', label: 'Dasseti', href: '/story#dasseti', note: '2023 to now. The pattern gets a job title: solutions engineer.' }
+    ]
+  },
+  {
+    id: 'connect', label: 'Connect', href: '/connect', angle: -43, step: 30,
+    note: 'Email, and where else to find me.',
+    sats: [
+      { id: 'connect-email', label: 'Email', href: `mailto:${siteConfig.email}`, note: `${siteConfig.email}. The most direct way to reach me.` },
+      { id: 'connect-linkedin', label: 'LinkedIn', href: linkOf('LinkedIn'), note: 'Work history and the professional version of the story.' },
+      { id: 'connect-github', label: 'GitHub', href: linkOf('GitHub'), note: 'Where the Garage tools and this site are kept.' }
+    ]
+  },
+  {
+    id: 'play', label: 'Play', href: '/play', angle: 13, step: 24,
+    note: 'Off the clock: football, Formula 1, cricket and predictions.',
+    sats: [
+      { id: 'play-fpl', label: 'FPL season', href: '/play/fpl', note: 'My Fantasy Premier League season, week by week.' },
+      { id: 'play-f1', label: 'Race Center', href: '/play/f1', note: 'The Formula 1 weekend in one place.' },
+      { id: 'play-cricket', label: 'Cricket Hub', href: '/play/cricket', note: 'Florida league cricket: teams, seasons and records.' },
+      { id: 'play-predict', label: 'Predictions', href: '/play/predict', note: 'Prediction games across the sports I follow.' },
+      { id: 'play-rivals', label: 'Rivalry Board', href: '/play/rivals', note: 'Who is ahead, and by how much.' }
+    ]
+  },
+  {
+    id: 'world-cup', label: 'World Cup 2026', href: '/world-cup-2026', angle: 60, step: 30,
+    note: 'A corner for the 2026 World Cup.',
+    sats: [
+      { id: 'wc-groups', label: 'Groups', href: '/world-cup-2026/groups', note: 'Every group table.' },
+      { id: 'wc-matches', label: 'Matches', href: '/world-cup-2026/matches', note: 'The full match schedule.' },
+      { id: 'wc-knockouts', label: 'Knockouts', href: '/world-cup-2026/knockouts', note: 'The bracket, round by round.' },
+      { id: 'wc-teams', label: 'Teams', href: '/world-cup-2026/teams', note: 'A page for every team in the tournament.' },
+      { id: 'wc-predictions', label: 'Predictions', href: '/world-cup-2026/predictions', note: 'My calls, on the record.' }
+    ]
+  },
+  {
+    id: 'caia', label: 'CAIA Corner', href: '/caia', angle: 120, step: 38,
+    note: 'A study hub for alternative investments.',
+    sats: [
+      { id: 'caia-level-1', label: 'Level I', href: '/caia/level-1', note: 'Study notes, topic by topic.' },
+      { id: 'caia-formulas', label: 'Formulas', href: '/caia/formulas', note: 'The formula sheet.' },
+      { id: 'caia-glossary', label: 'Glossary', href: '/caia/glossary', note: 'The terms, in plain language.' }
+    ]
+  },
+  {
+    id: 'garage', label: 'Garage', href: '/garage', angle: 177, step: 25,
+    note: 'Small tools I wanted and couldn’t find.',
+    sats: [
+      { id: 'garage-worldview', label: 'Worldview', href: '/projects/worldview', note: 'An atlas of everyday choices: what we eat, watch and buy.' },
+      { id: 'garage-style', label: 'Fielding Playbook', href: '/garage/style-fielding', note: 'Why a captain moves the field as a match changes.' },
+      { id: 'garage-captains', label: 'Captains View', href: '/garage/captains-view', note: 'Drag fielders into position and check the powerplay limits.' },
+      { id: 'garage-lens', label: 'Regulatory Lens', href: '/garage/form-adv-data-finder', note: 'An investment adviser’s SEC filings in one research workspace.' }
+    ]
+  },
+  {
+    id: 'field-notes', label: 'Field Notes', href: '/field-notes', angle: 225, step: 25,
+    note: `Every big number has a story behind it. ${published} published notes.`,
+    sats: [
+      { id: 'fn-finance', label: 'Finance', href: '/field-notes/category/finance', count: finance, note: `${finance} notes on how capital moves.` },
+      { id: 'fn-cricket', label: 'Match reports', href: '/field-notes/category/cricket', count: cricket, note: `${cricket} write-ups of the close finishes.` },
+      { id: 'fn-books', label: 'Books', href: '/field-notes/category/books', count: books, note: `${books} notes on the books that stayed with me.` },
+      { id: 'fn-brewing', label: 'Brewing', href: '/brewing', note: 'What I am still working out.' }
+    ]
+  }
+];
+
+// Threads: pages in different sections that belong to the same habit.
+const threads: [string, string][] = [
+  ['play-cricket', 'fn-cricket'],
+  ['fn-cricket', 'garage-captains'],
+  ['garage-lens', 'fn-finance'],
+  ['caia', 'fn-finance'],
+  ['wc-predictions', 'play-predict']
+];
+
+const nodeCount = 1 + hubs.length + hubs.reduce((sum, hub) => sum + hub.sats.length, 0);
+const showPath = (href: string) => href.replace(/^mailto:/, '').replace(/^https?:\/\/(www\.)?/, '');
+const isExternal = (href: string) => /^https?:/.test(href);
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<BaseLayout
+  title="Fab"
+  description={`Fab is the whole site on one animated map: ${hubs.length} sections, ${nodeCount} ways in, and the threads that connect them.`}
+  canonical="/fab"
+>
+  <section class="fab" data-fab data-threads={JSON.stringify(threads)}>
+    <header class="fab-head">
+      <div>
+        <p class="fab-eyebrow">Fab <span aria-hidden="true">/</span> the site on one sheet</p>
+        <h1 class="fab-title">Everything here, <em>connected.</em></h1>
+      </div>
+      <p class="fab-lede">
+        Fab is short for fabric. Every section of this site is a thread from the same habit: learn the room,
+        then translate. Pick a node and follow it.
+      </p>
+    </header>
+
+    <div class="fab-stage" data-fab-stage>
+      <canvas class="fab-canvas" data-fab-canvas aria-hidden="true"></canvas>
+
+      <div class="fab-chrome fab-chrome--top" aria-hidden="true">
+        <span>{pad(hubs.length)} sections</span>
+        <span>{nodeCount} nodes</span>
+        <span>{pad(threads.length)} threads</span>
+      </div>
+      <button class="fab-motion" type="button" data-fab-motion aria-pressed="true">
+        <span class="fab-motion__dot" aria-hidden="true"></span>
+        <span data-fab-motion-label>Motion on</span>
+      </button>
+
+      <nav class="fab-nav" aria-label="Site map" data-fab-nav>
+        <ul class="fab-tree" role="list">
+          <li class="fab-branch fab-branch--core">
+            <a
+              class="fab-node fab-node--core"
+              href={core.href}
+              data-node
+              data-id={core.id}
+              data-kind="core"
+              data-note={core.note}
+              data-path="/"
+            >
+              <span class="fab-core" aria-hidden="true"></span>
+              <span class="fab-core__label">
+                <span class="fab-core__name">{core.label}</span>
+                <span class="fab-core__sub">Home</span>
+              </span>
+            </a>
+          </li>
+          {hubs.map((hub, index) => (
+            <li class="fab-branch">
+              <a
+                class="fab-node fab-node--hub"
+                href={hub.href}
+                data-node
+                data-id={hub.id}
+                data-kind="hub"
+                data-parent={core.id}
+                data-angle={hub.angle}
+                data-step={hub.step}
+                data-note={hub.note}
+                data-path={showPath(hub.href)}
+              >
+                <span class="fab-pill">
+                  <span class="fab-pill__index" aria-hidden="true">{pad(index + 1)}</span>
+                  <span class="fab-pill__name">{hub.label}</span>
+                </span>
+              </a>
+              <ul class="fab-leaves" role="list">
+                {hub.sats.map((sat) => (
+                  <li>
+                    <a
+                      class="fab-node fab-node--sat"
+                      href={sat.href}
+                      target={isExternal(sat.href) ? '_blank' : undefined}
+                      rel={isExternal(sat.href) ? 'noopener noreferrer' : undefined}
+                      data-node
+                      data-id={sat.id}
+                      data-kind="sat"
+                      data-parent={hub.id}
+                      data-note={sat.note}
+                      data-path={showPath(sat.href)}
+                    >
+                      <span class="fab-dot" aria-hidden="true"></span>
+                      <span class="fab-label">
+                        {sat.label}
+                        {sat.count !== undefined && <span class="fab-count">{sat.count}</span>}
+                        {isExternal(sat.href) && <span class="fab-ext" aria-hidden="true">↗</span>}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="fab-readout" data-fab-readout aria-live="polite">
+        <div class="fab-readout__cell fab-readout__cell--node">
+          <SectorBadge variant="sector2" label="Node" />
+          <span class="fab-readout__name" data-ro-name data-default="Nothing selected">Nothing selected</span>
+        </div>
+        <div class="fab-readout__cell">
+          <span class="fab-readout__key">Path</span>
+          <span class="fab-readout__val" data-ro-path data-default="/fab">/fab</span>
+        </div>
+        <div class="fab-readout__cell fab-readout__cell--note">
+          <span class="fab-readout__key">What is there</span>
+          <span
+            class="fab-readout__val"
+            data-ro-note
+            data-default="Hover a node, or use Tab and the arrow keys. Enter opens it."
+          >Hover a node, or use Tab and the arrow keys. Enter opens it.</span>
+        </div>
+        <div class="fab-readout__cell fab-readout__cell--legend" aria-hidden="true">
+          <span class="fab-legend"><i class="fab-legend__line"></i>Section line</span>
+          <span class="fab-legend"><i class="fab-legend__line fab-legend__line--thread"></i>Shared thread</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .fab {
+    width: min(calc(100% - 2rem), 1400px);
+    margin-inline: auto;
+    padding-top: clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  /* ---------- Heading ---------- */
+  .fab-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: end;
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+    margin-bottom: clamp(1.25rem, 2.4vw, 2rem);
+  }
+
+  .fab-eyebrow {
+    margin: 0 0 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .fab-eyebrow span {
+    margin-inline: 0.5em;
+    color: var(--ink-tertiary);
+  }
+
+  .fab-title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(2.3rem, 5.4vw, 4.4rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--ink-primary);
+  }
+
+  .fab-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .fab-lede {
+    margin: 0;
+    max-width: 34rem;
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.25vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--ink-secondary);
+  }
+
+  /* ---------- Stage ---------- */
+  .fab-stage {
+    position: relative;
+    border: 1px solid var(--surface-line);
+    border-radius: var(--radius-card);
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 46%, var(--surface-raised), transparent 72%),
+      var(--surface-base);
+    overflow: hidden;
+  }
+
+  .fab-canvas,
+  .fab-chrome,
+  .fab-motion,
+  .fab-readout {
+    display: none;
+  }
+
+  /* Without JavaScript the map is a plain, readable index of links. */
+  .fab-tree,
+  .fab-leaves {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fab-tree {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  .fab-node {
+    display: block;
+    padding: 0.3rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ink-secondary);
+  }
+
+  .fab-node--hub,
+  .fab-node--core {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    color: var(--ink-primary);
+  }
+
+  .fab-pill__index,
+  .fab-core__sub {
+    margin-right: 0.6em;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-tertiary);
+  }
+
+  .fab-count,
+  .fab-ext {
+    margin-left: 0.5em;
+    font-size: 0.85em;
+    color: var(--accent);
+  }
+
+  /* ---------- Live map ---------- */
+  .fab--live .fab-stage {
+    height: clamp(720px, calc(100svh - 7rem), 900px);
+    touch-action: pan-y;
+  }
+
+  .fab--live .fab-canvas {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .fab--live .fab-tree {
+    display: block;
+    padding: 0;
+  }
+
+  .fab--live .fab-node {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    padding: 0;
+    outline: none;
+    will-change: transform;
+    transition: opacity var(--dur-base) var(--ease-mechanical);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .fab--live .fab-node:hover,
+  .fab--live .fab-node:focus-visible {
+    z-index: 3;
+  }
+
+  .fab--live .fab-stage.has-active .fab-node:not(.is-lit) {
+    opacity: 0.26;
+  }
+
+  /* Hub: a pill centred on its point */
+  .fab--live .fab-pill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.5rem 0.95rem 0.55rem;
+    white-space: nowrap;
+    border: 1px solid var(--surface-line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-raised) 92%, transparent);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+    transition:
+      opacity var(--dur-slow) var(--ease-instrument),
+      transform var(--dur-slow) var(--ease-instrument),
+      border-color var(--dur-fast) var(--ease-mechanical),
+      background-color var(--dur-fast) var(--ease-mechanical),
+      box-shadow var(--dur-base) var(--ease-mechanical);
+  }
+
+  .fab--live .fab-pill__index {
+    margin: 0;
+    font-size: 0.625rem;
+    color: var(--accent);
+  }
+
+  .fab--live .fab-pill__name {
+    font-family: var(--font-serif);
+    font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink-primary);
+  }
+
+  .fab--live .fab-node.is-in .fab-pill {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .fab--live .fab-node--hub.is-lit .fab-pill {
+    border-color: var(--accent-glow);
+  }
+
+  .fab--live .fab-node--hub.is-active .fab-pill,
+  .fab--live .fab-node--hub:focus-visible .fab-pill {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, var(--surface-raised));
+    box-shadow: 0 0 0 4px var(--accent-dim), 0 12px 36px rgba(0, 0, 0, 0.45);
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  /* Leaf: a dot with a label on the side facing away from its hub */
+  .fab--live .fab-dot {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--surface-base);
+    border: 1px solid var(--ink-secondary);
+    opacity: 0;
+    transform: scale(0);
+    transition:
+      opacity var(--dur-base) var(--ease-instrument),
+      transform var(--dur-base) var(--ease-instrument),
+      background-color var(--dur-fast) var(--ease-mechanical),
+      border-color var(--dur-fast) var(--ease-mechanical),
+      box-shadow var(--dur-base) var(--ease-mechanical);
+  }
+
+  /* generous hit area around the dot */
+  .fab--live .fab-dot::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+    border-radius: 50%;
+  }
+
+  .fab--live .fab-label {
+    position: absolute;
+    padding: 0.35rem 0.2rem;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--ink-secondary);
+    opacity: 0;
+    transition:
+      opacity var(--dur-slow) var(--ease-instrument),
+      color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .fab--live .fab-node[data-side='right'] .fab-label { left: 11px; top: 0; transform: translateY(-50%); }
+  .fab--live .fab-node[data-side='left'] .fab-label { right: 11px; top: 0; transform: translateY(-50%); }
+  .fab--live .fab-node[data-side='top'] .fab-label { left: 0; bottom: 8px; transform: translateX(-50%); }
+  .fab--live .fab-node[data-side='bottom'] .fab-label { left: 0; top: 8px; transform: translateX(-50%); }
+
+  .fab--live .fab-node.is-in .fab-dot {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .fab--live .fab-node.is-in .fab-label {
+    opacity: 1;
+  }
+
+  .fab--live .fab-node--sat.is-lit .fab-dot {
+    border-color: var(--accent);
+  }
+
+  .fab--live .fab-node--sat.is-active .fab-dot,
+  .fab--live .fab-node--sat:focus-visible .fab-dot {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 5px var(--accent-dim), 0 0 18px var(--accent-glow);
+    transform: scale(1.5);
+  }
+
+  .fab--live .fab-node--sat.is-active .fab-label,
+  .fab--live .fab-node--sat:focus-visible .fab-label {
+    color: var(--ink-primary);
+  }
+
+  /* Core */
+  .fab--live .fab-core {
+    position: absolute;
+    top: -46px;
+    left: -46px;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-glow);
+    background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--accent) 22%, var(--surface-raised)), var(--surface-base) 78%);
+    box-shadow: 0 0 60px var(--accent-dim), inset 0 0 24px var(--accent-dim);
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity var(--dur-cinematic) var(--ease-instrument),
+      transform var(--dur-cinematic) var(--ease-instrument),
+      border-color var(--dur-fast) var(--ease-mechanical),
+      box-shadow var(--dur-base) var(--ease-mechanical);
+  }
+
+  .fab--live .fab-core::before,
+  .fab--live .fab-core::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .fab--live .fab-core::before {
+    inset: -13px;
+    border: 1px dashed var(--accent-glow);
+    animation: fab-spin 28s linear infinite;
+  }
+
+  .fab--live .fab-core::after {
+    inset: -1px;
+    border: 1px solid var(--accent);
+    animation: fab-ping 3.6s var(--ease-instrument) infinite;
+  }
+
+  .fab--live .fab-core__label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    justify-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity var(--dur-cinematic) var(--ease-instrument);
+  }
+
+  .fab--live .fab-core__name {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--ink-primary);
+  }
+
+  .fab--live .fab-core__sub {
+    margin: 0;
+    font-size: 0.5625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .fab--live .fab-node.is-in .fab-core {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .fab--live .fab-node.is-in .fab-core__label {
+    opacity: 1;
+  }
+
+  .fab--live .fab-node--core.is-active .fab-core,
+  .fab--live .fab-node--core:focus-visible .fab-core {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 5px var(--accent-dim), 0 0 80px var(--accent-glow), inset 0 0 24px var(--accent-dim);
+    transform: scale(1.05);
+  }
+
+  @keyframes fab-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes fab-ping {
+    0% { transform: scale(1); opacity: 0.7; }
+    70%, 100% { transform: scale(1.75); opacity: 0; }
+  }
+
+  .fab--still .fab-core::before,
+  .fab--still .fab-core::after,
+  .fab--still .fab-motion__dot {
+    animation: none;
+  }
+
+  .fab--still .fab-core::after {
+    opacity: 0;
+  }
+
+  /* Corner chrome */
+  .fab--live .fab-chrome {
+    position: absolute;
+    top: 0.9rem;
+    left: 1rem;
+    z-index: 2;
+    display: flex;
+    gap: 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+    pointer-events: none;
+  }
+
+  .fab--live .fab-motion {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.6rem;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-chip);
+    background: none;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-secondary);
+    transition: color var(--dur-fast) var(--ease-mechanical), border-color var(--dur-fast) var(--ease-mechanical);
+  }
+
+  .fab--live .fab-motion:hover,
+  .fab--live .fab-motion:focus-visible {
+    color: var(--ink-primary);
+    border-color: var(--surface-line);
+  }
+
+  .fab-motion__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+    animation: fab-blink 2.4s var(--ease-mechanical) infinite;
+  }
+
+  .fab-motion[aria-pressed='false'] .fab-motion__dot {
+    background: var(--ink-tertiary);
+    box-shadow: none;
+  }
+
+  @keyframes fab-blink {
+    50% { opacity: 0.35; }
+  }
+
+  /* Readout bar */
+  .fab--live .fab-readout {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 2.2fr) auto;
+    min-height: 68px;
+    border-top: 1px solid var(--surface-line);
+    background: color-mix(in srgb, var(--surface-base) 88%, transparent);
+    backdrop-filter: blur(10px);
+    font-family: var(--font-mono);
+  }
+
+  .fab-readout__cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.4rem;
+    min-width: 0;
+    padding: 0.75rem 1.1rem;
+    border-right: 1px dashed var(--surface-line);
+  }
+
+  .fab-readout__cell:last-child {
+    border-right: 0;
+  }
+
+  .fab-readout__key {
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+  }
+
+  .fab-readout__val,
+  .fab-readout__name {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.8125rem;
+    color: var(--ink-primary);
+  }
+
+  .fab-readout__name {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .fab-readout__cell--note .fab-readout__val {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  .fab-readout.is-on [data-ro-path] {
+    color: var(--accent);
+  }
+
+  .fab-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-secondary);
+  }
+
+  .fab-legend__line {
+    width: 26px;
+    border-top: 1px solid var(--accent);
+  }
+
+  .fab-legend__line--thread {
+    border-top: 1px dashed var(--status-warn);
+  }
+
+  /* ---------- Narrow screens: the map becomes a vertical weave ---------- */
+  @media (max-width: 899px) {
+    .fab-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fab--live .fab-readout {
+      display: none;
+    }
+
+    .fab--live .fab-chrome {
+      gap: 0.8rem;
+      font-size: 0.5625rem;
+      letter-spacing: 0.1em;
+    }
+
+    .fab--live .fab-motion span:last-child {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .fab--live .fab-pill__name {
+      font-size: 1.05rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fab--live .fab-node,
+    .fab--live .fab-pill,
+    .fab--live .fab-dot,
+    .fab--live .fab-label,
+    .fab--live .fab-core,
+    .fab--live .fab-core__label {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  type Kind = 'core' | 'hub' | 'sat';
+
+  interface FabNode {
+    id: string;
+    el: HTMLAnchorElement;
+    kind: Kind;
+    parent: FabNode | null;
+    /** The node this one is drawn from. Differs from `parent` in the vertical weave. */
+    from: FabNode | null;
+    children: FabNode[];
+    partners: FabNode[];
+    index: number;
+    angle: number;
+    step: number;
+    bx: number;
+    by: number;
+    x: number;
+    y: number;
+    amp: number;
+    w1: number;
+    w2: number;
+    p1: number;
+    p2: number;
+    bend: number;
+    inAt: number;
+    shown: boolean;
+  }
+
+  interface Edge {
+    a: FabNode;
+    b: FabNode;
+    thread: boolean;
+    start: number;
+    dur: number;
+    offset: number;
+    speed: number;
+  }
+
+  let teardown: (() => void) | null = null;
+
+  const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+  const easeOut = (p: number) => 1 - Math.pow(1 - p, 3);
+  const rad = (deg: number) => (deg * Math.PI) / 180;
+
+  /** Deterministic pseudo-random so the map looks the same on every visit. */
+  function seeded(seed: number) {
+    let s = seed;
+    return () => {
+      s = (s * 16807) % 2147483647;
+      return (s - 1) / 2147483646;
+    };
+  }
+
+  function rgb(value: string, fallback: string) {
+    const hex = (value || fallback).trim().replace('#', '');
+    const full = hex.length === 3 ? hex.split('').map((c) => c + c).join('') : hex.slice(0, 6);
+    const n = parseInt(full, 16);
+    if (Number.isNaN(n)) return rgb(fallback, fallback);
+    return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
+  }
+
+  function initFab(root: HTMLElement) {
+    const stage = root.querySelector<HTMLElement>('[data-fab-stage]');
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-fab-canvas]');
+    const ctx = canvas?.getContext('2d');
+    if (!stage || !canvas || !ctx) return null;
+
+    const abort = new AbortController();
+    const { signal } = abort;
+    const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let motion = !reduceQuery.matches;
+
+    const styles = getComputedStyle(root);
+    const ACCENT = rgb(styles.getPropertyValue('--accent'), '#7dd3a0');
+    const INK = rgb(styles.getPropertyValue('--ink-primary'), '#f4ede4');
+    const WARN = rgb(styles.getPropertyValue('--status-warn'), '#e8b86a');
+
+    // ----- Build the graph from the links already in the page -----
+    const rand = seeded(20261111);
+    const byId = new Map<string, FabNode>();
+    const nodes: FabNode[] = Array.from(root.querySelectorAll<HTMLAnchorElement>('[data-node]')).map((el, index) => {
+      const kind = (el.dataset.kind as Kind) || 'sat';
+      const node: FabNode = {
+        id: el.dataset.id || `node-${index}`,
+        el,
+        kind,
+        parent: null,
+        from: null,
+        children: [],
+        partners: [],
+        index,
+        angle: Number(el.dataset.angle || 0),
+        step: Number(el.dataset.step || 28),
+        bx: 0, by: 0, x: 0, y: 0,
+        amp: kind === 'core' ? 0 : kind === 'hub' ? 3.5 : 5,
+        w1: 0.28 + rand() * 0.3,
+        w2: 0.24 + rand() * 0.3,
+        p1: rand() * Math.PI * 2,
+        p2: rand() * Math.PI * 2,
+        bend: (rand() > 0.5 ? 1 : -1) * (0.08 + rand() * 0.08),
+        inAt: 0,
+        shown: false
+      };
+      byId.set(node.id, node);
+      return node;
+    });
+
+    for (const node of nodes) {
+      const parent = node.el.dataset.parent ? byId.get(node.el.dataset.parent) : null;
+      if (parent) {
+        node.parent = parent;
+        parent.children.push(node);
+      }
+    }
+
+    const core = nodes.find((n) => n.kind === 'core');
+    if (!core) return null;
+    const hubs = nodes.filter((n) => n.kind === 'hub');
+
+    const threadPairs: [string, string][] = JSON.parse(root.dataset.threads || '[]');
+    const edges: Edge[] = [];
+    for (const node of nodes) {
+      if (!node.parent) continue;
+      edges.push({ a: node.parent, b: node, thread: false, start: 0, dur: 0.7, offset: rand(), speed: 0.1 + rand() * 0.07 });
+    }
+    for (const [a, b] of threadPairs) {
+      const na = byId.get(a);
+      const nb = byId.get(b);
+      if (!na || !nb) continue;
+      na.partners.push(nb);
+      nb.partners.push(na);
+      edges.push({ a: na, b: nb, thread: true, start: 2.3, dur: 1.1, offset: rand(), speed: 0.05 });
+    }
+
+    const stars = Array.from({ length: 90 }, () => ({
+      x: rand(), y: rand(), r: 0.5 + rand() * 0.9, a: 0.08 + rand() * 0.22, w: 0.4 + rand() * 1.2, p: rand() * 6.28
+    }));
+
+    // ----- Layout -----
+    let W = 0;
+    let H = 0;
+    let wide = true;
+    let cx = 0;
+    let cy = 0;
+    let rx = 0;
+    let ry = 0;
+
+    function layout() {
+      W = stage!.clientWidth;
+      wide = W >= 900;
+      if (wide) layoutWide();
+      else layoutWeave();
+
+      for (const edge of edges) {
+        if (!edge.thread) edge.a = edge.b.from || edge.a;
+      }
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas!.width = Math.round(W * dpr);
+      canvas!.height = Math.round(H * dpr);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      scheduleIntro();
+      if (!running) renderOnce();
+    }
+
+    /** Desktop: hubs on an ellipse around the middle, links fanning outward. */
+    function layoutWide() {
+      stage!.style.height = '';
+      H = stage!.clientHeight;
+      const bar = 68;
+      cx = W / 2;
+      cy = (H - bar) / 2 + 16;
+      rx = clamp(W / 2 - 330, 215, 400);
+      ry = clamp(cy - 200, 140, 250);
+      const reach = clamp(W * 0.085, 104, 128);
+
+      core!.bx = cx;
+      core!.by = cy;
+      core!.from = null;
+
+      for (const hub of hubs) {
+        const a = rad(hub.angle);
+        hub.bx = cx + Math.cos(a) * rx;
+        hub.by = cy + Math.sin(a) * ry;
+        hub.from = core!;
+        const out = Math.atan2(hub.by - cy, hub.bx - cx);
+        const n = hub.children.length;
+        hub.children.forEach((sat, j) => {
+          const theta = out + rad((j - (n - 1) / 2) * hub.step);
+          const r = reach + (j % 2 ? 26 : 0);
+          sat.bx = hub.bx + Math.cos(theta) * r;
+          sat.by = hub.by + Math.sin(theta) * r;
+          sat.from = hub;
+          const c = Math.cos(theta);
+          const s = Math.sin(theta);
+          sat.el.dataset.side = Math.abs(c) > 0.42 ? (c > 0 ? 'right' : 'left') : s > 0 ? 'bottom' : 'top';
+        });
+      }
+    }
+
+    /** Phones: one thread weaving down the page, hubs alternating left and right. */
+    function layoutWeave() {
+      cx = W / 2;
+      cy = 104;
+      core!.bx = cx;
+      core!.by = cy;
+      core!.from = null;
+
+      const gap = 36;
+      const reach = clamp(W * 0.3, 96, 150);
+      let y = cy + 96;
+      hubs.forEach((hub, i) => {
+        const n = hub.children.length;
+        const block = Math.max(1, n - 1) * gap;
+        const left = i % 2 === 0;
+        const dir = left ? 1 : -1;
+        y += block / 2 + 34;
+        hub.bx = left ? clamp(W * 0.27, 92, 220) : W - clamp(W * 0.27, 92, 220);
+        hub.by = y;
+        hub.from = i === 0 ? core! : hubs[i - 1];
+        hub.children.forEach((sat, j) => {
+          const dy = (j - (n - 1) / 2) * gap;
+          const bow = Math.sqrt(Math.max(0, 1 - Math.pow(dy / (reach * 1.9), 2)));
+          sat.bx = hub.bx + dir * reach * bow;
+          sat.by = hub.by + dy;
+          sat.from = hub;
+          sat.el.dataset.side = left ? 'right' : 'left';
+        });
+        y += block / 2 + 34;
+      });
+
+      H = Math.round(y + 40);
+      stage!.style.height = `${H}px`;
+      rx = 0;
+      ry = 0;
+    }
+
+    // ----- Intro timing: lines draw outward, nodes arrive as their line lands -----
+    let introSet = false;
+    function scheduleIntro() {
+      if (introSet) return;
+      introSet = true;
+      core!.inAt = 0.05;
+      hubs.forEach((hub, i) => {
+        const edge = edges.find((e) => !e.thread && e.b === hub)!;
+        edge.start = 0.3 + i * 0.09;
+        edge.dur = 0.75;
+        hub.inAt = edge.start + edge.dur * 0.72;
+        hub.children.forEach((sat, j) => {
+          const leaf = edges.find((e) => !e.thread && e.b === sat)!;
+          leaf.start = hub.inAt + 0.12 + j * 0.07;
+          leaf.dur = 0.55;
+          sat.inAt = leaf.start + leaf.dur * 0.7;
+        });
+      });
+    }
+
+    // ----- Selection -----
+    let hovered: FabNode | null = null;
+    let focused: FabNode | null = null;
+    let active: FabNode | null = null;
+    const trail = new Set<FabNode>();
+    const lit = new Set<FabNode>();
+
+    const roBar = root.querySelector<HTMLElement>('[data-fab-readout]');
+    const roName = root.querySelector<HTMLElement>('[data-ro-name]');
+    const roPath = root.querySelector<HTMLElement>('[data-ro-path]');
+    const roNote = root.querySelector<HTMLElement>('[data-ro-note]');
+
+    function labelOf(node: FabNode): string {
+      const el = node.el.querySelector('.fab-pill__name, .fab-core__name, .fab-label');
+      const own = el?.firstChild?.textContent?.trim() || el?.textContent?.trim() || node.id;
+      return node.kind === 'sat' && node.parent ? `${labelOf(node.parent)} / ${own}` : own;
+    }
+
+    function select() {
+      const next = focused || hovered;
+      if (next === active) return;
+      active = next;
+      trail.clear();
+      lit.clear();
+      if (active) {
+        for (let n: FabNode | null = active; n; n = n.from) trail.add(n);
+        trail.forEach((n) => lit.add(n));
+        active.children.forEach((n) => lit.add(n));
+        active.partners.forEach((n) => lit.add(n));
+      }
+      stage!.classList.toggle('has-active', !!active);
+      for (const node of nodes) {
+        node.el.classList.toggle('is-lit', lit.has(node));
+        node.el.classList.toggle('is-active', node === active);
+      }
+      roBar?.classList.toggle('is-on', !!active);
+      if (roName) roName.textContent = active ? labelOf(active) : roName.dataset.default || '';
+      if (roPath) roPath.textContent = active ? active.el.dataset.path || '' : roPath.dataset.default || '';
+      if (roNote) roNote.textContent = active ? active.el.dataset.note || '' : roNote.dataset.default || '';
+      if (!running) renderOnce();
+    }
+
+    for (const node of nodes) {
+      node.el.addEventListener('pointerenter', (event) => {
+        if (event.pointerType === 'touch') return;
+        hovered = node;
+        select();
+      }, { signal });
+      node.el.addEventListener('pointerleave', () => {
+        if (hovered === node) hovered = null;
+        select();
+      }, { signal });
+      node.el.addEventListener('focus', () => {
+        focused = node;
+        select();
+      }, { signal });
+      node.el.addEventListener('blur', () => {
+        if (focused === node) focused = null;
+        select();
+      }, { signal });
+    }
+
+    // Arrow keys move to the nearest node in that direction.
+    root.querySelector('[data-fab-nav]')?.addEventListener('keydown', (event) => {
+      const key = (event as KeyboardEvent).key;
+      const dir = ({ ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowDown: [0, 1], ArrowUp: [0, -1] } as Record<string, number[]>)[key];
+      const current = nodes.find((n) => n.el === document.activeElement);
+      if (!dir || !current) return;
+      let best: FabNode | null = null;
+      let bestScore = Infinity;
+      for (const node of nodes) {
+        if (node === current) continue;
+        const dx = node.bx - current.bx;
+        const dy = node.by - current.by;
+        const along = dx * dir[0] + dy * dir[1];
+        const across = Math.abs(dx * dir[1] - dy * dir[0]);
+        if (along < 8 || across > along * 1.6) continue;
+        const score = along + across * 2.2;
+        if (score < bestScore) {
+          bestScore = score;
+          best = node;
+        }
+      }
+      if (best) {
+        event.preventDefault();
+        best.el.focus({ preventScroll: wide });
+      }
+    }, { signal });
+
+    // ----- Pointer parallax -----
+    let px = 0;
+    let py = 0;
+    let tx = 0;
+    let ty = 0;
+    stage.addEventListener('pointermove', (event) => {
+      if (event.pointerType === 'touch' || !wide) return;
+      const box = stage.getBoundingClientRect();
+      tx = ((event.clientX - box.left) / box.width - 0.5) * 2;
+      ty = ((event.clientY - box.top) / box.height - 0.5) * 2;
+    }, { signal });
+    stage.addEventListener('pointerleave', () => {
+      tx = 0;
+      ty = 0;
+    }, { signal });
+
+    // ----- Drawing -----
+    function control(ax: number, ay: number, bx: number, by: number, bend: number) {
+      return [(ax + bx) / 2 - (by - ay) * bend, (ay + by) / 2 + (bx - ax) * bend];
+    }
+
+    function place(t: number) {
+      const ox = motion ? px * 10 : 0;
+      const oy = motion ? py * 8 : 0;
+      core!.x = core!.bx - ox * 0.5;
+      core!.y = core!.by - oy * 0.5;
+      for (const node of nodes) {
+        if (node.kind === 'core') continue;
+        const dx = motion ? Math.sin(t * node.w1 + node.p1) * node.amp : 0;
+        const dy = motion ? Math.cos(t * node.w2 + node.p2) * node.amp : 0;
+        if (node.kind === 'hub') {
+          node.x = node.bx + dx + ox;
+          node.y = node.by + dy + oy;
+        } else {
+          const hub = node.parent!;
+          node.x = node.bx + (hub.x - hub.bx) + dx + ox * 0.7;
+          node.y = node.by + (hub.y - hub.by) + dy + oy * 0.7;
+        }
+      }
+      for (const node of nodes) {
+        node.el.style.transform = `translate3d(${node.x.toFixed(2)}px, ${node.y.toFixed(2)}px, 0)`;
+        if (!node.shown && (!motion || t >= node.inAt)) {
+          node.shown = true;
+          node.el.classList.add('is-in');
+        }
+      }
+    }
+
+    function draw(t: number) {
+      const c = ctx!;
+      c.clearRect(0, 0, W, H);
+
+      // backdrop: a quiet field of points, drifting slightly against the pointer
+      for (const star of stars) {
+        const twinkle = motion ? 0.6 + 0.4 * Math.sin(t * star.w + star.p) : 0.8;
+        c.fillStyle = `rgba(${INK}, ${(star.a * twinkle).toFixed(3)})`;
+        c.fillRect(star.x * W - px * 5, star.y * H - py * 4, star.r, star.r);
+      }
+
+      // orbit guides (desktop only)
+      if (wide) {
+        c.lineWidth = 1;
+        c.setLineDash([2, 9]);
+        c.lineDashOffset = motion ? -t * 5 : 0;
+        c.strokeStyle = `rgba(${INK}, 0.085)`;
+        c.beginPath();
+        c.ellipse(core!.x, core!.y, rx, ry, 0, 0, Math.PI * 2);
+        c.stroke();
+        c.lineDashOffset = motion ? t * 3 : 0;
+        c.strokeStyle = `rgba(${INK}, 0.045)`;
+        c.beginPath();
+        c.ellipse(core!.x, core!.y, rx + 128, ry + 112, 0, 0, Math.PI * 2);
+        c.stroke();
+        c.setLineDash([]);
+      }
+
+      for (const edge of edges) {
+        const p = motion ? easeOut(clamp((t - edge.start) / edge.dur, 0, 1)) : 1;
+        if (p <= 0) continue;
+        const { a, b } = edge;
+        const bend = edge.thread ? 0.22 : b.bend;
+        const [qx, qy] = control(a.x, a.y, b.x, b.y, bend);
+
+        const onTrail = !edge.thread && trail.has(b) && trail.has(a);
+        const fromActive = !edge.thread && a === active;
+        const threadOn = edge.thread && (a === active || b === active);
+
+        let color = INK;
+        let alpha = 0.17;
+        let width = 1;
+        if (edge.thread) {
+          color = WARN;
+          alpha = threadOn ? 0.9 : active ? 0.1 : 0.3;
+          width = threadOn ? 1.4 : 1;
+        } else if (onTrail) {
+          color = ACCENT;
+          alpha = 0.95;
+          width = 1.6;
+        } else if (fromActive) {
+          color = ACCENT;
+          alpha = 0.5;
+        } else if (active) {
+          alpha = 0.07;
+        } else if (b.kind === 'hub') {
+          alpha = 0.26;
+        }
+
+        // partial curve while the line is still drawing itself in
+        const mx = a.x + (qx - a.x) * p;
+        const my = a.y + (qy - a.y) * p;
+        const ex = (1 - p) * (1 - p) * a.x + 2 * (1 - p) * p * qx + p * p * b.x;
+        const ey = (1 - p) * (1 - p) * a.y + 2 * (1 - p) * p * qy + p * p * b.y;
+
+        c.lineWidth = width;
+        c.strokeStyle = `rgba(${color}, ${alpha})`;
+        if (edge.thread) {
+          c.setLineDash([3, 6]);
+          c.lineDashOffset = motion ? -t * 9 : 0;
+        }
+        c.beginPath();
+        c.moveTo(a.x, a.y);
+        c.quadraticCurveTo(mx, my, ex, ey);
+        c.stroke();
+        if (edge.thread) c.setLineDash([]);
+
+        // a pulse travelling along the line
+        if (motion && p >= 1 && !(active && !onTrail && !fromActive && !threadOn)) {
+          const boost = onTrail || threadOn ? 2.4 : 1;
+          const u = (t * edge.speed * boost + edge.offset) % 1;
+          const fade = Math.sin(u * Math.PI);
+          const ux = (1 - u) * (1 - u) * a.x + 2 * (1 - u) * u * qx + u * u * b.x;
+          const uy = (1 - u) * (1 - u) * a.y + 2 * (1 - u) * u * qy + u * u * b.y;
+          const tone = edge.thread ? WARN : ACCENT;
+          c.fillStyle = `rgba(${tone}, ${(0.16 * fade).toFixed(3)})`;
+          c.beginPath();
+          c.arc(ux, uy, 5.5, 0, Math.PI * 2);
+          c.fill();
+          c.fillStyle = `rgba(${tone}, ${(0.95 * fade).toFixed(3)})`;
+          c.beginPath();
+          c.arc(ux, uy, 1.6, 0, Math.PI * 2);
+          c.fill();
+        }
+      }
+
+      // ripple on the selected node
+      if (active && motion && active.kind === 'sat') {
+        const u = (t * 0.7) % 1;
+        c.strokeStyle = `rgba(${ACCENT}, ${(0.5 * (1 - u)).toFixed(3)})`;
+        c.lineWidth = 1;
+        c.beginPath();
+        c.arc(active.x, active.y, 8 + u * 26, 0, Math.PI * 2);
+        c.stroke();
+      }
+    }
+
+    // ----- Loop -----
+    let raf = 0;
+    let running = false;
+    let visible = true;
+    let clock = 0;
+    let last = 0;
+
+    function frame(now: number) {
+      if (!running) return;
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      clock += dt;
+      px += (tx - px) * Math.min(1, dt * 4);
+      py += (ty - py) * Math.min(1, dt * 4);
+      place(clock);
+      draw(clock);
+      raf = requestAnimationFrame(frame);
+    }
+
+    function renderOnce() {
+      place(clock);
+      draw(clock);
+    }
+
+    function sync() {
+      const should = motion && visible && !document.hidden;
+      root.classList.toggle('fab--still', !motion);
+      if (should && !running) {
+        running = true;
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+      } else if (!should && running) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+      if (!running) renderOnce();
+    }
+
+    const motionButton = root.querySelector<HTMLButtonElement>('[data-fab-motion]');
+    const motionLabel = root.querySelector<HTMLElement>('[data-fab-motion-label]');
+    function setMotion(on: boolean) {
+      motion = on;
+      motionButton?.setAttribute('aria-pressed', String(on));
+      if (motionLabel) motionLabel.textContent = on ? 'Motion on' : 'Motion off';
+      sync();
+    }
+    motionButton?.addEventListener('click', () => setMotion(!motion), { signal });
+    reduceQuery.addEventListener('change', (event) => setMotion(!event.matches), { signal });
+    document.addEventListener('visibilitychange', sync, { signal });
+
+    const io = new IntersectionObserver((entries) => {
+      visible = entries[0]?.isIntersecting ?? true;
+      sync();
+    });
+    io.observe(stage);
+
+    let lastWidth = -1;
+    const ro = new ResizeObserver(() => {
+      const width = stage.clientWidth;
+      const height = stage.clientHeight;
+      if (width === lastWidth && (!wide || height === H)) return;
+      lastWidth = width;
+      layout();
+    });
+
+    root.classList.add('fab--live');
+    layout();
+    lastWidth = stage.clientWidth;
+    ro.observe(stage);
+    setMotion(motion);
+
+    return () => {
+      abort.abort();
+      io.disconnect();
+      ro.disconnect();
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+  }
+
+  function boot() {
+    teardown?.();
+    teardown = null;
+    const root = document.querySelector<HTMLElement>('[data-fab]');
+    if (root) teardown = initFab(root);
+  }
+
+  document.addEventListener('astro:page-load', boot);
+  document.addEventListener('astro:before-swap', () => {
+    teardown?.();
+    teardown = null;
+  });
+</script>

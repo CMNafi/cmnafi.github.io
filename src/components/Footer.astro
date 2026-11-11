@@ -5,6 +5,7 @@ const year = new Date().getFullYear();
 // The header already carries the page nav, so the footer stays to one quiet line
 const links = [
   ...siteConfig.socialLinks.map((link) => ({ label: link.label, href: link.href })),
+  { label: 'Fab', href: '/fab' },
   { label: 'Sitemap', href: '/sitemap' },
   { label: 'Telemetry ↗', href: '/admin' }
 ];
