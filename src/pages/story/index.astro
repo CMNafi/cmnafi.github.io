@@ -18,60 +18,26 @@ const record = [
 ];
 
 const education = [
-  { org: 'Luther College', role: 'B.A. Data Science, Computer Science minor, GPA 3.5', when: 'Aug 2018 to May 2022', where: 'Decorah, IA' },
-  { org: 'UWC Changshu', role: 'IB Diploma, full scholarship', when: '2016 to 2018', where: 'Changshu, China' }
-];
-
-const certifications = [
-  'IBM: Introduction to Data Engineering',
-  'Google: Data Analytics Professional Certificate',
-  'DeepLearning.AI: Neural Networks and Deep Learning',
-  'Salesforce: Einstein Analytics'
+  { org: 'Luther College', role: 'B.A. Data Science, Computer Science minor', when: 'Aug 2018 to May 2022', where: 'Decorah, IA' },
+  { org: 'UWC Changshu', role: 'IB Diploma', when: '2016 to 2018', where: 'Changshu, China' }
 ];
 ---
 
 <BaseLayout
   title="Story"
-  description="I left home at twelve and have been the newest person in the room ever since. Military school, China, Iowa, BlackRock, and now a job that is mostly translation."
+  description="I left home at twelve and have been learning new places since. A short account, from Dinajpur to Florida."
+  canonical="/story"
 >
   <article class="story">
     <header class="story-head">
-      <p class="story-eyebrow">Story · {chapters.length} chapters · about 8 minutes</p>
+      <p class="story-eyebrow">Story · {chapters.length} short chapters</p>
       <h1>The newest person <br />in the <em>room.</em></h1>
       <p class="dek">
-        I left home at twelve and have been learning new rooms ever since. Military school, China, a small
-        town in Iowa, three very different institutions, and now a job that is mostly translation. This is
-        how that happened.
+        I left home at twelve and have moved a few times since: a military school, China, a small town in
+        Iowa, and now Florida. Each time I had to learn how a new place worked. This is a short account of
+        that.
       </p>
-
-      <dl class="facts">
-        <div><dt>Now</dt><dd>Solutions Engineer, Dasseti</dd></div>
-        <div><dt>Based</dt><dd>Land O' Lakes, Florida, working remotely</dd></div>
-        <div><dt>Before</dt><dd>BlackRock, SkyBridge, Mayo Clinic</dd></div>
-        <div><dt>Studied</dt><dd>Data Science, Luther College (GPA 3.5)</dd></div>
-        <div><dt>Languages</dt><dd>Bengali (native), English (fluent), Hindi (proficient)</dd></div>
-      </dl>
-
-      <div class="head-links">
-        <a href="https://www.linkedin.com/in/cm-nafi/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-        <a href="mailto:nafi@cmnafi.com">Email</a>
-        <a href="#record">The record ↓</a>
-      </div>
     </header>
-
-    <section class="short-version" aria-labelledby="short-version-title">
-      <h2 id="short-version-title" class="label">The short version</h2>
-      <p>
-        I'm a solutions engineer at Dasseti, living in Land O' Lakes, Florida and working remotely. I grew up in Bangladesh,
-        left home at twelve for military school, and at sixteen moved to China on a full scholarship to a
-        United World College, without speaking the language. I studied data science in an Iowa town of eight
-        thousand, then worked at Mayo Clinic, SkyBridge and BlackRock.
-      </p>
-      <p>
-        Every one of those places asked the same thing of me: learn how the room talks, then make yourself
-        useful in it. Now that's the job.
-      </p>
-    </section>
 
     <nav class="chapter-index" aria-label="Chapters">
       <ol>
@@ -111,8 +77,8 @@ const certifications = [
         <div>
           <h3>Cricket</h3>
           <p>
-            All-rounder, right-arm fast. Most of the match reports here come from the Tampa leagues, playing for
-            TB Bengal Tigers, SWAT and St Pete Shields. I write up the close ones.
+            I'm an all-rounder and bowl right-arm fast. I play in the Tampa leagues, for TB Bengal Tigers, SWAT
+            and St Pete Shields, and write up the close matches.
           </p>
           <a href="/field-notes/category/cricket">Cricket notes →</a>
         </div>
@@ -132,16 +98,6 @@ const certifications = [
           <a href="/field-notes/category/books">Book notes →</a>
         </div>
       </div>
-    </section>
-
-    <section class="useful" aria-labelledby="useful-title">
-      <h2 id="useful-title" class="label">Where I'm useful</h2>
-      <p class="useful-lede">
-        Due diligence and allocator workflows. How investment teams evaluate and adopt software. Solutions
-        engineering at finance-adjacent SaaS. Regulatory data like Form ADV and 13F. Writing about finance for
-        people who don't read finance for fun.
-      </p>
-      <p class="useful-not">Probably not your person for sell-side equity research or a quant trading seat.</p>
     </section>
 
     <section class="record" id="record" aria-labelledby="record-title">
@@ -168,15 +124,12 @@ const certifications = [
           </li>
         ))}
       </ul>
-
-      <h3 class="record-head">Certifications</h3>
-      <p class="certs">{certifications.join(' · ')}</p>
     </section>
 
     <section class="contact" aria-labelledby="contact-title">
       <h2 id="contact-title" class="label">Say hello</h2>
       <a class="contact-email" href="mailto:nafi@cmnafi.com">nafi@cmnafi.com</a>
-      <p>I read everything, and reply within two business days.</p>
+      <p>Questions and corrections are both welcome.</p>
     </section>
   </article>
 </BaseLayout>
@@ -193,8 +146,6 @@ const certifications = [
   .story-eyebrow,
   .label,
   .chapter-meta,
-  .facts dt,
-  .head-links a,
   .chapter-index,
   .record-head,
   .r-when,
@@ -211,8 +162,8 @@ const certifications = [
   .story-head h1 {
     font-family: var(--font-serif);
     font-weight: 300;
-    font-size: clamp(52px, 9vw, 128px);
-    line-height: 0.95;
+    font-size: clamp(2.5rem, 5.8vw, 4.6rem);
+    line-height: 1.02;
     letter-spacing: -0.045em;
     margin: 0 0 clamp(28px, 4vw, 44px);
   }
@@ -229,24 +180,9 @@ const certifications = [
     text-wrap: pretty;
   }
 
-  .facts {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
-    gap: 0 32px;
-    margin: 0 0 28px;
-  }
 
-  .facts div {
-    border-top: 1px solid var(--surface-line);
-    padding: 16px 0;
-  }
 
-  .facts dt { color: var(--ink-quiet); font-size: 11px; margin-bottom: 6px; }
-  .facts dd { margin: 0; font-size: 17px; color: var(--ink-primary); }
 
-  .head-links { display: flex; flex-wrap: wrap; gap: 4px 28px; }
-  .head-links a { color: var(--ink-secondary); padding: 12px 0; transition: color var(--dur-fast); }
-  .head-links a:hover { color: var(--accent); }
 
   /* Section labels */
   .label {
@@ -257,20 +193,8 @@ const certifications = [
     border-bottom: 1px solid var(--surface-line);
   }
 
-  .short-version { margin-top: clamp(72px, 10vw, 128px); }
 
-  .short-version p {
-    font-family: var(--font-serif);
-    font-weight: 300;
-    font-size: clamp(24px, 3vw, 38px);
-    line-height: 1.3;
-    letter-spacing: -0.02em;
-    max-width: 30em;
-    margin: 0 0 0.8em;
-    text-wrap: pretty;
-  }
 
-  .short-version p:last-child { color: var(--ink-secondary); }
 
   /* Chapter index */
   .chapter-index { margin: clamp(56px, 8vw, 96px) 0 0; }
@@ -357,7 +281,6 @@ const certifications = [
 
   /* Off the clock */
   .off-clock,
-  .useful,
   .record,
   .contact { margin-top: clamp(72px, 9vw, 120px); }
 
@@ -386,17 +309,7 @@ const certifications = [
   .off-grid a:hover { color: var(--accent); }
 
   /* Useful */
-  .useful-lede {
-    font-family: var(--font-serif);
-    font-weight: 300;
-    font-size: clamp(22px, 2.6vw, 32px);
-    line-height: 1.35;
-    letter-spacing: -0.015em;
-    max-width: 32em;
-    margin: 0 0 20px;
-  }
 
-  .useful-not { color: var(--ink-quiet); font-size: 16px; margin: 0; }
 
   /* Record */
   .record { scroll-margin-top: 80px; }
@@ -418,15 +331,15 @@ const certifications = [
   .r-role { color: var(--ink-secondary); font-size: 16px; }
   .r-when { color: var(--ink-quiet); font-size: 11px; text-align: right; }
 
-  .certs { color: var(--ink-secondary); font-size: 15px; line-height: 1.7; margin: 8px 0 0; }
 
   /* Contact */
   .contact-email {
     display: inline-block;
     font-family: var(--font-serif);
     font-weight: 300;
-    font-size: clamp(34px, 7vw, 96px);
-    line-height: 1.05;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.2;
+    border-bottom: 1px solid var(--accent);
     letter-spacing: -0.02em;
     color: var(--ink-primary);
     overflow-wrap: anywhere;
@@ -444,6 +357,6 @@ const certifications = [
   }
 
   @media print {
-    .head-links, .chapter-index, .contact { display: none !important; }
+    .chapter-index, .contact { display: none !important; }
   }
 </style>

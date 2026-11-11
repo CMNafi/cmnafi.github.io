@@ -39,16 +39,16 @@ Everything else on the site is the same habit pointed somewhere new:
 
 Source of truth: `src/content/journey/*.mdx`, rendered on `/story`.
 
-| # | Place | When | Chapter | The turn |
+| # | Place | When | Chapter | What happens |
 |---|---|---|---|---|
-| 01 | Dinajpur, Bangladesh | Childhood | A house where reading was the answer to boredom | The one room where he wasn't new |
-| 02 | Rangpur, Bangladesh | Age 12 | Twelve, and on my own clock | Rangpur Cadet College. 66 km from home, a long way away |
-| 03 | Changshu, China | 2016, age 16 | A country, and a language, I didn't know | UWC on full scholarship, 100+ nationalities |
-| 04 | Decorah, Iowa | Aug 2018 to May 2022 | Eight thousand people and a long winter | Luther College, B.A. Data Science, GPA 3.5; Blackstone/BlackRock mix-up |
-| 05 | Rochester, Minnesota | 2021 to 2022 | Where the stakes were real | Mayo Clinic. "Messy data is the job" |
-| 06 | New York | 2021 to 2022 | Data that can move a decision | SkyBridge. "Narrative is translation" |
-| 07 | Wilmington, Delaware | 2022 to 2023 | A trillion dollars is a storytelling problem | BlackRock, Data & AI |
-| 08 | Remote | 2023 to now | The pattern gets a job title | Dasseti, solutions engineer |
+| 01 | Dinajpur, Bangladesh | Childhood | A house where reading was the answer to boredom | The one place he didn't have to work out |
+| 02 | Rangpur, Bangladesh | Age 12 | Leaving home at twelve | Rangpur Cadet College, 66 km from home |
+| 03 | Changshu, China | 2016, age 16 | A country, and a language, I didn't know | UWC, classmates from 100+ countries |
+| 04 | Decorah, Iowa | Aug 2018 to May 2022 | Eight thousand people and a long winter | Luther College, B.A. Data Science; Blackstone/BlackRock mix-up |
+| 05 | Rochester, Minnesota | 2021 to 2022 | My first real data work | Mayo Clinic. Cleaning the data is most of the work |
+| 06 | New York | 2021 to 2022 | A first look at how investors choose | SkyBridge. A memo is an argument, not a list |
+| 07 | Wilmington, Delaware | 2022 to 2023 | The firm I had mixed up | BlackRock, Data & AI. Dependable beats exciting |
+| 08 | Remote | 2023 to now | The job in the middle | Dasseti, solutions engineer |
 | 09 | Land O' Lakes, Florida | Now | Numbers, tools, and matches | Field Notes, Garage, cricket |
 
 ## 4. Voice
@@ -63,6 +63,30 @@ Inherits ETHOS.md (editorial, calm, precise, no exclamation points). On top:
 - **First person, plain verbs.** "I learned," "I built," "I wrote."
 - **Let numbers do the work.** `66 km`. `8,000 people`. `100+ countries`.
   `$32.8 billion`. Monospace where the design allows.
+
+### Humble and plain (November 12, 2026)
+
+Nafi asked for the story to be humble and very simple, with no bragging. This
+rule sits above everything else in this section.
+
+- **Say what happened, not what it proves.** "I worked on risk reporting", not
+  what that says about him. No sentence whose job is to make him look good.
+- **No closing lesson on every chapter.** If a paragraph ends on an aphorism,
+  cut the aphorism.
+- **Small verbs for his part.** "Helped", "contributed", "worked on", "was an
+  intern". Never "led", "drove", "presented to senior stakeholders".
+- **Leave out credentials that only impress.** No GPA, no certification list,
+  no "where I'm useful" pitch, no reply-time promises. Employers, degrees and
+  dates appear once, in the record.
+- **The scholarship is stated once**, as a plain fact in the Changshu chapter.
+- **Short sentences, common words.**
+- **Self-aware beats impressive.** The Blackstone/BlackRock mix-up stays.
+
+Retired with this rule: "makes you larger" · "effort has a texture" · "the
+floor everything stands on" · "senior stakeholders" · "the pattern gets a job
+title" · "where the stakes were real" · "a trillion dollars is a storytelling
+problem" as a heading (the line stays in section 5 as his, but not on the
+Story page).
 
 ### Retired words and phrases
 
@@ -96,7 +120,7 @@ Use only these. If a claim isn't here or in his own writing, don't publish it.
 - **UWC Changshu, China:** 2016, age 16, full scholarship, IB Diploma.
   Didn't speak the language. Classmates from 100+ countries.
 - **Luther College, Decorah, Iowa:** town of ~8,000. B.A. Data Science,
-  Computer Science minor, 2022. Junior year: applied to "Blackstone," the
+  Computer Science minor, 2022. (GPA is not published on the site.) Junior year: applied to "Blackstone," the
   interview invitation said BlackRock (see Field Note
   `blackstone-vs-blackrock`).
 - **Mayo Clinic, Rochester, MN:** AI Intern, 2021 to 2022. Clinical data

@@ -64,8 +64,8 @@ export const journeySegments: TimelineSegment[] = [
         location: 'Decorah, Iowa, USA',
         period: 'Aug 2018 to May 2022',
         description:
-          'Graduated with a B.A. in Data Science (GPA 3.5) and a minor in Computer Science. Focused on statistical learning, data pipelines, and decision-ready analysis.',
-        highlights: ['B.A. Data Science', 'GPA 3.5', 'Decorah, Iowa'],
+          'Graduated with a B.A. in Data Science and a minor in Computer Science. Focused on statistical learning, data pipelines, and decision-ready analysis.',
+        highlights: ['B.A. Data Science', 'Decorah, Iowa'],
         href: 'https://www.luther.edu/',
         tags: ['Data Science', 'Statistics', 'Research']
       }
